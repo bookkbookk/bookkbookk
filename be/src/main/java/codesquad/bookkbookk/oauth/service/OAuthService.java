@@ -11,18 +11,15 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import codesquad.bookkbookk.oauth.OAuthDetail;
+import codesquad.bookkbookk.oauth.OAuthProvider;
 import codesquad.bookkbookk.oauth.data.dto.OAuthTokenResponse;
-import codesquad.bookkbookk.oauth.util.OAuthDetailsProvider;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class OAuthService {
 
-	private final OAuthDetailsProvider oAuthDetailsProvider;
-
-	public OAuthTokenResponse requestToken(OAuthDetail oAuthDetail, String authCode) {
+	public String requestOAuthToken(OAuthProvider.Property oAuthDetail, String authCode) {
 		return WebClient.create()
 				.post()
 				.uri(oAuthDetail.getTokenRequestUri())
@@ -47,12 +44,12 @@ public class OAuthService {
 		return formData;
 	}
 
-	public Map<String, Object> requestOauthUserInfo(OAuthDetail oAuthDetail,
-													   OAuthTokenResponse tokenResponse) {
+	public Map<String, Object> requestOAuthUserInfo(OAuthProvider.Property oAuthDetail,
+													String tokenResponse) {
 		return WebClient.create()
 				.get()
 				.uri(oAuthDetail.getUserInfoRequestUri())
-				.headers(header -> header.setBearerAuth(tokenResponse.getAccessToken()))
+				.headers(header -> header.setBearerAuth(tokenResponse))
 				.retrieve()
 				.bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {
 				})
