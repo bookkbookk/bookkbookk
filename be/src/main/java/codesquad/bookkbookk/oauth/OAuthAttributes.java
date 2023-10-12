@@ -25,5 +25,5 @@ public enum OAuthAttributes {
 	}
 
 	public abstract OAuthUserProfile of(Map<String, Object> attributes);
-	
+
 }
