@@ -1,12 +1,17 @@
 import { queryClient } from "@api/queryClient";
-import GlobalStyle from "@styles/GlobalStyle";
+import { Global, ThemeProvider } from "@emotion/react";
+import {
+  ThemeProvider as MUIThemeProvider,
+  THEME_ID,
+  createTheme,
+} from "@mui/material/styles";
+import { GlobalStyle } from "@styles/GlobalStyle";
 import { designSystem } from "@styles/designSystem";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { RouterProvider } from "react-router-dom";
 import { router } from "router/router";
 import { useThemeValue } from "store/useTheme";
-import { ThemeProvider } from "styled-components";
 import * as S from "./App.style";
 
 export default function App() {
@@ -15,11 +20,13 @@ export default function App() {
 
   return (
     <ThemeProvider theme={currentTheme}>
-      <GlobalStyle />
+      <Global styles={GlobalStyle} />
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools initialIsOpen={false} />
         <S.App>
-          <RouterProvider router={router} />
+          <MUIThemeProvider theme={{ [THEME_ID]: createTheme() }}>
+            <RouterProvider router={router} />
+          </MUIThemeProvider>
         </S.App>
       </QueryClientProvider>
       <S.ModalRoot id="modal-root" />

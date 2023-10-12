@@ -1,11 +1,12 @@
 import MapleBold from "@assets/fonts/MapleBold.ttf";
-import { createGlobalStyle } from "styled-components";
+import { css } from "@emotion/react";
 
-export default createGlobalStyle`
+export const GlobalStyle = css`
   @font-face {
-    font-family: 'SOYO Maple Bold';
-    src: url(${MapleBold}) format('woff2');
+    font-family: "SOYO Maple Bold";
+    src: url(${MapleBold}) format("woff2");
   }
+
   html,
   body,
   p,
@@ -66,7 +67,7 @@ export default createGlobalStyle`
   textarea {
     all: unset;
   }
-  
+
   select {
     margin: 0;
   }
@@ -77,7 +78,7 @@ export default createGlobalStyle`
   }
 
   * {
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: "Noto Sans KR", sans-serif;
     &::before,
     &::after {
       box-sizing: inherit;

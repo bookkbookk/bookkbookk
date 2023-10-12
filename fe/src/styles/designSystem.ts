@@ -29,24 +29,24 @@ const radius = {
 };
 
 const font = {
-  displayBold32: "700 32px Pretendard, sans-serif",
-  displayBold24: "700 24px Pretendard, sans-serif",
-  displayBold20: "700 20px Pretendard, sans-serif",
-  displayBold16: "700 16px Pretendard, sans-serif",
-  displayBold14: "700 14px Pretendard, sans-serif",
-  displayBold12: "700 12px Pretendard, sans-serif",
+  displayBold32: "700 32px Roboto, sans-serif",
+  displayBold24: "700 24px Roboto, sans-serif",
+  displayBold20: "700 20px Roboto, sans-serif",
+  displayBold16: "700 16px Roboto, sans-serif",
+  displayBold14: "700 14px Roboto, sans-serif",
+  displayBold12: "700 12px Roboto, sans-serif",
 
-  displayMD20: "500 20px Pretendard, sans-serif",
-  displayMD16: "500 16px Pretendard, sans-serif",
-  displayMD12: "500 12px Pretendard, sans-serif",
+  displayMD20: "500 20px Roboto, sans-serif",
+  displayMD16: "500 16px Roboto, sans-serif",
+  displayMD12: "500 12px Roboto, sans-serif",
 
-  selectedBold20: "700 20px Pretendard, sans-serif",
-  selectedBold16: "700 16px Pretendard, sans-serif",
-  selectedBold12: "700 12px Pretendard, sans-serif",
+  selectedBold20: "700 20px Roboto, sans-serif",
+  selectedBold16: "700 16px Roboto, sans-serif",
+  selectedBold12: "700 12px Roboto, sans-serif",
 
-  availableMD20: "500 20px Pretendard, sans-serif",
-  availableMD16: "500 16px Pretendard, sans-serif",
-  availableMD12: "500 12px Pretendard, sans-serif",
+  availableMD20: "500 20px Roboto, sans-serif",
+  availableMD16: "500 16px Roboto, sans-serif",
+  availableMD12: "500 12px Roboto, sans-serif",
 
   brandBold32: "700 32px SOYO Maple Bold, sans-serif",
 };
