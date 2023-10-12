@@ -28,18 +28,20 @@ public class OAuthService {
 					header.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 					header.setAcceptCharset(Collections.singletonList(StandardCharsets.UTF_8));
 				})
-				.bodyValue(requestTokenFormData(oAuthDetail, authCode))
+				.bodyValue(createTokenRequestBody(oAuthDetail, authCode))
 				.retrieve()
 				.bodyToMono(OAuthTokenResponse.class)
+				.map(OAuthTokenResponse::getAccessToken)
 				.block();
 	}
 
-	private MultiValueMap<String, String> requestTokenFormData(OAuthDetail provider, String code) {
+	private MultiValueMap<String, String> createTokenRequestBody(OAuthProvider.Property property, String authCode) {
 		MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-		formData.add("client_id", provider.getClientId());
-		formData.add("client_secret", provider.getClientSecret());
-		formData.add("redirect_uri", provider.getRedirectUri());
-		formData.add("code", code);
+
+		formData.add("client_id", property.getClientId());
+		formData.add("client_secret", property.getClientSecret());
+		formData.add("redirect_uri", property.getRedirectUri());
+		formData.add("code", authCode);
 		formData.add("grant_type", "authorization_code");
 		return formData;
 	}
