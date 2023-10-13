@@ -1,21 +1,29 @@
 import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 
-export const THEME = {
+export const THEME_MODE = {
   light: "light" as const,
   dark: "dark" as const,
 };
 
-type Theme = keyof typeof THEME;
-const defaultTheme: Theme = THEME.light;
+export type ThemeMode = keyof typeof THEME_MODE;
+const defaultThemeMode: ThemeMode = window.matchMedia(
+  "(prefers-color-scheme: dark)"
+).matches
+  ? THEME_MODE.dark
+  : THEME_MODE.light;
 
-const themeAtom = atom<Theme>(defaultTheme);
-const useThemeAtom = atom(
-  (get) => get(themeAtom),
-  (_, set, update: Theme) => set(themeAtom, update)
+const themeModeAtom = atom<ThemeMode>(defaultThemeMode);
+const useThemeModeAtom = atom(
+  (get) => get(themeModeAtom),
+  (_, set) => {
+    set(themeModeAtom, (prev) =>
+      prev === THEME_MODE.light ? THEME_MODE.dark : THEME_MODE.light
+    );
+  }
 );
 
-const useThemeValue = () => useAtomValue(themeAtom);
-const useSetTheme = () => useSetAtom(useThemeAtom);
-const useTheme = () => useAtom(useThemeAtom);
+const useThemeModeValue = () => useAtomValue(themeModeAtom);
+const useToggleThemeMode = () => useSetAtom(useThemeModeAtom);
+const useThemeMode = () => useAtom(useThemeModeAtom);
 
-export { useSetTheme, useTheme, useThemeValue };
+export { useThemeMode, useThemeModeValue, useToggleThemeMode };

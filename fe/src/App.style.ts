@@ -1,10 +1,10 @@
-import emotionStyled from "@emotion/styled";
+import { styled } from "@mui/material";
 
-export const App = emotionStyled.div`
+export const App = styled("div")`
   width: 100vw;
-  min-width: 960px;
-  max-width: 1440px;
   margin: auto;
+  display: flex;
+  justify-content: center;
 `;
 
-export const ModalRoot = emotionStyled.div``;
+export const ModalRoot = styled("div")``;

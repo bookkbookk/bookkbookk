@@ -78,7 +78,6 @@ export const GlobalStyle = css`
   }
 
   * {
-    font-family: "Noto Sans KR", sans-serif;
     &::before,
     &::after {
       box-sizing: inherit;

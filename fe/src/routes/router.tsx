@@ -1,4 +1,5 @@
 import BookClub from "@pages/BookClub";
+import Landing from "@pages/Landing";
 import Library from "@pages/Library";
 import Main from "@pages/Main";
 import NotFound from "@pages/NotFound";
@@ -17,7 +18,7 @@ import { ROUTE_PATH } from "./constants";
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path={ROUTE_PATH.home} />
+      <Route path={ROUTE_PATH.home} element={<Landing />} />
       <Route
         path={ROUTE_PATH.main}
         element={
