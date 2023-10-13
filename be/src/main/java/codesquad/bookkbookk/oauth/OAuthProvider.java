@@ -24,7 +24,8 @@ public class OAuthProvider {
         private final String tokenRequestUri;
         private final String userInfoRequestUri;
 
-        public Property(String clientId, String clientSecret, String redirectUri, String tokenRequestUri, String userInfoRequestUri) {
+        public Property(String clientId, String clientSecret, String redirectUri,
+                        String tokenRequestUri, String userInfoRequestUri) {
             this.clientId = clientId;
             this.clientSecret = clientSecret;
             this.redirectUri = redirectUri;

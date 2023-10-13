@@ -35,7 +35,8 @@ public class OAuthService {
                 .block();
     }
 
-    private MultiValueMap<String, String> createTokenRequestBody(OAuthProvider.Property property, String authCode) {
+    private MultiValueMap<String, String> createTokenRequestBody(OAuthProvider.Property property,
+                                                                 String authCode) {
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
 
         formData.add("client_id", property.getClientId());
