@@ -4,20 +4,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.context.properties.ConstructorBinding;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@Component
 @ConfigurationProperties(prefix = "oauth2")
 public class OAuthProvider {
 
 	private final Map<String, Property> properties = new HashMap<>();
 
 	@Getter
-	@AllArgsConstructor
+	@ConstructorBinding
 	public static class Property {
 
 		private final String clientId;
@@ -25,6 +23,14 @@ public class OAuthProvider {
 		private final String redirectUri;
 		private final String tokenRequestUri;
 		private final String userInfoRequestUri;
+
+		public Property(String clientId, String clientSecret, String redirectUri, String tokenRequestUri, String userInfoRequestUri) {
+			this.clientId = clientId;
+			this.clientSecret = clientSecret;
+			this.redirectUri = redirectUri;
+			this.tokenRequestUri = tokenRequestUri;
+			this.userInfoRequestUri = userInfoRequestUri;
+		}
 
 	}
 

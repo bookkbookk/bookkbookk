@@ -19,16 +19,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OAuthService {
 
-	public String requestOAuthToken(OAuthProvider.Property oAuthDetail, String authCode) {
+	public String requestOAuthToken(OAuthProvider.Property oAuthProperty, String authCode) {
 		return WebClient.create()
 				.post()
-				.uri(oAuthDetail.getTokenRequestUri())
+				.uri(oAuthProperty.getTokenRequestUri())
 				.headers(header -> {
 					header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 					header.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 					header.setAcceptCharset(Collections.singletonList(StandardCharsets.UTF_8));
 				})
-				.bodyValue(createTokenRequestBody(oAuthDetail, authCode))
+				.bodyValue(createTokenRequestBody(oAuthProperty, authCode))
 				.retrieve()
 				.bodyToMono(OAuthTokenResponse.class)
 				.map(OAuthTokenResponse::getAccessToken)
