@@ -10,14 +10,14 @@ import lombok.Getter;
 @ConstructorBinding
 public class JwtProperties {
 
-	private final String secretKey;
-	private final Long accessTokenExpiration;
-	private final Long refreshTokenExpiration;
+    private final String secretKey;
+    private final Long accessTokenExpiration;
+    private final Long refreshTokenExpiration;
 
-	public JwtProperties(String secretKey, Long accessTokenExpiration, Long refreshTokenExpiration) {
-		this.secretKey = secretKey;
-		this.accessTokenExpiration = accessTokenExpiration;
-		this.refreshTokenExpiration = refreshTokenExpiration;
-	}
+    public JwtProperties(String secretKey, Long accessTokenExpiration, Long refreshTokenExpiration) {
+        this.secretKey = secretKey;
+        this.accessTokenExpiration = accessTokenExpiration;
+        this.refreshTokenExpiration = refreshTokenExpiration;
+    }
 
 }

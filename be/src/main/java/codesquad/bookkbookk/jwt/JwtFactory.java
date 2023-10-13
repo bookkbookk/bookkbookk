@@ -15,36 +15,36 @@ import lombok.RequiredArgsConstructor;
 @Component
 public class JwtFactory {
 
-	private static final String TOKEN_PAYLOAD_MEMBER_ID = "memberId";
+    private static final String TOKEN_PAYLOAD_MEMBER_ID = "memberId";
 
-	private final JwtProperties jwtProperties;
+    private final JwtProperties jwtProperties;
 
-	private Key key;
+    private Key key;
 
-	@PostConstruct
-	private void setKey() {
-		key = Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes());
-	}
+    @PostConstruct
+    private void setKey() {
+        key = Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes());
+    }
 
-	public String generateAccessToken(Long memberId) {
-		Date expiration = new Date(
-				System.currentTimeMillis() + jwtProperties.getAccessTokenExpiration());
-		return createToken(memberId, expiration);
-	}
+    public String generateAccessToken(Long memberId) {
+        Date expiration = new Date(
+                System.currentTimeMillis() + jwtProperties.getAccessTokenExpiration());
+        return createToken(memberId, expiration);
+    }
 
-	public String generateRefreshToken(Long memberId) {
-		Date expiration = new Date(
-				System.currentTimeMillis() + jwtProperties.getRefreshTokenExpiration());
-		return createToken(memberId, expiration);
-	}
+    public String generateRefreshToken(Long memberId) {
+        Date expiration = new Date(
+                System.currentTimeMillis() + jwtProperties.getRefreshTokenExpiration());
+        return createToken(memberId, expiration);
+    }
 
-	private String createToken(Long memberId, Date expiration) {
-		return Jwts.builder()
-				.expiration(expiration)
-				.claim(TOKEN_PAYLOAD_MEMBER_ID, memberId)
-				.signWith(key)
-				.compact();
-	}
+    private String createToken(Long memberId, Date expiration) {
+        return Jwts.builder()
+                .expiration(expiration)
+                .claim(TOKEN_PAYLOAD_MEMBER_ID, memberId)
+                .signWith(key)
+                .compact();
+    }
 
 }
 

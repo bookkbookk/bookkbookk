@@ -12,26 +12,26 @@ import lombok.Getter;
 @ConfigurationProperties(prefix = "oauth2")
 public class OAuthProvider {
 
-	private final Map<String, Property> properties = new HashMap<>();
+    private final Map<String, Property> properties = new HashMap<>();
 
-	@Getter
-	@ConstructorBinding
-	public static class Property {
+    @Getter
+    @ConstructorBinding
+    public static class Property {
 
-		private final String clientId;
-		private final String clientSecret;
-		private final String redirectUri;
-		private final String tokenRequestUri;
-		private final String userInfoRequestUri;
+        private final String clientId;
+        private final String clientSecret;
+        private final String redirectUri;
+        private final String tokenRequestUri;
+        private final String userInfoRequestUri;
 
-		public Property(String clientId, String clientSecret, String redirectUri, String tokenRequestUri, String userInfoRequestUri) {
-			this.clientId = clientId;
-			this.clientSecret = clientSecret;
-			this.redirectUri = redirectUri;
-			this.tokenRequestUri = tokenRequestUri;
-			this.userInfoRequestUri = userInfoRequestUri;
-		}
+        public Property(String clientId, String clientSecret, String redirectUri, String tokenRequestUri, String userInfoRequestUri) {
+            this.clientId = clientId;
+            this.clientSecret = clientSecret;
+            this.redirectUri = redirectUri;
+            this.tokenRequestUri = tokenRequestUri;
+            this.userInfoRequestUri = userInfoRequestUri;
+        }
 
-	}
+    }
 
 }

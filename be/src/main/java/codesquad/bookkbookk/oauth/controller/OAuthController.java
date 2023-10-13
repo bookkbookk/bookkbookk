@@ -18,24 +18,24 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OAuthController {
 
-	private final OAuthProvider oAuthProvider;
-	private final OAuthService oAuthService;
-	private final JwtFactory jwtFactory;
+    private final OAuthProvider oAuthProvider;
+    private final OAuthService oAuthService;
+    private final JwtFactory jwtFactory;
 
-	//기능 동작 테스트용 (API 설계 이후 수정 필요)
-	@GetMapping("/auth/login/{provider}")
-	public ResponseEntity<OAuthUserProfile> login(@RequestParam("code") String code,
-												  @PathVariable String provider) {
-		Map<String, OAuthProvider.Property> properties = oAuthProvider.getProperties();
-		OAuthProvider.Property property = properties.get(provider);
-		String token = oAuthService.requestOAuthToken(property, code);
-		Map<String, Object> userInfo = oAuthService.requestOAuthUserInfo(property, token);
-		OAuthUserProfile oAuthUserProfile = OAuthUserProfile.of(provider, userInfo);
-		String test = jwtFactory.generateAccessToken(1L);
-		System.out.println(test);
-		return ResponseEntity.ok()
-				.body(oAuthUserProfile);
+    //기능 동작 테스트용 (API 설계 이후 수정 필요)
+    @GetMapping("/auth/login/{provider}")
+    public ResponseEntity<OAuthUserProfile> login(@RequestParam("code") String code,
+                                                  @PathVariable String provider) {
+        Map<String, OAuthProvider.Property> properties = oAuthProvider.getProperties();
+        OAuthProvider.Property property = properties.get(provider);
+        String token = oAuthService.requestOAuthToken(property, code);
+        Map<String, Object> userInfo = oAuthService.requestOAuthUserInfo(property, token);
+        OAuthUserProfile oAuthUserProfile = OAuthUserProfile.of(provider, userInfo);
+        String test = jwtFactory.generateAccessToken(1L);
+        System.out.println(test);
+        return ResponseEntity.ok()
+                .body(oAuthUserProfile);
 
-	}
+    }
 
 }
