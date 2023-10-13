@@ -26,13 +26,13 @@ public class JwtFactory {
         key = Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes());
     }
 
-    public String generateAccessToken(Long memberId) {
+    public String createAccessToken(Long memberId) {
         Date expiration = new Date(
                 System.currentTimeMillis() + jwtProperties.getAccessTokenExpiration());
         return createToken(memberId, expiration);
     }
 
-    public String generateRefreshToken(Long memberId) {
+    public String createRefreshToken(Long memberId) {
         Date expiration = new Date(
                 System.currentTimeMillis() + jwtProperties.getRefreshTokenExpiration());
         return createToken(memberId, expiration);

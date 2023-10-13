@@ -15,7 +15,7 @@ public class OAuthUserProfile {
     private final String imageUrl;
 
     @Builder
-    public OAuthUserProfile(String email, String name, String imageUrl) {
+    private OAuthUserProfile(String email, String name, String imageUrl) {
         this.email = email;
         this.name = name;
         this.imageUrl = imageUrl;

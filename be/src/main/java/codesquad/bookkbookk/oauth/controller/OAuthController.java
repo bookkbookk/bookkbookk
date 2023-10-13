@@ -31,7 +31,7 @@ public class OAuthController {
         String token = oAuthService.requestOAuthToken(property, code);
         Map<String, Object> userInfo = oAuthService.requestOAuthUserInfo(property, token);
         OAuthUserProfile oAuthUserProfile = OAuthUserProfile.of(provider, userInfo);
-        String test = jwtFactory.generateAccessToken(1L);
+        String test = jwtFactory.createAccessToken(1L);
         System.out.println(test);
         return ResponseEntity.ok()
                 .body(oAuthUserProfile);
