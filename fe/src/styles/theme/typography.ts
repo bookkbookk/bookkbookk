@@ -1,4 +1,6 @@
-// TODO: 폰트 변경
+import MapleBold from "@assets/fonts/MapleBold.ttf";
+import MapleRegular from "@assets/fonts/MapleRegular.ttf";
+import Pretendard from "@assets/fonts/PretendardVariable.woff2";
 
 function pxToRem(value: number) {
   return `${value / 16}rem`;
@@ -27,19 +29,14 @@ export function responsiveFontSizes({
 }
 
 export const primaryFont = [
-  "Roboto",
   "Pretendard",
   "sans-serif",
   "SOYO Maple Bold",
+  "SOYO Maple Regular",
 ].join(",");
-export const themeFont = "SOYO Maple Bold, sans-serif";
 
 export const typography = {
   fontFamily: primaryFont,
-  fontWeightRegular: 400,
-  fontWeightMedium: 500,
-  fontWeightSemiBold: 600,
-  fontWeightBold: 700,
   h1: {
     fontWeight: 800,
     lineHeight: 80 / 64,
@@ -107,5 +104,24 @@ export const typography = {
     fontWeight: 700,
     lineHeight: 24 / 14,
     fontSize: pxToRem(14),
+  },
+};
+
+export const components = {
+  MuiCssBaseline: {
+    styleOverrides: `
+    @font-face {
+      font-family: "SOYO Maple Bold";
+      src: url(${MapleBold}) format("woff2");
+    }
+    @font-face {
+      font-family: "SOYO Maple Regular";
+      src: url(${MapleRegular}) format("woff2");
+    }
+    @font-face {
+      font-family: "Pretendard";
+      src: url(${Pretendard}) format("woff2");
+    }
+    `,
   },
 };

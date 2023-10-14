@@ -6,7 +6,7 @@ import {
 import { useMemo } from "react";
 import { useThemeModeValue } from "store/useTheme";
 import { getPalette } from "./palette";
-import { typography } from "./typography";
+import { components, typography } from "./typography";
 
 export default function ThemeProvider({
   children,
@@ -15,7 +15,11 @@ export default function ThemeProvider({
 }) {
   const themeMode = useThemeModeValue();
   const theme = useMemo(() => {
-    return createTheme({ palette: getPalette(themeMode), typography });
+    return createTheme({
+      palette: getPalette(themeMode),
+      typography,
+      components,
+    });
   }, [themeMode]);
 
   return (

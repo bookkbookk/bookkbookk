@@ -34,20 +34,20 @@ export const SectionContent = styled("div")`
 `;
 
 export const SectionTitle = styled("h2")`
-  font-size: 2rem;
   color: ${({ theme }) => theme.palette.text.primary};
   font: ${({ theme }) => theme.typography.h2};
-  font: ${({ theme }) => theme.typography.fontFamily};
+  font-family: "SOYO Maple Bold";
 `;
 
 export const SectionDescription = styled("p")`
-  font-size: 1rem;
+  font: ${({ theme }) => theme.typography.body1};
   color: ${({ theme }) => theme.palette.text.secondary};
 `;
 
 export const LogoTitle = styled("h1")`
   color: ${({ theme }) => theme.palette.text.primary};
   font: ${({ theme }) => theme.typography.h4};
+  font-family: "SOYO Maple Bold";
   padding-left: ${({ theme }) => theme.spacing(0.5)};
 `;
 
