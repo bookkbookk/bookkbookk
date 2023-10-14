@@ -1,4 +1,4 @@
-import emotionStyled from "@emotion/styled";
+import { styled } from "@mui/material";
 import Button from "@mui/material/Button";
 
 export default function Main() {
@@ -10,6 +10,6 @@ export default function Main() {
   );
 }
 
-const S = emotionStyled.div`
-  font: ${({ theme }) => theme.font.brandBold32};
+const S = styled("div")`
+  font: ${({ theme }) => theme.typography.h1};
 `;

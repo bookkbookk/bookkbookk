@@ -4,6 +4,6 @@ export const ROUTE_PATH = {
   library: "/main/library",
   bookClub: "/main/book-club",
   signUp: "/sign-up",
-  OAuth: "/oauth",
+  auth: "/auth",
   notFound: "/404",
 };
