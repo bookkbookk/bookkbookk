@@ -6,7 +6,7 @@ export default function Logo() {
   return (
     <S.LogoContainer to={ROUTE_PATH.main}>
       <LogoIcon />
-      <S.LogoTitle>부크부크</S.LogoTitle>
+      <S.LogoTitle>북크북크</S.LogoTitle>
     </S.LogoContainer>
   );
 }
