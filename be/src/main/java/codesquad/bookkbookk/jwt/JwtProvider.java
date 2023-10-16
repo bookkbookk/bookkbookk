@@ -13,9 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Component
-public class JwtFactory {
-
-    private static final String TOKEN_PAYLOAD_MEMBER_ID = "memberId";
+public class JwtProvider {
 
     private final JwtProperties jwtProperties;
 
@@ -23,25 +21,32 @@ public class JwtFactory {
 
     @PostConstruct
     private void setKey() {
-        key = Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes());
+        this.key = Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes());
+    }
+
+    public Jwt createJwt(Long memberId) {
+        return Jwt.builder()
+                .accessToken(createAccessToken(memberId))
+                .refreshToken(createRefreshToken(memberId))
+                .build();
     }
 
     public String createAccessToken(Long memberId) {
-        Date expiration = new Date(
-                System.currentTimeMillis() + jwtProperties.getAccessTokenExpiration());
+        Date expiration = new Date(System.currentTimeMillis() + jwtProperties.getAccessTokenExpiration());
+
         return createToken(memberId, expiration);
     }
 
     public String createRefreshToken(Long memberId) {
-        Date expiration = new Date(
-                System.currentTimeMillis() + jwtProperties.getRefreshTokenExpiration());
+        Date expiration = new Date(System.currentTimeMillis() + jwtProperties.getRefreshTokenExpiration());
+
         return createToken(memberId, expiration);
     }
 
     private String createToken(Long memberId, Date expiration) {
         return Jwts.builder()
                 .expiration(expiration)
-                .claim(TOKEN_PAYLOAD_MEMBER_ID, memberId)
+                .claim("memberId", memberId)
                 .signWith(key)
                 .compact();
     }
