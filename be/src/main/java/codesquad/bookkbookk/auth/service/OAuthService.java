@@ -34,7 +34,7 @@ public class OAuthService {
     @Transactional
     public LoginResponse login(OAuthCode oAuthCode, String providerName) {
         OAuthProvider.Property oAuthProperty = oAuthProvider.getProperties().get(providerName);
-        String oAuthToken = requestOAuthToken(oAuthProperty, oAuthCode.getOAuthCode());
+        String oAuthToken = requestOAuthToken(oAuthProperty, oAuthCode.getDecodedOAuthCode());
         Map<String, Object> oAuthUserInfos = requestOAuthUserInfos(oAuthProperty, oAuthToken);
         LoginRequest loginRequest = LoginRequest.of(providerName, oAuthUserInfos);
 
@@ -53,7 +53,7 @@ public class OAuthService {
         return memberRepository.save(Member.from(loginRequest));
     }
 
-    private String requestOAuthToken(OAuthProvider.Property oAuthProperty, String authCode) {
+    private String requestOAuthToken(OAuthProvider.Property oAuthProperty, String oAuthCode) {
         return WebClient.create()
                 .post()
                 .uri(oAuthProperty.getTokenRequestUrl())
@@ -62,7 +62,7 @@ public class OAuthService {
                     header.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
                     header.setAcceptCharset(Collections.singletonList(StandardCharsets.UTF_8));
                 })
-                .bodyValue(createTokenRequestBody(oAuthProperty, authCode))
+                .bodyValue(createTokenRequestBody(oAuthProperty, oAuthCode))
                 .retrieve()
                 .bodyToMono(OAuthTokenResponse.class)
                 .map(OAuthTokenResponse::getAccessToken)
@@ -70,13 +70,13 @@ public class OAuthService {
     }
 
     private MultiValueMap<String, String> createTokenRequestBody(OAuthProvider.Property oAuthProperty,
-                                                                 String authCode) {
+                                                                 String oAuthCode) {
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
 
         formData.add("client_id", oAuthProperty.getClientId());
         formData.add("client_secret", oAuthProperty.getClientSecret());
         formData.add("redirect_uri", oAuthProperty.getRedirectUrl());
-        formData.add("code", authCode);
+        formData.add("code", oAuthCode);
         formData.add("grant_type", "authorization_code");
         return formData;
     }
