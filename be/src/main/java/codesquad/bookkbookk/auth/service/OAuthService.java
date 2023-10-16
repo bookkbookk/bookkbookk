@@ -1,4 +1,4 @@
-package codesquad.bookkbookk.oauth.service;
+package codesquad.bookkbookk.auth.service;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
@@ -16,11 +16,11 @@ import codesquad.bookkbookk.jwt.Jwt;
 import codesquad.bookkbookk.jwt.JwtProvider;
 import codesquad.bookkbookk.member.data.entity.Member;
 import codesquad.bookkbookk.member.repository.MemberRepository;
-import codesquad.bookkbookk.oauth.data.dto.OAuthCode;
-import codesquad.bookkbookk.oauth.data.provider.OAuthProvider;
-import codesquad.bookkbookk.oauth.data.dto.LoginResponse;
-import codesquad.bookkbookk.oauth.data.dto.OAuthTokenResponse;
-import codesquad.bookkbookk.oauth.data.dto.LoginRequest;
+import codesquad.bookkbookk.auth.data.dto.OAuthCode;
+import codesquad.bookkbookk.auth.data.provider.OAuthProvider;
+import codesquad.bookkbookk.auth.data.dto.LoginResponse;
+import codesquad.bookkbookk.auth.data.dto.OAuthTokenResponse;
+import codesquad.bookkbookk.auth.data.dto.LoginRequest;
 import lombok.RequiredArgsConstructor;
 
 @Service

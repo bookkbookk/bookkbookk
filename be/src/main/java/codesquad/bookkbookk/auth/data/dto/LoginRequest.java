@@ -1,8 +1,8 @@
-package codesquad.bookkbookk.oauth.data.dto;
+package codesquad.bookkbookk.auth.data.dto;
 
 import java.util.Map;
 
-import codesquad.bookkbookk.oauth.data.type.LoginType;
+import codesquad.bookkbookk.auth.data.type.LoginType;
 import lombok.Builder;
 import lombok.Getter;
 

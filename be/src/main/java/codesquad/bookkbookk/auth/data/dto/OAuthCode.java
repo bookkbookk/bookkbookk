@@ -1,4 +1,4 @@
-package codesquad.bookkbookk.oauth.data.dto;
+package codesquad.bookkbookk.auth.data.dto;
 
 import lombok.AccessLevel;
 import lombok.Builder;

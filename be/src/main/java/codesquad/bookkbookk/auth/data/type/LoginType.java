@@ -1,8 +1,8 @@
-package codesquad.bookkbookk.oauth.data.type;
+package codesquad.bookkbookk.auth.data.type;
 
 import java.util.Map;
 
-import codesquad.bookkbookk.oauth.data.dto.LoginRequest;
+import codesquad.bookkbookk.auth.data.dto.LoginRequest;
 
 public enum LoginType {
 

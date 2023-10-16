@@ -1,4 +1,4 @@
-package codesquad.bookkbookk.oauth.data.provider;
+package codesquad.bookkbookk.auth.data.provider;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package codesquad.bookkbookk.oauth.controller;
+package codesquad.bookkbookk.auth.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.bookkbookk.jwt.JwtProvider;
-import codesquad.bookkbookk.oauth.data.dto.OAuthCode;
-import codesquad.bookkbookk.oauth.data.dto.LoginResponse;
-import codesquad.bookkbookk.oauth.service.OAuthService;
+import codesquad.bookkbookk.auth.data.dto.OAuthCode;
+import codesquad.bookkbookk.auth.data.dto.LoginResponse;
+import codesquad.bookkbookk.auth.service.OAuthService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
