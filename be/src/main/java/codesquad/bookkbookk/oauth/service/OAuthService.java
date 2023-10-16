@@ -16,6 +16,7 @@ import codesquad.bookkbookk.jwt.Jwt;
 import codesquad.bookkbookk.jwt.JwtProvider;
 import codesquad.bookkbookk.member.data.entity.Member;
 import codesquad.bookkbookk.member.repository.MemberRepository;
+import codesquad.bookkbookk.oauth.data.dto.OAuthCode;
 import codesquad.bookkbookk.oauth.data.provider.OAuthProvider;
 import codesquad.bookkbookk.oauth.data.dto.LoginResponse;
 import codesquad.bookkbookk.oauth.data.dto.OAuthTokenResponse;
@@ -31,9 +32,9 @@ public class OAuthService {
     private final JwtProvider jwtProvider;
 
     @Transactional
-    public LoginResponse login(String authCode, String providerName) {
+    public LoginResponse login(OAuthCode oAuthCode, String providerName) {
         OAuthProvider.Property oAuthProperty = oAuthProvider.getProperties().get(providerName);
-        String oAuthToken = requestOAuthToken(oAuthProperty, authCode);
+        String oAuthToken = requestOAuthToken(oAuthProperty, oAuthCode.getOAuthCode());
         Map<String, Object> oAuthUserInfos = requestOAuthUserInfos(oAuthProperty, oAuthToken);
         LoginRequest loginRequest = LoginRequest.of(providerName, oAuthUserInfos);
 
