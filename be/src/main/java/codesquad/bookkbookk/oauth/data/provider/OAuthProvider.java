@@ -1,4 +1,4 @@
-package codesquad.bookkbookk.oauth;
+package codesquad.bookkbookk.oauth.data.provider;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,9 +22,9 @@ public class OAuthProvider {
 
         private final String clientId;
         private final String clientSecret;
-        private final String redirectUri;
-        private final String tokenRequestUri;
-        private final String userInfoRequestUri;
+        private final String redirectUrl;
+        private final String tokenRequestUrl;
+        private final String userInfoRequestUrl;
 
     }
 
