@@ -12,15 +12,15 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import codesquad.bookkbookk.auth.data.dto.LoginRequest;
+import codesquad.bookkbookk.auth.data.dto.LoginResponse;
+import codesquad.bookkbookk.auth.data.dto.OAuthCode;
+import codesquad.bookkbookk.auth.data.dto.OAuthTokenResponse;
+import codesquad.bookkbookk.auth.data.provider.OAuthProvider;
 import codesquad.bookkbookk.jwt.Jwt;
 import codesquad.bookkbookk.jwt.JwtProvider;
 import codesquad.bookkbookk.member.data.entity.Member;
 import codesquad.bookkbookk.member.repository.MemberRepository;
-import codesquad.bookkbookk.auth.data.dto.OAuthCode;
-import codesquad.bookkbookk.auth.data.provider.OAuthProvider;
-import codesquad.bookkbookk.auth.data.dto.LoginResponse;
-import codesquad.bookkbookk.auth.data.dto.OAuthTokenResponse;
-import codesquad.bookkbookk.auth.data.dto.LoginRequest;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -82,7 +82,7 @@ public class OAuthService {
     }
 
     private Map<String, Object> requestOAuthUserInfos(OAuthProvider.Property oAuthProperty,
-                                                    String oAuthToken) {
+                                                      String oAuthToken) {
         return WebClient.create()
                 .get()
                 .uri(oAuthProperty.getUserInfoRequestUrl())

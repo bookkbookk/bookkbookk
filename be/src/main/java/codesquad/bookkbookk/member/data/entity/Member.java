@@ -8,8 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import codesquad.bookkbookk.auth.data.type.LoginType;
 import codesquad.bookkbookk.auth.data.dto.LoginRequest;
+import codesquad.bookkbookk.auth.data.type.LoginType;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
