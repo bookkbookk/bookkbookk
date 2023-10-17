@@ -1,4 +1,3 @@
-import { getMember } from "@api/member/client";
 import StatusIndicator from "@components/common/StatusIndicator/StatusIndicator";
 import Auth from "@pages/Auth";
 import BookClub from "@pages/BookClub";
@@ -7,6 +6,7 @@ import Library from "@pages/Library";
 import Main from "@pages/Main";
 import NotFound from "@pages/NotFound";
 import SignUp from "@pages/SignUp";
+import { getMemberInfo } from "@utils/index";
 import Layout from "layout";
 import { Suspense } from "react";
 import {
@@ -16,25 +16,16 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
-import MemberProvider from "./MemberProvider";
 import ProtectedRoutes from "./ProtectedRoutes";
+import UserProvider from "./UserProvider";
 import { ROUTE_PATH } from "./constants";
 
-// TODO: loader vs MemberProvider 내부에서 query 호출 고민
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
-      loader={async () => {
-        try {
-          const memberInfo = await getMember();
-          return { memberInfo };
-        } catch (error) {
-          console.error(error);
-          return null;
-        }
-      }}
+      loader={getMemberInfo}
       path={ROUTE_PATH.home}
-      element={<MemberProvider />}>
+      element={<UserProvider />}>
       <Route path={ROUTE_PATH.home} element={<Landing />} />
       <Route
         path={ROUTE_PATH.main}
