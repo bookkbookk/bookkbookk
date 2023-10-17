@@ -1,6 +1,6 @@
 import Header from "@components/Landing/Header";
 import Main from "@components/Landing/Main";
-import { Container } from "@components/Landing/index.style";
+import { Container } from "@components/common/common.style";
 import { Navigate } from "react-router-dom";
 import { ROUTE_PATH } from "routes/constants";
 import { useIsLoginValue } from "store/useMember";

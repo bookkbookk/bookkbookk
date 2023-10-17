@@ -1,12 +1,6 @@
 import { styled } from "@mui/material";
 import { Link } from "react-router-dom";
 
-export const Container = styled("div")`
-  display: flex;
-  flex-direction: column;
-  width: 60vw;
-`;
-
 export const Header = styled("header")`
   display: flex;
   color: ${({ theme }) => theme.palette.primary.contrastText};
