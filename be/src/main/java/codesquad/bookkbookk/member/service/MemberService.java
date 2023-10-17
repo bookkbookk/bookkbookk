@@ -24,10 +24,8 @@ public class MemberService {
 
     @Transactional
     public void updateNickname(Long memberId, UpdateNicknameRequest updateNicknameRequest) {
-        String newNickname = updateNicknameRequest.getNickname();
-
         Member member = memberRepository.findById(memberId).orElseThrow(RuntimeException::new);
-        member.updateNickname(newNickname);
+        member.updateNickname(updateNicknameRequest);
     }
 
 }

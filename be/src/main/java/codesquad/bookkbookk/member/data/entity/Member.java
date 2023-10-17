@@ -10,6 +10,7 @@ import javax.persistence.Id;
 
 import codesquad.bookkbookk.auth.data.dto.LoginRequest;
 import codesquad.bookkbookk.auth.data.type.LoginType;
+import codesquad.bookkbookk.member.data.dto.UpdateNicknameRequest;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,8 +43,8 @@ public class Member {
         this.profileImgUrl = profileImgUrl;
     }
 
-    public void updateNickname(String nickname) {
-        this.nickname = nickname;
+    public void updateNickname(UpdateNicknameRequest updateNicknameRequest) {
+        this.nickname = updateNicknameRequest.getNickname();
     }
 
     public static Member from(LoginRequest loginRequest) {
