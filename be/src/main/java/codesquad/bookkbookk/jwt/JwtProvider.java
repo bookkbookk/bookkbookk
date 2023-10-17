@@ -1,12 +1,15 @@
 package codesquad.bookkbookk.jwt;
 
-import java.security.Key;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.crypto.SecretKey;
 
 import org.springframework.stereotype.Component;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +20,7 @@ public class JwtProvider {
 
     private final JwtProperties jwtProperties;
 
-    private Key key;
+    private SecretKey key;
 
     @PostConstruct
     private void setKey() {
@@ -27,26 +30,40 @@ public class JwtProvider {
     public Jwt createJwt(Long memberId) {
         return Jwt.builder()
                 .accessToken(createAccessToken(memberId))
-                .refreshToken(createRefreshToken(memberId))
+                .refreshToken(createRefreshToken())
                 .build();
     }
 
     public String createAccessToken(Long memberId) {
         Date expiration = new Date(System.currentTimeMillis() + jwtProperties.getAccessTokenExpiration());
+        Map<String, Object> claims = Map.of("memberId", memberId);
 
-        return createToken(memberId, expiration);
+        return createToken(claims, expiration);
     }
 
-    public String createRefreshToken(Long memberId) {
+    public String createRefreshToken() {
         Date expiration = new Date(System.currentTimeMillis() + jwtProperties.getRefreshTokenExpiration());
+        Map<String, Object> claims = Collections.emptyMap();
 
-        return createToken(memberId, expiration);
+        return createToken(claims, expiration);
     }
 
-    private String createToken(Long memberId, Date expiration) {
+    public Long extractMemberId(String token) {
+        return getPayloads(token).get("memberId", Long.class);
+    }
+
+    public Claims getPayloads(String token) {
+        return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
+    private String createToken(Map<String, Object> claims, Date expiration) {
         return Jwts.builder()
                 .expiration(expiration)
-                .claim("memberId", memberId)
+                .claims(claims)
                 .signWith(key)
                 .compact();
     }
