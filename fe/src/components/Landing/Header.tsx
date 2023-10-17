@@ -1,3 +1,4 @@
+import { GOOGLE_OAUTH_PATH } from "@api/auth/constants";
 import { ReactComponent as GoogleIcon } from "@assets/icons/google.svg";
 import { ReactComponent as LogoIcon } from "@assets/images/brand-circle.svg";
 import ThemeSwitch from "@components/common/ThemeSwitch/ThemeSwitch";
@@ -29,7 +30,7 @@ function Logo() {
 
 function GoogleLoginButton() {
   return (
-    <Link to={ROUTE_PATH.auth}>
+    <Link to={GOOGLE_OAUTH_PATH}>
       <Button variant="outlined" color="inherit">
         <GoogleIcon />
         <S.ButtonText>구글로 로그인하기</S.ButtonText>

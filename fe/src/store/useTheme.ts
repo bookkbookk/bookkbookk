@@ -22,7 +22,7 @@ const useThemeModeAtom = atom(
   }
 );
 
-const useThemeModeValue = () => useAtomValue(themeModeAtom);
+const useThemeModeValue = () => useAtomValue(useThemeModeAtom);
 const useToggleThemeMode = () => useSetAtom(useThemeModeAtom);
 const useThemeMode = () => useAtom(useThemeModeAtom);
 

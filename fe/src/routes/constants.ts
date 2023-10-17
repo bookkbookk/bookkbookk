@@ -1,9 +1,10 @@
 export const ROUTE_PATH = {
   home: "/",
+  landing: "/landing",
   main: "/main",
-  library: "/main/library",
-  bookClub: "/main/book-club",
+  library: "library",
+  bookClub: "book-club",
+  auth: "/auth/:provider",
   signUp: "/sign-up",
-  auth: "/auth",
-  notFound: "/404",
+  notFound: "404",
 };
