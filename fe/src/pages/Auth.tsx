@@ -4,8 +4,11 @@ import { ACCESS_TOKEN_KEY, MESSAGE, REFRESH_TOKEN_KEY } from "@constant/index";
 import { useEffect } from "react";
 import { Navigate, useParams, useSearchParams } from "react-router-dom";
 import { ROUTE_PATH } from "routes/constants";
+import { useSetIsLogin } from "store/useMember";
 
 export default function Auth() {
+  const setIsLogin = useSetIsLogin();
+
   const { provider } = useParams();
   const [searchParams] = useSearchParams();
   const OAuthCode = searchParams.get("code");
@@ -24,6 +27,7 @@ export default function Auth() {
     if (isSuccess) {
       localStorage.setItem(ACCESS_TOKEN_KEY, authInfo.data.accessToken);
       localStorage.setItem(REFRESH_TOKEN_KEY, authInfo.data.refreshToken);
+      setIsLogin(true);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

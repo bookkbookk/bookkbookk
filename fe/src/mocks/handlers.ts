@@ -5,14 +5,10 @@ import { MEMBER_INFO } from "./data";
 
 const TOKEN_EXPIRATION = {
   accessToken: false,
-  refreshToken: true,
+  refreshToken: false,
 };
 
 export const handlers = [
-  rest.get("/api/endpoint", (req, res, ctx) => {
-    return res(ctx.json({ data: "data" }));
-  }),
-
   rest.get(MEMBER_API_PATH.member, (req, res, ctx) => {
     const Authorization = req.headers.get("Authorization");
 
@@ -20,7 +16,7 @@ export const handlers = [
       return res(
         ctx.status(401),
         ctx.json({
-          message: "잘못된 요청입니다.",
+          message: "Authorization 헤더가 없습니다.",
         })
       );
     }
@@ -37,7 +33,7 @@ export const handlers = [
     return res(ctx.json(MEMBER_INFO));
   }),
 
-  rest.get(AUTH_API_PATH.refresh, async (req, res, ctx) => {
+  rest.post(AUTH_API_PATH.refresh, async (req, res, ctx) => {
     const { refreshToken } = await req.json<{ refreshToken: string }>();
 
     if (!refreshToken) {
@@ -58,7 +54,6 @@ export const handlers = [
       );
     }
 
-    TOKEN_EXPIRATION.accessToken = false;
     return res(
       ctx.status(200),
       ctx.json<{ accessToken: string }>({

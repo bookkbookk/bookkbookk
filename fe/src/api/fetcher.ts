@@ -1,7 +1,6 @@
-import { logout } from "@utils/index";
+import { reissueAccessToken } from "@api/auth/utils";
 import axios from "axios";
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "constant/index";
-import { postRefreshToken } from "./auth/client";
 import { ERROR_CODE } from "./auth/constants";
 
 const { VITE_APP_API_URL } = import.meta.env;
@@ -31,15 +30,19 @@ fetcher.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+    const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
 
     if (
       error.response.status === ERROR_CODE.UNAUTHORIZED &&
-      !originalRequest._retry
+      !originalRequest._retry &&
+      !!refreshToken
     ) {
       originalRequest._retry = true;
 
       try {
-        await reissueAccessToken();
+        const accessToken = await reissueAccessToken();
+        accessToken && localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+
         return fetcher(originalRequest);
       } catch {
         return Promise.reject(error);
@@ -49,18 +52,3 @@ fetcher.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-async function reissueAccessToken() {
-  const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
-
-  if (!refreshToken) {
-    return;
-  }
-
-  try {
-    const { data } = await postRefreshToken(refreshToken);
-    localStorage.setItem(ACCESS_TOKEN_KEY, data.accessToken);
-  } catch (error) {
-    logout();
-  }
-}
