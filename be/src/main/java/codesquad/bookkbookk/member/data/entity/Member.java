@@ -42,6 +42,10 @@ public class Member {
         this.profileImgUrl = profileImgUrl;
     }
 
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
     public static Member from(LoginRequest loginRequest) {
         return Member.builder()
                 .email(loginRequest.getEmail())
