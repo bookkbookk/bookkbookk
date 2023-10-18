@@ -1,5 +1,7 @@
 package codesquad.bookkbookk.member.data.entity;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -7,9 +9,11 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import codesquad.bookkbookk.auth.data.dto.LoginRequest;
 import codesquad.bookkbookk.auth.data.type.LoginType;
+import codesquad.bookkbookk.bookclub.data.entity.MemberBookClub;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,6 +37,8 @@ public class Member {
     private String nickname;
     @Column(name = "profile_img_url", nullable = false)
     private String profileImgUrl;
+    @OneToMany(mappedBy = "member")
+    private List<MemberBookClub> memberBookClub;
 
     @Builder
     private Member(String email, LoginType loginType, String nickname, String profileImgUrl) {
