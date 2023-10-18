@@ -1,8 +1,11 @@
 package codesquad.bookkbookk.bookclub.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.bookkbookk.bookclub.data.dto.CreateBookClubRequest;
 import codesquad.bookkbookk.bookclub.data.dto.CreateBookClubResponse;
+import codesquad.bookkbookk.bookclub.data.dto.ReadBookClubResponse;
 import codesquad.bookkbookk.bookclub.service.BookClubService;
 import codesquad.bookkbookk.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +39,17 @@ public class BookClubController {
         return ResponseEntity.ok()
                 .body(response);
 
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ReadBookClubResponse>> readBookClubs(HttpServletRequest httpServletRequest) {
+        String accessToken = extractAccessToken(httpServletRequest);
+        Long memberId = jwtProvider.extractMemberId(accessToken);
+
+        List<ReadBookClubResponse> response = bookClubService.readBookClubs(memberId);
+
+        return ResponseEntity.ok()
+                .body(response);
     }
 
     private String extractAccessToken(HttpServletRequest request) {
