@@ -11,8 +11,8 @@ export default function SignUp() {
 
   return (
     <Container>
-      <div style={{ width: "100%" }}>
-        <Logo />
+      <div style={{ width: "100%", padding: "2rem 0" }}>
+        <Logo isTitleVisible={false} />
       </div>
       <Title />
       {isSuccess && <SignUpForm {...memberInfo} />}

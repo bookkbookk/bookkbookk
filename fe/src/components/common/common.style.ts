@@ -1,12 +1,9 @@
-import { Badge, styled } from "@mui/material";
+import { Badge, Box, styled } from "@mui/material";
 
-export const Container = styled("div")`
+export const Container = styled(Box)`
+  width: 60vw;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 60vw;
-  height: 100vh;
 `;
 
 export const PlusBadge = styled(Badge)(({ theme }) => ({

@@ -8,7 +8,11 @@ import { MemberInfo } from "./type";
 
 export const loader = () => async () => {
   const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
-  // TODO: enabled 조건을 추가했는데 왜 accessToken 없을 떄도 쿼리가 실행되는지 확인해보기
+
+  if (!accessToken) {
+    return null;
+  }
+
   const query = queryKeys.members.info({ enabled: !!accessToken });
 
   return (

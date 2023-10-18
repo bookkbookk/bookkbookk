@@ -1,6 +1,5 @@
 import { reissueAccessToken } from "@api/auth/utils";
 import { loader as userLoader } from "@api/member/queries";
-import StatusIndicator from "@components/common/StatusIndicator/StatusIndicator";
 import Auth from "@pages/Auth";
 import BookClub from "@pages/BookClub";
 import Landing from "@pages/Landing";
@@ -8,8 +7,7 @@ import Library from "@pages/Library";
 import Main from "@pages/Main";
 import NotFound from "@pages/NotFound";
 import SignUp from "@pages/SignUp";
-import Layout from "layout";
-import { Suspense } from "react";
+import Layout from "layout/Layout";
 import {
   Navigate,
   Outlet,
@@ -27,18 +25,16 @@ export const router = createBrowserRouter(
       loader={reissueAccessToken}
       path={ROUTE_PATH.home}
       element={<Root />}>
-      <Route loader={userLoader} element={<UserProvider />}>
+      <Route
+        path={ROUTE_PATH.home}
+        loader={userLoader}
+        element={<UserProvider />}>
         <Route path={ROUTE_PATH.home} element={<Landing />} />
         <Route
           path={ROUTE_PATH.main}
           element={
             <Layout>
-              <Suspense
-                fallback={
-                  <StatusIndicator status="loading" message="Loading..." />
-                }>
-                <Outlet />
-              </Suspense>
+              <Outlet />
             </Layout>
           }>
           <Route index element={<Main />} />

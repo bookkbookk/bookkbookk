@@ -18,7 +18,6 @@ export const Section = styled("section")`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80vh;
   gap: ${({ theme }) => theme.spacing(6)};
 `;
 
