@@ -11,7 +11,7 @@ export default function Auth() {
 
   const { provider } = useParams();
   const [searchParams] = useSearchParams();
-  const OAuthCode = searchParams.get("code");
+  const authCode = searchParams.get("code");
 
   const {
     data: authInfo,
@@ -20,7 +20,7 @@ export default function Auth() {
     isLoading,
   } = useOAuthLogin({
     provider: provider!,
-    OAuthCode: OAuthCode!,
+    authCode: authCode!,
   });
 
   useEffect(() => {

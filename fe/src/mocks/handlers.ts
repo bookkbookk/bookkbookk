@@ -63,9 +63,9 @@ export const handlers = [
   }),
 
   rest.post(`${AUTH_API_PATH.login}/:provider`, async (req, res, ctx) => {
-    const { OAuthCode } = await req.json<{ OAuthCode: string }>();
+    const { authCode } = await req.json<{ authCode: string }>();
 
-    if (!OAuthCode) {
+    if (!authCode) {
       return res(
         ctx.status(400),
         ctx.json({
@@ -88,6 +88,36 @@ export const handlers = [
         refreshToken:
           "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2OTcxMDMwMDN9.FgoFySrenum985OrDzwwtaEhu1Iz7IVJtz5M6H8lzX8",
         isNewMember: true,
+      })
+    );
+  }),
+
+  rest.patch(MEMBER_API_PATH.member, (req, res, ctx) => {
+    const memberInfo = req.body as FormData;
+
+    if (!memberInfo) {
+      return res(
+        ctx.status(400),
+        ctx.json({
+          message: "잘못된 요청입니다.",
+        })
+      );
+    }
+
+    if ("test" === memberInfo.nickname) {
+      return res(
+        ctx.status(409),
+        ctx.json({
+          errorCode: "E0009",
+          message: "이미 사용중인 닉네임입니다.",
+        })
+      );
+    }
+
+    return res(
+      ctx.status(200),
+      ctx.json({
+        memberInfo,
       })
     );
   }),

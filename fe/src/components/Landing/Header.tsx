@@ -1,11 +1,10 @@
 import { GOOGLE_OAUTH_PATH } from "@api/auth/constants";
 import { ReactComponent as GoogleIcon } from "@assets/icons/google.svg";
-import { ReactComponent as LogoIcon } from "@assets/images/brand-circle.svg";
+import Logo from "@components/common/Logo";
 import ThemeSwitch from "@components/common/ThemeSwitch/ThemeSwitch";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
-import { ROUTE_PATH } from "routes/constants";
-import * as S from "./index.style";
+import * as S from "./Landing.style";
 
 export default function Header() {
   return (
@@ -16,15 +15,6 @@ export default function Header() {
         <GoogleLoginButton />
       </S.Wrapper>
     </S.Header>
-  );
-}
-
-function Logo() {
-  return (
-    <S.LogoContainer to={ROUTE_PATH.main}>
-      <LogoIcon />
-      <S.LogoTitle>북크북크</S.LogoTitle>
-    </S.LogoContainer>
   );
 }
 

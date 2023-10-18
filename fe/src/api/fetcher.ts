@@ -12,6 +12,12 @@ export const fetcher = axios.create({
   },
 });
 
+export const formDataConfig = {
+  headers: {
+    "Content-Type": "multipart/form-data",
+  },
+};
+
 fetcher.interceptors.request.use(
   (config) => {
     const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);

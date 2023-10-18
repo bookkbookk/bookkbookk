@@ -8,11 +8,11 @@ export const postRefreshToken = async (refreshToken: string) => {
   });
 };
 
-export const postLogin = async ({ provider, OAuthCode }: OAuthLoginParams) => {
+export const postLogin = async ({ provider, authCode }: OAuthLoginParams) => {
   return await fetcher.post<Tokens & { isNewMember: boolean }>(
     `${AUTH_API_PATH.login}/${provider}`,
     {
-      OAuthCode,
+      authCode,
     }
   );
 };

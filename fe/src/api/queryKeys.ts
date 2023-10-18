@@ -5,17 +5,17 @@ import { getMember } from "./member/client";
 
 export const queryKeys = createQueryKeyStore({
   members: {
-    info: (enabled?: boolean) => ({
+    info: (option?: { enabled?: boolean }) => ({
       queryKey: ["getMember"],
       queryFn: getMember,
-      enabled,
+      enabled: option?.enabled,
     }),
   },
   auth: {
-    login: ({ provider, OAuthCode }: OAuthLoginParams) => ({
+    login: ({ provider, authCode }: OAuthLoginParams) => ({
       queryKey: ["postLogin"],
-      queryFn: () => postLogin({ provider, OAuthCode }),
-      enabled: !!OAuthCode && !!provider,
+      queryFn: () => postLogin({ provider, authCode }),
+      enabled: !!authCode && !!provider,
     }),
   },
 });

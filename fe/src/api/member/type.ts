@@ -3,3 +3,8 @@ export type Member = {
   nickname: string;
   profileImgUrl: string;
 };
+
+export type MemberInfo = {
+  nickname?: string;
+  profileImage?: File;
+};

@@ -1,7 +1,7 @@
 import ErrorImage from "@assets/images/error.svg";
 import LoadingImage from "@assets/images/loading.gif";
 import { Button } from "@mui/material";
-import { Message, Wrapper } from "./index.style";
+import * as S from "./StatusIndicator.style";
 
 export default function StatusIndicator({
   status,
@@ -13,15 +13,15 @@ export default function StatusIndicator({
   const indicatorImage = getIndicatorImage(status);
 
   return (
-    <Wrapper>
+    <S.Wrapper>
       {indicatorImage}
-      <Message>{message}</Message>
+      <S.Message>{message}</S.Message>
       {status === "error" && (
         <Button variant="contained" color="primary" href={window.location.href}>
           다시 시도하기
         </Button>
       )}
-    </Wrapper>
+    </S.Wrapper>
   );
 }
 

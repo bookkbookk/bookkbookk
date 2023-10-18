@@ -5,5 +5,5 @@ export type Tokens = {
 
 export type OAuthLoginParams = {
   provider: string;
-  OAuthCode: string;
+  authCode: string;
 };
