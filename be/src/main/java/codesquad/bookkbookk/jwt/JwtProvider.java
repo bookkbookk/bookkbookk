@@ -6,7 +6,9 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
+import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
@@ -48,16 +50,19 @@ public class JwtProvider {
         return createToken(claims, expiration);
     }
 
-    public Long extractMemberId(String token) {
-        return getPayloads(token).get("memberId", Long.class);
+    public String getToken(HttpServletRequest request) {
+        String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
+
+        return authorization.substring("Bearer ".length());
     }
 
-    public Claims getPayloads(String token) {
+    public Long extractMemberId(String accessToken) {
         return Jwts.parser()
                 .verifyWith(key)
                 .build()
-                .parseSignedClaims(token)
-                .getPayload();
+                .parseSignedClaims(accessToken)
+                .getPayload()
+                .get("memberId", Long.class);
     }
 
     private String createToken(Map<String, Object> claims, Date expiration) {
