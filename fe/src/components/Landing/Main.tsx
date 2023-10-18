@@ -2,7 +2,7 @@ import Brand from "@assets/images/brand.svg";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import { ROUTE_PATH } from "routes/constants";
-import * as S from "./index.style";
+import * as S from "./Landing.style";
 
 // TODO: 페이지 뷰 작업 완료되면 기능 단위로 서비스 소개
 export default function Main() {
