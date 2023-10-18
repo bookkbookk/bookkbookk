@@ -4,6 +4,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import codesquad.bookkbookk.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.image.S3ImageUploader;
 import codesquad.bookkbookk.member.data.dto.MemberResponse;
 import codesquad.bookkbookk.member.data.dto.UpdateProfileRequest;
@@ -19,14 +20,14 @@ public class MemberService {
     private final S3ImageUploader s3ImageUploader;
 
     public MemberResponse readMember(Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(RuntimeException::new);
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
 
         return MemberResponse.from(member);
     }
 
     @Transactional
     public void updateProfile(Long memberId, UpdateProfileRequest updateProfileRequest) {
-        Member member = memberRepository.findById(memberId).orElseThrow(RuntimeException::new);
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
 
         String imageUrl = s3ImageUploader.upload(updateProfileRequest.getProfileImage()).toString();
 
