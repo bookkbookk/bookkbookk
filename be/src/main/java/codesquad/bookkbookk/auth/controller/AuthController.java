@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import codesquad.bookkbookk.auth.data.dto.AuthCode;
 import codesquad.bookkbookk.auth.data.dto.LoginResponse;
-import codesquad.bookkbookk.auth.data.dto.OAuthCode;
 import codesquad.bookkbookk.auth.service.OAuthService;
 import lombok.RequiredArgsConstructor;
 
@@ -20,9 +20,9 @@ public class AuthController {
     private final OAuthService oAuthService;
 
     @PostMapping("/login/{providerName}")
-    public ResponseEntity<LoginResponse> login(@RequestBody OAuthCode oAuthCode,
+    public ResponseEntity<LoginResponse> login(@RequestBody AuthCode authCode,
                                                @PathVariable String providerName) {
-        LoginResponse loginResponse = oAuthService.login(oAuthCode, providerName);
+        LoginResponse loginResponse = oAuthService.login(authCode, providerName);
 
         return ResponseEntity.ok()
                 .body(loginResponse);

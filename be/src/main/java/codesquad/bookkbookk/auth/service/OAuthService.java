@@ -14,7 +14,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import codesquad.bookkbookk.auth.data.dto.LoginRequest;
 import codesquad.bookkbookk.auth.data.dto.LoginResponse;
-import codesquad.bookkbookk.auth.data.dto.OAuthCode;
+import codesquad.bookkbookk.auth.data.dto.AuthCode;
 import codesquad.bookkbookk.auth.data.dto.OAuthTokenResponse;
 import codesquad.bookkbookk.auth.data.provider.OAuthProvider;
 import codesquad.bookkbookk.jwt.Jwt;
@@ -32,9 +32,9 @@ public class OAuthService {
     private final JwtProvider jwtProvider;
 
     @Transactional
-    public LoginResponse login(OAuthCode oAuthCode, String providerName) {
+    public LoginResponse login(AuthCode authCode, String providerName) {
         OAuthProvider.Property oAuthProperty = oAuthProvider.getProperties().get(providerName);
-        String oAuthToken = requestOAuthToken(oAuthProperty, oAuthCode.getDecodedOAuthCode());
+        String oAuthToken = requestOAuthToken(oAuthProperty, authCode.getDecodedOAuthCode());
         Map<String, Object> oAuthUserInfos = requestOAuthUserInfos(oAuthProperty, oAuthToken);
         LoginRequest loginRequest = LoginRequest.of(providerName, oAuthUserInfos);
 
