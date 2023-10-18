@@ -9,18 +9,18 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OAuthCode {
+public class AuthCode {
 
-    @JsonProperty("oAuthCode")
-    private String oAuthCode;
+    @JsonProperty("authCode")
+    private String authCode;
 
     @Builder
-    private OAuthCode(String oAuthCode) {
-        this.oAuthCode = oAuthCode;
+    private AuthCode(String oAuthCode) {
+        this.authCode = authCode;
     }
 
     public String getDecodedOAuthCode() {
-        return URLDecoder.decode(oAuthCode);
+        return URLDecoder.decode(authCode);
     }
 
 }
