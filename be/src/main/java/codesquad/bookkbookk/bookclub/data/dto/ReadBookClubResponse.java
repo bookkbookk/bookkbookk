@@ -10,10 +10,10 @@ import lombok.Getter;
 @Getter
 public class ReadBookClubResponse {
 
-    private Long id;
-    private Long creatorId;
-    private String name;
-    private String profileImgUrl;
+    private final Long id;
+    private final Long creatorId;
+    private final String name;
+    private final String profileImgUrl;
 
     @Builder
     private ReadBookClubResponse(Long id, Long creatorId, String name, String profileImgUrl) {
