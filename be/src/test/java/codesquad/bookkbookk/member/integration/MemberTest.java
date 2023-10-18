@@ -10,6 +10,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import codesquad.bookkbookk.IntegrationTest;
+import codesquad.bookkbookk.error.exception.ApiException;
+import codesquad.bookkbookk.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.jwt.JwtProvider;
 import codesquad.bookkbookk.member.data.dto.MemberResponse;
 import codesquad.bookkbookk.member.data.entity.Member;
@@ -48,6 +50,31 @@ public class MemberTest extends IntegrationTest {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             softAssertions.assertThat(response.jsonPath().getObject("", MemberResponse.class).getId())
                     .isEqualTo(member.getId());
+        });
+
+    }
+
+    @Test
+    @DisplayName("저장되어 있지 않은 멤버를 조회하면 예외를 던진다.")
+    void readUnsavedMember() {
+        //given
+        String accessToken = jwtProvider.createAccessToken(1L);
+        MemberNotFoundException exception = new MemberNotFoundException();
+
+        //when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .when()
+                .get("/api/members")
+                .then().log().all()
+                .extract();
+
+        //then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(exception.getCode());
+            softAssertions.assertThat(response.jsonPath().getObject("", ApiException.class).getMessage())
+                    .isEqualTo(exception.getMessage());
         });
 
     }
