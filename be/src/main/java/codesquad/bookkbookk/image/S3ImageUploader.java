@@ -23,18 +23,18 @@ public class S3ImageUploader {
     private String bucket;
 
     public URL upload(MultipartFile multipartFile) {
-        String uuid = UUID.randomUUID().toString();
+        String key = "profile-image/" + UUID.randomUUID();
 
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(multipartFile.getSize());
         metadata.setContentType(multipartFile.getContentType());
 
         try {
-            amazonS3.putObject(bucket, uuid, multipartFile.getInputStream(), metadata);
+            amazonS3.putObject(bucket, key, multipartFile.getInputStream(), metadata);
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
-        return amazonS3.getUrl(bucket, uuid);
+        return amazonS3.getUrl(bucket, key);
     }
 
 }
