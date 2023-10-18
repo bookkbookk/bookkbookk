@@ -4,8 +4,9 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import codesquad.bookkbookk.image.S3ImageUploader;
 import codesquad.bookkbookk.member.data.dto.MemberResponse;
-import codesquad.bookkbookk.member.data.dto.UpdateNicknameRequest;
+import codesquad.bookkbookk.member.data.dto.UpdateProfileRequest;
 import codesquad.bookkbookk.member.data.entity.Member;
 import codesquad.bookkbookk.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final S3ImageUploader s3ImageUploader;
 
     public MemberResponse readMember(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(RuntimeException::new);
@@ -23,9 +25,12 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateNickname(Long memberId, UpdateNicknameRequest updateNicknameRequest) {
+    public void updateProfile(Long memberId, UpdateProfileRequest updateProfileRequest) {
         Member member = memberRepository.findById(memberId).orElseThrow(RuntimeException::new);
-        member.updateNickname(updateNicknameRequest);
+
+        String imageUrl = s3ImageUploader.upload(updateProfileRequest.getProfileImage()).toString();
+
+        member.updateProfile(updateProfileRequest.getNickname(), imageUrl);
     }
 
 }
