@@ -26,7 +26,7 @@ class FilterTest {
 
     @Test
     @DisplayName("토큰이 필요한 요청에 토큰을 넣지 않으면 필터가 작동한다.")
-    void requestWOToken() throws Exception {
+    void requestWithOutToken() throws Exception {
         //given
         //when
         ExtractableResponse<Response> response = RestAssured
