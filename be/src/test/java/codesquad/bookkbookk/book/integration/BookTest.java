@@ -50,7 +50,7 @@ public class BookTest extends IntegrationTest {
     private JwtProvider jwtProvider;
 
     @Test
-    @DisplayName("책을 성공적으로 생선한다.")
+    @DisplayName("책을 성공적으로 생성한다.")
     void createBook() throws IOException {
         //given
         Member member = TestDataFactory.createMember();
