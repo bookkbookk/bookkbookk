@@ -58,8 +58,11 @@ public class Member {
                 .build();
     }
 
-    public void updateProfile(String nickname, String profileImgUrl) {
+    public void updateNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public void updateProfileImgUrl(String profileImgUrl){
         this.profileImgUrl = profileImgUrl;
     }
 
