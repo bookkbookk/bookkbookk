@@ -11,9 +11,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-
 import codesquad.bookkbookk.IntegrationTest;
 import codesquad.bookkbookk.bookclub.data.dto.CreateBookClubResponse;
 import codesquad.bookkbookk.bookclub.data.dto.ReadBookClubResponse;
@@ -43,13 +40,10 @@ public class BookClubTest extends IntegrationTest {
     @Autowired
     private JwtProvider jwtProvider;
 
-    @Autowired
-    private ObjectMapper mapper;
     @Test
     @DisplayName("북클럽을 생성한다.")
     void createBookClub() throws IOException {
         //given
-        mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
 
@@ -69,7 +63,7 @@ public class BookClubTest extends IntegrationTest {
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             softAssertions.assertThat(response.jsonPath().getObject("", CreateBookClubResponse.class)
-                            .getBookClubId()).isEqualTo(member.getId());
+                    .getBookClubId()).isEqualTo(member.getId());
         });
     }
 
@@ -83,7 +77,7 @@ public class BookClubTest extends IntegrationTest {
         BookClub bookClub = TestDataFactory.createBookClub();
         bookClubRepository.save(bookClub);
 
-        MemberBookClub memberBookClub = MemberBookClub.of(member, bookClub);
+        MemberBookClub memberBookClub = new MemberBookClub(member, bookClub);
         memberBookClubRepository.save(memberBookClub);
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
