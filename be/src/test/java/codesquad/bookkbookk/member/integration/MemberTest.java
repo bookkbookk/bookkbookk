@@ -46,12 +46,14 @@ public class MemberTest extends IntegrationTest {
                     .get("/api/members")
                 .then().log().all()
                     .extract();
-
+        MemberResponse result = response.jsonPath().getObject("", MemberResponse.class);
         //then
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softAssertions.assertThat(response.jsonPath().getObject("", MemberResponse.class).getId())
-                    .isEqualTo(member.getId());
+            softAssertions.assertThat(result.getId()).isEqualTo(member.getId());
+            softAssertions.assertThat(result.getNickname()).isEqualTo(member.getNickname());
+            softAssertions.assertThat(result.getEmail()).isEqualTo(member.getEmail());
+            softAssertions.assertThat(result.getProfileImgUrl()).isEqualTo(member.getProfileImgUrl());
         });
 
     }
