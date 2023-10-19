@@ -1,6 +1,8 @@
-import Diversity2RoundedIcon from "@mui/icons-material/Diversity2Rounded";
+import { PAGE_TITLE } from "@constant/index";
+import Diversity3RoundedIcon from "@mui/icons-material/Diversity3Rounded";
 import GridViewRoundedIcon from "@mui/icons-material/GridViewRounded";
 import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
+import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import { ROUTE_PATH } from "routes/constants";
 
 export const SIDEBAR = {
@@ -13,25 +15,30 @@ export const HEADER = {
 };
 
 export type NavigationItem = {
-  title: string;
+  label: string;
   path: string;
   icon: React.ReactElement;
 };
 
 export const NAVIGATION_CONFIG = [
   {
-    title: "메인 main",
+    label: PAGE_TITLE[ROUTE_PATH.main].english,
     path: ROUTE_PATH.main,
     icon: <GridViewRoundedIcon />,
   },
   {
-    title: "서재 library",
+    label: PAGE_TITLE[ROUTE_PATH.library].english,
     path: ROUTE_PATH.library,
     icon: <MenuBookRoundedIcon />,
   },
   {
-    title: "북클럽 bookClub",
+    label: PAGE_TITLE[ROUTE_PATH.bookClub].english,
     path: ROUTE_PATH.bookClub,
-    icon: <Diversity2RoundedIcon />,
+    icon: <Diversity3RoundedIcon />,
+  },
+  {
+    label: PAGE_TITLE[ROUTE_PATH.myPage].english,
+    path: ROUTE_PATH.myPage,
+    icon: <SettingsRoundedIcon />,
   },
 ];

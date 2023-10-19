@@ -11,7 +11,20 @@ export const MESSAGE = {
 };
 
 export const PAGE_TITLE = {
-  [ROUTE_PATH.main]: "메인",
-  [ROUTE_PATH.library]: "서재",
-  [ROUTE_PATH.bookClub]: "북클럽",
+  [ROUTE_PATH.main]: {
+    korean: "메인",
+    english: "Main",
+  },
+  [ROUTE_PATH.library]: {
+    korean: "서재",
+    english: "Library",
+  },
+  [ROUTE_PATH.bookClub]: {
+    korean: "북클럽",
+    english: "BookClub",
+  },
+  [ROUTE_PATH.myPage]: {
+    korean: "마이페이지",
+    english: "MyPage",
+  },
 };

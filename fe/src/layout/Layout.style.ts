@@ -64,7 +64,6 @@ export const AppBar = styled(MuiAppBar, {
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
-    marginLeft: SIDEBAR.width,
     width: `calc(100% - ${SIDEBAR.width}px)`,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
@@ -74,9 +73,11 @@ export const AppBar = styled(MuiAppBar, {
 }));
 
 export const Main = styled(Box)`
-  flex-grow: 1;
+  height: 100vh;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   py: ${HEADER.mobile + 8}px;
 `;
 
@@ -85,13 +86,12 @@ type ListItemButtonProps = React.ComponentPropsWithRef<
 > & {
   component: React.ElementType;
   to: string;
-  isOpen: boolean;
   selected?: boolean;
 };
 
 // TODO: 매직넘버 제거
 export const ListItemButton = styled(MuiListItemButton, {
-  shouldForwardProp: (prop) => prop !== "selected" && prop !== "isOpen",
+  shouldForwardProp: (prop) => prop !== "selected",
 })<ListItemButtonProps>(({ theme, selected }) => ({
   minHeight: 48,
   paddingLeft: theme.spacing(2.5),

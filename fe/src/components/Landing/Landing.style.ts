@@ -45,12 +45,6 @@ export const LogoTitle = styled("h1")`
   padding-left: ${({ theme }) => theme.spacing(0.5)};
 `;
 
-export const Wrapper = styled("div")`
-  display: flex;
-  color: ${({ theme }) => theme.palette.text.primary};
-  gap: ${({ theme }) => theme.spacing(2)};
-`;
-
 export const ButtonText = styled("span")`
   color: ${({ theme }) => theme.palette.text.primary};
   padding-left: ${({ theme }) => theme.spacing(1)};

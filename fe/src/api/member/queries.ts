@@ -37,7 +37,9 @@ export const usePatchMemberInfo = ({
         queryClient.invalidateQueries(queryKeys.members.info());
         onSuccessCallback();
       },
-      onError: (error) => {
+      // TODO: error type 정의
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      onError: (error: any) => {
         if (error.response.status === 409) {
           return enqueueSnackbar(MESSAGE.NICKNAME_DUPLICATED, {
             variant: "error",

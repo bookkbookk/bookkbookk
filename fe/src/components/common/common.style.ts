@@ -6,6 +6,12 @@ export const Container = styled(Box)`
   flex-direction: column;
 `;
 
+export const Wrapper = styled("div")`
+  display: flex;
+  color: ${({ theme }) => theme.palette.text.primary};
+  gap: ${({ theme }) => theme.spacing(2)};
+`;
+
 export const PlusBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
     bottom: 20,

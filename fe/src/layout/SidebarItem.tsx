@@ -5,26 +5,16 @@ import { Link, useLocation } from "react-router-dom";
 import * as S from "./Layout.style";
 import { NavigationItem } from "./constants";
 
-export function SidebarItem({
-  isOpen,
-  path,
-  title,
-  icon,
-}: {
-  isOpen: boolean;
-} & NavigationItem) {
+export function SidebarItem({ item }: { item: NavigationItem }) {
+  const { path, label, icon } = item;
   const { pathname } = useLocation();
   const isSelected = pathname === path;
 
   return (
     <ListItem disablePadding>
-      <S.ListItemButton
-        component={Link}
-        to={path}
-        selected={isSelected}
-        isOpen={isOpen}>
+      <S.ListItemButton component={Link} to={path} selected={isSelected}>
         <ListItemIcon>{icon}</ListItemIcon>
-        <ListItemText primary={title} />
+        <ListItemText primary={label} />
       </S.ListItemButton>
     </ListItem>
   );

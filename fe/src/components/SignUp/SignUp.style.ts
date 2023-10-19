@@ -27,10 +27,9 @@ export const Wrapper = styled("div")`
   align-items: center;
   width: 100%;
   gap: 3rem;
-  padding: 2rem 0;
 
   .submit-button {
-    margin-top: 5rem;
+    margin-top: 2rem;
     width: 100;
     align-self: flex-end;
   }
