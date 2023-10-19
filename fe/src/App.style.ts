@@ -1,10 +1,9 @@
-import { styled } from "@mui/material";
+import { Box, styled } from "@mui/material";
 
-export const App = styled("div")`
-  width: 100vw;
-  margin: auto;
+export const App = styled(Box)`
   display: flex;
   justify-content: center;
+  align-items: center;
 `;
 
 export const ModalRoot = styled("div")``;

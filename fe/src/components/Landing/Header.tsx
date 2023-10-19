@@ -1,39 +1,17 @@
-import { ReactComponent as GoogleIcon } from "@assets/icons/google.svg";
-import { ReactComponent as LogoIcon } from "@assets/images/brand-circle.svg";
+import Logo from "@components/common/Logo";
 import ThemeSwitch from "@components/common/ThemeSwitch/ThemeSwitch";
-import { Button } from "@mui/material";
-import { Link } from "react-router-dom";
-import { ROUTE_PATH } from "routes/constants";
-import * as S from "./index.style";
+import { Wrapper } from "@components/common/common.style";
+import { GoogleLoginButton } from "../common/GoogleLoginButton";
+import * as S from "./Landing.style";
 
 export default function Header() {
   return (
     <S.Header>
       <Logo />
-      <S.Wrapper>
+      <Wrapper>
         <ThemeSwitch />
         <GoogleLoginButton />
-      </S.Wrapper>
+      </Wrapper>
     </S.Header>
-  );
-}
-
-function Logo() {
-  return (
-    <S.LogoContainer to={ROUTE_PATH.main}>
-      <LogoIcon />
-      <S.LogoTitle>북크북크</S.LogoTitle>
-    </S.LogoContainer>
-  );
-}
-
-function GoogleLoginButton() {
-  return (
-    <Link to={ROUTE_PATH.auth}>
-      <Button variant="outlined" color="inherit">
-        <GoogleIcon />
-        <S.ButtonText>구글로 로그인하기</S.ButtonText>
-      </Button>
-    </Link>
   );
 }
