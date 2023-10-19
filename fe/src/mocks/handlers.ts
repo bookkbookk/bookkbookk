@@ -104,15 +104,15 @@ export const handlers = [
       );
     }
 
-    if ("test" === memberInfo.nickname) {
-      return res(
-        ctx.status(409),
-        ctx.json({
-          errorCode: "E0009",
-          message: "이미 사용중인 닉네임입니다.",
-        })
-      );
-    }
+    // if ("test" === memberInfo.nickname) {
+    //   return res(
+    //     ctx.status(409),
+    //     ctx.json({
+    //       errorCode: "E0009",
+    //       message: "이미 사용중인 닉네임입니다.",
+    //     })
+    //   );
+    // }
 
     return res(
       ctx.status(200),
