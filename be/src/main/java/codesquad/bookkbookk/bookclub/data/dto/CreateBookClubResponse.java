@@ -10,12 +10,8 @@ public class CreateBookClubResponse {
 
     private Long bookClubId;
 
-    private CreateBookClubResponse(Long bookClubId) {
+    public CreateBookClubResponse(Long bookClubId) {
         this.bookClubId = bookClubId;
-    }
-
-    public static CreateBookClubResponse from(Long bookClubId) {
-        return new CreateBookClubResponse(bookClubId);
     }
 
 }

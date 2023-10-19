@@ -30,13 +30,9 @@ public class MemberBookClub {
     @JoinColumn(name = "book_club_id")
     private BookClub bookClub;
 
-    private MemberBookClub(Member member, BookClub bookClub) {
+    public MemberBookClub(Member member, BookClub bookClub) {
         this.member = member;
         this.bookClub = bookClub;
-    }
-
-    public static MemberBookClub of(Member member, BookClub bookClub) {
-        return new MemberBookClub(member, bookClub);
     }
 
 }

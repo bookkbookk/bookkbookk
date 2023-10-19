@@ -28,15 +28,19 @@ public class BookClubService {
     public CreateBookClubResponse createBookClub(Long memberId, CreateBookClubRequest request) {
         String profileImgUrl = s3ImageUploader.upload(request.getProfileImage()).toString();
 
-        BookClub bookClub = BookClub.from(memberId, request.getName(), profileImgUrl);
+        BookClub bookClub = BookClub.builder()
+                .creatorId(memberId)
+                .name(request.getName())
+                .profileImgUrl(profileImgUrl)
+                .build();
         bookClubRepository.save(bookClub);
 
         Member member = memberRepository.findById(memberId).orElseThrow();
-        MemberBookClub memberBookClub = MemberBookClub.of(member, bookClub);
+        MemberBookClub memberBookClub = new MemberBookClub(member, bookClub);
 
         memberBookClubRepository.save(memberBookClub);
 
-        return CreateBookClubResponse.from(bookClub.getId());
+        return new CreateBookClubResponse(bookClub.getId());
 
     }
 

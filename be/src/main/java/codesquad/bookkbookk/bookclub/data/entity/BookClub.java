@@ -40,12 +40,4 @@ public class BookClub {
         this.profileImgUrl = profileImgUrl;
     }
 
-    public static BookClub from(Long creatorId, String name, String profileImgUrl){
-        return BookClub.builder()
-                .creatorId(creatorId)
-                .name(name)
-                .profileImgUrl(profileImgUrl)
-                .build();
-    }
-
 }

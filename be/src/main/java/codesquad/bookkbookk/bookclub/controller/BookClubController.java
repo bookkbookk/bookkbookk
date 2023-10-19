@@ -40,7 +40,6 @@ public class BookClubController {
                 .body(response);
 
     }
-
     @GetMapping
     public ResponseEntity<List<ReadBookClubResponse>> readBookClubs(HttpServletRequest httpServletRequest) {
         String accessToken = extractAccessToken(httpServletRequest);
