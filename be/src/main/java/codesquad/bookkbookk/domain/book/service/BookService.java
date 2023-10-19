@@ -2,6 +2,7 @@ package codesquad.bookkbookk.domain.book.service;
 
 import org.springframework.stereotype.Service;
 
+import codesquad.bookkbookk.common.error.exception.BookClubNotFoundException;
 import codesquad.bookkbookk.common.error.exception.MemberNotInBookClubException;
 import codesquad.bookkbookk.domain.book.data.dto.CreateBookRequest;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
@@ -31,7 +32,7 @@ public class BookService {
         Book book = Book.from(request);
         bookRepository.save(book);
 
-        BookClub bookClub = bookClubRepository.findById(memberId).orElseThrow();
+        BookClub bookClub = bookClubRepository.findById(memberId).orElseThrow(BookClubNotFoundException::new);
         BookClubBook bookClubBook = new BookClubBook(book, bookClub);
 
         bookClubBookRepository.save(bookClubBook);

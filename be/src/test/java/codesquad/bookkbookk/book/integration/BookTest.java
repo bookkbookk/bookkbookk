@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import codesquad.bookkbookk.IntegrationTest;
+import codesquad.bookkbookk.common.error.exception.BookNotFoundException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.domain.book.data.dto.CreateBookRequest;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
@@ -85,7 +86,7 @@ public class BookTest extends IntegrationTest {
                 .extract();
 
         //then
-        Book expectedBook = bookRepository.findById(createBookRequest.getId()).orElseThrow();
+        Book expectedBook = bookRepository.findById(createBookRequest.getId()).orElseThrow(BookNotFoundException::new);
         BookClubBook expectedBookClubBook = bookClubBookRepository.findById(1L).orElseThrow();
 
         SoftAssertions.assertSoftly(softAssertions -> {
