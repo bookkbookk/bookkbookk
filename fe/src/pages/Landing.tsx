@@ -1,6 +1,6 @@
 import Header from "@components/Landing/Header";
 import Main from "@components/Landing/Main";
-import { Container } from "@components/common/common.style";
+import { Box } from "@mui/material";
 import { Navigate } from "react-router-dom";
 import { ROUTE_PATH } from "routes/constants";
 import { useIsLoginValue } from "store/useMember";
@@ -13,9 +13,9 @@ export default function Landing() {
   }
 
   return (
-    <Container>
+    <Box>
       <Header />
       <Main />
-    </Container>
+    </Box>
   );
 }

@@ -3,7 +3,7 @@ import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Drawer from "@mui/material/Drawer";
 import MuiListItemButton from "@mui/material/ListItemButton";
 import { CSSObject, Theme, alpha, styled } from "@mui/material/styles";
-import { HEADER, SIDEBAR } from "./constants";
+import { SIDEBAR } from "./constants";
 
 type AppBarProps = MuiAppBarProps & {
   open?: boolean;
@@ -72,15 +72,6 @@ export const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-export const Main = styled(Box)`
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  py: ${HEADER.mobile + 8}px;
-`;
-
 type ListItemButtonProps = React.ComponentPropsWithRef<
   typeof MuiListItemButton
 > & {
@@ -110,3 +101,16 @@ export const ListItemButton = styled(MuiListItemButton, {
     },
   }),
 }));
+
+export const Main = styled(Box)`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+`;
+
+export const Content = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+`;

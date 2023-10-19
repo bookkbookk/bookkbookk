@@ -1,19 +1,28 @@
 import { SignUpForm } from "@components/SignUp/SignUpForm";
-import { Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { useMemberValue } from "store/useMember";
 
 export default function MyPage() {
   const memberInfo = useMemberValue();
 
+  // TODO: 마이페이지 기능별로 컴포넌트 분리
   return (
-    <div>
-      <Typography variant="h3">프로필 수정</Typography>
-      {memberInfo && (
-        <SignUpForm
-          profileImgUrl={memberInfo.profileImgUrl}
-          nickname={memberInfo.nickname}
-        />
-      )}
-    </div>
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}>
+      <div>
+        {memberInfo && (
+          <SignUpForm
+            profileImgUrl={memberInfo.profileImgUrl}
+            nickname={memberInfo.nickname}
+          />
+        )}
+      </div>
+    </Box>
   );
 }

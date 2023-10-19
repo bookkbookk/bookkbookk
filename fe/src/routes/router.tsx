@@ -1,5 +1,6 @@
 import { reissueAccessToken } from "@api/auth/utils";
 import { loader as userLoader } from "@api/member/queries";
+import StatusIndicator from "@components/common/StatusIndicator/StatusIndicator";
 import Auth from "@pages/Auth";
 import BookClub from "@pages/BookClub";
 import Landing from "@pages/Landing";
@@ -9,6 +10,7 @@ import MyPage from "@pages/MyPage";
 import NotFound from "@pages/NotFound";
 import SignUp from "@pages/SignUp";
 import Layout from "layout/Layout";
+import { Suspense } from "react";
 import {
   Navigate,
   Outlet,
@@ -35,7 +37,12 @@ export const router = createBrowserRouter(
           path={ROUTE_PATH.main}
           element={
             <Layout>
-              <Outlet />
+              <Suspense
+                fallback={
+                  <StatusIndicator status="loading" message="로딩중.." />
+                }>
+                <Outlet />
+              </Suspense>
             </Layout>
           }>
           <Route index element={<Main />} />
