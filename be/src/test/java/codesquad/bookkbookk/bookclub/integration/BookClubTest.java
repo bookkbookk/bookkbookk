@@ -12,15 +12,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import codesquad.bookkbookk.IntegrationTest;
-import codesquad.bookkbookk.bookclub.data.dto.CreateBookClubResponse;
-import codesquad.bookkbookk.bookclub.data.dto.ReadBookClubResponse;
-import codesquad.bookkbookk.bookclub.data.entity.BookClub;
-import codesquad.bookkbookk.bookclub.data.entity.MemberBookClub;
-import codesquad.bookkbookk.bookclub.repository.BookClubRepository;
-import codesquad.bookkbookk.bookclub.repository.MemberBookClubRepository;
-import codesquad.bookkbookk.jwt.JwtProvider;
-import codesquad.bookkbookk.member.data.entity.Member;
-import codesquad.bookkbookk.member.repository.MemberRepository;
+import codesquad.bookkbookk.domain.bookclub.data.dto.CreateBookClubResponse;
+import codesquad.bookkbookk.domain.bookclub.data.dto.ReadBookClubResponse;
+import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
+import codesquad.bookkbookk.domain.bookclub.data.entity.MemberBookClub;
+import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
+import codesquad.bookkbookk.domain.bookclub.repository.MemberBookClubRepository;
+import codesquad.bookkbookk.common.jwt.JwtProvider;
+import codesquad.bookkbookk.domain.member.data.entity.Member;
+import codesquad.bookkbookk.domain.member.repository.MemberRepository;
 import codesquad.bookkbookk.util.TestDataFactory;
 
 import io.restassured.RestAssured;

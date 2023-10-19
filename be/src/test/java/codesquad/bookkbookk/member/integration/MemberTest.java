@@ -8,12 +8,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import codesquad.bookkbookk.IntegrationTest;
-import codesquad.bookkbookk.error.exception.ApiException;
-import codesquad.bookkbookk.error.exception.MemberNotFoundException;
-import codesquad.bookkbookk.jwt.JwtProvider;
-import codesquad.bookkbookk.member.data.dto.MemberResponse;
-import codesquad.bookkbookk.member.data.entity.Member;
-import codesquad.bookkbookk.member.repository.MemberRepository;
+import codesquad.bookkbookk.common.error.exception.ApiException;
+import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
+import codesquad.bookkbookk.common.jwt.JwtProvider;
+import codesquad.bookkbookk.domain.member.data.dto.MemberResponse;
+import codesquad.bookkbookk.domain.member.data.entity.Member;
+import codesquad.bookkbookk.domain.member.repository.MemberRepository;
 import codesquad.bookkbookk.util.TestDataFactory;
 
 import io.restassured.RestAssured;

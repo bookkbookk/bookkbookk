@@ -1,8 +1,8 @@
 package codesquad.bookkbookk.util;
 
-import codesquad.bookkbookk.auth.data.type.LoginType;
-import codesquad.bookkbookk.bookclub.data.entity.BookClub;
-import codesquad.bookkbookk.member.data.entity.Member;
+import codesquad.bookkbookk.domain.auth.data.type.LoginType;
+import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
+import codesquad.bookkbookk.domain.member.data.entity.Member;
 
 public class TestDataFactory {
 
