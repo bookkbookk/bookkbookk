@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtFilter implements Filter {
 
     private final String[] getUrlWhiteList = new String[]{};
-    private final String[] postUrlWhiteList = new String[]{"/api/members/login*"};
+    private final String[] postUrlWhiteList = new String[]{"/api/auth/login"};
     private final JwtProvider jwtProvider;
 
     @Override
