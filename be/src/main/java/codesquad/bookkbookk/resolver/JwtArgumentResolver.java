@@ -12,6 +12,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import codesquad.bookkbookk.jwt.JwtProvider;
+
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -32,4 +33,5 @@ public class JwtArgumentResolver implements HandlerMethodArgumentResolver {
         return jwtProvider.extractMemberId(jwtProvider.getToken(
                 Objects.requireNonNull(webRequest.getNativeRequest(HttpServletRequest.class))));
     }
+
 }

@@ -17,12 +17,11 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 public class S3Config {
 
+    private final Regions region = Regions.AP_NORTHEAST_2;
     @Value("${s3.access-key}")
     private String accessKey;
-
     @Value("${s3.secret-key}")
     private String secretKey;
-    private final Regions region = Regions.AP_NORTHEAST_2;
 
     @Bean
     public AmazonS3 amazonS3() {

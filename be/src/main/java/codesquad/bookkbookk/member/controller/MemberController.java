@@ -11,6 +11,7 @@ import codesquad.bookkbookk.member.data.dto.MemberResponse;
 import codesquad.bookkbookk.member.data.dto.UpdateProfileRequest;
 import codesquad.bookkbookk.member.service.MemberService;
 import codesquad.bookkbookk.resolver.MemberId;
+
 import lombok.RequiredArgsConstructor;
 
 @RestController

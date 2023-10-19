@@ -14,6 +14,7 @@ import javax.persistence.OneToMany;
 import codesquad.bookkbookk.auth.data.dto.LoginRequest;
 import codesquad.bookkbookk.auth.data.type.LoginType;
 import codesquad.bookkbookk.bookclub.data.entity.MemberBookClub;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -48,11 +49,6 @@ public class Member {
         this.profileImgUrl = profileImgUrl;
     }
 
-    public void updateProfile(String nickname, String profileImgUrl) {
-        this.nickname = nickname;
-        this.profileImgUrl = profileImgUrl;
-    }
-
     public static Member from(LoginRequest loginRequest) {
         return Member.builder()
                 .email(loginRequest.getEmail())
@@ -60,6 +56,11 @@ public class Member {
                 .nickname(loginRequest.getNickname())
                 .profileImgUrl(loginRequest.getProfileImageUrl())
                 .build();
+    }
+
+    public void updateProfile(String nickname, String profileImgUrl) {
+        this.nickname = nickname;
+        this.profileImgUrl = profileImgUrl;
     }
 
 }

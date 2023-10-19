@@ -10,6 +10,7 @@ import codesquad.bookkbookk.member.data.dto.MemberResponse;
 import codesquad.bookkbookk.member.data.dto.UpdateProfileRequest;
 import codesquad.bookkbookk.member.data.entity.Member;
 import codesquad.bookkbookk.member.repository.MemberRepository;
+
 import lombok.RequiredArgsConstructor;
 
 @Service

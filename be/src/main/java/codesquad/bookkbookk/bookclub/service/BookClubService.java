@@ -14,6 +14,7 @@ import codesquad.bookkbookk.bookclub.repository.MemberBookClubRepository;
 import codesquad.bookkbookk.image.S3ImageUploader;
 import codesquad.bookkbookk.member.data.entity.Member;
 import codesquad.bookkbookk.member.repository.MemberRepository;
+
 import lombok.RequiredArgsConstructor;
 
 @Service

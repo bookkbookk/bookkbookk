@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import codesquad.bookkbookk.bookclub.data.entity.BookClub;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -23,7 +24,7 @@ public class ReadBookClubResponse {
         this.profileImgUrl = profileImgUrl;
     }
 
-    public static ReadBookClubResponse from(BookClub bookClub){
+    public static ReadBookClubResponse from(BookClub bookClub) {
         return ReadBookClubResponse.builder()
                 .id(bookClub.getId())
                 .creatorId(bookClub.getCreatorId())
@@ -32,9 +33,10 @@ public class ReadBookClubResponse {
                 .build();
     }
 
-    public static List<ReadBookClubResponse> from(List<BookClub> bookClubs){
+    public static List<ReadBookClubResponse> from(List<BookClub> bookClubs) {
         return bookClubs.stream()
                 .map(ReadBookClubResponse::from)
                 .collect(Collectors.toUnmodifiableList());
     }
+
 }

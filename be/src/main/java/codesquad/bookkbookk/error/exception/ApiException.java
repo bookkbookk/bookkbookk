@@ -2,7 +2,7 @@ package codesquad.bookkbookk.error.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class ApiException extends RuntimeException{
+public class ApiException extends RuntimeException {
 
     private final int code;
     private final HttpStatus status;

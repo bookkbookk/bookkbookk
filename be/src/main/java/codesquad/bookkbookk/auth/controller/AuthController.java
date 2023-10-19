@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import codesquad.bookkbookk.auth.data.dto.AuthCode;
 import codesquad.bookkbookk.auth.data.dto.LoginResponse;
 import codesquad.bookkbookk.auth.service.OAuthService;
+
 import lombok.RequiredArgsConstructor;
 
 @RestController

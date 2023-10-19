@@ -3,7 +3,6 @@ package codesquad.bookkbookk.error.exception;
 import org.springframework.http.HttpStatus;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
 public class ErrorResponse {

@@ -1,7 +1,5 @@
 package codesquad.bookkbookk.member.integration;
 
-import java.util.Map;
-
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +15,7 @@ import codesquad.bookkbookk.member.data.dto.MemberResponse;
 import codesquad.bookkbookk.member.data.entity.Member;
 import codesquad.bookkbookk.member.repository.MemberRepository;
 import codesquad.bookkbookk.util.TestDataFactory;
+
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -64,11 +63,11 @@ public class MemberTest extends IntegrationTest {
         //when
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .when()
-                .get("/api/members")
+                    .get("/api/members")
                 .then().log().all()
-                .extract();
+                    .extract();
 
         //then
         SoftAssertions.assertSoftly(softAssertions -> {

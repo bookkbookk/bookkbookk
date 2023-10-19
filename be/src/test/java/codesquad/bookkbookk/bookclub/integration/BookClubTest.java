@@ -22,6 +22,7 @@ import codesquad.bookkbookk.jwt.JwtProvider;
 import codesquad.bookkbookk.member.data.entity.Member;
 import codesquad.bookkbookk.member.repository.MemberRepository;
 import codesquad.bookkbookk.util.TestDataFactory;
+
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -52,13 +53,13 @@ public class BookClubTest extends IntegrationTest {
         //when
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
-                .multiPart("profileImage", File.createTempFile("create", "jpeg"), MediaType.IMAGE_JPEG_VALUE)
-                .multiPart("name", "name")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                    .multiPart("profileImage", File.createTempFile("create", "jpeg"), MediaType.IMAGE_JPEG_VALUE)
+                    .multiPart("name", "name")
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .when()
-                .post("/api/book-clubs")
+                    .post("/api/book-clubs")
                 .then().log().all()
-                .extract();
+                    .extract();
 
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -70,7 +71,7 @@ public class BookClubTest extends IntegrationTest {
     @Test
     @DisplayName("현재 로그인 한 유저의 북클럽을 조회한다.")
     void readBookClubs() {
-        //given
+        // given
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
 
@@ -82,17 +83,19 @@ public class BookClubTest extends IntegrationTest {
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
+        // when
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .   header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .when()
-                .get("/api/book-clubs")
+                    .get("/api/book-clubs")
                 .then().log().all()
-                .extract();
+                    .extract();
 
+        // then
+        ReadBookClubResponse result = response.jsonPath().getList("", ReadBookClubResponse.class).get(0);
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            ReadBookClubResponse result = response.jsonPath().getList("", ReadBookClubResponse.class).get(0);
             softAssertions.assertThat(result.getName()).isEqualTo(bookClub.getName());
             softAssertions.assertThat(result.getCreatorId()).isEqualTo(member.getId());
         });

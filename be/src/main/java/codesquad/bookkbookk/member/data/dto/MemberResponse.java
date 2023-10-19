@@ -1,6 +1,7 @@
 package codesquad.bookkbookk.member.data.dto;
 
 import codesquad.bookkbookk.member.data.entity.Member;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

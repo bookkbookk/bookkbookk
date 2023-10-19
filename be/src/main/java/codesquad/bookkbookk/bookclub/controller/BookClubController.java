@@ -16,6 +16,7 @@ import codesquad.bookkbookk.bookclub.data.dto.CreateBookClubResponse;
 import codesquad.bookkbookk.bookclub.data.dto.ReadBookClubResponse;
 import codesquad.bookkbookk.bookclub.service.BookClubService;
 import codesquad.bookkbookk.jwt.JwtProvider;
+
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -40,6 +41,7 @@ public class BookClubController {
                 .body(response);
 
     }
+
     @GetMapping
     public ResponseEntity<List<ReadBookClubResponse>> readBookClubs(HttpServletRequest httpServletRequest) {
         String accessToken = extractAccessToken(httpServletRequest);

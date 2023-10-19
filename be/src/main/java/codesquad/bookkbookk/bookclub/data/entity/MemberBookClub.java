@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import codesquad.bookkbookk.member.data.entity.Member;
+
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

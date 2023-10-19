@@ -27,16 +27,16 @@ class FilterTest {
     @Test
     @DisplayName("토큰이 필요한 요청에 토큰을 넣지 않으면 필터가 작동한다.")
     void requestWithOutToken() throws Exception {
-        //given
-        //when
+        // given
+        // when
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                 .when()
-                .get("api/members")
+                    .get("api/members")
                 .then().log().all()
-                .extract();
+                    .extract();
 
-        //then
+        // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
