@@ -1,4 +1,4 @@
-import ErrorImage from "@assets/images/error.svg";
+import ErrorImage from "@assets/images/error.png";
 import LoadingImage from "@assets/images/loading.gif";
 import { Box, Button } from "@mui/material";
 import { ROUTE_PATH } from "routes/constants";
