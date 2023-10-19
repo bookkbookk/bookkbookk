@@ -29,6 +29,7 @@ export const LeftBox = styled(Box)(({ theme }) => ({
   height: "100%",
   flexDirection: "column",
   justifyContent: "center",
+  alignItems: "center",
   gap: theme.spacing(2),
 }));
 
@@ -38,6 +39,43 @@ export const RightBox = styled(Box)(({ theme }) => ({
   height: "100%",
   backgroundColor: theme.palette.background.paper,
   flexDirection: "column",
+  alignItems: "center",
   justifyContent: "center",
   gap: theme.spacing(2),
 }));
+
+export const BoxContent = styled(Box)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  width: "80%",
+  height: "100%",
+  gap: "2rem",
+  margin: theme.spacing(4),
+}));
+
+export const Section = styled("section")`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing(6)};
+`;
+
+export const SectionContent = styled("div")`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing(2)};
+`;
+
+export const SectionTitle = styled("h2")`
+  color: ${({ theme }) => theme.palette.text.primary};
+  font: ${({ theme }) => theme.typography.h2};
+  font-family: "SOYO Maple Bold";
+`;
+
+export const SectionDescription = styled("p")`
+  font: ${({ theme }) => theme.typography.body1};
+  color: ${({ theme }) => theme.palette.text.secondary};
+  white-space: pre-wrap;
+  text-align: center;
+`;
