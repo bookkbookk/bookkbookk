@@ -16,20 +16,20 @@ export const grey = {
 };
 
 export const secondary = {
-  lighter: "#ffe0b2",
-  light: "#ffb84d",
-  main: "#ff9900",
-  dark: "#f57d00",
-  darker: "#e65200",
+  lighter: "#b3f0fc",
+  light: "#7fe7fb",
+  main: "#42ddf8",
+  dark: "#00ccf0",
+  darker: "#0092a7",
   contrastText: "#FFFFFF",
 };
 
 export const primary = {
-  lighter: "#b5e5d2",
-  light: "#82d4b5",
-  main: "#40C498",
-  dark: "#00aa6d",
-  darker: "#009b62",
+  lighter: "#ffd2d5",
+  light: "#e8817b",
+  main: "#f85d42",
+  dark: "#d64a3a",
+  darker: "#c94433",
   contrastText: "#FFFFFF",
 };
 

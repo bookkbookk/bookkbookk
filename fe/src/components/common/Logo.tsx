@@ -1,4 +1,4 @@
-import { ReactComponent as LogoIcon } from "@assets/images/brand-circle.svg";
+import { ReactComponent as LogoIcon } from "@assets/images/brand.svg";
 import { ROUTE_PATH } from "routes/constants";
 import * as S from "../Landing/Landing.style";
 
