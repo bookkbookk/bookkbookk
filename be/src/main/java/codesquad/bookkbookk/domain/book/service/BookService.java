@@ -2,7 +2,7 @@ package codesquad.bookkbookk.domain.book.service;
 
 import org.springframework.stereotype.Service;
 
-import codesquad.bookkbookk.common.error.exception.AccessDeniedBookClubError;
+import codesquad.bookkbookk.common.error.exception.MemberNotInBookClubException;
 import codesquad.bookkbookk.domain.book.data.dto.CreateBookRequest;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.data.entity.BookClubBook;
@@ -25,7 +25,7 @@ public class BookService {
 
     public void createBook(Long memberId, CreateBookRequest request) {
         if(!memberBookClubRepository.existsByMemberIdAndBookClubId(memberId, request.getBookClubId())){
-            throw new AccessDeniedBookClubError();
+            throw new MemberNotInBookClubException();
         }
 
         Book book = Book.from(request);
