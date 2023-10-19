@@ -63,8 +63,15 @@ public class BookTest extends IntegrationTest {
         memberBookClubRepository.save(memberBookClub);
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
-        CreateBookRequest createBookRequest = new CreateBookRequest(
-                1L, bookClub.getId(), "책", "image.image", "감귤", "추리");
+
+        CreateBookRequest createBookRequest = CreateBookRequest.builder()
+                .id(1L)
+                .bookClubId(bookClub.getId())
+                .title("책")
+                .cover("image.image")
+                .author("감귤")
+                .category("추리")
+                .build();
         //when
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
@@ -77,8 +84,10 @@ public class BookTest extends IntegrationTest {
                 .then().log().all()
                 .extract();
 
+        //then
         Book expectedBook = bookRepository.findById(createBookRequest.getId()).orElseThrow();
         BookClubBook expectedBookClubBook = bookClubBookRepository.findById(1L).orElseThrow();
+
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             softAssertions.assertThat(expectedBook.getId()).isEqualTo(createBookRequest.getId());

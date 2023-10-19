@@ -1,6 +1,7 @@
 package codesquad.bookkbookk.domain.book.data.dto;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +16,8 @@ public class CreateBookRequest {
     private String author;
     private String category;
 
-    public CreateBookRequest(Long id, Long bookClubId, String title, String cover, String author, String category) {
+    @Builder
+    private CreateBookRequest(Long id, Long bookClubId, String title, String cover, String author, String category) {
         this.id = id;
         this.bookClubId = bookClubId;
         this.title = title;
