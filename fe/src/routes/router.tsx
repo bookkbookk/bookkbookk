@@ -6,9 +6,10 @@ import BookClub from "@pages/BookClub";
 import Landing from "@pages/Landing";
 import Library from "@pages/Library";
 import Main from "@pages/Main";
+import MyPage from "@pages/MyPage";
 import NotFound from "@pages/NotFound";
 import SignUp from "@pages/SignUp";
-import Layout from "layout";
+import Layout from "layout/Layout";
 import { Suspense } from "react";
 import {
   Navigate,
@@ -27,7 +28,10 @@ export const router = createBrowserRouter(
       loader={reissueAccessToken}
       path={ROUTE_PATH.home}
       element={<Root />}>
-      <Route loader={userLoader} element={<UserProvider />}>
+      <Route
+        path={ROUTE_PATH.home}
+        loader={userLoader}
+        element={<UserProvider />}>
         <Route path={ROUTE_PATH.home} element={<Landing />} />
         <Route
           path={ROUTE_PATH.main}
@@ -35,7 +39,7 @@ export const router = createBrowserRouter(
             <Layout>
               <Suspense
                 fallback={
-                  <StatusIndicator status="loading" message="Loading..." />
+                  <StatusIndicator status="loading" message="로딩중.." />
                 }>
                 <Outlet />
               </Suspense>
@@ -44,6 +48,7 @@ export const router = createBrowserRouter(
           <Route index element={<Main />} />
           <Route path={ROUTE_PATH.library} element={<Library />} />
           <Route path={ROUTE_PATH.bookClub} element={<BookClub />} />
+          <Route path={ROUTE_PATH.myPage} element={<MyPage />} />
         </Route>
       </Route>
       <Route path={ROUTE_PATH.auth} element={<Auth />} />

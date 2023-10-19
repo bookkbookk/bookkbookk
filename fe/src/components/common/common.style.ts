@@ -1,12 +1,15 @@
-import { Badge, styled } from "@mui/material";
+import { Badge, Box, styled } from "@mui/material";
 
-export const Container = styled("div")`
+export const Container = styled(Box)`
+  width: 60vw;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 60vw;
-  height: 100vh;
+`;
+
+export const Wrapper = styled(Box)`
+  display: flex;
+  color: ${({ theme }) => theme.palette.text.primary};
+  gap: ${({ theme }) => theme.spacing(2)};
 `;
 
 export const PlusBadge = styled(Badge)(({ theme }) => ({
@@ -18,4 +21,23 @@ export const PlusBadge = styled(Badge)(({ theme }) => ({
     borderRadius: "50%",
     border: `3px solid ${theme.palette.background.paper}`,
   },
+}));
+
+export const LeftBox = styled(Box)(({ theme }) => ({
+  display: "flex",
+  width: "70%",
+  height: "100%",
+  flexDirection: "column",
+  justifyContent: "center",
+  gap: theme.spacing(2),
+}));
+
+export const RightBox = styled(Box)(({ theme }) => ({
+  display: "flex",
+  width: "30%",
+  height: "100%",
+  backgroundColor: theme.palette.background.paper,
+  flexDirection: "column",
+  justifyContent: "center",
+  gap: theme.spacing(2),
 }));

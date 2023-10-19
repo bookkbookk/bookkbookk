@@ -8,7 +8,11 @@ import { MemberInfo } from "./type";
 
 export const loader = () => async () => {
   const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
-  // TODO: enabled 조건을 추가했는데 왜 accessToken 없을 떄도 쿼리가 실행되는지 확인해보기
+
+  if (!accessToken) {
+    return null;
+  }
+
   const query = queryKeys.members.info({ enabled: !!accessToken });
 
   return (
@@ -33,7 +37,9 @@ export const usePatchMemberInfo = ({
         queryClient.invalidateQueries(queryKeys.members.info());
         onSuccessCallback();
       },
-      onError: (error) => {
+      // TODO: error type 정의
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      onError: (error: any) => {
         if (error.response.status === 409) {
           return enqueueSnackbar(MESSAGE.NICKNAME_DUPLICATED, {
             variant: "error",

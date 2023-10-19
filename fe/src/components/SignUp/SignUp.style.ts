@@ -6,7 +6,7 @@ export const TitleWrapper = styled("div")`
   justify-content: center;
   align-items: center;
   gap: 2rem;
-  padding: 5rem 0;
+  padding: 2rem 0;
 `;
 
 export const VisuallyHiddenInput = styled("input")({
@@ -27,10 +27,9 @@ export const Wrapper = styled("div")`
   align-items: center;
   width: 100%;
   gap: 3rem;
-  padding: 2rem 0;
 
   .submit-button {
-    margin-top: 5rem;
+    margin-top: 2rem;
     width: 100;
     align-self: flex-end;
   }

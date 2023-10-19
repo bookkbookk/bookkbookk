@@ -121,4 +121,19 @@ export const handlers = [
       })
     );
   }),
+
+  rest.post(AUTH_API_PATH.logout, async (req, res, ctx) => {
+    const { refreshToken } = await req.json<{ refreshToken: string | null }>();
+
+    if (!refreshToken) {
+      return res(
+        ctx.status(400),
+        ctx.json({
+          message: "잘못된 요청입니다.",
+        })
+      );
+    }
+
+    return res(ctx.status(200));
+  }),
 ];

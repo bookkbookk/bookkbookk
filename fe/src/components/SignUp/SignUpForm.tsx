@@ -48,7 +48,7 @@ export function SignUpForm({
         id="nickname"
         label="닉네임"
         variant="outlined"
-        style={{ width: 300 }}
+        sx={{ width: 300 }}
         value={newNickname}
         onChange={onNicknameChange}
       />

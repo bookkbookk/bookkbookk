@@ -14,7 +14,7 @@ export default function ProfileEditAvatar({
 }) {
   return (
     <Button
-      style={{ backgroundColor: "transparent" }}
+      sx={{ backgroundColor: "transparent" }}
       component="label"
       disableElevation
       disableRipple>

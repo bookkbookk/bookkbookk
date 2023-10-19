@@ -4,7 +4,7 @@ import * as S from "./SignUp.style";
 export default function Title() {
   return (
     <S.TitleWrapper>
-      <Typography style={{ fontFamily: "SOYO Maple Bold" }} variant="h2">
+      <Typography sx={{ fontFamily: "SOYO Maple Bold" }} variant="h2">
         안녕하세요, 반가워요! 👋
       </Typography>
       <Typography variant="h6">
