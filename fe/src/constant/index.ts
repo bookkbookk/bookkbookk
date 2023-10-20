@@ -14,12 +14,16 @@ export const MESSAGE = {
 
 export const PAGE_TITLE = {
   [ROUTE_PATH.main]: {
-    korean: "메인",
+    korean: "북크북크",
     english: "Main",
   },
   [ROUTE_PATH.library]: {
     korean: "서재",
     english: "Library",
+  },
+  [ROUTE_PATH.newBook]: {
+    korean: "책 추가",
+    english: "New Book",
   },
   [ROUTE_PATH.bookClub]: {
     korean: "북클럽",

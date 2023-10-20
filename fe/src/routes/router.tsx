@@ -7,6 +7,7 @@ import Landing from "@pages/Landing";
 import Library from "@pages/Library";
 import Main from "@pages/Main";
 import MyPage from "@pages/MyPage";
+import NewBook from "@pages/NewBook";
 import NewBookClub from "@pages/NewBookClub";
 import NotFound from "@pages/NotFound";
 import SignUp from "@pages/SignUp";
@@ -48,6 +49,7 @@ export const router = createBrowserRouter(
           }>
           <Route index element={<Main />} />
           <Route path={ROUTE_PATH.library} element={<Library />} />
+          <Route path={ROUTE_PATH.newBook} element={<NewBook />} />
           <Route path={ROUTE_PATH.bookClub} element={<BookClub />} />
           <Route path={ROUTE_PATH.newBookClub} element={<NewBookClub />} />
           <Route path={ROUTE_PATH.myPage} element={<MyPage />} />
