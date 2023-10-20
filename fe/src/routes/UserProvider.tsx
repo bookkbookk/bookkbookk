@@ -8,10 +8,7 @@ export default function UserProvider() {
   const setMember = useSetMember();
 
   useEffect(() => {
-    setMember({
-      type: "INIT",
-      payload: memberInfo as Member,
-    });
+    setMember(memberInfo as Member);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

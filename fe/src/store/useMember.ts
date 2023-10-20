@@ -1,18 +1,6 @@
 import { Member } from "@api/member/type";
 import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 
-type MemberAtomActionMap = {
-  INIT: Member;
-  UPDATE: Partial<Member>;
-};
-
-type MemberAtomAction = {
-  [K in keyof MemberAtomActionMap]: {
-    type: K;
-    payload: MemberAtomActionMap[K];
-  };
-}[keyof MemberAtomActionMap];
-
 const isLoginAtom = atom<boolean | undefined>(undefined);
 const memberAtom = atom<Member | undefined>(undefined);
 
@@ -25,18 +13,8 @@ const useIsLoginAtom = atom(
 
 const useMemberAtom = atom(
   (get) => get(memberAtom),
-  (_, set, action: MemberAtomAction) => {
-    switch (action.type) {
-      case "INIT":
-        set(memberAtom, action.payload);
-        break;
-      case "UPDATE":
-        set(memberAtom, (prev) => {
-          if (!prev) return prev;
-          return { ...prev, ...action.payload };
-        });
-        break;
-    }
+  (_, set, payload: Member) => {
+    set(memberAtom, payload);
   }
 );
 
