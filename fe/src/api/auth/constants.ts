@@ -15,7 +15,7 @@ export const GOOGLE_OAUTH_PATH = `${GOOGLE_AUTHORIZE_URI}?${stringify(
 )}`;
 
 export const AUTH_API_PATH = {
-  refresh: "/api/reissue-access-token",
+  refresh: "/api/auth/reissue",
   login: "/api/auth/login",
   logout: "/api/auth/logout",
 };
