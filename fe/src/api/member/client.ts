@@ -12,7 +12,7 @@ export const patchMemberInfo = async (memberInfo: MemberInfo) => {
   const memberInfoFormData = makeFormData(memberInfo);
 
   const { data } = await fetcher.patch(
-    MEMBER_API_PATH.member,
+    `${MEMBER_API_PATH.member}/profile`,
     memberInfoFormData,
     formDataConfig
   );
