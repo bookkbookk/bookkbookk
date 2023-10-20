@@ -3,6 +3,7 @@ import {
   ReactElement,
   ReactNode,
   isValidElement,
+  useMemo,
   useState,
 } from "react";
 
@@ -69,14 +70,16 @@ export const useFunnel = <Steps extends NonEmptyArray<string>>(
     return <>{targetStep}</>;
   };
 
-  const FunnelComponent = Object.assign(
-    function RouteFunnel(props: RouteFunnelProps<Steps>) {
-      return <Funnel<Steps> steps={steps} step={step} {...props} />;
-    },
-    {
-      Step,
-    }
-  );
+  const FunnelComponent = useMemo(() => {
+    return Object.assign(
+      function RouteFunnel(props: RouteFunnelProps<Steps>) {
+        return <Funnel<Steps> steps={steps} step={step} {...props} />;
+      },
+      {
+        Step,
+      }
+    );
+  }, [steps, step]);
 
   return [FunnelComponent, activeStepIndex, setStep] as const;
 };

@@ -1,4 +1,4 @@
-import { Badge, Box, styled } from "@mui/material";
+import { Badge, Box, Card as MuiCard, styled } from "@mui/material";
 
 export const Container = styled(Box)`
   width: 60vw;
@@ -21,6 +21,19 @@ export const PlusBadge = styled(Badge)(({ theme }) => ({
     borderRadius: "50%",
     border: `3px solid ${theme.palette.background.paper}`,
   },
+}));
+
+export const MainBox = styled(Box)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "space-between",
+  padding: theme.spacing(2, 4),
+}));
+
+export const BoxHeader = styled(Box)(({ theme }) => ({
+  display: "flex",
+  justifyContent: "space-between",
+  gap: theme.spacing(2),
 }));
 
 export const LeftBox = styled(Box)(({ theme }) => ({
@@ -79,3 +92,19 @@ export const SectionDescription = styled("p")`
   white-space: pre-wrap;
   text-align: center;
 `;
+
+export const Card = styled(MuiCard)(({ theme }) => ({
+  width: "100%",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  gap: theme.spacing(2),
+  padding: theme.spacing(3),
+}));
+
+export const ButtonWrapper = styled(Box)(({ theme }) => ({
+  display: "flex",
+  justifyContent: "space-between",
+  width: "100%",
+  marginTop: theme.spacing(2),
+}));

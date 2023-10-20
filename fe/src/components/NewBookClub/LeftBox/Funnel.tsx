@@ -1,12 +1,11 @@
+import Stepper from "@components/common/Stepper";
 import { BoxContent } from "@components/common/common.style";
+import { NEW_BOOK_CLUB_FUNNEL } from "@components/constants";
 import { NonEmptyArray, useFunnel } from "@hooks/useFunnel";
 import { useNavigate } from "react-router-dom";
-import { StepperWrapper } from "../NewBookClub.style";
-import { NEW_BOOK_CLUB_FUNNEL } from "../constants";
 import { BookClubCongratulation } from "./Congratulation";
 import BookClubMember from "./Member";
 import BookClubProfile from "./Profile";
-import NewBookClubStepper from "./Stepper";
 
 export default function NewBookClubFunnel() {
   const { profile, member, congratulation } = NEW_BOOK_CLUB_FUNNEL;
@@ -19,9 +18,7 @@ export default function NewBookClubFunnel() {
 
   return (
     <BoxContent>
-      <StepperWrapper>
-        <NewBookClubStepper activeStep={activeStepIndex} />
-      </StepperWrapper>
+      <Stepper activeStep={activeStepIndex} funnel={funnelSteps} />
       <Funnel>
         <Funnel.Step name={profile}>
           <BookClubProfile

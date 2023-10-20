@@ -1,23 +1,26 @@
-import { Step, StepLabel, Stepper } from "@mui/material";
+import { NonEmptyArray } from "@hooks/useFunnel";
+import { Stepper as MuiStepper, Step, StepLabel } from "@mui/material";
 import React from "react";
-import { NEW_BOOK_CLUB_FUNNEL } from "../constants";
 
-export default function NewBookClubStepper({
+export default function Stepper({
   activeStep,
+  funnel,
 }: {
   activeStep: number;
+  funnel: NonEmptyArray<string>;
 }) {
   return (
-    <Stepper activeStep={activeStep}>
-      {Object.values(NEW_BOOK_CLUB_FUNNEL).map((step) => {
+    <MuiStepper sx={{ padding: "1rem 0" }} activeStep={activeStep}>
+      {funnel.map((step) => {
         const stepProps: { completed?: boolean } = {};
         const labelProps: { optional?: React.ReactNode } = {};
+
         return (
           <Step key={step} {...stepProps}>
             <StepLabel {...labelProps}>{step}</StepLabel>
           </Step>
         );
       })}
-    </Stepper>
+    </MuiStepper>
   );
 }

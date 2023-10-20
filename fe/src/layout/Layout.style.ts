@@ -24,9 +24,9 @@ const closedMixin = (theme: Theme): CSSObject => ({
     duration: theme.transitions.duration.leavingScreen,
   }),
   overflowX: "hidden",
-  width: `calc(${theme.spacing(7)} + 1px)`,
+  width: theme.spacing(7),
   [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
+    width: theme.spacing(8),
   },
 });
 
@@ -51,7 +51,6 @@ export const SidebarHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "flex-end",
-  padding: theme.spacing(0, 1),
   ...theme.mixins.toolbar,
 }));
 
@@ -85,7 +84,6 @@ export const ListItemButton = styled(MuiListItemButton, {
   shouldForwardProp: (prop) => prop !== "selected",
 })<ListItemButtonProps>(({ theme, selected }) => ({
   minHeight: 48,
-  paddingLeft: theme.spacing(2.5),
   color: theme.palette.text.secondary,
   textTransform: "capitalize",
   ...(selected && {

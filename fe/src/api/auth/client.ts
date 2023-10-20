@@ -1,6 +1,6 @@
 import { fetcher } from "@api/fetcher";
 import { REFRESH_TOKEN_KEY } from "@constant/index";
-import { AUTH_API_PATH } from "./constants";
+import { AUTH_API_PATH } from "../constants";
 import { OAuthLoginParams, Tokens } from "./type";
 
 export const postRefreshToken = async (refreshToken: string) => {

@@ -21,8 +21,6 @@ export default function App() {
           </S.App>
         </SnackbarProvider>
       </QueryClientProvider>
-      <S.ModalRoot id="modal-root" />
-      {/* <Toaster /> */}
     </ThemeProvider>
   );
 }

@@ -1,4 +1,5 @@
 import { ReactComponent as LogoIcon } from "@assets/images/brand.svg";
+import AccountPopover from "@components/common/AccountPopover/AccountPopover";
 import { GoogleLoginButton } from "@components/common/GoogleLoginButton";
 import ThemeSwitch from "@components/common/ThemeSwitch/ThemeSwitch";
 import { Wrapper } from "@components/common/common.style";
@@ -6,7 +7,6 @@ import { PAGE_TITLE } from "@constant/index";
 import { IconButton, Toolbar, Typography } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { useIsLoginValue } from "store/useMember";
-import AccountPopover from "./AccountPopover.tsx/AccountPopover";
 import { AppBar } from "./Layout.style";
 
 export function Header({
@@ -20,7 +20,7 @@ export function Header({
   const isLogin = useIsLoginValue();
 
   return (
-    <AppBar position="fixed" open={isSideOpen}>
+    <AppBar position="fixed" open={isSideOpen} elevation={1}>
       <Toolbar
         sx={{
           backgroundColor: (theme) => theme.palette.background.paper,

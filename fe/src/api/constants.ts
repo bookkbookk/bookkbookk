@@ -23,3 +23,11 @@ export const AUTH_API_PATH = {
 export const ERROR_CODE = {
   UNAUTHORIZED: 401,
 };
+
+export const BOOK_CLUB_API_PATH = {
+  bookClubs: "/api/book-clubs",
+};
+
+export const MEMBER_API_PATH = {
+  member: "/api/members",
+};

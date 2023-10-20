@@ -1,6 +1,6 @@
 import { fetcher, formDataConfig } from "@api/fetcher";
 import { makeFormData } from "@api/utils";
-import { BOOK_CLUB_API_PATH } from "./constants";
+import { BOOK_CLUB_API_PATH } from "../constants";
 import { BookClubInfo } from "./type";
 
 export const postNewBookClub = async (bookClubInfo: BookClubInfo) => {
