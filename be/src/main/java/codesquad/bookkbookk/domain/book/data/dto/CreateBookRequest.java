@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CreateBookRequest {
 
-    private Long id;
+    private Long isbn;
     private Long bookClubId;
     private String title;
     private String cover;
@@ -17,8 +17,8 @@ public class CreateBookRequest {
     private String category;
 
     @Builder
-    private CreateBookRequest(Long id, Long bookClubId, String title, String cover, String author, String category) {
-        this.id = id;
+    private CreateBookRequest(Long isbn, Long bookClubId, String title, String cover, String author, String category) {
+        this.isbn = isbn;
         this.bookClubId = bookClubId;
         this.title = title;
         this.cover = cover;
