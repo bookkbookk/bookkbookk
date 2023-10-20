@@ -16,29 +16,29 @@ export const HEADER = {
 
 export type NavigationItem = {
   label: string;
-  path: string[];
+  path: string;
   icon: React.ReactElement;
 };
 
 export const NAVIGATION_CONFIG = [
   {
     label: PAGE_TITLE[ROUTE_PATH.main].english,
-    path: [ROUTE_PATH.main],
+    path: ROUTE_PATH.main,
     icon: <GridViewRoundedIcon />,
   },
   {
     label: PAGE_TITLE[ROUTE_PATH.library].english,
-    path: [ROUTE_PATH.library],
+    path: ROUTE_PATH.library,
     icon: <MenuBookRoundedIcon />,
   },
   {
     label: PAGE_TITLE[ROUTE_PATH.bookClub].english,
-    path: [ROUTE_PATH.bookClub, ROUTE_PATH.newBookClub],
+    path: ROUTE_PATH.bookClub,
     icon: <Diversity3RoundedIcon />,
   },
   {
     label: PAGE_TITLE[ROUTE_PATH.myPage].english,
-    path: [ROUTE_PATH.myPage],
+    path: ROUTE_PATH.myPage,
     icon: <SettingsRoundedIcon />,
   },
 ];

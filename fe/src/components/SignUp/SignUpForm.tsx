@@ -2,12 +2,11 @@ import { usePatchMemberInfo } from "@api/member/queries";
 import ProfileEditAvatar from "@components/SignUp/ProfileEditAvatar";
 import { Wrapper } from "@components/SignUp/SignUp.style";
 import { useFileReader } from "@hooks/useFileReader";
+import { useMovePage } from "@hooks/useMovePage";
 import { Button } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { ROUTE_PATH } from "routes/constants";
-import { useSetMember } from "store/useMember";
 
 export function SignUpForm({
   profileImgUrl,
@@ -16,22 +15,12 @@ export function SignUpForm({
   profileImgUrl: string;
   nickname: string;
 }) {
-  const setMemberInfo = useSetMember();
   const [newNickname, setNewNickname] = useState(nickname);
   const { file, previewUrl, handleFileChange } = useFileReader();
-  const navigate = useNavigate();
+  const { movePage } = useMovePage({ replace: true });
 
   const { onPatchMemberInfo } = usePatchMemberInfo({
-    onSuccessCallback: (newProfileImgUrl) => {
-      setMemberInfo({
-        type: "UPDATE",
-        payload: {
-          nickname: newNickname,
-          profileImgUrl: newProfileImgUrl,
-        },
-      });
-      navigate(ROUTE_PATH.main, { replace: true });
-    },
+    onSuccessCallback: () => movePage(ROUTE_PATH.main),
   });
   const onSubmitMemberInfo = () =>
     onPatchMemberInfo({
@@ -46,7 +35,7 @@ export function SignUpForm({
     setNewNickname(e.target.value);
 
   const onCompleteButtonClick = isSameProfile
-    ? () => navigate(ROUTE_PATH.main, { replace: true })
+    ? () => movePage(ROUTE_PATH.main)
     : onSubmitMemberInfo;
 
   return (

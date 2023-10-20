@@ -4,7 +4,6 @@ export const ROUTE_PATH = {
   main: "/main",
   library: "/main/library",
   bookClub: "/main/book-club",
-  newBookClub: "/main/new-book-club",
   myPage: "/main/my-page",
   auth: "/auth/:provider",
   signUp: "/sign-up",

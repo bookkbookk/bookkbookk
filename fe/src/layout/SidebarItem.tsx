@@ -8,11 +8,11 @@ import { NavigationItem } from "./constants";
 export function SidebarItem({ item }: { item: NavigationItem }) {
   const { path, label, icon } = item;
   const { pathname } = useLocation();
-  const isSelected = item.path.some((p) => p === pathname);
+  const isSelected = pathname === path;
 
   return (
     <ListItem disablePadding>
-      <S.ListItemButton component={Link} to={path[0]} selected={isSelected}>
+      <S.ListItemButton component={Link} to={path} selected={isSelected}>
         <ListItemIcon>{icon}</ListItemIcon>
         <ListItemText primary={label} />
       </S.ListItemButton>

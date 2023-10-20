@@ -7,8 +7,8 @@ const compressOptions = {
   useWebWorker: true,
 };
 
-export const useFileReader = (option?: { storedFile?: File }) => {
-  const [file, setFile] = useState<File | undefined>(option?.storedFile);
+export const useFileReader = () => {
+  const [file, setFile] = useState<File | undefined>(undefined);
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(undefined);
   const reader = useMemo(() => new FileReader(), []);
 

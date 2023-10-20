@@ -13,7 +13,11 @@ export default function ProfileEditAvatar({
   onFileChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
   return (
-    <Button sx={{ backgroundColor: "transparent" }} component="label">
+    <Button
+      sx={{ backgroundColor: "transparent" }}
+      component="label"
+      disableElevation
+      disableRipple>
       <S.VisuallyHiddenInput
         accept="image/*"
         id="profileImg"

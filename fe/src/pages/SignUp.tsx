@@ -10,14 +10,7 @@ export default function SignUp() {
   const { data: memberInfo, isSuccess, isError } = useGetMember();
 
   return (
-    <Box
-      sx={{
-        height: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-      }}>
+    <Box>
       <div style={{ width: "100%", padding: "2rem 0" }}>
         <Logo isTitleVisible={false} />
       </div>
