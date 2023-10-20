@@ -6,4 +6,6 @@ import codesquad.bookkbookk.domain.bookclub.data.entity.MemberBookClub;
 
 public interface MemberBookClubRepository extends JpaRepository<MemberBookClub, Long> {
 
+    boolean existsByMemberIdAndBookClubId(Long memberId, Long bookClubId);
+
 }
