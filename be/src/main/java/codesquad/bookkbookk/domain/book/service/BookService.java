@@ -32,7 +32,7 @@ public class BookService {
         Book book = Book.from(request);
         bookRepository.save(book);
 
-        BookClub bookClub = bookClubRepository.findById(memberId).orElseThrow(BookClubNotFoundException::new);
+        BookClub bookClub = bookClubRepository.findById(request.getBookClubId()).orElseThrow(BookClubNotFoundException::new);
         BookClubBook bookClubBook = new BookClubBook(book, bookClub);
 
         bookClubBookRepository.save(bookClubBook);
