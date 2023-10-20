@@ -7,6 +7,7 @@ import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ROUTE_PATH } from "routes/constants";
+import { useSetMember } from "store/useMember";
 
 export function SignUpForm({
   profileImgUrl,
@@ -15,12 +16,22 @@ export function SignUpForm({
   profileImgUrl: string;
   nickname: string;
 }) {
+  const setMemberInfo = useSetMember();
   const [newNickname, setNewNickname] = useState(nickname);
   const { file, previewUrl, handleFileChange } = useFileReader();
   const navigate = useNavigate();
 
   const { onPatchMemberInfo } = usePatchMemberInfo({
-    onSuccessCallback: () => navigate(ROUTE_PATH.main),
+    onSuccessCallback: (newProfileImgUrl) => {
+      setMemberInfo({
+        type: "UPDATE",
+        payload: {
+          nickname: newNickname,
+          profileImgUrl: newProfileImgUrl,
+        },
+      });
+      navigate(ROUTE_PATH.main, { replace: true });
+    },
   });
   const onSubmitMemberInfo = () =>
     onPatchMemberInfo({
