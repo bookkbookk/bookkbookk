@@ -1,7 +1,7 @@
 import Stepper from "@components/common/Stepper";
 import { BoxContent } from "@components/common/common.style";
 import { NEW_BOOK_FUNNEL } from "@components/constants";
-import { NonEmptyArray, useFunnel } from "@hooks/useFunnel";
+import { useFunnel } from "@hooks/useFunnel/useFunnel";
 import { useNavigate } from "react-router-dom";
 import BookChapters from "./BookChapters";
 import BookClubGathering from "./BookClubGathering";
@@ -9,11 +9,7 @@ import BookSearch from "./BookSearch";
 
 export default function NewBookFunnel() {
   const { bookSearch, bookClubGathering, bookChapters } = NEW_BOOK_FUNNEL;
-  const funnelSteps: NonEmptyArray<string> = [
-    bookSearch,
-    bookClubGathering,
-    bookChapters,
-  ];
+  const funnelSteps = [bookSearch, bookClubGathering, bookChapters] as const;
   const navigate = useNavigate();
 
   const [Funnel, activeStepIndex, setStep] = useFunnel(funnelSteps, {

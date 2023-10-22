@@ -1,4 +1,4 @@
-import { NonEmptyArray } from "@hooks/useFunnel";
+import { NonEmptyArray } from "@hooks/useFunnel/type";
 import { Stepper as MuiStepper, Step, StepLabel } from "@mui/material";
 import React from "react";
 
