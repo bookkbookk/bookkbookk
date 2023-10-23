@@ -1,4 +1,5 @@
 import { Badge, Box, Card as MuiCard, styled } from "@mui/material";
+import { HEADER } from "layout/constants";
 
 export const Container = styled(Box)`
   width: 60vw;
@@ -38,7 +39,7 @@ export const BoxHeader = styled(Box)(({ theme }) => ({
 
 export const LeftBox = styled(Box)(({ theme }) => ({
   display: "flex",
-  width: "70%",
+  width: "75%",
   height: "100%",
   flexDirection: "column",
   justifyContent: "center",
@@ -47,8 +48,11 @@ export const LeftBox = styled(Box)(({ theme }) => ({
 }));
 
 export const RightBox = styled(Box)(({ theme }) => ({
+  position: "fixed",
+  right: 0,
+  top: `${HEADER.height}px`,
   display: "flex",
-  width: "30%",
+  width: "25%",
   height: "100%",
   backgroundColor: theme.palette.background.paper,
   flexDirection: "column",
@@ -101,6 +105,12 @@ export const Card = styled(MuiCard)(({ theme }) => ({
   justifyContent: "center",
   gap: theme.spacing(2),
   padding: theme.spacing(3),
+}));
+
+export const CardContent = styled(Box)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  gap: theme.spacing(2),
 }));
 
 export const ButtonWrapper = styled(Box)(({ theme }) => ({

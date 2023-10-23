@@ -1,15 +1,15 @@
 import { Paper } from "@mui/material";
 import MuiInputBase from "@mui/material/InputBase";
-import { alpha, styled } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 
 export const Search = styled(Paper)(({ theme }) => ({
   "position": "relative",
   "borderRadius": theme.shape.borderRadius,
+  "backgroundColor": theme.palette.background.paper,
   "border": `1px solid ${theme.palette.divider}`,
-  "backgroundColor": alpha(theme.palette.background.paper, 0.25),
   "width": "100%",
   "&:hover, &:focus-within ": {
-    backgroundColor: theme.palette.background.paper,
+    border: `1px solid ${theme.palette.text.primary}`,
   },
 }));
 

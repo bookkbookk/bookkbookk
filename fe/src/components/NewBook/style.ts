@@ -1,4 +1,5 @@
-import { ListItemButton, Typography, styled } from "@mui/material";
+import { Box, ListItemButton, Typography, styled } from "@mui/material";
+import { Link } from "react-router-dom";
 
 export const SearchBookListItem = styled(ListItemButton)(({ theme }) => ({
   "width": "100%",
@@ -9,13 +10,6 @@ export const SearchBookListItem = styled(ListItemButton)(({ theme }) => ({
   "&:hover": {
     backgroundColor: theme.palette.action.hover,
   },
-}));
-
-export const BookCover = styled("img")(({ theme }) => ({
-  maxWidth: theme.spacing(10),
-  maxHeight: theme.spacing(16),
-  objectFit: "cover",
-  borderRadius: theme.spacing(1),
 }));
 
 export const BookInfo = styled("div")(({ theme }) => ({
@@ -44,7 +38,7 @@ export const BookTitle = styled(Typography)(({ theme }) => ({
   wordBreak: "break-all",
 }));
 
-export const BookSubInfo = styled(Typography)(({ theme }) => ({
+export const BookSubInfo = styled(Box)(({ theme }) => ({
   maxWidth: "100%",
   overflow: "hidden",
   whiteSpace: "nowrap",
@@ -60,4 +54,45 @@ export const BookDescription = styled(Typography)(({ theme }) => ({
   wordBreak: "keep-all",
   textOverflow: "ellipsis",
   WebkitLineClamp: 3,
+}));
+
+export const ModalBox = styled(Box)(({ theme }) => ({
+  position: "absolute",
+  maxWidth: "30vw",
+  minWidth: "30vw",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  backgroundColor: theme.palette.background.paper,
+  border: `1px solid ${theme.palette.divider}`,
+  borderRadius: theme.spacing(2),
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: theme.spacing(4),
+  gap: theme.spacing(2),
+}));
+
+export const ModalImageWrapper = styled(Box)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  backgroundColor: theme.palette.background.default,
+  width: "100%",
+  borderRadius: theme.spacing(1),
+  padding: theme.spacing(4),
+}));
+
+export const BookCoverImage = styled("img")({
+  objectFit: "fill",
+});
+
+export const BookLink = styled(Link)(({ theme }) => ({
+  "color": theme.palette.text.primary,
+  "fontFamily": "SOYO Maple Bold",
+
+  "&:hover": {
+    textDecoration: `underline ${theme.palette.secondary.light}`,
+  },
 }));

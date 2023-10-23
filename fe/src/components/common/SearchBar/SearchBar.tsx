@@ -11,7 +11,7 @@ export default function SearchBar({
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
   return (
-    <S.Search>
+    <S.Search elevation={0}>
       <S.SearchIconWrapper>
         <SearchIcon />
       </S.SearchIconWrapper>

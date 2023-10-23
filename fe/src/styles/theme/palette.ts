@@ -93,7 +93,7 @@ const base = {
   error,
   grey,
   common,
-  divider: alpha(grey[500], 0.2),
+  divider: alpha(grey[600], 0.2),
   action,
 };
 
@@ -106,7 +106,7 @@ const dark = {
   background: {
     paper: grey[800],
     default: grey[900],
-    neutral: grey[800],
+    neutral: grey[900],
   },
   action: {
     ...base.action,

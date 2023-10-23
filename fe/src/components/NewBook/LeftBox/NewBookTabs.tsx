@@ -1,15 +1,15 @@
 import { a11yProps } from "@components/utils";
 import { Box, Tab, Tabs } from "@mui/material";
 import React from "react";
+import { useActiveTab } from "store/useNewBook";
 import { NEW_BOOK_TABS } from "../../constants";
 
-export default function NewBookTabs({
-  activeTabID,
-  handleChange,
-}: {
-  activeTabID: number;
-  handleChange: (event: React.SyntheticEvent, newValue: number) => void;
-}) {
+export default function NewBookTabs() {
+  const [activeTabID, setActiveTabID] = useActiveTab();
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setActiveTabID({ type: "INDEX", payload: newValue });
+  };
+
   return (
     <Box
       sx={{

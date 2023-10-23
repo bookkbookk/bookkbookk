@@ -18,7 +18,7 @@ export function BookSearchGuide() {
         height={250}
       />
       <Typography sx={{ marginTop: "2rem" }} variant="h4">
-        이번 북클럽 모임에서는 어떤 책을 읽으시나요?
+        이번 북클럽 모임에서 어떤 책을 읽어볼까요?
       </Typography>
       <Typography variant="body1">
         검색창에 원하시는 책 이름을 검색해보세요!

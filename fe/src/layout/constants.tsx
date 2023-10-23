@@ -7,12 +7,11 @@ import { ROUTE_PATH } from "routes/constants";
 
 export const SIDEBAR = {
   openWidth: 240,
-  closeWidth: 64,
+  closeWidth: 56,
 };
 
 export const HEADER = {
-  mobile: 64,
-  desktop: 80,
+  height: 64,
 };
 
 export type NavigationItem = {

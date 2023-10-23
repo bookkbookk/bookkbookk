@@ -1,11 +1,11 @@
-export type BookSearchInfo = {
+export type BookInfo = {
   title: string;
   link: string;
   author: string;
   pubDate: string;
   description: string;
-  isbn13: string;
+  isbn: string;
   cover: string;
-  categoryName: string;
+  category: string;
   publisher: string;
 };

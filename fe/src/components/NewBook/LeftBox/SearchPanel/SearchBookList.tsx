@@ -1,41 +1,40 @@
-import { BookSearchInfo } from "@api/book/type";
-import { Paper } from "@mui/material";
-import * as S from "./SearchPanel.style";
+import { BookInfo } from "@api/book/type";
+import BookDetailModal from "@components/NewBook/LeftBox/BookDetailModal/BookDetailModal";
+import { List, ListItem, Paper } from "@mui/material";
+import { useState } from "react";
+import { SearchBookListItem } from "./SearchBookListItem";
 
-export default function SearchBookList({ data }: { data: BookSearchInfo[] }) {
+export default function SearchBookList({
+  data,
+  onSelectBook,
+}: {
+  data: BookInfo[];
+  onSelectBook: () => void;
+}) {
+  const [selectedBook, setSelectedBook] = useState<BookInfo | null>(null);
+  const handleModalOpen = (bookInfo: BookInfo) => setSelectedBook(bookInfo);
+  const handleModalClose = () => setSelectedBook(null);
+
   return (
     <Paper>
-      {data.map((bookInfo) => (
-        <SearchBookListItem key={bookInfo.isbn13} {...bookInfo} />
-      ))}
+      <List sx={{ padding: 0 }}>
+        {data.map((bookInfo) => (
+          <ListItem
+            key={bookInfo.isbn}
+            disablePadding
+            onClick={() => handleModalOpen(bookInfo)}>
+            <SearchBookListItem {...bookInfo} />
+          </ListItem>
+        ))}
+      </List>
+      {selectedBook && (
+        <BookDetailModal
+          open={!!selectedBook}
+          handleClose={handleModalClose}
+          bookInfo={selectedBook}
+          onSelectBook={onSelectBook}
+        />
+      )}
     </Paper>
-  );
-}
-
-function SearchBookListItem(bookInfo: BookSearchInfo) {
-  const {
-    title,
-    author,
-    pubDate,
-    description,
-    cover,
-    categoryName,
-    publisher,
-  } = bookInfo;
-
-  return (
-    <S.SearchBookListItem>
-      <S.BookCover src={cover} alt={title} />
-      <S.BookInfo>
-        <S.BookTitle variant="h6">{title}</S.BookTitle>
-        <S.BookSubInfoWrapper>
-          <S.BookSubInfo variant="body2">{author}</S.BookSubInfo>
-          <S.BookSubInfo variant="body2">{publisher}</S.BookSubInfo>
-          <S.BookSubInfo variant="body2">{pubDate}</S.BookSubInfo>
-        </S.BookSubInfoWrapper>
-        <S.BookSubInfo variant="body2">{categoryName}</S.BookSubInfo>
-        <S.BookDescription variant="body2">{description}</S.BookDescription>
-      </S.BookInfo>
-    </S.SearchBookListItem>
   );
 }
