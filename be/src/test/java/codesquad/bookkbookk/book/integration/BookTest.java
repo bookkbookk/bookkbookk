@@ -8,7 +8,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import codesquad.bookkbookk.IntegrationTest;
+import codesquad.bookkbookk.common.error.exception.ApiException;
 import codesquad.bookkbookk.common.error.exception.BookNotFoundException;
+import codesquad.bookkbookk.common.error.exception.MemberNotInBookClubException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.domain.book.data.dto.CreateBookRequest;
 import codesquad.bookkbookk.domain.book.data.dto.CreateBookResponse;
@@ -89,6 +91,49 @@ public class BookTest extends IntegrationTest {
             softAssertions.assertThat(expectedBook.getIsbn()).isEqualTo(createBookRequest.getIsbn());
             softAssertions.assertThat(expectedBook.getCategory()).isEqualTo(createBookRequest.getCategory());
             softAssertions.assertThat(expectedBook.getTitle()).isEqualTo(createBookRequest.getTitle());
+        });
+    }
+
+    @Test
+    @DisplayName("책 추가 권한이 없는 멤버가 책을 추가했을 때 에러가 발생한다.")
+    void createBookNotInBookClub() {
+        //given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        CreateBookRequest createBookRequest = CreateBookRequest.builder()
+                .isbn("123123123")
+                .bookClubId(bookClub.getId())
+                .title("책")
+                .cover("image.image")
+                .author("감귤")
+                .category("추리")
+                .build();
+
+        MemberNotInBookClubException exception = new MemberNotInBookClubException();
+        //when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .body(createBookRequest)
+                .accept(ContentType.JSON)
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .when()
+                .post("/api/books")
+                .then().log().all()
+                .extract();
+
+        //then
+
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(exception.getCode());
+            softAssertions.assertThat(response.jsonPath().getObject("", ApiException.class).getMessage())
+                    .isEqualTo(exception.getMessage());
         });
     }
 
