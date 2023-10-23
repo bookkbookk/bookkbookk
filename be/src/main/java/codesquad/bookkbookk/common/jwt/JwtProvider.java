@@ -64,6 +64,13 @@ public class JwtProvider {
                 .get("memberId", Long.class);
     }
 
+    public void validateToken(String token) {
+        Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parse(token);
+    }
+
     private String createToken(Map<String, Object> claims, Date expiration) {
         return Jwts.builder()
                 .expiration(expiration)
