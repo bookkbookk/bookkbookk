@@ -5,6 +5,8 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import codesquad.bookkbookk.common.filter.CorsFilter;
 import codesquad.bookkbookk.common.filter.JwtFilter;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
@@ -22,10 +24,10 @@ public class FilterConfig {
     }
 
     @Bean
-    public FilterRegistrationBean<JwtFilter> jwtFilter(JwtProvider provider) {
+    public FilterRegistrationBean<JwtFilter> jwtFilter(JwtProvider provider, ObjectMapper objectMapper) {
         FilterRegistrationBean<JwtFilter> filterRegistrationBean = new FilterRegistrationBean<>();
 
-        filterRegistrationBean.setFilter(new JwtFilter(provider));
+        filterRegistrationBean.setFilter(new JwtFilter(provider, objectMapper));
         filterRegistrationBean.setOrder(2);
         return filterRegistrationBean;
     }
