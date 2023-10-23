@@ -12,10 +12,12 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.domain.auth.data.dto.AuthCode;
 import codesquad.bookkbookk.domain.auth.data.dto.LoginRequest;
 import codesquad.bookkbookk.domain.auth.data.dto.LoginResponse;
 import codesquad.bookkbookk.domain.auth.data.dto.OAuthTokenResponse;
+import codesquad.bookkbookk.domain.auth.data.dto.ReissueResponse;
 import codesquad.bookkbookk.domain.auth.data.entity.MemberRefreshToken;
 import codesquad.bookkbookk.domain.auth.data.provider.OAuthProvider;
 import codesquad.bookkbookk.common.jwt.Jwt;
@@ -49,6 +51,15 @@ public class OAuthService {
         memberRefreshTokenRepository.save(memberRefreshToken);
 
         return LoginResponse.of(jwt, doesMemberExist);
+    }
+
+    @Transactional(readOnly = true)
+    public ReissueResponse reissueAccessToken(String refreshToken) {
+        Member member = memberRefreshTokenRepository.findMemberByRefreshToken(refreshToken)
+                .orElseThrow(MemberNotFoundException::new);
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        return new ReissueResponse(accessToken);
     }
 
     private Member getLoginMember(LoginRequest loginRequest, boolean doesMemberExist) {
