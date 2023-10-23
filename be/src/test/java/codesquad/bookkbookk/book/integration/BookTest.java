@@ -1,7 +1,5 @@
 package codesquad.bookkbookk.book.integration;
 
-import java.io.IOException;
-
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,9 +11,8 @@ import codesquad.bookkbookk.IntegrationTest;
 import codesquad.bookkbookk.common.error.exception.BookNotFoundException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.domain.book.data.dto.CreateBookRequest;
+import codesquad.bookkbookk.domain.book.data.dto.CreateBookResponse;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
-import codesquad.bookkbookk.domain.book.data.entity.BookClubBook;
-import codesquad.bookkbookk.domain.book.repository.BookClubBookRepository;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.data.entity.MemberBookClub;
@@ -36,9 +33,6 @@ public class BookTest extends IntegrationTest {
     private BookRepository bookRepository;
 
     @Autowired
-    private BookClubBookRepository bookClubBookRepository;
-
-    @Autowired
     private MemberRepository memberRepository;
 
     @Autowired
@@ -52,7 +46,7 @@ public class BookTest extends IntegrationTest {
 
     @Test
     @DisplayName("책을 성공적으로 생성한다.")
-    void createBook() throws IOException {
+    void createBook() {
         //given
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
@@ -66,7 +60,7 @@ public class BookTest extends IntegrationTest {
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
         CreateBookRequest createBookRequest = CreateBookRequest.builder()
-                .id(1L)
+                .isbn("123123123")
                 .bookClubId(bookClub.getId())
                 .title("책")
                 .cover("image.image")
@@ -86,15 +80,15 @@ public class BookTest extends IntegrationTest {
                 .extract();
 
         //then
-        Book expectedBook = bookRepository.findById(createBookRequest.getId()).orElseThrow(BookNotFoundException::new);
-        BookClubBook expectedBookClubBook = bookClubBookRepository.findById(1L).orElseThrow();
+        CreateBookResponse createBookResponse = response.jsonPath().getObject("", CreateBookResponse.class);
+        Book expectedBook = bookRepository.findById(createBookResponse.getCreatedBookId())
+                .orElseThrow(BookNotFoundException::new);
 
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softAssertions.assertThat(expectedBook.getId()).isEqualTo(createBookRequest.getId());
+            softAssertions.assertThat(expectedBook.getIsbn()).isEqualTo(createBookRequest.getIsbn());
             softAssertions.assertThat(expectedBook.getCategory()).isEqualTo(createBookRequest.getCategory());
             softAssertions.assertThat(expectedBook.getTitle()).isEqualTo(createBookRequest.getTitle());
-            softAssertions.assertThat(expectedBookClubBook.getBook().getId()).isEqualTo(expectedBook.getId());
         });
     }
 
