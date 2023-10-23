@@ -16,9 +16,11 @@ import codesquad.bookkbookk.domain.auth.data.dto.AuthCode;
 import codesquad.bookkbookk.domain.auth.data.dto.LoginRequest;
 import codesquad.bookkbookk.domain.auth.data.dto.LoginResponse;
 import codesquad.bookkbookk.domain.auth.data.dto.OAuthTokenResponse;
+import codesquad.bookkbookk.domain.auth.data.entity.MemberRefreshToken;
 import codesquad.bookkbookk.domain.auth.data.provider.OAuthProvider;
 import codesquad.bookkbookk.common.jwt.Jwt;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
+import codesquad.bookkbookk.domain.auth.repository.MemberRefreshTokenRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
 
@@ -29,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 public class OAuthService {
 
     private final MemberRepository memberRepository;
+    private final MemberRefreshTokenRepository memberRefreshTokenRepository;
     private final OAuthProvider oAuthProvider;
     private final JwtProvider jwtProvider;
 
@@ -42,6 +45,8 @@ public class OAuthService {
         boolean doesMemberExist = memberRepository.existsByEmail(loginRequest.getEmail());
         Member loginMember = getLoginMember(loginRequest, doesMemberExist);
         Jwt jwt = jwtProvider.createJwt(loginMember.getId());
+        MemberRefreshToken memberRefreshToken = new MemberRefreshToken(loginMember, jwt.getRefreshToken());
+        memberRefreshTokenRepository.save(memberRefreshToken);
 
         return LoginResponse.of(jwt, doesMemberExist);
     }
