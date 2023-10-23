@@ -17,8 +17,8 @@ import lombok.NoArgsConstructor;
 public class Book {
 
     @Id
-    @Column(name = "book_id")
-    private Long id;
+    @Column(name = "isbn")
+    private Long isbn;
     @Column(nullable = false)
     private String title;
     @Column(nullable = false)
@@ -29,8 +29,8 @@ public class Book {
     private String category;
 
     @Builder
-    private Book(Long id, String title, String cover, String author, String category) {
-        this.id = id;
+    private Book(Long isbn, String title, String cover, String author, String category) {
+        this.isbn = isbn;
         this.title = title;
         this.cover = cover;
         this.author = author;
@@ -39,7 +39,7 @@ public class Book {
 
     public static Book from(CreateBookRequest request) {
         return Book.builder()
-                .id(request.getId())
+                .isbn(request.getIsbn())
                 .title(request.getTitle())
                 .cover(request.getCover())
                 .author(request.getAuthor())
