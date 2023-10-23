@@ -6,24 +6,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReadAladinBooksResponse {
 
-    private String title;
-    private String link;
-    private String author;
-    private String pubDate;
-    private String description;
-    private String isbn13;
-    private String cover;
-    private String categoryName;
-    private String publisher;
+    private final String title;
+    private final String link;
+    private final String author;
+    private final String pubDate;
+    private final String description;
+    private final String isbn13;
+    private final String cover;
+    private final String categoryName;
+    private final String publisher;
 
     @Builder
     private ReadAladinBooksResponse(String title, String link, String author, String pubDate, String description,
