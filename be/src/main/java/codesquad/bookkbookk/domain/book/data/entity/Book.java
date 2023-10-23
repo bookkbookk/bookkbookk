@@ -2,6 +2,8 @@ package codesquad.bookkbookk.domain.book.data.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import codesquad.bookkbookk.domain.book.data.dto.CreateBookRequest;
@@ -17,8 +19,13 @@ import lombok.NoArgsConstructor;
 public class Book {
 
     @Id
-    @Column(name = "isbn")
-    private Long isbn;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "book_id")
+    private Long id;
+    @Column(nullable = false)
+    private String isbn;
+    @Column(name = "book_club_id", nullable = false)
+    private Long bookClubId;
     @Column(nullable = false)
     private String title;
     @Column(nullable = false)
@@ -29,8 +36,9 @@ public class Book {
     private String category;
 
     @Builder
-    private Book(Long isbn, String title, String cover, String author, String category) {
+    private Book(String isbn, Long bookClubId, String title, String cover, String author, String category) {
         this.isbn = isbn;
+        this.bookClubId = bookClubId;
         this.title = title;
         this.cover = cover;
         this.author = author;
@@ -40,6 +48,7 @@ public class Book {
     public static Book from(CreateBookRequest request) {
         return Book.builder()
                 .isbn(request.getIsbn())
+                .bookClubId(request.getBookClubId())
                 .title(request.getTitle())
                 .cover(request.getCover())
                 .author(request.getAuthor())
