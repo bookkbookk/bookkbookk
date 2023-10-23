@@ -14,19 +14,24 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "refresh_token")
+@Entity(name = "member_refresh_token")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class RefreshToken {
+public class MemberRefreshToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "refresh_token_id")
+    @Column(name = "member_refresh_token_id")
     private Long id;
     @OneToOne
     @JoinColumn(name = "member_id")
     private Member member;
     @Column(name = "refresh_token")
     private String refreshToken;
+
+    public MemberRefreshToken(Member member, String refreshToken) {
+        this.member = member;
+        this.refreshToken = refreshToken;
+    }
 
 }
