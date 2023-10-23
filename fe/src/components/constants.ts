@@ -25,6 +25,21 @@ export const BOOK_CLUB_TAB = [
   },
 ];
 
+export const NEW_BOOK_TABS = [
+  {
+    id: 0,
+    label: "책 검색",
+  },
+  {
+    id: 1,
+    label: "북클럽 모임 일정",
+  },
+  {
+    id: 2,
+    label: "챕터 토픽 작성",
+  },
+];
+
 export const TOTAL_TAB = {
   id: 0,
   label: "전체 책장",

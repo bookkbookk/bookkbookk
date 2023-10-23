@@ -6,7 +6,8 @@ import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import { ROUTE_PATH } from "routes/constants";
 
 export const SIDEBAR = {
-  width: 240,
+  openWidth: 240,
+  closeWidth: 64,
 };
 
 export const HEADER = {

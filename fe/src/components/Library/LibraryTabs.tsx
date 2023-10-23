@@ -1,8 +1,9 @@
 import { a11yProps } from "@components/utils";
 import { Box, Tab, Tabs } from "@mui/material";
 import React from "react";
-import { DEFAULT_TABS, LIBRARY_TABS, TOTAL_TAB } from "../constants";
+import { TOTAL_TAB } from "../constants";
 
+// TODO: 책장 기능 이후에 추가 예정
 export default function LibraryTabs({
   activeTabID,
   handleChange,
@@ -29,13 +30,13 @@ export default function LibraryTabs({
           {...a11yProps(TOTAL_TAB.id)}
         />
         {/* TODO: DB에 기본으로 추가 요청 */}
-        {DEFAULT_TABS.map((tab) => (
+        {/* {DEFAULT_TABS.map((tab) => (
           <Tab key={tab.id} label={tab.label} {...a11yProps(tab.id)} />
-        ))}
+        ))} */}
         {/* TODO: 책장 목록 조회 */}
-        {LIBRARY_TABS.map((tab) => (
+        {/* {LIBRARY_TABS.map((tab) => (
           <Tab key={tab.id} label={tab.label} {...a11yProps(tab.id)} />
-        ))}
+        ))} */}
       </Tabs>
     </Box>
   );

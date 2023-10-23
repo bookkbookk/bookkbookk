@@ -55,6 +55,7 @@ export const RightBox = styled(Box)(({ theme }) => ({
   alignItems: "center",
   justifyContent: "center",
   gap: theme.spacing(2),
+  boxShadow: theme.shadows[1],
 }));
 
 export const BoxContent = styled(Box)(({ theme }) => ({

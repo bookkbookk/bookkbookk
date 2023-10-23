@@ -9,8 +9,12 @@ export default function BookClubCard() {
     <Card>
       <Typography variant="h6">북클럽 정보</Typography>
       <Box sx={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-        {bookClub && <Avatar src={bookClub.previewUrl} />}
-        <Typography variant="subtitle1">{bookClub?.name}</Typography>
+        {bookClub && (
+          <>
+            <Avatar src={bookClub.previewUrl} />
+            <Typography variant="subtitle1">{bookClub.name}</Typography>
+          </>
+        )}
       </Box>
     </Card>
   );

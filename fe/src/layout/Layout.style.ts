@@ -10,7 +10,7 @@ type AppBarProps = MuiAppBarProps & {
 };
 
 const openedMixin = (theme: Theme): CSSObject => ({
-  width: SIDEBAR.width,
+  width: SIDEBAR.openWidth,
   transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen,
@@ -24,16 +24,13 @@ const closedMixin = (theme: Theme): CSSObject => ({
     duration: theme.transitions.duration.leavingScreen,
   }),
   overflowX: "hidden",
-  width: theme.spacing(7),
-  [theme.breakpoints.up("sm")]: {
-    width: theme.spacing(8),
-  },
+  width: SIDEBAR.closeWidth,
 });
 
 export const Sidebar = styled(Drawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
-  width: SIDEBAR.width,
+  width: SIDEBAR.openWidth,
   flexShrink: 0,
   whiteSpace: "nowrap",
   boxSizing: "border-box",
@@ -63,7 +60,7 @@ export const AppBar = styled(MuiAppBar, {
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
-    width: `calc(100% - ${SIDEBAR.width}px)`,
+    width: `calc(100% - ${SIDEBAR.openWidth}px)`,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -110,5 +107,5 @@ export const Content = styled(Box)`
   display: flex;
   flex-direction: column;
   height: 100%;
-  width: 100%;
+  width: calc(100vw - ${SIDEBAR.closeWidth}px);
 `;
