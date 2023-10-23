@@ -18,7 +18,7 @@ public class BookService {
     private final BookRepository bookRepository;
     private final MemberBookClubRepository memberBookClubRepository;
 
-    public void createBook(Long memberId, CreateBookRequest request) {
+    public CreateBookResponse createBook(Long memberId, CreateBookRequest request) {
         if (!memberBookClubRepository.existsByMemberIdAndBookClubId(memberId, request.getBookClubId())) {
             throw new MemberNotInBookClubException();
         }
@@ -26,11 +26,7 @@ public class BookService {
         Book book = Book.from(request);
         bookRepository.save(book);
 
-        BookClub bookClub = bookClubRepository.findById(request.getBookClubId())
-                .orElseThrow(BookClubNotFoundException::new);
-        BookClubBook bookClubBook = new BookClubBook(book, bookClub);
-
-        bookClubBookRepository.save(bookClubBook);
+        return new CreateBookResponse(book.getId());
     }
 
 }
