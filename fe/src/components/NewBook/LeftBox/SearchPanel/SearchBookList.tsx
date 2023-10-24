@@ -1,5 +1,5 @@
 import { BookInfo } from "@api/book/type";
-import BookDetailModal from "@components/NewBook/LeftBox/BookDetailModal/BookDetailModal";
+import BookDetailModal from "@components/NewBook/LeftBox/Modals/BookDetailModal";
 import { List, ListItem, Paper } from "@mui/material";
 import { useState } from "react";
 import { SearchBookListItem } from "./SearchBookListItem";

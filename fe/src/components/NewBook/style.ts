@@ -1,26 +1,19 @@
-import { Box, ListItemButton, Typography, styled } from "@mui/material";
+import {
+  Box,
+  ListItemButton as MuiListItemButton,
+  Typography,
+  styled,
+} from "@mui/material";
 import { Link } from "react-router-dom";
 
-export const SearchBookListItem = styled(ListItemButton)(({ theme }) => ({
-  "width": "100%",
-  "display": "flex",
-  "alignItems": "center",
-  "padding": theme.spacing(1, 2),
-  "borderRadius": theme.spacing(1),
-  "&:hover": {
-    backgroundColor: theme.palette.action.hover,
-  },
-}));
-
-export const BookInfo = styled("div")(({ theme }) => ({
+export const InfoWrapper = styled("div")(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   maxWidth: `calc(100% - ${theme.spacing(8)})`,
   padding: theme.spacing(2),
-  marginLeft: theme.spacing(2),
 }));
 
-export const BookSubInfoWrapper = styled("div")(({ theme }) => ({
+export const SubInfoWrapper = styled("div")(({ theme }) => ({
   "display": "flex",
   "alignItems": "center",
   "width": "100%",
@@ -30,13 +23,12 @@ export const BookSubInfoWrapper = styled("div")(({ theme }) => ({
   },
 }));
 
-export const BookTitle = styled(Typography)(({ theme }) => ({
-  fontWeight: theme.typography.fontWeightBold,
+export const Title = styled(Typography)({
   overflow: "hidden",
   whiteSpace: "nowrap",
   textOverflow: "ellipsis",
   wordBreak: "break-all",
-}));
+});
 
 export const BookSubInfo = styled(Box)(({ theme }) => ({
   maxWidth: "100%",
@@ -74,6 +66,20 @@ export const ModalBox = styled(Box)(({ theme }) => ({
   gap: theme.spacing(2),
 }));
 
+export const ModalHeader = styled(Box)({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  width: "100%",
+});
+
+export const ModalBody = styled(Box)({
+  display: "flex",
+  width: "100%",
+  maxHeight: "70vh",
+  overflow: "scroll",
+});
+
 export const ModalImageWrapper = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
@@ -94,5 +100,16 @@ export const BookLink = styled(Link)(({ theme }) => ({
 
   "&:hover": {
     textDecoration: `underline ${theme.palette.secondary.light}`,
+  },
+}));
+
+export const ListItemButton = styled(MuiListItemButton)(({ theme }) => ({
+  "width": "100%",
+  "display": "flex",
+  "alignItems": "center",
+  "borderRadius": theme.spacing(1),
+  "gap": theme.spacing(2),
+  "&:hover": {
+    backgroundColor: theme.palette.action.hover,
   },
 }));

@@ -5,7 +5,8 @@ import {
   MEMBER_API_PATH,
 } from "@api/constants";
 import { rest } from "msw";
-import { ALADIN_BOOK_SEARCH_EXAMPLE, MEMBER_INFO } from "./data";
+import { BOOK_CLUB_LIST, MEMBER_INFO } from "./data";
+import ALADIN_BOOK_SEARCH_EXAMPLE from "./data.json";
 
 const TOKEN_EXPIRATION = {
   accessToken: false,
@@ -146,7 +147,7 @@ export const handlers = [
     return res(ctx.status(200));
   }),
 
-  rest.post(BOOK_CLUB_API_PATH.bookClubs, async (req, res, ctx) => {
+  rest.post(BOOK_CLUB_API_PATH.bookClubs, async (_, res, ctx) => {
     // const { name } = (await req.body) as FormData;
 
     // if (!name) {
@@ -179,4 +180,11 @@ export const handlers = [
 
     return res(ctx.status(200), ctx.json([]));
   }),
+
+  rest.get(
+    `${BOOK_CLUB_API_PATH.bookClubs}?status=open`,
+    async (_, res, ctx) => {
+      return res(ctx.status(200), ctx.json(BOOK_CLUB_LIST));
+    }
+  ),
 ];

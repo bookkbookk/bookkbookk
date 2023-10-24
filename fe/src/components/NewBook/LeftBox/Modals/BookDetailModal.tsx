@@ -1,7 +1,8 @@
 import { BookInfo } from "@api/book/type";
 import { ButtonWrapper } from "@components/common/common.style";
+import LaunchIcon from "@mui/icons-material/Launch";
 import { Button, Modal, Tooltip, Typography } from "@mui/material";
-import { useSetActiveTab, useSetBookInfo } from "store/useNewBook";
+import { useSetActiveTab, useSetBookChoice } from "store/useNewBook";
 import * as S from "../../style";
 
 export default function BookDetailModal({
@@ -27,11 +28,11 @@ export default function BookDetailModal({
   } = bookInfo;
 
   const setActiveTab = useSetActiveTab();
-  const setBookInfo = useSetBookInfo();
+  const setBookChoice = useSetBookChoice();
 
   const onSelectButtonClick = () => {
     setActiveTab({ type: "NEXT" });
-    setBookInfo(bookInfo);
+    setBookChoice(bookInfo);
     onSelectBook();
   };
 
@@ -48,19 +49,20 @@ export default function BookDetailModal({
           />
         </S.ModalImageWrapper>
         <Tooltip
-          title="링크를 누르면 서점 페이지의 도서 정보로 이동해요"
-          arrow
-          placement="top">
+          title="서점 페이지의 도서 정보로 이동해요!"
+          placement="top"
+          arrow>
           <S.BookLink to={link} target="blank">
             {title}
+            <LaunchIcon fontSize="inherit" />
           </S.BookLink>
         </Tooltip>
         <S.BookSubInfo>
           <Typography variant="body2">{author}</Typography>
-          <S.BookSubInfoWrapper>
+          <S.SubInfoWrapper>
             <Typography variant="body2">{publisher}</Typography>
             <Typography variant="body2">{pubDate}</Typography>
-          </S.BookSubInfoWrapper>
+          </S.SubInfoWrapper>
           <Typography variant="body2">{category}</Typography>
         </S.BookSubInfo>
         <Typography variant="body2">{description}</Typography>

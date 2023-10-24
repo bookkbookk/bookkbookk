@@ -1,26 +1,22 @@
+import { BookInfo } from "@api/book/type";
+import { BookClubProfile } from "@api/bookClub/type";
 import { NEW_BOOK_TABS } from "@components/constants";
 import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 
-type BookInfo = {
-  isbn: string;
-  title: string;
-  cover: string;
-  author: string;
-  category: string;
-  link: string;
-};
+type BookClubChoice = Pick<BookClubProfile, "id" | "name" | "profileImgUrl">;
 
 type Gathering = {
+  id: number;
   type: "ONLINE" | "OFFLINE";
   date: string;
   location: string;
 };
 
-type Chapter = {
-  title: string;
-  scope?: string;
-  topics?: { title: string; scope?: string }[];
-};
+// type Chapter = {
+//   title: string;
+//   scope?: string;
+//   topics?: { title: string; scope?: string }[];
+// };
 
 type NewBookAtomAction =
   | {
@@ -34,16 +30,49 @@ type NewBookAtomAction =
       payload: number;
     };
 
-const bookInfoAtom = atom<BookInfo | null>(null);
-const bookClubIdAtom = atom<number | null>(null);
-const activeTabAtom = atom<number>(NEW_BOOK_TABS[0].id);
-const gatheringAtom = atom<Gathering[]>([]);
-const chapterAtom = atom<Chapter[]>([]);
+type GatheringAtomAction =
+  | {
+      type: "ADD";
+    }
+  | {
+      type: "REMOVE";
+      payload: number;
+    };
 
-const useBookInfoAtom = atom(
-  (get) => get(bookInfoAtom),
+const activeTabAtom = atom<number>(NEW_BOOK_TABS[0].id);
+const bookChoiceAtom = atom<BookInfo | null>(null);
+const bookClubChoiceAtom = atom<BookClubChoice | null>(null);
+const gatheringAtom = atom<Gathering[]>([]);
+// const chapterAtom = atom<Chapter[]>([]);
+
+const useGatheringAtom = atom(
+  (get) => get(gatheringAtom),
+  (_, set, action: GatheringAtomAction) => {
+    switch (action.type) {
+      case "ADD":
+        set(gatheringAtom, (prev) => [
+          ...prev,
+          {
+            id: prev.length + 1,
+            type: "ONLINE",
+            date: "",
+            location: "",
+          },
+        ]);
+        break;
+      case "REMOVE":
+        set(gatheringAtom, (prev) =>
+          prev.filter((_, index) => index !== action.payload)
+        );
+        break;
+    }
+  }
+);
+
+const useBookChoiceAtom = atom(
+  (get) => get(bookChoiceAtom),
   (_, set, payload: BookInfo | null) => {
-    set(bookInfoAtom, payload);
+    set(bookChoiceAtom, payload);
   }
 );
 
@@ -64,19 +93,40 @@ const useActiveTabAtom = atom(
   }
 );
 
+const useBookClubChoiceAtom = atom(
+  (get) => get(bookClubChoiceAtom),
+  (_, set, payload: BookClubChoice | null) => {
+    set(bookClubChoiceAtom, payload);
+  }
+);
+
 const useActiveTabValue = () => useAtomValue(useActiveTabAtom);
 const useSetActiveTab = () => useSetAtom(useActiveTabAtom);
 const useActiveTab = () => useAtom(useActiveTabAtom);
 
-const useBookInfoValue = () => useAtomValue(useBookInfoAtom);
-const useSetBookInfo = () => useSetAtom(useBookInfoAtom);
-const useBookInfo = () => useAtom(useBookInfoAtom);
+const useBookChoiceValue = () => useAtomValue(useBookChoiceAtom);
+const useSetBookChoice = () => useSetAtom(useBookChoiceAtom);
+const useBookChoice = () => useAtom(useBookChoiceAtom);
+
+const useBookClubChoiceValue = () => useAtomValue(useBookClubChoiceAtom);
+const useSetBookClubChoice = () => useSetAtom(useBookClubChoiceAtom);
+const useBookClubChoice = () => useAtom(useBookClubChoiceAtom);
+
+const useGatheringValue = () => useAtomValue(useGatheringAtom);
+const useSetGathering = () => useSetAtom(useGatheringAtom);
+const useGathering = () => useAtom(useGatheringAtom);
 
 export {
   useActiveTab,
   useActiveTabValue,
-  useBookInfo,
-  useBookInfoValue,
+  useBookChoice,
+  useBookChoiceValue,
+  useBookClubChoice,
+  useBookClubChoiceValue,
+  useGathering,
+  useGatheringValue,
   useSetActiveTab,
-  useSetBookInfo,
+  useSetBookChoice,
+  useSetBookClubChoice,
+  useSetGathering,
 };

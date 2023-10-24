@@ -7,7 +7,7 @@ export function SearchBookListItem(bookInfo: BookInfoType) {
     bookInfo;
 
   return (
-    <S.SearchBookListItem>
+    <S.ListItemButton>
       <S.BookCoverImage
         src={cover}
         alt={title}
@@ -18,16 +18,16 @@ export function SearchBookListItem(bookInfo: BookInfoType) {
           maxHeight: "120px",
         }}
       />
-      <S.BookInfo>
-        <S.BookTitle variant="h6">{title}</S.BookTitle>
-        <S.BookSubInfoWrapper>
+      <S.InfoWrapper>
+        <S.Title variant="h6">{title}</S.Title>
+        <S.SubInfoWrapper>
           <Typography variant="body2">{author}</Typography>
           <Typography variant="body2">{publisher}</Typography>
           <Typography variant="body2">{pubDate}</Typography>
-        </S.BookSubInfoWrapper>
+        </S.SubInfoWrapper>
         <Typography variant="body2">{category}</Typography>
         <S.BookDescription variant="body2">{description}</S.BookDescription>
-      </S.BookInfo>
-    </S.SearchBookListItem>
+      </S.InfoWrapper>
+    </S.ListItemButton>
   );
 }

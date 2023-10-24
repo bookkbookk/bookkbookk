@@ -1,3 +1,18 @@
+export const BOOK_CLUB_LIST = [
+  {
+    id: 1,
+    creatorId: 1,
+    name: "내가만든북클럽",
+    profileImgUrl: "",
+  },
+  {
+    id: 2,
+    creatorId: 1,
+    name: "내가만든북클럽2내가만든북클럽2내가만든북클럽2내가만든북클럽2",
+    profileImgUrl: "",
+  },
+];
+
 export const MEMBER_INFO = {
   memberId: 1,
   nickname: "감귤차먹고아프지마세요",

@@ -2,6 +2,8 @@ import { createQueryKeyStore } from "@lukemorales/query-key-factory";
 import { postLogin } from "./auth/client";
 import { OAuthLoginParams } from "./auth/type";
 import { getBookSearchResult } from "./book/client";
+import { getBookClubList } from "./bookClub/client";
+import { BookClubStatus } from "./bookClub/type";
 import { getMember } from "./member/client";
 
 export const queryKeys = createQueryKeyStore({
@@ -24,6 +26,12 @@ export const queryKeys = createQueryKeyStore({
       queryKey: ["getBookSearchResult", searchWord],
       queryFn: () => getBookSearchResult(searchWord),
       enabled: !!searchWord,
+    }),
+  },
+  bookClub: {
+    list: (option?: BookClubStatus) => ({
+      queryKey: ["getBookClubList", option],
+      queryFn: () => getBookClubList(option),
     }),
   },
 });
