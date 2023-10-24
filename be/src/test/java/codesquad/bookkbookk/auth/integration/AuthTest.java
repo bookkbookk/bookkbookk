@@ -12,10 +12,12 @@ import org.springframework.http.MediaType;
 
 import codesquad.bookkbookk.IntegrationTest;
 import codesquad.bookkbookk.common.error.exception.ApiException;
+import codesquad.bookkbookk.common.error.exception.RefreshTokenNotSavedException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.domain.auth.data.dto.ReissueResponse;
 import codesquad.bookkbookk.domain.auth.data.entity.MemberRefreshToken;
 import codesquad.bookkbookk.domain.auth.repository.MemberRefreshTokenRepository;
+import codesquad.bookkbookk.domain.auth.service.OAuthService;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
 import codesquad.bookkbookk.domain.member.service.MemberService;
@@ -27,6 +29,8 @@ import io.restassured.response.Response;
 
 public class AuthTest extends IntegrationTest {
 
+    @Autowired
+    private OAuthService oAuthService;
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
@@ -61,6 +65,35 @@ public class AuthTest extends IntegrationTest {
                     .isNotBlank();
             assertions.assertThat(response.jsonPath().getString("accessToken"))
                     .isNotEqualTo(accessToken);
+        });
+    }
+
+    @Test
+    @DisplayName("로그아웃을 성공한다.")
+    void logout() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+        String refreshToken = jwtProvider.createRefreshToken();
+        MemberRefreshToken memberRefreshToken = new MemberRefreshToken(member.getId(), refreshToken);
+        memberRefreshTokenRepository.save(memberRefreshToken);
+
+        // when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .when()
+                    .post("/api/auth/logout")
+                .then().log().all()
+                    .extract();
+
+        // then
+        SoftAssertions.assertSoftly(assertions -> {
+            assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            assertions.assertThatThrownBy(
+                    () -> oAuthService.reissueAccessToken(refreshToken)
+            ).isInstanceOf(RefreshTokenNotSavedException.class);
         });
     }
 

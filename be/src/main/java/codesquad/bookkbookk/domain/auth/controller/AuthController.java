@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import codesquad.bookkbookk.common.resolver.MemberId;
 import codesquad.bookkbookk.common.resolver.Token;
 import codesquad.bookkbookk.domain.auth.data.dto.AuthCode;
 import codesquad.bookkbookk.domain.auth.data.dto.LoginResponse;
@@ -37,6 +38,11 @@ public class AuthController {
 
         return ResponseEntity.ok()
                 .body(response);
+    }
+
+    @PostMapping("/logout")
+    public void reissueAccessToken(@MemberId Long memberId) {
+        oAuthService.logout(memberId);
     }
 
 }
