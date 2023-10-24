@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -17,8 +19,10 @@ public class ReadAladinBooksResponse {
     private final String author;
     private final String pubDate;
     private final String description;
+    @JsonProperty("isbn")
     private final String isbn13;
     private final String cover;
+    @JsonProperty("category")
     private final String categoryName;
     private final String publisher;
 
@@ -39,14 +43,14 @@ public class ReadAladinBooksResponse {
     public static ReadAladinBooksResponse from(Map<String, Object> data) {
         return ReadAladinBooksResponse.builder()
                 .title(valueOf(data.get("title")))
-                .link((String) data.get("link"))
+                .link(valueOf(data.get("link")))
                 .author(valueOf(data.get("author")))
-                .pubDate((String) data.get("pubDate"))
-                .description((String) data.get("description"))
+                .pubDate(valueOf(data.get("pubDate")))
+                .description(valueOf(data.get("description")))
                 .isbn13(valueOf(data.get("isbn13")))
-                .cover((String) data.get("cover"))
-                .categoryName((String) data.get("categoryName"))
-                .publisher((String) data.get("publisher"))
+                .cover(valueOf(data.get("cover")))
+                .categoryName(valueOf(data.get("categoryName")))
+                .publisher(valueOf(data.get("publisher")))
                 .build();
     }
 
