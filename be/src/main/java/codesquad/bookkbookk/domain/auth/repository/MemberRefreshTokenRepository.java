@@ -9,6 +9,6 @@ import codesquad.bookkbookk.domain.member.data.entity.Member;
 
 public interface MemberRefreshTokenRepository extends JpaRepository<MemberRefreshToken, Long> {
 
-    Optional<Member> findMemberByRefreshToken(String refreshToken);
+    Optional<MemberRefreshToken> findByRefreshToken(String refreshToken);
 
 }

@@ -13,6 +13,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
+import codesquad.bookkbookk.common.error.exception.RefreshTokenNotSavedException;
 import codesquad.bookkbookk.domain.auth.data.dto.AuthCode;
 import codesquad.bookkbookk.domain.auth.data.dto.LoginRequest;
 import codesquad.bookkbookk.domain.auth.data.dto.LoginResponse;
@@ -55,8 +56,8 @@ public class OAuthService {
 
     @Transactional(readOnly = true)
     public ReissueResponse reissueAccessToken(String refreshToken) {
-        Member member = memberRefreshTokenRepository.findMemberByRefreshToken(refreshToken)
-                .orElseThrow(MemberNotFoundException::new);
+        Member member = memberRefreshTokenRepository.findByRefreshToken(refreshToken)
+                .orElseThrow(RefreshTokenNotSavedException::new).getMember();
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
         return new ReissueResponse(accessToken);
