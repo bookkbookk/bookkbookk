@@ -1,6 +1,6 @@
 package codesquad.bookkbookk.auth.integration;
 
-import java.io.File;
+import static java.lang.Thread.*;
 
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
@@ -8,19 +8,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 
 import codesquad.bookkbookk.IntegrationTest;
-import codesquad.bookkbookk.common.error.exception.ApiException;
 import codesquad.bookkbookk.common.error.exception.RefreshTokenNotSavedException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
-import codesquad.bookkbookk.domain.auth.data.dto.ReissueResponse;
 import codesquad.bookkbookk.domain.auth.data.entity.MemberRefreshToken;
 import codesquad.bookkbookk.domain.auth.repository.MemberRefreshTokenRepository;
 import codesquad.bookkbookk.domain.auth.service.OAuthService;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
-import codesquad.bookkbookk.domain.member.service.MemberService;
 import codesquad.bookkbookk.util.TestDataFactory;
 
 import io.restassured.RestAssured;
@@ -40,7 +36,7 @@ public class AuthTest extends IntegrationTest {
 
     @Test
     @DisplayName("refreshToken으로 accessToken 재발급을 한다.")
-    void reissueAccessToken() {
+    void reissueAccessToken() throws InterruptedException {
         // given
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
@@ -48,6 +44,7 @@ public class AuthTest extends IntegrationTest {
         String refreshToken = jwtProvider.createRefreshToken();
         MemberRefreshToken memberRefreshToken = new MemberRefreshToken(member.getId(), refreshToken);
         memberRefreshTokenRepository.save(memberRefreshToken);
+        sleep(3000);
 
         // when
         ExtractableResponse<Response> response = RestAssured
