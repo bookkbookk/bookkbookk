@@ -14,8 +14,11 @@ import codesquad.bookkbookk.common.error.exception.MemberNotInBookClubException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.domain.book.data.dto.CreateBookRequest;
 import codesquad.bookkbookk.domain.book.data.dto.CreateBookResponse;
+import codesquad.bookkbookk.domain.book.data.dto.ReadBookResponse;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
+import codesquad.bookkbookk.domain.book.data.entity.MemberBook;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
+import codesquad.bookkbookk.domain.book.repository.MemberBookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.data.entity.MemberBookClub;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
@@ -42,6 +45,9 @@ public class BookTest extends IntegrationTest {
 
     @Autowired
     private MemberBookClubRepository memberBookClubRepository;
+
+    @Autowired
+    private MemberBookRepository memberBookRepository;
 
     @Autowired
     private JwtProvider jwtProvider;
@@ -134,6 +140,46 @@ public class BookTest extends IntegrationTest {
             softAssertions.assertThat(response.statusCode()).isEqualTo(exception.getCode());
             softAssertions.assertThat(response.jsonPath().getObject("", ApiException.class).getMessage())
                     .isEqualTo(exception.getMessage());
+        });
+    }
+
+    @Test
+    @DisplayName("요청한 멤버가 참여한 책들을 title 기준 오름차순으로 조회한다.")
+    void readBooks() {
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book1 = TestDataFactory.createBook1();
+        bookRepository.save(book1);
+        Book book2 = TestDataFactory.createBook2();
+        bookRepository.save(book2);
+
+        MemberBook memberBook1 = new MemberBook(member, book1);
+        memberBookRepository.save(memberBook1);
+
+        MemberBook memberBook2 = new MemberBook(member, book2);
+        memberBookRepository.save(memberBook2);
+
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .queryParam("page", 0)
+                .queryParam("size", 1)
+                .when()
+                .get("/api/books")
+                .then().log().all()
+                .extract();
+
+        ReadBookResponse result = response.jsonPath().getObject("", ReadBookResponse.class);
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(result.getBooks().get(0).getTitle()).isEqualTo("개똥벌레");
+            softAssertions.assertThat(result.getHasNext()).isEqualTo(true);
         });
     }
 

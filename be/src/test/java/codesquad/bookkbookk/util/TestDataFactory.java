@@ -1,6 +1,7 @@
 package codesquad.bookkbookk.util;
 
 import codesquad.bookkbookk.domain.auth.data.type.LoginType;
+import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 
@@ -21,6 +22,30 @@ public class TestDataFactory {
                 .name("Test Book Club")
                 .profileImgUrl("image.url")
                 .build();
+    }
+
+    public static Book createBook1() {
+        return Book.builder()
+                .title("신데렐라")
+                .bookClubId(1L)
+                .author("감귤")
+                .category("미스테리")
+                .cover("Cinderella")
+                .isbn("1231231231231")
+                .build();
+
+    }
+
+    public static Book createBook2() {
+        return Book.builder()
+                .title("개똥벌레")
+                .bookClubId(1L)
+                .author("나그")
+                .category("스릴러")
+                .cover("gaeddong")
+                .isbn("1231231231232")
+                .build();
+
     }
 
 }
