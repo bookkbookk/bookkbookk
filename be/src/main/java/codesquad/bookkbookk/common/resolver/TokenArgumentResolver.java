@@ -24,7 +24,7 @@ public class TokenArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(MemberId.class) && parameter.getParameterType().equals(Long.class);
+        return parameter.hasParameterAnnotation(Token.class) && parameter.getParameterType().equals(String.class);
     }
 
     @Override
