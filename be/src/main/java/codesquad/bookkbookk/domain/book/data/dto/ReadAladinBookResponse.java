@@ -12,7 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class ReadAladinBooksResponse {
+public class ReadAladinBookResponse {
 
     private final String title;
     private final String link;
@@ -27,8 +27,8 @@ public class ReadAladinBooksResponse {
     private final String publisher;
 
     @Builder
-    private ReadAladinBooksResponse(String title, String link, String author, String pubDate, String description,
-                                    String isbn13, String cover, String categoryName, String publisher) {
+    private ReadAladinBookResponse(String title, String link, String author, String pubDate, String description,
+                                   String isbn13, String cover, String categoryName, String publisher) {
         this.title = title;
         this.link = link;
         this.author = author;
@@ -40,8 +40,8 @@ public class ReadAladinBooksResponse {
         this.publisher = publisher;
     }
 
-    public static ReadAladinBooksResponse from(Map<String, Object> data) {
-        return ReadAladinBooksResponse.builder()
+    public static ReadAladinBookResponse from(Map<String, Object> data) {
+        return ReadAladinBookResponse.builder()
                 .title(valueOf(data.get("title")))
                 .link(valueOf(data.get("link")))
                 .author(valueOf(data.get("author")))
@@ -54,9 +54,9 @@ public class ReadAladinBooksResponse {
                 .build();
     }
 
-    public static List<ReadAladinBooksResponse> from(List<Map<String, Object>> datum) {
+    public static List<ReadAladinBookResponse> from(List<Map<String, Object>> datum) {
         return datum.stream()
-                .map(ReadAladinBooksResponse::from)
+                .map(ReadAladinBookResponse::from)
                 .collect(Collectors.toUnmodifiableList());
     }
 

@@ -7,12 +7,12 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import codesquad.bookkbookk.domain.book.data.dto.ReadAladinBooksResponse;
+import codesquad.bookkbookk.domain.book.data.dto.ReadAladinBookResponse;
 
 @Service
 public class AladinService {
 
-    public List<ReadAladinBooksResponse> readAladinBooks(String searchTerm) {
+    public List<ReadAladinBookResponse> readAladinBooks(String searchTerm) {
         Map<String, Object> response = WebClient.create()
                 .get()
                 .uri(uriBuilder -> uriBuilder
@@ -35,7 +35,7 @@ public class AladinService {
                 .block();
 
         List<Map<String, Object>> datum = (List<Map<String, Object>>) response.get("item");
-        return ReadAladinBooksResponse.from(datum);
+        return ReadAladinBookResponse.from(datum);
     }
 
 }

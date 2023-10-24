@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 
 import codesquad.bookkbookk.IntegrationTest;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
-import codesquad.bookkbookk.domain.book.data.dto.ReadAladinBooksResponse;
+import codesquad.bookkbookk.domain.book.data.dto.ReadAladinBookResponse;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -35,7 +35,7 @@ public class AladinTest extends IntegrationTest {
                 .then().log().all()
                 .extract();
 
-       ReadAladinBooksResponse result = response.jsonPath().getList("", ReadAladinBooksResponse.class).get(0);
+       ReadAladinBookResponse result = response.jsonPath().getList("", ReadAladinBookResponse.class).get(0);
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             softAssertions.assertThat(result.getTitle()).isEqualTo("베베북 : 아가랑 삐악삐악");

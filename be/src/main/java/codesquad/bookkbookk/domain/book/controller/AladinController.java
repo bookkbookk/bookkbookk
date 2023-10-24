@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import codesquad.bookkbookk.domain.book.data.dto.ReadAladinBooksResponse;
+import codesquad.bookkbookk.domain.book.data.dto.ReadAladinBookResponse;
 import codesquad.bookkbookk.domain.book.service.AladinService;
 
 import lombok.RequiredArgsConstructor;
@@ -21,8 +21,8 @@ public class AladinController {
     private final AladinService aladinService;
 
     @GetMapping("/books")
-    public ResponseEntity<List<ReadAladinBooksResponse>> readBooks(@RequestParam String search) {
-        List<ReadAladinBooksResponse> responses = aladinService.readAladinBooks(search);
+    public ResponseEntity<List<ReadAladinBookResponse>> readBooks(@RequestParam String search) {
+        List<ReadAladinBookResponse> responses = aladinService.readAladinBooks(search);
 
         return ResponseEntity.ok()
                 .body(responses);
