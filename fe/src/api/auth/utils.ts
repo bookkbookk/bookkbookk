@@ -17,7 +17,7 @@ export async function reissueAccessToken() {
   }
 
   try {
-    const { data } = await postRefreshToken(refreshToken);
+    const { data } = await postRefreshToken();
     return data.accessToken;
   } catch (error) {
     logout();

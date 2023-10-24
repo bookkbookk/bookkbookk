@@ -40,7 +40,7 @@ export const handlers = [
     return res(ctx.status(200), ctx.json(MEMBER_INFO));
   }),
 
-  rest.post(AUTH_API_PATH.refresh, async (req, res, ctx) => {
+  rest.post(AUTH_API_PATH.reissueToken, async (req, res, ctx) => {
     const { refreshToken } = await req.json<{ refreshToken: string }>();
 
     if (!refreshToken) {
