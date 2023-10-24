@@ -10,6 +10,7 @@ export const MESSAGE = {
   NICKNAME_DUPLICATED: `이미 사용중인 닉네임이에요. 다른 닉네임을 사용해주세요.`,
   NEW_BOOK_CLUB_ERROR: `북클럽 생성에 실패했어요. \n 잠시 후 다시 시도해주세요.`,
   NEW_BOOK_CLUB_SUCCESS: `축하합니다! \n 앞으로 북크북크와 함께 좋은 책들을 많이 만나게 될 거에요! \n\n 그럼 바로 책을 추가하러 가볼까요?`,
+  NEW_BOOK_ERROR: `책 추가에 실패했어요. \n 잠시 후 다시 시도해주세요.`,
 };
 
 export const PAGE_TITLE = {
@@ -36,5 +37,8 @@ export const PAGE_TITLE = {
   [ROUTE_PATH.newBookClub]: {
     korean: "북클럽 생성",
     english: "New BookClub",
+  },
+  "book-detail": {
+    korean: "책 챕터 목록",
   },
 };

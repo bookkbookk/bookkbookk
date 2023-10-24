@@ -1,6 +1,7 @@
 import {
   ALADIN_API_PATH,
   AUTH_API_PATH,
+  BOOK_API_PATH,
   BOOK_CLUB_API_PATH,
   MEMBER_API_PATH,
 } from "@api/constants";
@@ -187,4 +188,8 @@ export const handlers = [
       return res(ctx.status(200), ctx.json(BOOK_CLUB_LIST));
     }
   ),
+
+  rest.post(BOOK_API_PATH.books, async (_, res, ctx) => {
+    return res(ctx.status(200), ctx.json({ createdBookId: 1 }));
+  }),
 ];

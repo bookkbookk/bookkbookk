@@ -37,6 +37,10 @@ export const ALADIN_API_PATH = {
   search: "/api/aladin/books",
 };
 
+export const BOOK_API_PATH = {
+  books: "/api/books",
+};
+
 // export const ALADIN_API_PATH = {
 //   search: "http://localhost:3000/search/book",
 // };

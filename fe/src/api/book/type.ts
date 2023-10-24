@@ -9,3 +9,12 @@ export type BookInfo = {
   category: string;
   publisher: string;
 };
+
+export type NewBookInfo = Pick<
+  BookInfo,
+  "isbn" | "title" | "author" | "cover" | "category"
+>;
+
+export type NewBookBody = NewBookInfo & {
+  bookClubId: number;
+};
