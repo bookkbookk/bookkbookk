@@ -63,6 +63,11 @@ public class OAuthService {
         return new ReissueResponse(accessToken);
     }
 
+    @Transactional
+    public void logout(Long memberId) {
+        memberRefreshTokenRepository.deleteByMemberId(memberId);
+    }
+
     private Member getLoginMember(LoginRequest loginRequest, boolean doesMemberExist) {
         if (doesMemberExist) {
             return memberRepository.findByEmail(loginRequest.getEmail())
