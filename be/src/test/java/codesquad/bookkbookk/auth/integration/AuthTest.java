@@ -42,7 +42,7 @@ public class AuthTest extends IntegrationTest {
         memberRepository.save(member);
         String accessToken = jwtProvider.createAccessToken(member.getId());
         String refreshToken = jwtProvider.createRefreshToken();
-        MemberRefreshToken memberRefreshToken = new MemberRefreshToken(member, refreshToken);
+        MemberRefreshToken memberRefreshToken = new MemberRefreshToken(member.getId(), refreshToken);
         memberRefreshTokenRepository.save(memberRefreshToken);
 
         // when

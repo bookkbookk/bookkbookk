@@ -23,14 +23,13 @@ public class MemberRefreshToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_refresh_token_id")
     private Long id;
-    @OneToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @Column(name = "member_id")
+    private Long memberId;
     @Column(name = "refresh_token")
     private String refreshToken;
 
-    public MemberRefreshToken(Member member, String refreshToken) {
-        this.member = member;
+    public MemberRefreshToken(Long memberId, String refreshToken) {
+        this.memberId = memberId;
         this.refreshToken = refreshToken;
     }
 

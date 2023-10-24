@@ -48,7 +48,7 @@ public class OAuthService {
         boolean doesMemberExist = memberRepository.existsByEmail(loginRequest.getEmail());
         Member loginMember = getLoginMember(loginRequest, doesMemberExist);
         Jwt jwt = jwtProvider.createJwt(loginMember.getId());
-        MemberRefreshToken memberRefreshToken = new MemberRefreshToken(loginMember, jwt.getRefreshToken());
+        MemberRefreshToken memberRefreshToken = new MemberRefreshToken(loginMember.getId(), jwt.getRefreshToken());
         memberRefreshTokenRepository.save(memberRefreshToken);
 
         return LoginResponse.of(jwt, doesMemberExist);
@@ -56,9 +56,9 @@ public class OAuthService {
 
     @Transactional(readOnly = true)
     public ReissueResponse reissueAccessToken(String refreshToken) {
-        Member member = memberRefreshTokenRepository.findByRefreshToken(refreshToken)
-                .orElseThrow(RefreshTokenNotSavedException::new).getMember();
-        String accessToken = jwtProvider.createAccessToken(member.getId());
+        Long memberId = memberRefreshTokenRepository.findByRefreshToken(refreshToken)
+                .orElseThrow(RefreshTokenNotSavedException::new).getMemberId();
+        String accessToken = jwtProvider.createAccessToken(memberId);
 
         return new ReissueResponse(accessToken);
     }
