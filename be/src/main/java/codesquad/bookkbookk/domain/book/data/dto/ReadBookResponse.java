@@ -5,22 +5,16 @@ import java.util.stream.Collectors;
 
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
 public class ReadBookResponse {
 
-    private List<BookResponse> books;
-    private Boolean hasNext;
-
-    public ReadBookResponse(List<Book> books, Boolean hasNext) {
-        this.books = BookResponse.from(books);
-        this.hasNext = hasNext;
-    }
+    private final Pagination pagination;
+    private final List<BookResponse> books;
 
     @Getter
     public static class BookResponse {
@@ -62,6 +56,16 @@ public class ReadBookResponse {
                     .map(BookResponse::from)
                     .collect(Collectors.toUnmodifiableList());
         }
+
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public static class Pagination {
+
+        private final int totalItemCounts;
+        private final int totalPageCounts;
+        private final int currentPageIndex;
 
     }
 
