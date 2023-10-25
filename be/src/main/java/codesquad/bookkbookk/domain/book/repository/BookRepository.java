@@ -1,7 +1,7 @@
 package codesquad.bookkbookk.domain.book.repository;
 
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -13,6 +13,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
             "JOIN member_book member_book " +
             "ON book.id = member_book.book.id " +
             "WHERE member_book.member.id = :memberId")
-    Slice<Book> findBooksByMemberId(Long memberId, PageRequest pageRequest);
+    Page<Book> findBooksByMemberId(Long memberId, Pageable pageable);
 
 }

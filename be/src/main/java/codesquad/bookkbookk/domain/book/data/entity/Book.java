@@ -5,8 +5,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import codesquad.bookkbookk.domain.book.data.dto.CreateBookRequest;
+import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -24,8 +28,9 @@ public class Book {
     private Long id;
     @Column(nullable = false)
     private String isbn;
-    @Column(name = "book_club_id", nullable = false)
-    private Long bookClubId;
+    @ManyToOne
+    @JoinColumn(name = "book_club_id")
+    private BookClub bookClub;
     @Column(nullable = false)
     private String title;
     @Column(nullable = false)
@@ -36,19 +41,19 @@ public class Book {
     private String category;
 
     @Builder
-    private Book(String isbn, Long bookClubId, String title, String cover, String author, String category) {
+    private Book(String isbn, BookClub bookClub, String title, String cover, String author, String category) {
         this.isbn = isbn;
-        this.bookClubId = bookClubId;
+        this.bookClub = bookClub;
         this.title = title;
         this.cover = cover;
         this.author = author;
         this.category = category;
     }
 
-    public static Book from(CreateBookRequest request) {
+    public static Book of(CreateBookRequest request, BookClub bookClub) {
         return Book.builder()
                 .isbn(request.getIsbn())
-                .bookClubId(request.getBookClubId())
+                .bookClub(bookClub)
                 .title(request.getTitle())
                 .cover(request.getCover())
                 .author(request.getAuthor())

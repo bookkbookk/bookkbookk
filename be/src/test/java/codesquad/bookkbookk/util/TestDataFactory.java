@@ -24,10 +24,10 @@ public class TestDataFactory {
                 .build();
     }
 
-    public static Book createBook1() {
+    public static Book createBook1(BookClub bookClub) {
         return Book.builder()
                 .title("신데렐라")
-                .bookClubId(1L)
+                .bookClub(bookClub)
                 .author("감귤")
                 .category("미스테리")
                 .cover("Cinderella")
@@ -36,10 +36,10 @@ public class TestDataFactory {
 
     }
 
-    public static Book createBook2() {
+    public static Book createBook2(BookClub bookClub) {
         return Book.builder()
                 .title("개똥벌레")
-                .bookClubId(1L)
+                .bookClub(bookClub)
                 .author("나그")
                 .category("스릴러")
                 .cover("gaeddong")

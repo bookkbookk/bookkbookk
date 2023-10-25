@@ -1,12 +1,10 @@
 package codesquad.bookkbookk.domain.book.service;
 
-import java.util.List;
-
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import codesquad.bookkbookk.common.error.exception.BookClubNotFoundException;
 import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.common.error.exception.MemberNotInBookClubException;
 import codesquad.bookkbookk.domain.book.data.dto.CreateBookRequest;
@@ -16,6 +14,8 @@ import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.data.entity.MemberBook;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
 import codesquad.bookkbookk.domain.book.repository.MemberBookRepository;
+import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
+import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
 import codesquad.bookkbookk.domain.bookclub.repository.MemberBookClubRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
@@ -27,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final BookClubRepository bookClubRepository;
     private final MemberBookClubRepository memberBookClubRepository;
     private final MemberRepository memberRepository;
     private final MemberBookRepository memberBookRepository;
@@ -36,26 +37,22 @@ public class BookService {
             throw new MemberNotInBookClubException();
         }
 
-        Book book = Book.from(request);
+        BookClub bookclub = bookClubRepository.findById(request.getBookClubId())
+                .orElseThrow(BookClubNotFoundException::new);
+        Book book = Book.of(request, bookclub);
         bookRepository.save(book);
 
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(MemberNotFoundException::new);
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         MemberBook memberBook = new MemberBook(member, book);
         memberBookRepository.save(memberBook);
 
         return new CreateBookResponse(book.getId());
     }
 
-    public ReadBookResponse readBooks(Long memberId, Integer page, Integer size) {
-        Sort sort = Sort.by(Sort.Direction.ASC, "title");
-        PageRequest pageRequest = PageRequest.of(page, size, sort);
-        Slice<Book> bookSlice = bookRepository.findBooksByMemberId(memberId, pageRequest);
+    public ReadBookResponse readBooks(Long memberId, Pageable pageable) {
+        Page<Book> books = bookRepository.findBooksByMemberId(memberId, pageable);
 
-        List<Book> books = bookSlice.getContent();
-        Boolean hasNext = bookSlice.hasNext();
-
-        return new ReadBookResponse(books, hasNext);
+        return ReadBookResponse.from(books);
     }
 
 }

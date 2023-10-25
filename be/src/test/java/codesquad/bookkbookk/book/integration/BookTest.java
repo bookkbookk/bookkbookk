@@ -1,5 +1,7 @@
 package codesquad.bookkbookk.book.integration;
 
+import java.util.LinkedHashMap;
+
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +16,6 @@ import codesquad.bookkbookk.common.error.exception.MemberNotInBookClubException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.domain.book.data.dto.CreateBookRequest;
 import codesquad.bookkbookk.domain.book.data.dto.CreateBookResponse;
-import codesquad.bookkbookk.domain.book.data.dto.ReadBookResponse;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.data.entity.MemberBook;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
@@ -144,17 +145,18 @@ public class BookTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("요청한 멤버가 참여한 책들을 title 기준 오름차순으로 조회한다.")
+    @DisplayName("요청한 멤버가 참여한 책들을 페이지로 나눠서 보내준다.")
     void readBooks() {
+        // given
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
 
         BookClub bookClub = TestDataFactory.createBookClub();
         bookClubRepository.save(bookClub);
 
-        Book book1 = TestDataFactory.createBook1();
+        Book book1 = TestDataFactory.createBook1(bookClub);
         bookRepository.save(book1);
-        Book book2 = TestDataFactory.createBook2();
+        Book book2 = TestDataFactory.createBook2(bookClub);
         bookRepository.save(book2);
 
         MemberBook memberBook1 = new MemberBook(member, book1);
@@ -165,6 +167,7 @@ public class BookTest extends IntegrationTest {
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
+        // when
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
@@ -175,11 +178,11 @@ public class BookTest extends IntegrationTest {
                 .then().log().all()
                 .extract();
 
-        ReadBookResponse result = response.jsonPath().getObject("", ReadBookResponse.class);
+        // then
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softAssertions.assertThat(result.getBooks().get(0).getTitle()).isEqualTo("개똥벌레");
-            softAssertions.assertThat(result.getHasNext()).isEqualTo(true);
+            softAssertions.assertThat(((LinkedHashMap) response.jsonPath().getList("books").get(0)).get("title"))
+                    .isEqualTo("신데렐라");
         });
     }
 
