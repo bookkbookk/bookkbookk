@@ -35,7 +35,7 @@ public class BookClubService {
         String profileImgUrl = DEFAULT_BOOK_CLUB_IMAGE_URL;
 
         MultipartFile profileImgFile = request.getProfileImage();
-        if (!profileImgFile.isEmpty()) {
+        if (profileImgFile != null) {
             profileImgUrl = s3ImageUploader.upload(profileImgFile).toString();
         }
 

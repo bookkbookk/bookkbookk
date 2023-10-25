@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.bookkbookk.domain.member.data.dto.MemberResponse;
 import codesquad.bookkbookk.domain.member.data.dto.UpdateProfileRequest;
+import codesquad.bookkbookk.domain.member.data.dto.UpdateProfileResponse;
 import codesquad.bookkbookk.domain.member.service.MemberService;
 import codesquad.bookkbookk.common.resolver.MemberId;
 
@@ -30,11 +31,12 @@ public class MemberController {
     }
 
     @PatchMapping("/profile")
-    public ResponseEntity<String> updateProfile(@MemberId Long memberId,
-                                                @ModelAttribute UpdateProfileRequest updateProfileRequest) {
-        memberService.updateProfile(memberId, updateProfileRequest);
+    public ResponseEntity<UpdateProfileResponse> updateProfile(@MemberId Long memberId,
+                                                               @ModelAttribute UpdateProfileRequest request) {
+        UpdateProfileResponse response = memberService.updateProfile(memberId, request);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok()
+                .body(response);
     }
 
 }
