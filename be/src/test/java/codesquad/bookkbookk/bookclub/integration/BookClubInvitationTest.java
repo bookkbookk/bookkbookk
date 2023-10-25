@@ -101,9 +101,8 @@ public class BookClubInvitationTest extends IntegrationTest {
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-                    .queryParam("bookClubId", bookClub.getId())
                 .when()
-                    .get("/api/book-clubs/invitation")
+                    .get("/api/book-clubs/invitation/1")
                 .then().log().all()
                     .extract();
 

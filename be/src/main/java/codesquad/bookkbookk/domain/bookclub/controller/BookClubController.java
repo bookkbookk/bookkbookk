@@ -5,10 +5,10 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.bookkbookk.common.resolver.MemberId;
@@ -48,17 +48,16 @@ public class BookClubController {
 
     @PostMapping("/invitation")
     public ResponseEntity<InvitationUrlResponse> createInvitationUrl(
-            @MemberId Long memberId,
-            @RequestBody CreateInvitationUrlRequest request) {
+            @MemberId Long memberId, @RequestBody CreateInvitationUrlRequest request) {
         InvitationUrlResponse response = bookClubInvitationService.createInvitationUrl(memberId, request);
 
         return ResponseEntity.ok()
                 .body(response);
     }
 
-    @GetMapping("/invitation")
+    @GetMapping("/invitation/{bookClubId}")
     public ResponseEntity<InvitationUrlResponse> readInvitationUrl(
-            @MemberId Long memberId, @RequestParam Long bookClubId) {
+            @MemberId Long memberId, @PathVariable Long bookClubId) {
         InvitationUrlResponse response = bookClubInvitationService.readInvitationUrl(memberId, bookClubId);
 
         return ResponseEntity.ok()

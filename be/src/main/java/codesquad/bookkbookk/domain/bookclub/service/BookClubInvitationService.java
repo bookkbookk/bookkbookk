@@ -18,9 +18,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BookClubInvitationService {
 
+    private static final String path = "bookkbookk.site/join/";
+
     private final BookClubInvitationUrlRepository bookClubInvitationUrlRepository;
     private final MemberBookClubRepository memberBookClubRepository;
-    private static final String path = "bookkbookk.site/join/";
 
     public InvitationUrlResponse createInvitationUrl(Long memberId, CreateInvitationUrlRequest request) {
         validateMemberAuth(memberId, request.getBookClubId());
@@ -29,16 +30,16 @@ public class BookClubInvitationService {
         BookClubInvitationUrl bookClubInvitationUrl = new BookClubInvitationUrl(request, invitationUrl);
         bookClubInvitationUrlRepository.save(bookClubInvitationUrl);
 
-        return new InvitationUrlResponse(invitationUrl);
+        return new InvitationUrlResponse(bookClubInvitationUrl.getInvitationUrl());
     }
 
     public InvitationUrlResponse readInvitationUrl(Long memberId, Long bookClubId) {
         validateMemberAuth(memberId, bookClubId);
 
-        BookClubInvitationUrl invitationUrl = bookClubInvitationUrlRepository.findByBookClubId(bookClubId)
+        BookClubInvitationUrl bookClubInvitationUrl = bookClubInvitationUrlRepository.findByBookClubId(bookClubId)
                 .orElseThrow(InvitationUrlNotFoundException::new);
 
-        return new InvitationUrlResponse(invitationUrl.getInvitationUrl());
+        return new InvitationUrlResponse(bookClubInvitationUrl.getInvitationUrl());
     }
 
     private void validateMemberAuth(Long memberId, Long bookClubId) {
