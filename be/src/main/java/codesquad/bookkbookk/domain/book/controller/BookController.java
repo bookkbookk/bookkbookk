@@ -1,5 +1,6 @@
 package codesquad.bookkbookk.domain.book.controller;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,9 +33,8 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<ReadBookResponse> readBooks(@MemberId Long memberId, @RequestParam Integer page,
-                                                      @RequestParam Integer size) {
-        ReadBookResponse response = bookService.readBooks(memberId, page, size);
+    public ResponseEntity<ReadBookResponse> readBooks(@MemberId Long memberId, Pageable pageable) {
+        ReadBookResponse response = bookService.readBooks(memberId, pageable);
 
         return ResponseEntity.ok()
                 .body(response);
