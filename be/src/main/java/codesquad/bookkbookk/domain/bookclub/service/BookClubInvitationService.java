@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BookClubInvitationService {
 
-    private static final String path = "bookkbookk.site/join/";
+    private static final String INVITATION_URL_PREFIX = "bookkbookk.site/join/";
 
     private final BookClubInvitationUrlRepository bookClubInvitationUrlRepository;
     private final MemberBookClubRepository memberBookClubRepository;
@@ -26,7 +26,7 @@ public class BookClubInvitationService {
     public InvitationUrlResponse createInvitationUrl(Long memberId, CreateInvitationUrlRequest request) {
         validateMemberAuth(memberId, request.getBookClubId());
 
-        String invitationUrl = path + UUID.randomUUID();
+        String invitationUrl = INVITATION_URL_PREFIX + UUID.randomUUID();
         BookClubInvitationUrl bookClubInvitationUrl = new BookClubInvitationUrl(request, invitationUrl);
         bookClubInvitationUrlRepository.save(bookClubInvitationUrl);
 
