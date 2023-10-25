@@ -28,13 +28,9 @@ public class BookClubInvitationUrl {
     @Column(nullable = false)
     private String invitationUrl;
 
-    @Column(nullable = true)
-    private String password;
-
 
     public BookClubInvitationUrl(CreateInvitationUrlRequest request, String invitationUrl) {
         this.bookClubId = request.getBookClubId();
-        this.password = request.getPassword();
         this.invitationUrl = invitationUrl;
     }
 

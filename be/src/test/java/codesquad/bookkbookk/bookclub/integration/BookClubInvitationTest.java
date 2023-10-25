@@ -57,7 +57,7 @@ public class BookClubInvitationTest extends IntegrationTest {
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        CreateInvitationUrlRequest request = new CreateInvitationUrlRequest(1L, "ddd");
+        CreateInvitationUrlRequest request = new CreateInvitationUrlRequest(1L);
 
         //when
         ExtractableResponse<Response> response = RestAssured
@@ -90,7 +90,7 @@ public class BookClubInvitationTest extends IntegrationTest {
         MemberBookClub memberBookClub = new MemberBookClub(member, bookClub);
         memberBookClubRepository.save(memberBookClub);
 
-        CreateInvitationUrlRequest request = new CreateInvitationUrlRequest(1L, "ddd");
+        CreateInvitationUrlRequest request = new CreateInvitationUrlRequest(1L);
         String invitationUrl = "bookkbookk.site/join/test";
         BookClubInvitationUrl bookClubInvitationUrl = new BookClubInvitationUrl(request, invitationUrl);
         bookClubInvitationUrlRepository.save(bookClubInvitationUrl);

@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 public class CreateInvitationUrlRequest {
 
     private Long bookClubId;
-    private String password;
 
-    public CreateInvitationUrlRequest(Long bookClubId, String password) {
+    public CreateInvitationUrlRequest(Long bookClubId) {
         this.bookClubId = bookClubId;
-        this.password = password;
     }
 
 }
