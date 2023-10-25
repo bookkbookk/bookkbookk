@@ -3,6 +3,8 @@ import { BookClubProfile } from "@api/bookClub/type";
 import { NEW_BOOK_TABS } from "@components/constants";
 import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 
+// TODO: atom 별로 newBook에 분리하기
+
 type BookClubChoice = Pick<BookClubProfile, "id" | "name" | "profileImgUrl">;
 
 type Gathering = {
@@ -12,13 +14,7 @@ type Gathering = {
   location: string;
 };
 
-// type Chapter = {
-//   title: string;
-//   scope?: string;
-//   topics?: { title: string; scope?: string }[];
-// };
-
-type NewBookAtomAction =
+type NewBookTabAtomAction =
   | {
       type: "PREV";
     }
@@ -43,7 +39,6 @@ const activeTabAtom = atom<number>(NEW_BOOK_TABS[0].id);
 const bookChoiceAtom = atom<BookInfo | null>(null);
 const bookClubChoiceAtom = atom<BookClubChoice | null>(null);
 const gatheringAtom = atom<Gathering[]>([]);
-// const chapterAtom = atom<Chapter[]>([]);
 
 const useGatheringAtom = atom(
   (get) => get(gatheringAtom),
@@ -78,7 +73,7 @@ const useBookChoiceAtom = atom(
 
 const useActiveTabAtom = atom(
   (get) => get(activeTabAtom),
-  (_, set, action: NewBookAtomAction) => {
+  (_, set, action: NewBookTabAtomAction) => {
     switch (action.type) {
       case "PREV":
         set(activeTabAtom, (prev) => prev - 1);

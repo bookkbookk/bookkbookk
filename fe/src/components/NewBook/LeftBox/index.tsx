@@ -5,20 +5,22 @@ import BackupIcon from "@mui/icons-material/Backup";
 import { Button, Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { ROUTE_PATH } from "routes/constants";
-import { useBookChoiceValue, useBookClubChoiceValue } from "store/useNewBook";
-import ChaptersPanel from "./ChaptersPanel";
+import { useBookChoice, useBookClubChoice } from "store/useNewBook";
+import ChaptersPanel from "./ChaptersPanel/ChaptersPanel";
 import GatheringPanel from "./GatheringPanel/GatheringPanel";
 import SearchPanel from "./SearchPanel";
 
 export default function NewBookLeftBox() {
-  const bookClubChoice = useBookClubChoiceValue();
-  const bookChoice = useBookChoiceValue();
+  const [bookClubChoice, setBookClubChoice] = useBookClubChoice();
+  const [bookChoice, setBookChoice] = useBookChoice();
   const isEssentialInfoFilled = bookClubChoice && bookChoice;
   const navigate = useNavigate();
 
   const { onPostNewBookClub } = usePostNewBook({
     onSuccessCallback: (bookId: number) => {
       navigate(`${ROUTE_PATH.bookDetail}/${bookId}`);
+      setBookClubChoice(null);
+      setBookChoice(null);
     },
   });
   const onClickPostNewBook = () => {
