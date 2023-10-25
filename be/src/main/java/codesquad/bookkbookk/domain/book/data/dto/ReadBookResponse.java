@@ -54,7 +54,6 @@ public class ReadBookResponse {
         private final String title;
         private final String cover;
         private final String author;
-
         private final String category;
 
         @Builder
