@@ -11,7 +11,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     @Query("SELECT book FROM Book book " +
             "JOIN member_book member_book " +
-            "ON book.id = member_book.                                                                                                                             book.id " +
+            "ON book.id = member_book.book.id " +
             "WHERE member_book.member.id = :memberId")
     Page<Book> findBooksByMemberId(Long memberId, Pageable pageable);
 
