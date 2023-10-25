@@ -11,6 +11,7 @@ import codesquad.bookkbookk.domain.member.data.dto.MemberResponse;
 import codesquad.bookkbookk.domain.member.data.dto.UpdateProfileRequest;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -31,7 +32,7 @@ public class MemberService {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
 
         MultipartFile profileImgFile = updateProfileRequest.getProfileImage();
-        if (!profileImgFile.isEmpty()) {
+        if (profileImgFile != null) {
             String profileImgUrl = s3ImageUploader.upload(profileImgFile).toString();
             member.updateProfileImgUrl(profileImgUrl);
         }
