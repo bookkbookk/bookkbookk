@@ -6,13 +6,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.bookkbookk.common.resolver.MemberId;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateBookClubRequest;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateBookClubResponse;
+import codesquad.bookkbookk.domain.bookclub.data.dto.CreateInvitationUrlRequest;
+import codesquad.bookkbookk.domain.bookclub.data.dto.InvitationUrlResponse;
 import codesquad.bookkbookk.domain.bookclub.data.dto.ReadBookClubResponse;
+import codesquad.bookkbookk.domain.bookclub.service.BookClubInvitationService;
 import codesquad.bookkbookk.domain.bookclub.service.BookClubService;
 
 import lombok.RequiredArgsConstructor;
@@ -23,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class BookClubController {
 
     private final BookClubService bookClubService;
+    private final BookClubInvitationService bookClubInvitationService;
 
     @PostMapping
     public ResponseEntity<CreateBookClubResponse> createBookClub(@MemberId Long memberId,
@@ -35,6 +41,25 @@ public class BookClubController {
     @GetMapping
     public ResponseEntity<List<ReadBookClubResponse>> readBookClubs(@MemberId Long memberId) {
         List<ReadBookClubResponse> response = bookClubService.readBookClubs(memberId);
+
+        return ResponseEntity.ok()
+                .body(response);
+    }
+
+    @PostMapping("/invitation")
+    public ResponseEntity<InvitationUrlResponse> createInvitationUrl(
+            @MemberId Long memberId,
+            @RequestBody CreateInvitationUrlRequest request) {
+        InvitationUrlResponse response = bookClubInvitationService.createInvitationUrl(memberId, request);
+
+        return ResponseEntity.ok()
+                .body(response);
+    }
+
+    @GetMapping("/invitation")
+    public ResponseEntity<InvitationUrlResponse> readInvitationUrl(
+            @MemberId Long memberId, @RequestParam Long bookClubId) {
+        InvitationUrlResponse response = bookClubInvitationService.readInvitationUrl(memberId, bookClubId);
 
         return ResponseEntity.ok()
                 .body(response);
