@@ -9,6 +9,7 @@ import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.common.image.S3ImageUploader;
 import codesquad.bookkbookk.domain.member.data.dto.MemberResponse;
 import codesquad.bookkbookk.domain.member.data.dto.UpdateProfileRequest;
+import codesquad.bookkbookk.domain.member.data.dto.UpdateProfileResponse;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
 
@@ -28,7 +29,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateProfile(Long memberId, UpdateProfileRequest updateProfileRequest) {
+    public UpdateProfileResponse updateProfile(Long memberId, UpdateProfileRequest updateProfileRequest) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
 
         MultipartFile profileImgFile = updateProfileRequest.getProfileImage();
@@ -41,6 +42,8 @@ public class MemberService {
         if (!nickname.isEmpty()) {
             member.updateNickname(nickname);
         }
+
+        return new UpdateProfileResponse(member.getNickname(), member.getProfileImgUrl());
     }
 
 }
