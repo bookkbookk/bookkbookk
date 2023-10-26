@@ -3,10 +3,13 @@ import { loader as userLoader } from "@api/member/queries";
 import StatusIndicator from "@components/common/StatusIndicator/StatusIndicator";
 import Auth from "@pages/Auth";
 import BookClub from "@pages/BookClub";
+import BookDetail from "@pages/BookDetail";
 import Landing from "@pages/Landing";
 import Library from "@pages/Library";
 import Main from "@pages/Main";
 import MyPage from "@pages/MyPage";
+import NewBook from "@pages/NewBook";
+import NewBookClub from "@pages/NewBookClub";
 import NotFound from "@pages/NotFound";
 import SignUp from "@pages/SignUp";
 import Layout from "layout/Layout";
@@ -47,7 +50,13 @@ export const router = createBrowserRouter(
           }>
           <Route index element={<Main />} />
           <Route path={ROUTE_PATH.library} element={<Library />} />
+          <Route
+            path={`${ROUTE_PATH.bookDetail}/:bookId`}
+            element={<BookDetail />}
+          />
+          <Route path={ROUTE_PATH.newBook} element={<NewBook />} />
           <Route path={ROUTE_PATH.bookClub} element={<BookClub />} />
+          <Route path={ROUTE_PATH.newBookClub} element={<NewBookClub />} />
           <Route path={ROUTE_PATH.myPage} element={<MyPage />} />
         </Route>
       </Route>

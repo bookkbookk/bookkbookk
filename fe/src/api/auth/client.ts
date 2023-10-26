@@ -1,12 +1,11 @@
-import { fetcher } from "@api/fetcher";
-import { REFRESH_TOKEN_KEY } from "@constant/index";
-import { AUTH_API_PATH } from "./constants";
+import { fetcher, fetcherWithRefreshToken } from "@api/fetcher";
+import { AUTH_API_PATH } from "../constants";
 import { OAuthLoginParams, Tokens } from "./type";
 
-export const postRefreshToken = async (refreshToken: string) => {
-  return await fetcher.post<{ accessToken: string }>(AUTH_API_PATH.refresh, {
-    refreshToken,
-  });
+export const postRefreshToken = async () => {
+  return await fetcherWithRefreshToken.post<{ accessToken: string }>(
+    AUTH_API_PATH.reissueToken
+  );
 };
 
 export const postLogin = async ({ provider, authCode }: OAuthLoginParams) => {
@@ -19,7 +18,5 @@ export const postLogin = async ({ provider, authCode }: OAuthLoginParams) => {
 };
 
 export const postLogout = async () => {
-  const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
-
-  return await fetcher.post(AUTH_API_PATH.logout, { refreshToken });
+  return await fetcher.post(AUTH_API_PATH.logout);
 };

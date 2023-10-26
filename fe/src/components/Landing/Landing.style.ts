@@ -14,30 +14,6 @@ export const LogoContainer = styled(Link)`
   align-items: center;
 `;
 
-export const Section = styled("section")`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing(6)};
-`;
-
-export const SectionContent = styled("div")`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing(2)};
-`;
-
-export const SectionTitle = styled("h2")`
-  color: ${({ theme }) => theme.palette.text.primary};
-  font: ${({ theme }) => theme.typography.h2};
-  font-family: "SOYO Maple Bold";
-`;
-
-export const SectionDescription = styled("p")`
-  font: ${({ theme }) => theme.typography.body1};
-  color: ${({ theme }) => theme.palette.text.secondary};
-`;
-
 export const LogoTitle = styled("h1")`
   color: ${({ theme }) => theme.palette.text.primary};
   font: ${({ theme }) => theme.typography.h4};

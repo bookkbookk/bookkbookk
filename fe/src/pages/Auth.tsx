@@ -1,6 +1,7 @@
 import { useOAuthLogin } from "@api/auth/queries";
 import StatusIndicator from "@components/common/StatusIndicator/StatusIndicator";
 import { ACCESS_TOKEN_KEY, MESSAGE, REFRESH_TOKEN_KEY } from "@constant/index";
+import { Box } from "@mui/material";
 import { useEffect } from "react";
 import { Navigate, useParams, useSearchParams } from "react-router-dom";
 import { ROUTE_PATH } from "routes/constants";
@@ -34,7 +35,7 @@ export default function Auth() {
   }, [isSuccess]);
 
   return (
-    <>
+    <Box sx={{ height: "100vh" }}>
       {isLoading && (
         <StatusIndicator status="loading" message={MESSAGE.LOGIN_LOADING} />
       )}
@@ -47,6 +48,6 @@ export default function Auth() {
       {isSuccess && authInfo.data.isNewMember && (
         <Navigate to={ROUTE_PATH.signUp} replace />
       )}
-    </>
+    </Box>
   );
 }

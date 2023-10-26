@@ -1,7 +1,7 @@
 import { reissueAccessToken } from "@api/auth/utils";
 import axios from "axios";
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "constant/index";
-import { ERROR_CODE } from "./auth/constants";
+import { AUTH_API_PATH, ERROR_CODE } from "./constants";
 
 const { VITE_APP_API_URL } = import.meta.env;
 
@@ -31,20 +31,36 @@ fetcher.interceptors.request.use(
   }
 );
 
+export const fetcherWithRefreshToken = axios.create({
+  baseURL: VITE_APP_API_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+fetcherWithRefreshToken.interceptors.request.use(
+  (config) => {
+    const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
+    if (refreshToken) {
+      config.headers["Authorization"] = `Bearer ${refreshToken}`;
+    }
+    return config;
+  },
+  (error) => {
+    Promise.reject(error);
+  }
+);
+
 // TODO: 리팩토링
 fetcher.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
 
     if (
       error.response.status === ERROR_CODE.UNAUTHORIZED &&
-      !originalRequest._retry &&
-      !!refreshToken
+      originalRequest.url !== AUTH_API_PATH.reissueToken
     ) {
-      originalRequest._retry = true;
-
       try {
         const accessToken = await reissueAccessToken();
         accessToken && localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);

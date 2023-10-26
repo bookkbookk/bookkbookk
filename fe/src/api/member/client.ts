@@ -1,6 +1,6 @@
 import { fetcher, formDataConfig } from "@api/fetcher";
 import { makeFormData } from "@api/utils";
-import { MEMBER_API_PATH } from "./constants";
+import { MEMBER_API_PATH } from "../constants";
 import { Member, MemberInfo } from "./type";
 
 export const getMember = async () => {
@@ -12,7 +12,7 @@ export const patchMemberInfo = async (memberInfo: MemberInfo) => {
   const memberInfoFormData = makeFormData(memberInfo);
 
   const { data } = await fetcher.patch(
-    MEMBER_API_PATH.member,
+    `${MEMBER_API_PATH.member}/profile`,
     memberInfoFormData,
     formDataConfig
   );
