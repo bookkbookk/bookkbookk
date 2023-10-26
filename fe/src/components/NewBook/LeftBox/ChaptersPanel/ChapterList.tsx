@@ -1,5 +1,5 @@
 import { Box, Divider, Paper } from "@mui/material";
-import { useChapterListValue } from "store/newBook/useChapters";
+import { useChapterListValue } from "store/newBook/useChapterList";
 import { ChapterListItem } from "./ChapterListItem";
 
 export default function ChapterList() {

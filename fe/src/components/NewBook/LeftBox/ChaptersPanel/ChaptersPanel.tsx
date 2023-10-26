@@ -1,6 +1,6 @@
 import { RoundButton } from "@components/common/common.style";
 import { Box } from "@mui/material";
-import { useSetChapterList } from "store/newBook/useChapters";
+import { useSetChapterList } from "store/newBook/useChapterList";
 import { useActiveTabValue } from "store/useNewBook";
 import NewBookTabPanel from "../NewBookTabPanel";
 import ChapterList from "./ChapterList";
