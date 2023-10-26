@@ -37,7 +37,6 @@ public class TopicController {
 
     @GetMapping("/{chapterId}")
     public ResponseEntity<List<ReadTopicResponse>> readTopicList(@PathVariable Long chapterId) {
-
         List<ReadTopicResponse> responses = topicService.readTopicLIst(chapterId);
 
         return ResponseEntity.ok()
