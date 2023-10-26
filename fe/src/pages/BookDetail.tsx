@@ -1,8 +1,7 @@
 import { BoxHeader, MainBox } from "@components/common/common.style";
-import { useParams } from "react-router-dom";
 
 export default function BookDetail() {
-  const { bookId } = useParams<{ bookId: string }>();
+  // const { bookId } = useParams<{ bookId: string }>();
 
   return (
     <MainBox>
