@@ -37,7 +37,7 @@ export default function BookDetailModal({
   return (
     <Modal open={open} onClose={handleClose}>
       <S.ModalBox>
-        <S.ModalImageWrapper>
+        <S.ImageWrapper>
           <S.BookCoverImage
             src={cover}
             alt={title}
@@ -45,7 +45,7 @@ export default function BookDetailModal({
             height={160}
             sx={{ objectFit: "contain" }}
           />
-        </S.ModalImageWrapper>
+        </S.ImageWrapper>
         <Tooltip
           title="서점 페이지의 도서 정보로 이동해요!"
           placement="top"
