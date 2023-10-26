@@ -5,8 +5,8 @@ import lombok.Getter;
 @Getter
 public class CreateTopicRequest {
 
-    private Long chapterId;
-    private String title;
+    private final Long chapterId;
+    private final String title;
 
     public CreateTopicRequest(Long chapterId, String title) {
         this.chapterId = chapterId;
