@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import codesquad.bookkbookk.domain.topic.data.dto.CreateTopicRequest;
 import codesquad.bookkbookk.domain.topic.data.dto.CreateTopicResponse;
 import codesquad.bookkbookk.domain.topic.data.dto.ReadTopicResponse;
+import codesquad.bookkbookk.domain.topic.data.dto.UpdateTopicTitleRequest;
 import codesquad.bookkbookk.domain.topic.service.TopicService;
 
 import lombok.RequiredArgsConstructor;
@@ -44,15 +45,16 @@ public class TopicController {
     }
 
     @PatchMapping("/{topicId}")
-    public ResponseEntity<String> updateTitle(@PathVariable Long topicId, @RequestBody String title) {
-        topicService.updateTitle(topicId, title);
+    public ResponseEntity<String> updateTitle(@PathVariable Long topicId,
+                                              @RequestBody UpdateTopicTitleRequest request) {
+        topicService.updateTitle(topicId, request);
 
         return ResponseEntity.ok()
                 .build();
     }
 
     @DeleteMapping("/{topicId}")
-    public ResponseEntity<String> deleteTopic(@PathVariable Long topicId){
+    public ResponseEntity<String> deleteTopic(@PathVariable Long topicId) {
         topicService.deleteTopic(topicId);
 
         return ResponseEntity.ok()
