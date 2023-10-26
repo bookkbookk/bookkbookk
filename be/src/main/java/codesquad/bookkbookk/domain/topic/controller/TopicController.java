@@ -44,7 +44,7 @@ public class TopicController {
     }
 
     @PatchMapping("/{topicId}")
-    public ResponseEntity<String> updateTitle(@PathVariable Long topicId,
+    public ResponseEntity<Void> updateTitle(@PathVariable Long topicId,
                                               @RequestBody UpdateTopicTitleRequest request) {
         topicService.updateTitle(topicId, request);
 
@@ -53,7 +53,7 @@ public class TopicController {
     }
 
     @DeleteMapping("/{topicId}")
-    public ResponseEntity<String> deleteTopic(@PathVariable Long topicId) {
+    public ResponseEntity<Void> deleteTopic(@PathVariable Long topicId) {
         topicService.deleteTopic(topicId);
 
         return ResponseEntity.ok()
