@@ -10,7 +10,9 @@ export default function Stepper({
   funnel: NonEmptyArray<string>;
 }) {
   return (
-    <MuiStepper sx={{ padding: "1rem 0" }} activeStep={activeStep}>
+    <MuiStepper
+      sx={{ padding: "1.5rem 0", width: "60%" }}
+      activeStep={activeStep}>
       {funnel.map((step) => {
         const stepProps: { completed?: boolean } = {};
         const labelProps: { optional?: React.ReactNode } = {};

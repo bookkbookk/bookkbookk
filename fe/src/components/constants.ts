@@ -7,7 +7,6 @@ export const NEW_BOOK_CLUB_FUNNEL = {
 export const NEW_BOOK_FUNNEL = {
   bookSearch: "bookSearch" as const,
   bookClubGathering: "bookClubGathering" as const,
-  bookChapters: "bookChapters" as const,
 };
 
 export const BOOK_CLUB_TAB = [
@@ -22,21 +21,6 @@ export const BOOK_CLUB_TAB = [
   {
     id: 2,
     label: "닫힌 북클럽",
-  },
-];
-
-export const NEW_BOOK_TABS = [
-  {
-    id: 0,
-    label: "책 검색",
-  },
-  {
-    id: 1,
-    label: "북클럽 모임 일정",
-  },
-  {
-    id: 2,
-    label: "챕터 토픽 작성",
   },
 ];
 

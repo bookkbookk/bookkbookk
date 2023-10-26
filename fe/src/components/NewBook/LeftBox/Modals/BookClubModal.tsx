@@ -1,7 +1,7 @@
 import { useGetBookClubList } from "@api/bookClub/queries";
 import ClearIcon from "@mui/icons-material/Clear";
 import { IconButton, List, Modal, Typography } from "@mui/material";
-import { useBookClubChoiceValue } from "store/useNewBook";
+import { useBookClubChoiceValue } from "store/newBook/useBookClubChoice";
 import * as S from "../../style";
 import BookClubListItem from "./BookClubListItem";
 

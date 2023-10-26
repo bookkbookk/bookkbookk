@@ -15,9 +15,14 @@ export const usePostNewBook = ({
 }) => {
   const { mutate } = useMutation(postNewBook);
 
-  const onPostNewBookClub = (newBookBody: NewBookBody) => {
+  const onPostNewBook = (newBookBody: NewBookBody) => {
     mutate(newBookBody, {
-      onSuccess: ({ createdBookId }) => onSuccessCallback(createdBookId),
+      onSuccess: ({ createdBookId }) => {
+        enqueueSnackbar(MESSAGE.NEW_BOOK_SUCCESS, {
+          variant: "success",
+        });
+        onSuccessCallback(createdBookId);
+      },
       onError: () => {
         enqueueSnackbar(MESSAGE.NEW_BOOK_ERROR, {
           variant: "error",
@@ -26,5 +31,5 @@ export const usePostNewBook = ({
     });
   };
 
-  return { onPostNewBookClub };
+  return { onPostNewBook };
 };

@@ -2,11 +2,20 @@ import CongratulationImage from "@assets/images/congratulation.png";
 import { SectionDescription } from "@components/common/common.style";
 import { MESSAGE } from "@constant/index";
 import { Box, Button, Typography } from "@mui/material";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ROUTE_PATH } from "routes/constants";
+import { useSetBookClub } from "store/useBookClub";
 
 export function BookClubCongratulation() {
   const navigate = useNavigate();
+  const setBookClubInfo = useSetBookClub();
+
+  useEffect(() => {
+    return () => setBookClubInfo(null);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
@@ -19,7 +28,7 @@ export function BookClubCongratulation() {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => navigate(ROUTE_PATH.library)}>
+          onClick={() => navigate(ROUTE_PATH.newBook)}>
           책 추가하러 가기
         </Button>
         <Button
