@@ -1,16 +1,14 @@
 package codesquad.bookkbookk.domain.topic.data.dto;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CreateTopicRequest {
 
-    private final Long chapterId;
-    private final String title;
-
-    public CreateTopicRequest(Long chapterId, String title) {
-        this.chapterId = chapterId;
-        this.title = title;
-    }
+    private Long chapterId;
+    private String title;
 
 }

@@ -4,8 +4,6 @@ import codesquad.bookkbookk.domain.auth.data.type.LoginType;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
-import codesquad.bookkbookk.domain.topic.data.dto.CreateTopicRequest;
-import codesquad.bookkbookk.domain.topic.data.entity.Topic;
 
 public class TestDataFactory {
 
@@ -48,11 +46,6 @@ public class TestDataFactory {
                 .isbn("1231231231232")
                 .build();
 
-    }
-
-    public static Topic createTopic(Long chapterId, String title){
-        CreateTopicRequest request = new CreateTopicRequest(chapterId, title);
-        return Topic.from(request);
     }
 
 }

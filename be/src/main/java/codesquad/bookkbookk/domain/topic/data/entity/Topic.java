@@ -6,8 +6,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import codesquad.bookkbookk.domain.topic.data.dto.CreateTopicRequest;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,13 +24,9 @@ public class Topic {
 
     private String title;
 
-    private Topic(Long chapterId, String title) {
+    public Topic(Long chapterId, String title) {
         this.chapterId = chapterId;
         this.title = title;
-    }
-
-    public static Topic from(CreateTopicRequest request) {
-        return new Topic(request.getChapterId(), request.getTitle());
     }
 
     public void updateTitle(String title){

@@ -23,7 +23,7 @@ public class TopicService {
 
     @Transactional
     public CreateTopicResponse createTopic(CreateTopicRequest request) {
-        Topic topic = Topic.from(request);
+        Topic topic = new Topic(request.getChapterId(), request.getTitle());
         topicRepository.save(topic);
         return new CreateTopicResponse(topic.getId());
     }

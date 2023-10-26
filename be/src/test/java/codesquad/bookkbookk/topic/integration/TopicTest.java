@@ -12,7 +12,6 @@ import codesquad.bookkbookk.common.error.exception.TopicNotFoundException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
-import codesquad.bookkbookk.domain.topic.data.dto.CreateTopicRequest;
 import codesquad.bookkbookk.domain.topic.data.dto.UpdateTopicTitleRequest;
 import codesquad.bookkbookk.domain.topic.data.entity.Topic;
 import codesquad.bookkbookk.domain.topic.repository.TopicRepository;
@@ -42,12 +41,11 @@ public class TopicTest extends IntegrationTest {
         memberRepository.save(member);
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        CreateTopicRequest createTopicRequest = new CreateTopicRequest(1L, "토픽1");
-
+        String requestBody = "{\"chapterId\": 1, \"title\": \"토픽\"}";
         //when
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
-                    .body(createTopicRequest)
+                .body(requestBody)
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                     .contentType(ContentType.JSON)
                 .when()
@@ -71,8 +69,8 @@ public class TopicTest extends IntegrationTest {
         memberRepository.save(member);
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        Topic topic1 = TestDataFactory.createTopic(1L, "토픽1");
-        Topic topic2 = TestDataFactory.createTopic(1L, "토픽2");
+        Topic topic1 = new Topic(1L, "토픽1");
+        Topic topic2 = new Topic(1L, "토픽2");
         topicRepository.save(topic1);
         topicRepository.save(topic2);
 
@@ -100,7 +98,7 @@ public class TopicTest extends IntegrationTest {
         memberRepository.save(member);
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        Topic topic = TestDataFactory.createTopic(1L, "토픽");
+        Topic topic = new Topic(1L, "토픽");
         topicRepository.save(topic);
 
         UpdateTopicTitleRequest request = new UpdateTopicTitleRequest("updated title");
@@ -132,7 +130,7 @@ public class TopicTest extends IntegrationTest {
         memberRepository.save(member);
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        Topic topic = TestDataFactory.createTopic(1L, "토픽");
+        Topic topic = new Topic(1L, "토픽");
         topicRepository.save(topic);
 
         //when
