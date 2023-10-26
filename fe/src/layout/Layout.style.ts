@@ -10,7 +10,7 @@ type AppBarProps = MuiAppBarProps & {
 };
 
 const openedMixin = (theme: Theme): CSSObject => ({
-  width: SIDEBAR.width,
+  width: SIDEBAR.openWidth,
   transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen,
@@ -24,16 +24,13 @@ const closedMixin = (theme: Theme): CSSObject => ({
     duration: theme.transitions.duration.leavingScreen,
   }),
   overflowX: "hidden",
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
-  },
+  width: SIDEBAR.closeWidth,
 });
 
 export const Sidebar = styled(Drawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
-  width: SIDEBAR.width,
+  width: SIDEBAR.openWidth,
   flexShrink: 0,
   whiteSpace: "nowrap",
   boxSizing: "border-box",
@@ -51,7 +48,6 @@ export const SidebarHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "flex-end",
-  padding: theme.spacing(0, 1),
   ...theme.mixins.toolbar,
 }));
 
@@ -64,7 +60,7 @@ export const AppBar = styled(MuiAppBar, {
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
-    width: `calc(100% - ${SIDEBAR.width}px)`,
+    width: `calc(100% - ${SIDEBAR.openWidth}px)`,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -85,7 +81,6 @@ export const ListItemButton = styled(MuiListItemButton, {
   shouldForwardProp: (prop) => prop !== "selected",
 })<ListItemButtonProps>(({ theme, selected }) => ({
   minHeight: 48,
-  paddingLeft: theme.spacing(2.5),
   color: theme.palette.text.secondary,
   textTransform: "capitalize",
   ...(selected && {
@@ -112,5 +107,5 @@ export const Content = styled(Box)`
   display: flex;
   flex-direction: column;
   height: 100%;
-  width: 100%;
+  width: calc(100vw - ${SIDEBAR.closeWidth}px);
 `;

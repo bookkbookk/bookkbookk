@@ -1,8 +1,9 @@
+import { queryKeys } from "@api/queryKeys";
 import { MESSAGE } from "@constant/index";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
 import { postNewBookClub } from "./client";
-import { BookClubInfo } from "./type";
+import { BookClubCreationInfo, BookClubStatus } from "./type";
 
 export const usePostNewBookClub = ({
   onSuccessCallback,
@@ -11,7 +12,7 @@ export const usePostNewBookClub = ({
 }) => {
   const { mutate } = useMutation(postNewBookClub);
 
-  const onPostNewBookClub = (bookClubInfo: BookClubInfo) => {
+  const onPostNewBookClub = (bookClubInfo: BookClubCreationInfo) => {
     mutate(bookClubInfo, {
       onSuccess: onSuccessCallback,
       onError: () => {
@@ -24,3 +25,6 @@ export const usePostNewBookClub = ({
 
   return { onPostNewBookClub };
 };
+
+export const useGetBookClubList = (option?: BookClubStatus) =>
+  useQuery(queryKeys.bookClub.list(option));

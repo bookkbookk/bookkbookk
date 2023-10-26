@@ -22,12 +22,12 @@ export function SignUpForm({
   const navigate = useNavigate();
 
   const { onPatchMemberInfo } = usePatchMemberInfo({
-    onSuccessCallback: (newProfileImgUrl) => {
+    onSuccessCallback: (newMemberInfo) => {
       setMemberInfo({
         type: "UPDATE",
         payload: {
-          nickname: newNickname,
-          profileImgUrl: newProfileImgUrl,
+          nickname: newMemberInfo.newNickname,
+          profileImgUrl: newMemberInfo.newProfileImgUrl,
         },
       });
       navigate(ROUTE_PATH.main, { replace: true });

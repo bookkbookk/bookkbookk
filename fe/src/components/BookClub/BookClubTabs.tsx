@@ -1,6 +1,7 @@
+import { a11yProps } from "@components/utils";
 import { Box, Tab, Tabs } from "@mui/material";
 import React from "react";
-import { BOOK_CLUB_TAB } from "./constants";
+import { BOOK_CLUB_TAB } from "../constants";
 
 export default function BookClubTabs({
   activeTabID,
@@ -25,11 +26,4 @@ export default function BookClubTabs({
       </Tabs>
     </Box>
   );
-}
-
-function a11yProps(index: number) {
-  return {
-    "id": `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
 }

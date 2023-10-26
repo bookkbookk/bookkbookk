@@ -77,4 +77,8 @@ export const GlobalStyle = css`
       box-sizing: inherit;
     }
   }
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;

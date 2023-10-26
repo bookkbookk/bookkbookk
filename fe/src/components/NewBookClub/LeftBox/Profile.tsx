@@ -1,11 +1,13 @@
 import ProfileEditAvatar from "@components/SignUp/ProfileEditAvatar";
 import { Wrapper } from "@components/SignUp/SignUp.style";
-import { SectionDescription } from "@components/common/common.style";
+import {
+  ButtonWrapper,
+  SectionDescription,
+} from "@components/common/common.style";
 import { useFileReader } from "@hooks/useFileReader";
 import { Button, TextField, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 import { useBookClub } from "store/useBookClub";
-import { ButtonWrapper } from "../NewBookClub.style";
 
 export default function BookClubProfile({
   onPrev,

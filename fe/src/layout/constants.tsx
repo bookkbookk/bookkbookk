@@ -6,12 +6,12 @@ import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import { ROUTE_PATH } from "routes/constants";
 
 export const SIDEBAR = {
-  width: 240,
+  openWidth: 240,
+  closeWidth: 56,
 };
 
 export const HEADER = {
-  mobile: 64,
-  desktop: 80,
+  height: 64,
 };
 
 export type NavigationItem = {
@@ -28,7 +28,7 @@ export const NAVIGATION_CONFIG = [
   },
   {
     label: PAGE_TITLE[ROUTE_PATH.library].english,
-    path: [ROUTE_PATH.library],
+    path: [ROUTE_PATH.library, ROUTE_PATH.newBook, ROUTE_PATH.bookDetail],
     icon: <MenuBookRoundedIcon />,
   },
   {

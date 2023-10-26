@@ -1,7 +1,13 @@
-import { AUTH_API_PATH } from "@api/auth/constants";
-import { MEMBER_API_PATH } from "@api/member/constants";
+import {
+  ALADIN_API_PATH,
+  AUTH_API_PATH,
+  BOOK_API_PATH,
+  BOOK_CLUB_API_PATH,
+  MEMBER_API_PATH,
+} from "@api/constants";
 import { rest } from "msw";
-import { MEMBER_INFO } from "./data";
+import { BOOK_CLUB_LIST, MEMBER_INFO } from "./data";
+import ALADIN_BOOK_SEARCH_EXAMPLE from "./data.json";
 
 const TOKEN_EXPIRATION = {
   accessToken: false,
@@ -16,6 +22,7 @@ export const handlers = [
       return res(
         ctx.status(401),
         ctx.json({
+          errorCode: "E0001",
           message: "Authorization 헤더가 없습니다.",
         })
       );
@@ -30,21 +37,10 @@ export const handlers = [
       );
     }
 
-    return res(ctx.json(MEMBER_INFO));
+    return res(ctx.status(200), ctx.json(MEMBER_INFO));
   }),
 
-  rest.post(AUTH_API_PATH.refresh, async (req, res, ctx) => {
-    const { refreshToken } = await req.json<{ refreshToken: string }>();
-
-    if (!refreshToken) {
-      return res(
-        ctx.status(400),
-        ctx.json({
-          message: "잘못된 요청입니다.",
-        })
-      );
-    }
-
+  rest.post(AUTH_API_PATH.reissueToken, async (_, res, ctx) => {
     if (TOKEN_EXPIRATION.refreshToken) {
       return res(
         ctx.status(401),
@@ -62,7 +58,7 @@ export const handlers = [
     );
   }),
 
-  rest.post(`${AUTH_API_PATH.login}/:provider`, async (req, res, ctx) => {
+  rest.post(`${AUTH_API_PATH.login}/*`, async (req, res, ctx) => {
     const { authCode } = await req.json<{ authCode: string }>();
 
     if (!authCode) {
@@ -92,7 +88,7 @@ export const handlers = [
     );
   }),
 
-  rest.patch(MEMBER_API_PATH.member, (req, res, ctx) => {
+  rest.patch(`${MEMBER_API_PATH.member}/profile`, (req, res, ctx) => {
     const memberInfo = req.body as FormData;
 
     if (!memberInfo) {
@@ -104,22 +100,26 @@ export const handlers = [
       );
     }
 
-    if ("test" === memberInfo.nickname) {
-      return res(
-        ctx.status(409),
-        ctx.json({
-          errorCode: "E0009",
-          message: "이미 사용중인 닉네임입니다.",
-        })
-      );
-    }
+    // if ("test" === memberInfo.nickname) {
+    //   return res(
+    //     ctx.status(409),
+    //     ctx.json({
+    //       errorCode: "E0009",
+    //       message: "이미 사용중인 닉네임입니다.",
+    //     })
+    //   );
+    // }
 
-    return res(
-      ctx.status(200),
-      ctx.json({
-        memberInfo,
-      })
-    );
+    // if (memberInfo.profileImage) {
+    //   return res(
+    //     ctx.status(200),
+    //     ctx.json({
+    //       ...MEMBER_INFO,
+    //       newProfileImgUrl:
+    //         "https://github.com/masters2023-project-team05-second-hand/second-hand-max-fe/assets/111998760/4ce425f1-d40b-421f-a24f-3c5b73737120",
+    //     })
+    //   );
+    // }
   }),
 
   rest.post(AUTH_API_PATH.logout, async (req, res, ctx) => {
@@ -135,5 +135,50 @@ export const handlers = [
     }
 
     return res(ctx.status(200));
+  }),
+
+  rest.post(BOOK_CLUB_API_PATH.bookClubs, async (_, res, ctx) => {
+    // const { name } = (await req.body) as FormData;
+
+    // if (!name) {
+    //   return res(
+    //     ctx.status(400),
+    //     ctx.json({
+    //       message: "잘못된 요청입니다.",
+    //     })
+    //   );
+    // }
+
+    return res(ctx.status(200));
+  }),
+
+  rest.get(ALADIN_API_PATH.search, async (req, res, ctx) => {
+    const search = req.url.search;
+
+    if (!search) {
+      return res(
+        ctx.status(400),
+        ctx.json({
+          message: "search 쿼리 파라미터가 없습니다.",
+        })
+      );
+    }
+
+    if (search === `?search=${encodeURIComponent("바람")}`) {
+      return res(ctx.status(200), ctx.json(ALADIN_BOOK_SEARCH_EXAMPLE));
+    }
+
+    return res(ctx.status(200), ctx.json([]));
+  }),
+
+  rest.get(
+    `${BOOK_CLUB_API_PATH.bookClubs}?status=open`,
+    async (_, res, ctx) => {
+      return res(ctx.status(200), ctx.json(BOOK_CLUB_LIST));
+    }
+  ),
+
+  rest.post(BOOK_API_PATH.books, async (_, res, ctx) => {
+    return res(ctx.status(200), ctx.json({ createdBookId: 1 }));
   }),
 ];
