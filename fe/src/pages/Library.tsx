@@ -15,7 +15,7 @@ export default function Library() {
   const isLogin = useIsLoginValue();
   const navigate = useNavigate();
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setActiveTabID(newValue);
   };
 

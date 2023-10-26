@@ -40,5 +40,6 @@ export const PAGE_TITLE = {
   },
   "book-detail": {
     korean: "책 챕터 목록",
+    english: "Book Detail",
   },
 };

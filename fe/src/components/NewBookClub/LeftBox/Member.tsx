@@ -12,7 +12,7 @@ export default function BookClubMember({
   onNext: () => void;
 }) {
   // TODO: 언제 BookClubInfo 초기화 시켜야 하는지 고민
-  const [bookClubInfo, setBookClubInfo] = useBookClub();
+  const [bookClubInfo] = useBookClub();
 
   const { onPostNewBookClub } = usePostNewBookClub({
     onSuccessCallback: onNext,

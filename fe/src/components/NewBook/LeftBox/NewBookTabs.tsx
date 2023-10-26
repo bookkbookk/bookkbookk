@@ -6,7 +6,7 @@ import { NEW_BOOK_TABS } from "../../constants";
 
 export default function NewBookTabs() {
   const [activeTabID, setActiveTabID] = useActiveTab();
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setActiveTabID({ type: "INDEX", payload: newValue });
   };
 
