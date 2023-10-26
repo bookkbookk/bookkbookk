@@ -12,6 +12,8 @@ import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
 import codesquad.bookkbookk.domain.topic.data.dto.CreateTopicRequest;
+import codesquad.bookkbookk.domain.topic.data.entity.Topic;
+import codesquad.bookkbookk.domain.topic.repository.TopicRepository;
 import codesquad.bookkbookk.util.TestDataFactory;
 
 import io.restassured.RestAssured;
@@ -25,6 +27,9 @@ public class TopicTest extends IntegrationTest {
     private MemberRepository memberRepository;
 
     @Autowired
+    private TopicRepository topicRepository;
+
+    @Autowired
     private JwtProvider jwtProvider;
 
     @DisplayName("성공적으로 토픽을 생성한다.")
@@ -33,7 +38,6 @@ public class TopicTest extends IntegrationTest {
         //given
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
-
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
         CreateTopicRequest createTopicRequest = new CreateTopicRequest(1L, "토픽1");
@@ -55,5 +59,34 @@ public class TopicTest extends IntegrationTest {
             softAssertions.assertThat(response.jsonPath().getLong("createdTopicId")).isNotZero();
         });
 
+    }
+
+    @DisplayName("성공적으로 토픽을 조회한다")
+    @Test
+    void readTopicList(){
+        //given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        Topic topic1 = TestDataFactory.createTopic(1L, "토픽1");
+        Topic topic2 = TestDataFactory.createTopic(1L, "토픽2");
+        topicRepository.save(topic1);
+        topicRepository.save(topic2);
+
+        //when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .when()
+                    .get("/api/topics/1")
+                .then().log().all()
+                    .extract();
+
+        //then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(response.jsonPath().getList("")).hasSize(2);
+        });
     }
 }
