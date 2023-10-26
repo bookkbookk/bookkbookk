@@ -35,4 +35,8 @@ public class Topic {
         return new Topic(request.getChapterId(), request.getTitle());
     }
 
+    public void updateTitle(String title){
+        this.title = title;
+    }
+
 }
