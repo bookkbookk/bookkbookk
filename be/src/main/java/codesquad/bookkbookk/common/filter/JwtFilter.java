@@ -1,6 +1,7 @@
 package codesquad.bookkbookk.common.filter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -10,17 +11,22 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.util.PatternMatchUtils;
 
-import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import codesquad.bookkbookk.common.error.ErrorResponse;
+import codesquad.bookkbookk.common.error.exception.ApiException;
+import codesquad.bookkbookk.common.error.exception.jwt.MalformedTokenException;
+import codesquad.bookkbookk.common.error.exception.jwt.NoAuthorizationHeaderException;
+import codesquad.bookkbookk.common.error.exception.jwt.BearerPrefixNotIncludedException;
+import codesquad.bookkbookk.common.error.exception.jwt.TokenExpiredException;
+import codesquad.bookkbookk.common.error.exception.jwt.TokenNotIncludedException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SecurityException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,8 +35,9 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtFilter implements Filter {
 
     private final String[] getUrlWhiteList = new String[]{};
-    private final String[] postUrlWhiteList = new String[]{"/api/members/login*"};
+    private final String[] postUrlWhiteList = new String[]{"/api/auth/login*"};
     private final JwtProvider jwtProvider;
+    private final ObjectMapper objectMapper;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws
@@ -42,25 +49,32 @@ public class JwtFilter implements Filter {
             chain.doFilter(request, response);
             return;
         }
-        if (!doesContainToken(httpServletRequest)) {
-            httpServletResponse.sendError(HttpStatus.UNAUTHORIZED.value(), "로그인이 필요합니다.");
+
+        String authorization = httpServletRequest.getHeader("Authorization");
+        if (authorization == null) {
+            writeErrorResponse(new NoAuthorizationHeaderException(), httpServletResponse);
+            return;
+        }
+        if (!authorization.startsWith("Bearer ")) {
+            writeErrorResponse(new BearerPrefixNotIncludedException(), httpServletResponse);
             return;
         }
 
+        String token = authorization.substring("Bearer ".length());
         try {
-            String accessToken = jwtProvider.getToken(httpServletRequest);
-            jwtProvider.extractMemberId(accessToken);
-            chain.doFilter(request, response);
-        } catch (JsonParseException e) {
-            log.error("JsonParseException");
-            httpServletResponse.sendError(HttpStatus.BAD_REQUEST.value());
-        } catch (MalformedJwtException | UnsupportedJwtException e) {
-            log.error("JwtException");
-            httpServletResponse.sendError(HttpStatus.UNAUTHORIZED.value(), "인증 오류");
+            jwtProvider.validateToken(token);
+        } catch (IllegalArgumentException e) {
+            writeErrorResponse(new TokenNotIncludedException(), httpServletResponse);
+            return;
+        } catch (MalformedJwtException | SecurityException e) {
+            writeErrorResponse(new MalformedTokenException(), httpServletResponse);
+            return;
         } catch (ExpiredJwtException e) {
-            log.error("JwtTokenExpired");
-            httpServletResponse.sendError(HttpStatus.FORBIDDEN.value(), "토큰이 만료 되었습니다");
+            writeErrorResponse(new TokenExpiredException(), httpServletResponse);
+            return;
         }
+
+        chain.doFilter(request, response);
     }
 
     private boolean checkGetWhiteList(HttpServletRequest httpServletRequest) {
@@ -73,9 +87,16 @@ public class JwtFilter implements Filter {
         return httpServletRequest.getMethod().equals("POST") && PatternMatchUtils.simpleMatch(postUrlWhiteList, url);
     }
 
-    private boolean doesContainToken(HttpServletRequest request) {
-        String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
-        return authorization != null && authorization.startsWith("Bearer ");
+    private void writeErrorResponse(ApiException apiException, HttpServletResponse httpServletResponse)
+            throws IOException {
+        httpServletResponse.setCharacterEncoding("UTF-8");
+        ErrorResponse errorResponse = ErrorResponse.from(apiException);
+        PrintWriter writer = httpServletResponse.getWriter();
+
+        log.error(apiException.getClass().getSimpleName() + ": " + apiException.getMessage());
+        httpServletResponse.setStatus(errorResponse.getCode());
+        String jsonBody = objectMapper.writeValueAsString(errorResponse);
+        writer.print(jsonBody);
     }
 
 }

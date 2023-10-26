@@ -3,6 +3,7 @@ package codesquad.bookkbookk.domain.bookclub.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateBookClubRequest;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateBookClubResponse;
@@ -26,8 +27,17 @@ public class BookClubService {
     private final MemberBookClubRepository memberBookClubRepository;
     private final MemberRepository memberRepository;
 
+    private static final String DEFAULT_BOOK_CLUB_IMAGE_URL =
+            "https://i.namu.wiki/i/ZnPxYijjK2AlXyf1dPZv0fqVvg3kdxahVkONYTCR-jplhh48smoq4UCfSAZIz6_R0lxoBz" +
+                    "JuQiIL6kfwtv0taBXNa_-nOxJKx2BX-z3GxPj6vqoc14GZ7nrT_jDXlrOV1xNL9RVYBTN_brsnBuCwOA.webp";
+
     public CreateBookClubResponse createBookClub(Long memberId, CreateBookClubRequest request) {
-        String profileImgUrl = s3ImageUploader.upload(request.getProfileImage()).toString();
+        String profileImgUrl = DEFAULT_BOOK_CLUB_IMAGE_URL;
+
+        MultipartFile profileImgFile = request.getProfileImage();
+        if (profileImgFile != null) {
+            profileImgUrl = s3ImageUploader.upload(profileImgFile).toString();
+        }
 
         BookClub bookClub = BookClub.builder()
                 .creatorId(memberId)
