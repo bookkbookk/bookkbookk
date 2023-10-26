@@ -62,7 +62,7 @@ public class TopicTest extends IntegrationTest {
         Book book = TestDataFactory.createBook1(bookClub);
         bookRepository.save(book);
 
-        Chapter chapter = new Chapter(member, book, "first");
+        Chapter chapter = new Chapter(book, "first");
         chapterRepository.save(chapter);
 
         String requestBody = "{\"chapterId\": 1, \"title\": \"토픽\"}";
@@ -99,7 +99,7 @@ public class TopicTest extends IntegrationTest {
         Book book = TestDataFactory.createBook1(bookClub);
         bookRepository.save(book);
 
-        Chapter chapter = new Chapter(member, book, "first");
+        Chapter chapter = new Chapter(book, "first");
         chapterRepository.save(chapter);
 
         Topic topic1 = new Topic(chapter, "토픽1");
@@ -137,7 +137,7 @@ public class TopicTest extends IntegrationTest {
         Book book = TestDataFactory.createBook1(bookClub);
         bookRepository.save(book);
 
-        Chapter chapter = new Chapter(member, book, "first");
+        Chapter chapter = new Chapter(book, "first");
         chapterRepository.save(chapter);
 
         Topic topic = new Topic(chapter, "topic");
@@ -178,7 +178,7 @@ public class TopicTest extends IntegrationTest {
         Book book = TestDataFactory.createBook1(bookClub);
         bookRepository.save(book);
 
-        Chapter chapter = new Chapter(member, book, "first");
+        Chapter chapter = new Chapter(book, "first");
         chapterRepository.save(chapter);
 
         Topic topic = new Topic(chapter, "topic");
