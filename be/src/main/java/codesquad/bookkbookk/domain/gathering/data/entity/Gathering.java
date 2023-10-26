@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import codesquad.bookkbookk.domain.book.data.entity.Book;
+import codesquad.bookkbookk.domain.gathering.data.dto.CreateGatheringRequest;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -32,10 +33,14 @@ public class Gathering {
     private LocalDateTime dateTime;
     private String place;
 
-    public Gathering(Book book, LocalDateTime dateTime, String place) {
+    private Gathering(Book book, LocalDateTime dateTime, String place) {
         this.book = book;
         this.dateTime = dateTime;
         this.place = place;
+    }
+
+    public static Gathering of(CreateGatheringRequest request, Book book) {
+        return new Gathering(book, request.getDateTime(), request.getPlace());
     }
 
 }
