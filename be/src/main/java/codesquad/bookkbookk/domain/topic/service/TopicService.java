@@ -34,7 +34,7 @@ public class TopicService {
         return ReadTopicResponse.from(topicList);
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     public void updateTitle(Long topicId, UpdateTopicTitleRequest request) {
         Topic topic = topicRepository.findById(topicId).orElseThrow(TopicNotFoundException::new);
         topic.updateTitle(request.getTitle());
