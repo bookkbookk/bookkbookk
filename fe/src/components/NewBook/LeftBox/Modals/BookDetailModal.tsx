@@ -1,9 +1,9 @@
 import { BookInfo } from "@api/book/type";
+import * as S from "@components/NewBook/style";
 import { ButtonWrapper } from "@components/common/common.style";
 import LaunchIcon from "@mui/icons-material/Launch";
 import { Button, Modal, Tooltip, Typography } from "@mui/material";
-import { useSetActiveTab, useSetBookChoice } from "store/useNewBook";
-import * as S from "../../style";
+import { useSetBookChoice } from "store/newBook/useBookChoice";
 
 export default function BookDetailModal({
   open,
@@ -27,11 +27,9 @@ export default function BookDetailModal({
     link,
   } = bookInfo;
 
-  const setActiveTab = useSetActiveTab();
   const setBookChoice = useSetBookChoice();
 
   const onSelectButtonClick = () => {
-    setActiveTab({ type: "NEXT" });
     setBookChoice(bookInfo);
     onSelectBook();
   };

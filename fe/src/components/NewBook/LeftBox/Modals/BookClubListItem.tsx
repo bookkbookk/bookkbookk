@@ -1,7 +1,7 @@
 import { BookClubProfile } from "@api/bookClub/type";
 import CheckIcon from "@mui/icons-material/Check";
 import { Avatar, ListItem, Typography } from "@mui/material";
-import { useSetBookClubChoice } from "store/useNewBook";
+import { useSetBookClubChoice } from "store/newBook/useBookClubChoice";
 import * as S from "../../style";
 
 export default function BookClubListItem({

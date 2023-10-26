@@ -70,7 +70,7 @@ export const BoxContent = styled(Box)(({ theme }) => ({
   width: "80%",
   height: "100%",
   gap: "2rem",
-  margin: theme.spacing(4),
+  padding: theme.spacing(4),
 }));
 
 export const Section = styled("section")`
@@ -94,7 +94,7 @@ export const SectionTitle = styled("h2")`
 
 export const SectionDescription = styled("p")`
   font: ${({ theme }) => theme.typography.body1};
-  color: ${({ theme }) => theme.palette.text.secondary};
+  color: ${({ theme }) => theme.palette.text.primary};
   white-space: pre-wrap;
   text-align: center;
 `;
