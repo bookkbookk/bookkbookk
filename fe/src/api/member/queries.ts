@@ -27,14 +27,20 @@ export const useGetMember = (enabled?: boolean) =>
 export const usePatchMemberInfo = ({
   onSuccessCallback,
 }: {
-  onSuccessCallback: (newProfileImgUrl: string) => void;
+  onSuccessCallback: ({
+    newNickname,
+    newProfileImgUrl,
+  }: {
+    newNickname: string;
+    newProfileImgUrl: string;
+  }) => void;
 }) => {
   const { mutate } = useMutation(patchMemberInfo);
 
   const onPatchMemberInfo = (memberInfo: MemberInfo) => {
     mutate(memberInfo, {
-      onSuccess: ({ newProfileImgUrl }) => {
-        onSuccessCallback(newProfileImgUrl);
+      onSuccess: (newMemberInfo) => {
+        onSuccessCallback(newMemberInfo);
       },
       // TODO: error type 정의
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
