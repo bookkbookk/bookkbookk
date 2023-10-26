@@ -59,13 +59,13 @@ const useTopicListAtom = atom(
         set(topicListAtom, (prev) => {
           const newTopicList = new Map(prev);
 
-          for (const [key, value] of prev) {
+          for (const [key, value] of newTopicList) {
             if (key > action.payload.chapterIndex) {
               newTopicList.set(key - 1, value);
             }
           }
 
-          newTopicList.delete(newTopicList.size);
+          newTopicList.delete(newTopicList.size - 1);
           return newTopicList;
         });
         break;
