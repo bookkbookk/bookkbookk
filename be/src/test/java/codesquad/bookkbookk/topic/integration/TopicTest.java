@@ -10,6 +10,12 @@ import org.springframework.http.HttpStatus;
 import codesquad.bookkbookk.IntegrationTest;
 import codesquad.bookkbookk.common.error.exception.TopicNotFoundException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
+import codesquad.bookkbookk.domain.book.data.entity.Book;
+import codesquad.bookkbookk.domain.book.repository.BookRepository;
+import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
+import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
+import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
+import codesquad.bookkbookk.domain.chapter.repository.ChapterRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
 import codesquad.bookkbookk.domain.topic.data.dto.UpdateTopicTitleRequest;
@@ -31,6 +37,15 @@ public class TopicTest extends IntegrationTest {
     private TopicRepository topicRepository;
 
     @Autowired
+    private ChapterRepository chapterRepository;
+
+    @Autowired
+    private BookRepository bookRepository;
+
+    @Autowired
+    private BookClubRepository bookClubRepository;
+
+    @Autowired
     private JwtProvider jwtProvider;
 
     @DisplayName("성공적으로 토픽을 생성한다.")
@@ -40,6 +55,15 @@ public class TopicTest extends IntegrationTest {
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
         String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = new Chapter(member, book, "first");
+        chapterRepository.save(chapter);
 
         String requestBody = "{\"chapterId\": 1, \"title\": \"토픽\"}";
         //when
@@ -69,8 +93,17 @@ public class TopicTest extends IntegrationTest {
         memberRepository.save(member);
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        Topic topic1 = new Topic(1L, "토픽1");
-        Topic topic2 = new Topic(1L, "토픽2");
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = new Chapter(member, book, "first");
+        chapterRepository.save(chapter);
+
+        Topic topic1 = new Topic(chapter, "토픽1");
+        Topic topic2 = new Topic(chapter, "토픽2");
         topicRepository.save(topic1);
         topicRepository.save(topic2);
 
@@ -98,7 +131,16 @@ public class TopicTest extends IntegrationTest {
         memberRepository.save(member);
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        Topic topic = new Topic(1L, "토픽");
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = new Chapter(member, book, "first");
+        chapterRepository.save(chapter);
+
+        Topic topic = new Topic(chapter, "topic");
         topicRepository.save(topic);
 
         UpdateTopicTitleRequest request = new UpdateTopicTitleRequest("updated title");
@@ -130,7 +172,16 @@ public class TopicTest extends IntegrationTest {
         memberRepository.save(member);
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        Topic topic = new Topic(1L, "토픽");
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = new Chapter(member, book, "first");
+        chapterRepository.save(chapter);
+
+        Topic topic = new Topic(chapter, "topic");
         topicRepository.save(topic);
 
         //when
