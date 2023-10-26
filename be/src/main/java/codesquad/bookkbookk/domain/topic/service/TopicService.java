@@ -24,7 +24,7 @@ public class TopicService {
         return new CreateTopicResponse(topic.getId());
     }
 
-    public List<ReadTopicResponse> readTopicLIst(Long memberId, Long chapterId){
+    public List<ReadTopicResponse> readTopicLIst(Long memberId, Long chapterId) {
         List<Topic> topicList = topicRepository.findByChapterId(chapterId);
 
         return ReadTopicResponse.from(topicList);

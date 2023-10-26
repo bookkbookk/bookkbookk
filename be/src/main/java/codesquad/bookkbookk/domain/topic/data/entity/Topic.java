@@ -34,4 +34,5 @@ public class Topic {
     public static Topic from(CreateTopicRequest request) {
         return new Topic(request.getChapterId(), request.getTitle());
     }
+
 }
