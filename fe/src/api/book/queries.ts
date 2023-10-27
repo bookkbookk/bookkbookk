@@ -18,7 +18,9 @@ export const usePostNewBook = ({
 }: {
   onSuccessCallback: (bookId: number) => void;
 }) => {
-  const { mutate } = useMutation(postNewBook);
+  const { mutate } = useMutation({
+    mutationFn: postNewBook,
+  });
 
   const onPostNewBook = (newBookBody: NewBookBody) => {
     mutate(newBookBody, {
