@@ -1,9 +1,9 @@
 import { BookInfo } from "@api/book/type";
+import * as S from "@components/NewBook/style";
 import { ButtonWrapper } from "@components/common/common.style";
 import LaunchIcon from "@mui/icons-material/Launch";
 import { Button, Modal, Tooltip, Typography } from "@mui/material";
-import { useSetActiveTab, useSetBookChoice } from "store/useNewBook";
-import * as S from "../../style";
+import { useSetBookChoice } from "store/newBook/useBookChoice";
 
 export default function BookDetailModal({
   open,
@@ -27,11 +27,9 @@ export default function BookDetailModal({
     link,
   } = bookInfo;
 
-  const setActiveTab = useSetActiveTab();
   const setBookChoice = useSetBookChoice();
 
   const onSelectButtonClick = () => {
-    setActiveTab({ type: "NEXT" });
     setBookChoice(bookInfo);
     onSelectBook();
   };
@@ -39,7 +37,7 @@ export default function BookDetailModal({
   return (
     <Modal open={open} onClose={handleClose}>
       <S.ModalBox>
-        <S.ModalImageWrapper>
+        <S.ImageWrapper>
           <S.BookCoverImage
             src={cover}
             alt={title}
@@ -47,7 +45,7 @@ export default function BookDetailModal({
             height={160}
             sx={{ objectFit: "contain" }}
           />
-        </S.ModalImageWrapper>
+        </S.ImageWrapper>
         <Tooltip
           title="서점 페이지의 도서 정보로 이동해요!"
           placement="top"

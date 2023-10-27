@@ -1,3 +1,4 @@
+import BookList from "@components/Library/BookList";
 import * as S from "@components/Library/Library.style";
 import LibraryTabs from "@components/Library/LibraryTabs";
 import { BoxHeader, MainBox } from "@components/common/common.style";
@@ -33,6 +34,7 @@ export default function Library() {
           </Button>
         )}
       </BoxHeader>
+      <BookList />
       <Tooltip title="새로운 책을 추가해보세요">
         <S.BookAddFab
           color="primary"

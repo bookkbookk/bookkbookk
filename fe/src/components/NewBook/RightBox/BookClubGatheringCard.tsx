@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@components/common/common.style";
 import { Avatar, Typography } from "@mui/material";
-import { useBookClubChoiceValue } from "store/useNewBook";
+import { useBookClubChoiceValue } from "store/newBook/useBookClubChoice";
 
 export default function BookClubGatheringCard() {
   const bookClubChoice = useBookClubChoiceValue();

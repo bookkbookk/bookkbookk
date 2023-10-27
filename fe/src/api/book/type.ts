@@ -18,3 +18,33 @@ export type NewBookInfo = Pick<
 export type NewBookBody = NewBookInfo & {
   bookClubId: number;
 };
+
+export type Chapter = {
+  title: string;
+  topics?: { title: string }[];
+};
+
+export type NewChapterBody = {
+  bookId: number;
+  chapters: Chapter[];
+};
+
+type Pagination = {
+  totalItemCounts: number;
+  totalPageCounts: number;
+  currentPageIndex: number;
+};
+
+export type BookList = {
+  pagination: Pagination;
+  books: BookListItem[];
+};
+
+export type BookListItem = {
+  id: number;
+  bookClub: { id: number; name: string };
+  title: string;
+  cover: string;
+  author: string;
+  category: string;
+};

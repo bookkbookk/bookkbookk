@@ -3,11 +3,10 @@ import { Card, CardContent } from "@components/common/common.style";
 import ClearIcon from "@mui/icons-material/Clear";
 import LaunchIcon from "@mui/icons-material/Launch";
 import { Box, IconButton, Tooltip, Typography } from "@mui/material";
-import { useBookChoice, useSetActiveTab } from "store/useNewBook";
+import { useBookChoice } from "store/newBook/useBookChoice";
 
 export default function BookCard() {
   const [bookChoice, setBookChoice] = useBookChoice();
-  const setActiveTab = useSetActiveTab();
 
   return (
     <Card>
@@ -28,7 +27,6 @@ export default function BookCard() {
                 size="small"
                 onClick={() => {
                   setBookChoice(null);
-                  setActiveTab({ type: "PREV" });
                 }}>
                 <ClearIcon fontSize="inherit" />
               </IconButton>

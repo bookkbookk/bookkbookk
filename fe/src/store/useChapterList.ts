@@ -1,5 +1,5 @@
 import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
-import { Info, ReducerAction } from "./type";
+import { Info, ReducerAction } from "./newBook/type";
 
 type ChapterListAtomActionMap = {
   UPDATE_CHAPTER: { chapterIndex: number; info: Info };
