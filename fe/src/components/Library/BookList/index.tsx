@@ -1,7 +1,9 @@
 import { useGetBooks } from "@api/book/queries";
+import StatusIndicator from "@components/common/StatusIndicator/StatusIndicator";
+import { MESSAGE } from "@constant/index";
 import { Pagination, Stack } from "@mui/material";
 import React, { useState } from "react";
-import BookCardGrid from "./BookCardGrid";
+import { BookCardGrid, GridSkeleton } from "./BookCardGrid";
 
 export default function BookList() {
   const [page, setPage] = useState(1);
@@ -9,11 +11,17 @@ export default function BookList() {
     setPage(value);
   };
 
-  const { books } = useGetBooks({ page: page - 1, size: 6 });
+  const { books, isLoading, isError, isSuccess } = useGetBooks({
+    page: page - 1,
+    size: 9,
+  });
 
   return (
     <>
-      {books && (
+      {isError && (
+        <StatusIndicator status="error" message={MESSAGE.BOOK_LIST_ERROR} />
+      )}
+      {isSuccess && books && (
         <Stack spacing={2}>
           <BookCardGrid books={books.books} />
           <Pagination
@@ -24,6 +32,7 @@ export default function BookList() {
           />
         </Stack>
       )}
+      {isLoading && <GridSkeleton />}
     </>
   );
 }
