@@ -2,7 +2,7 @@ import { usePostNewBookClub } from "@api/bookClub/queries";
 import { Wrapper } from "@components/SignUp/SignUp.style";
 import { ButtonWrapper } from "@components/common/common.style";
 import { Button, Typography } from "@mui/material";
-import { useBookClub } from "store/useBookClub";
+import { useBookClubValue } from "store/useBookClub";
 
 export default function BookClubMember({
   onPrev,
@@ -11,8 +11,7 @@ export default function BookClubMember({
   onPrev: () => void;
   onNext: () => void;
 }) {
-  // TODO: 언제 BookClubInfo 초기화 시켜야 하는지 고민
-  const [bookClubInfo] = useBookClub();
+  const bookClubInfo = useBookClubValue();
 
   const { onPostNewBookClub } = usePostNewBookClub({
     onSuccessCallback: onNext,
