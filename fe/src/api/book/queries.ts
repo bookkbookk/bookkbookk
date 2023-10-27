@@ -6,9 +6,10 @@ import { postNewBook } from "./client";
 import { NewBookBody } from "./type";
 
 export const useGetBookSearchResult = (searchWord: string) => {
-  const { data: bookSearchResult } = useQuery(
-    queryKeys.books.search(searchWord)
-  );
+  const { data: bookSearchResult } = useQuery({
+    ...queryKeys.books.search(searchWord),
+    enabled: !!searchWord,
+  });
 
   return { bookSearchResult };
 };
