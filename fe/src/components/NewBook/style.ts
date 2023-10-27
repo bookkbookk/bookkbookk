@@ -80,7 +80,7 @@ export const ModalBody = styled(Box)({
   overflow: "scroll",
 });
 
-export const ModalImageWrapper = styled(Box)(({ theme }) => ({
+export const ImageWrapper = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",

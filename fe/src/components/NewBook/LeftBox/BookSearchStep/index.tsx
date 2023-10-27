@@ -20,7 +20,7 @@ export default function BookSearchStep({
     value: userInput,
     wait: 500,
   });
-  const { data: bookSearchResult } = useGetBookSearchResult(searchWord);
+  const { bookSearchResult } = useGetBookSearchResult(searchWord);
 
   const onUserInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserInput(e.target.value);

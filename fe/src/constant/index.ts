@@ -14,6 +14,7 @@ export const MESSAGE = {
   NEW_BOOK_ERROR: `책 추가에 실패했어요. \n 잠시 후 다시 시도해주세요.`,
   NEW_BOOK_SUCCESS: `책 추가를 완료했어요! 이제 책을 읽으며 챕터를 추가해볼까요?`,
   NEW_CHAPTER_ERROR: `챕터 추가에 실패했어요. \n 잠시 후 다시 시도해주세요.`,
+  BOOK_LIST_ERROR: `책 목록을 불러오는데 실패했어요. \n 잠시 후 다시 시도해주세요.`,
 };
 
 export const PAGE_TITLE = {
