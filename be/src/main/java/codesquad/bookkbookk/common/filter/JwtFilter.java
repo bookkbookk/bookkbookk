@@ -2,6 +2,7 @@ package codesquad.bookkbookk.common.filter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -11,6 +12,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.util.PatternMatchUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -89,7 +92,9 @@ public class JwtFilter implements Filter {
 
     private void writeErrorResponse(ApiException apiException, HttpServletResponse httpServletResponse)
             throws IOException {
-        httpServletResponse.setCharacterEncoding("UTF-8");
+        httpServletResponse.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        httpServletResponse.setCharacterEncoding(StandardCharsets.UTF_8.name());
         ErrorResponse errorResponse = ErrorResponse.from(apiException);
         PrintWriter writer = httpServletResponse.getWriter();
 
