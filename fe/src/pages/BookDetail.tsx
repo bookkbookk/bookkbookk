@@ -1,6 +1,8 @@
 import { BoxHeader, MainBox } from "@components/common/common.style";
 
 export default function BookDetail() {
+  // const { bookId } = useParams<{ bookId: string }>();
+
   return (
     <MainBox>
       <BoxHeader />
