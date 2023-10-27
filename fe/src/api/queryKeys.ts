@@ -22,10 +22,10 @@ export const queryKeys = createQueryKeyStore({
     }),
   },
   books: {
+    // TODO: 여기에 enabled 조건 추가하면 적용이 안되는 이유 찾아보기
     search: (searchWord: string) => ({
       queryKey: ["getBookSearchResult", searchWord],
       queryFn: () => getBookSearchResult(searchWord),
-      enabled: !!searchWord,
     }),
     list: ({ page, size }: { page: number; size: number }) => ({
       queryKey: ["getBookList", { page, size }],

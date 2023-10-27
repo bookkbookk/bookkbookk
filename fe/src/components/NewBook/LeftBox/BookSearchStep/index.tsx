@@ -8,6 +8,7 @@ import { BookSearchGuide } from "./BookSearchGuide";
 
 import Navigation from "../Navigation";
 import SearchBookList from "./SearchBookList";
+
 export default function BookSearchStep({
   onPrev,
   onNext,
@@ -18,7 +19,7 @@ export default function BookSearchStep({
   const [userInput, setUserInput] = useState("");
   const searchWord = useDebounceValue({
     value: userInput,
-    wait: 500,
+    wait: 300,
   });
   const { bookSearchResult } = useGetBookSearchResult(searchWord);
 
