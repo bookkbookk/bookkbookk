@@ -35,7 +35,7 @@ export const usePatchMemberInfo = ({
     newProfileImgUrl: string;
   }) => void;
 }) => {
-  const { mutate } = useMutation(patchMemberInfo);
+  const { mutate } = useMutation({ mutationFn: patchMemberInfo });
 
   const onPatchMemberInfo = (memberInfo: MemberInfo) => {
     mutate(memberInfo, {

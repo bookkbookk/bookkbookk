@@ -39,4 +39,5 @@ export const ALADIN_API_PATH = {
 
 export const BOOK_API_PATH = {
   books: "/api/books",
+  chapters: "/api/chapters",
 };

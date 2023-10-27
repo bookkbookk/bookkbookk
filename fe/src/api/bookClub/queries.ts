@@ -10,7 +10,7 @@ export const usePostNewBookClub = ({
 }: {
   onSuccessCallback: () => void;
 }) => {
-  const { mutate } = useMutation(postNewBookClub);
+  const { mutate } = useMutation({ mutationFn: postNewBookClub });
 
   const onPostNewBookClub = (bookClubInfo: BookClubCreationInfo) => {
     mutate(bookClubInfo, {
