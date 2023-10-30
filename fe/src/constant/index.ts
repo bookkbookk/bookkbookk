@@ -42,8 +42,4 @@ export const PAGE_TITLE = {
     korean: "북클럽 생성",
     english: "New BookClub",
   },
-  "book-detail": {
-    korean: "책 챕터 목록",
-    english: "Book Detail",
-  },
 };
