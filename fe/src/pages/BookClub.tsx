@@ -1,4 +1,4 @@
-import BookClubTabs from "@components/BookClub/BookClubTabs";
+import Tabs from "@components/common/Tabs";
 import { BoxHeader, MainBox } from "@components/common/common.style";
 import { BOOK_CLUB_TAB } from "@components/constants";
 import AddIcon from "@mui/icons-material/Add";
@@ -20,7 +20,7 @@ export default function BookClub() {
   return (
     <MainBox>
       <BoxHeader>
-        <BookClubTabs {...{ activeTabID, handleChange }} />
+        <Tabs {...{ activeTabID, handleChange, tabList: BOOK_CLUB_TAB }} />
         {isLogin && (
           <Button
             variant="contained"

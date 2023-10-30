@@ -29,10 +29,6 @@ export default function LibraryTabs({
           label={TOTAL_TAB.label}
           {...a11yProps(TOTAL_TAB.id)}
         />
-        {/* TODO: DB에 기본으로 추가 요청 */}
-        {/* {DEFAULT_TABS.map((tab) => (
-          <Tab key={tab.id} label={tab.label} {...a11yProps(tab.id)} />
-        ))} */}
         {/* TODO: 책장 목록 조회 */}
         {/* {LIBRARY_TABS.map((tab) => (
           <Tab key={tab.id} label={tab.label} {...a11yProps(tab.id)} />

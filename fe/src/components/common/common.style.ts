@@ -29,6 +29,7 @@ export const MainBox = styled(Box)(({ theme }) => ({
   flexDirection: "column",
   justifyContent: "space-between",
   padding: theme.spacing(2, 4),
+  alignItems: "center",
 }));
 
 export const BoxHeader = styled(Box)(({ theme }) => ({

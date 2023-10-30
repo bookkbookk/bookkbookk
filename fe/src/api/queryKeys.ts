@@ -29,6 +29,12 @@ export const queryKeys = createQueryKeyStore({
       queryFn: () => getBookList({ page, size }),
     }),
   },
+  chapters: {
+    list: ({ page, size }: { page: number; size: number }) => ({
+      queryKey: ["getChapterList", { page, size }],
+      // queryFn: () => getChapterList({ page, size }),
+    }),
+  },
   bookClub: {
     list: (option?: BookClubStatus) => ({
       queryKey: ["getBookClubList", option],

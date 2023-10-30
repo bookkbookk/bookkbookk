@@ -8,9 +8,10 @@ type ChapterListAtomActionMap = {
 
 type ChaptersAtomAction =
   | { type: "ADD_CHAPTER" }
+  | { type: "RESET_CHAPTER" }
   | ReducerAction<ChapterListAtomActionMap>;
 
-const chapterListAtom = atom<Info[]>([]);
+const chapterListAtom = atom<Info[]>([{ title: "" }]);
 
 const useChapterListAtom = atom(
   (get) => get(chapterListAtom),
@@ -32,6 +33,9 @@ const useChapterListAtom = atom(
         set(chapterListAtom, (prev) =>
           prev.filter((_, index) => index !== action.payload.chapterIndex)
         );
+        break;
+      case "RESET_CHAPTER":
+        set(chapterListAtom, [{ title: "" }]);
         break;
     }
   }
