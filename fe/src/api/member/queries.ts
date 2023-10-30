@@ -1,28 +1,29 @@
+import { getAccessToken } from "@api/fetcher";
 import { queryClient } from "@api/queryClient";
 import { queryKeys } from "@api/queryKeys";
-import { ACCESS_TOKEN_KEY, MESSAGE } from "@constant/index";
+import { MESSAGE } from "@constant/index";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
 import { patchMemberInfo } from "./client";
 import { MemberInfo } from "./type";
 
 export const loader = () => async () => {
-  const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+  const accessToken = getAccessToken();
 
   if (!accessToken) {
     return null;
   }
 
-  const query = queryKeys.members.info({ enabled: !!accessToken });
+  const query = queryKeys.members.info();
 
   return (
-    queryClient.getQueryData(query.queryKey) ??
+    queryClient.getQueryData({ ...query.queryKey, enabled: !!accessToken }) ??
     (await queryClient.fetchQuery(query))
   );
 };
 
 export const useGetMember = (enabled?: boolean) =>
-  useQuery(queryKeys.members.info({ enabled }));
+  useQuery({ ...queryKeys.members.info(), enabled });
 
 export const usePatchMemberInfo = ({
   onSuccessCallback,

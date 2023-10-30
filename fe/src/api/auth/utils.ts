@@ -1,9 +1,10 @@
 import { postRefreshToken } from "@api/auth/client";
-import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "constant/index";
+import { setAccessToken } from "@api/fetcher";
+import { REFRESH_TOKEN_KEY } from "constant/index";
 import { ROUTE_PATH } from "routes/constants";
 
 export function logout() {
-  localStorage.removeItem(ACCESS_TOKEN_KEY);
+  setAccessToken("");
   localStorage.removeItem(REFRESH_TOKEN_KEY);
 
   window.location.href = ROUTE_PATH.main;

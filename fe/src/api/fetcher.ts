@@ -5,6 +5,16 @@ import { AUTH_API_PATH, ERROR_CODE } from "./constants";
 
 const { VITE_APP_API_URL } = import.meta.env;
 
+const tokenStorage = {
+  [ACCESS_TOKEN_KEY]: "",
+};
+
+export const setAccessToken = (accessToken: string) => {
+  tokenStorage[ACCESS_TOKEN_KEY] = accessToken;
+};
+
+export const getAccessToken = () => tokenStorage[ACCESS_TOKEN_KEY];
+
 export const fetcher = axios.create({
   baseURL: VITE_APP_API_URL,
   headers: {
@@ -20,7 +30,7 @@ export const formDataConfig = {
 
 fetcher.interceptors.request.use(
   (config) => {
-    const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+    const accessToken = tokenStorage[ACCESS_TOKEN_KEY];
     if (accessToken) {
       config.headers["Authorization"] = `Bearer ${accessToken}`;
     }
@@ -63,7 +73,7 @@ fetcher.interceptors.response.use(
     ) {
       try {
         const accessToken = await reissueAccessToken();
-        accessToken && localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+        accessToken && setAccessToken(accessToken);
 
         return fetcher(originalRequest);
       } catch {
