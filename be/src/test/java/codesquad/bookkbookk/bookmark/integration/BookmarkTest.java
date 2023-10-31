@@ -11,11 +11,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import codesquad.bookkbookk.IntegrationTest;
+import codesquad.bookkbookk.common.error.exception.BookmarkNotFoundException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
+import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
+import codesquad.bookkbookk.domain.bookmark.repository.BookmarkRepository;
 import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
 import codesquad.bookkbookk.domain.chapter.repository.ChapterRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
@@ -41,6 +44,8 @@ public class BookmarkTest extends IntegrationTest {
     ChapterRepository chapterRepository;
     @Autowired
     TopicRepository topicRepository;
+    @Autowired
+    BookmarkRepository bookmarkRepository;
     @Autowired
     JwtProvider jwtProvider;
 
@@ -81,6 +86,52 @@ public class BookmarkTest extends IntegrationTest {
         // then
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        });
+    }
+
+    @Test
+    @DisplayName("북마크를 수정한다.")
+    void updateBookmark() throws InterruptedException {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = TestDataFactory.createChapter1(book);
+        chapterRepository.save(chapter);
+
+        Topic topic = TestDataFactory.createTopic1(chapter);
+        topicRepository.save(topic);
+
+        Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
+        bookmarkRepository.save(bookmark);
+
+        JSONObject requestBody = new JSONObject(Map.of("title", "updated title",
+                "content", "updated content"));
+        Thread.sleep(1000);
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .contentType(ContentType.JSON)
+                .body(requestBody.toString())
+                .when()
+                .patch("api/bookmarks/" + bookmark.getId())
+                .then()
+                .extract();
+
+        // then
+        Bookmark actual = bookmarkRepository.findById(bookmark.getId()).orElseThrow(BookmarkNotFoundException::new);
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(actual.getTitle()).isEqualTo("updated title");
+            softAssertions.assertThat(actual.getUpdateAt()).isNotEqualTo(actual.getCreateAt());
         });
     }
 }
