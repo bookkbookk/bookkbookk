@@ -14,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import codesquad.bookkbookk.IntegrationTest;
+import codesquad.bookkbookk.common.error.exception.ChapterNotFoundException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
@@ -121,6 +122,44 @@ public class ChapterTest extends IntegrationTest {
                     .isEqualTo(chapters.get(0).getTitle());
             softAssertions.assertThat(response.jsonPath().getInt("[1].topicsCount"))
                     .isEqualTo(chapters.get(1).getTopics().size());
+        });
+    }
+
+    @DisplayName("토픽 제목을 변경한다.")
+    @Test
+    void updateChapterTitle() {
+        //given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = TestDataFactory.createChapter1(book);
+        chapterRepository.save(chapter);
+
+        JSONObject requestBody = new JSONObject(Map.of("title", "update"));
+
+        //when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .contentType(ContentType.JSON)
+                .body(requestBody.toString())
+                .when()
+                .patch("/api/chapters/" + chapter.getId())
+                .then().log().all()
+                .extract();
+
+        //then
+        Chapter actual = chapterRepository.findById(chapter.getId()).orElseThrow(ChapterNotFoundException::new);
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(actual.getTitle()).isEqualTo("update");
         });
     }
 
