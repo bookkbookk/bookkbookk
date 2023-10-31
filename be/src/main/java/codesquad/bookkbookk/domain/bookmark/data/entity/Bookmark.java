@@ -14,12 +14,18 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import codesquad.bookkbookk.domain.bookmark.data.dto.UpdateBookmarkRequest;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.topic.data.entity.Topic;
 
+import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Bookmark {
 
     @Id
@@ -47,6 +53,11 @@ public class Bookmark {
         this.topic = topic;
         this.title = title;
         this.content = content;
+    }
+
+    public void updateBookmark(UpdateBookmarkRequest updateBookmarkRequest) {
+        this.title = updateBookmarkRequest.getTitle();
+        this.content = updateBookmarkRequest.getContent();
     }
 
 }
