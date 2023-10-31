@@ -64,15 +64,15 @@ export const RightBox = styled(Box)(({ theme }) => ({
   boxShadow: theme.shadows[1],
 }));
 
-export const BoxContent = styled(Box)(({ theme }) => ({
+export const BoxContent = styled(Box)({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
   width: "80%",
   height: "100%",
   gap: "2rem",
-  padding: theme.spacing(4),
-}));
+  padding: "2rem 0",
+});
 
 export const Section = styled("section")`
   display: flex;

@@ -1,4 +1,4 @@
-import { ReactComponent as LogoIcon } from "@assets/images/brand.svg";
+import LogoImage from "@assets/images/brand.png";
 import { ROUTE_PATH } from "routes/constants";
 import * as S from "../Landing/Landing.style";
 
@@ -9,7 +9,7 @@ export default function Logo({
 }) {
   return (
     <S.LogoContainer to={ROUTE_PATH.main}>
-      <LogoIcon />
+      <img src={LogoImage} width={80} height={80} />
       {isTitleVisible && <S.LogoTitle>북크북크</S.LogoTitle>}
     </S.LogoContainer>
   );

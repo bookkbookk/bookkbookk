@@ -1,17 +1,13 @@
 import { Member } from "@api/member/type";
 import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
+import { ReducerAction } from "./type";
 
 type MemberAtomActionMap = {
   INIT: Member;
   UPDATE: Partial<Member>;
 };
 
-type MemberAtomAction = {
-  [K in keyof MemberAtomActionMap]: {
-    type: K;
-    payload: MemberAtomActionMap[K];
-  };
-}[keyof MemberAtomActionMap];
+type MemberAtomAction = ReducerAction<MemberAtomActionMap>;
 
 const isLoginAtom = atom<boolean | undefined>(undefined);
 const memberAtom = atom<Member | undefined>(undefined);
