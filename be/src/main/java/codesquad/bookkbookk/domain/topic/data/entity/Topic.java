@@ -5,6 +5,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -20,12 +24,14 @@ public class Topic {
     @Column(name = "topic_id")
     private Long id;
 
-    private Long chapterId;
+    @ManyToOne
+    @JoinColumn(name = "chapter_id")
+    private Chapter chapter;
 
     private String title;
 
-    public Topic(Long chapterId, String title) {
-        this.chapterId = chapterId;
+    public Topic(Chapter chapter, String title) {
+        this.chapter = chapter;
         this.title = title;
     }
 
