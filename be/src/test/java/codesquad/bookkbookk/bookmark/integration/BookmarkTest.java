@@ -134,4 +134,44 @@ public class BookmarkTest extends IntegrationTest {
             softAssertions.assertThat(actual.getUpdateAt()).isNotEqualTo(actual.getCreateAt());
         });
     }
+
+    @Test
+    @DisplayName("북마크를 삭제한다.")
+    void deleteBookmark() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = TestDataFactory.createChapter1(book);
+        chapterRepository.save(chapter);
+
+        Topic topic = TestDataFactory.createTopic1(chapter);
+        topicRepository.save(topic);
+
+        Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
+        bookmarkRepository.save(bookmark);
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .when()
+                .delete("api/bookmarks/" + bookmark.getId())
+                .then()
+                .extract();
+
+        // then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThatThrownBy(() -> bookmarkRepository.findById(bookmark.getId())
+                            .orElseThrow(BookmarkNotFoundException::new))
+                    .isInstanceOf(BookmarkNotFoundException.class);
+        });
+    }
 }
