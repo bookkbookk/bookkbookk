@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import codesquad.bookkbookk.domain.chapter.data.dto.CreateChapterRequest;
 import codesquad.bookkbookk.domain.chapter.data.dto.CreateChapterResponse;
 import codesquad.bookkbookk.domain.chapter.data.dto.ReadChapterResponse;
+import codesquad.bookkbookk.domain.chapter.data.dto.UpdateChapterTitleRequest;
 import codesquad.bookkbookk.domain.chapter.service.ChapterService;
 
 import lombok.RequiredArgsConstructor;
@@ -38,6 +40,14 @@ public class ChapterController {
 
         return ResponseEntity.ok()
                 .body(response);
+    }
+
+    @PatchMapping("/{chapterId}")
+    public ResponseEntity<Void> updateChapter(@PathVariable Long chapterId,
+                                              @RequestBody UpdateChapterTitleRequest updateChapterTitleRequest) {
+         chapterService.updateChapter(chapterId, updateChapterTitleRequest);
+
+        return ResponseEntity.ok().build();
     }
 
 }

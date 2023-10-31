@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import codesquad.bookkbookk.domain.book.data.entity.Book;
+import codesquad.bookkbookk.domain.chapter.data.dto.UpdateChapterTitleRequest;
 import codesquad.bookkbookk.domain.topic.data.entity.Topic;
 
 import lombok.AccessLevel;
@@ -41,6 +42,10 @@ public class Chapter {
     public Chapter(Book book, String title) {
         this.book = book;
         this.title = title;
+    }
+
+    public void updateTitle(UpdateChapterTitleRequest updateChapterTitleRequest) {
+        this.title = updateChapterTitleRequest.getTitle();
     }
 
 }
