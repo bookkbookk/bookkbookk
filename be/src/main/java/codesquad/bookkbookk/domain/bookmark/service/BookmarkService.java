@@ -52,4 +52,15 @@ public class BookmarkService {
         bookmark.updateBookmark(updateBookmarkRequest);
     }
 
+    @Transactional
+    public void deleteBookmark(Long memberId, Long bookmarkId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+        Bookmark bookmark = bookmarkRepository.findById(bookmarkId).orElseThrow(BookmarkNotFoundException::new);
+
+        if (member != bookmark.getWriter()) {
+            throw new MemberIsNotBookmarkWriterException();
+        }
+        bookmarkRepository.deleteById(bookmarkId);
+    }
+
 }
