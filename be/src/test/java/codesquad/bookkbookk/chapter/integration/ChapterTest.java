@@ -48,7 +48,7 @@ public class ChapterTest extends IntegrationTest {
     @Autowired
     JwtProvider jwtProvider;
 
-    @DisplayName("성공적으로 챕터을 생성한다.")
+    @DisplayName("챕터을 생성한다.")
     @Test
     void createChapter() throws JSONException {
         //given
@@ -84,7 +84,7 @@ public class ChapterTest extends IntegrationTest {
         });
     }
 
-    @DisplayName("토픽을 조회한다.")
+    @DisplayName("챕터를 조회한다.")
     @Test
     void readChapter() {
         //given
@@ -125,7 +125,7 @@ public class ChapterTest extends IntegrationTest {
         });
     }
 
-    @DisplayName("토픽 제목을 변경한다.")
+    @DisplayName("챕터 제목을 변경한다.")
     @Test
     void updateChapterTitle() {
         //given
@@ -160,6 +160,41 @@ public class ChapterTest extends IntegrationTest {
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             softAssertions.assertThat(actual.getTitle()).isEqualTo("update");
+        });
+    }
+
+    @DisplayName("챕터를 식제한다.")
+    @Test
+    void deleteChapter() {
+        //given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = TestDataFactory.createChapter1(book);
+        chapterRepository.save(chapter);
+
+        //when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .when()
+                .delete("/api/chapters/" + chapter.getId())
+                .then().log().all()
+                .extract();
+
+        //then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThatThrownBy(() -> chapterRepository.findById(chapter.getId())
+                            .orElseThrow(ChapterNotFoundException::new))
+                    .isInstanceOf(ChapterNotFoundException.class);
         });
     }
 
