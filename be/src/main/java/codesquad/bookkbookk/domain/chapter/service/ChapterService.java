@@ -10,6 +10,7 @@ import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
 import codesquad.bookkbookk.domain.chapter.data.dto.CreateChapterRequest;
 import codesquad.bookkbookk.domain.chapter.data.dto.CreateChapterResponse;
+import codesquad.bookkbookk.domain.chapter.data.dto.ReadChapterResponse;
 import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
 import codesquad.bookkbookk.domain.chapter.repository.ChapterRepository;
 import codesquad.bookkbookk.domain.topic.data.entity.Topic;
@@ -42,6 +43,12 @@ public class ChapterService {
         return new CreateChapterResponse(chapterList.stream()
                 .map(Chapter::getId)
                 .collect(Collectors.toUnmodifiableList()));
+    }
+
+    public List<ReadChapterResponse> readChapters(Long bookId) {
+        List<Chapter> chapters = chapterRepository.findAllByBookId(bookId);
+
+        return ReadChapterResponse.from(chapters);
     }
 
 }

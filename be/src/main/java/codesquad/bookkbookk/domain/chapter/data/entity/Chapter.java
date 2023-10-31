@@ -1,5 +1,6 @@
 package codesquad.bookkbookk.domain.chapter.data.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -35,7 +36,7 @@ public class Chapter {
     private String title;
 
     @OneToMany(mappedBy = "chapter")
-    private List<Topic> topics;
+    private List<Topic> topics = new ArrayList<>();
 
     public Chapter(Book book, String title) {
         this.book = book;
