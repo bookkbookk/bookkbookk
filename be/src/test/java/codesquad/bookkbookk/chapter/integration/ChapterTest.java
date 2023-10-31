@@ -1,5 +1,6 @@
 package codesquad.bookkbookk.chapter.integration;
 
+import java.util.List;
 import java.util.Map;
 
 import org.assertj.core.api.SoftAssertions;
@@ -18,8 +19,12 @@ import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
+import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
+import codesquad.bookkbookk.domain.chapter.repository.ChapterRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
+import codesquad.bookkbookk.domain.topic.data.entity.Topic;
+import codesquad.bookkbookk.domain.topic.repository.TopicRepository;
 import codesquad.bookkbookk.util.TestDataFactory;
 
 import io.restassured.RestAssured;
@@ -36,11 +41,15 @@ public class ChapterTest extends IntegrationTest {
     @Autowired
     BookRepository bookRepository;
     @Autowired
+    ChapterRepository chapterRepository;
+    @Autowired
+    TopicRepository topicRepository;
+    @Autowired
     JwtProvider jwtProvider;
 
-    @DisplayName("성공적으로 토픽을 생성한다.")
+    @DisplayName("성공적으로 챕터을 생성한다.")
     @Test
-    void createTopic() throws JSONException {
+    void createChapter() throws JSONException {
         //given
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
@@ -72,7 +81,47 @@ public class ChapterTest extends IntegrationTest {
             softAssertions.assertThat(response.jsonPath().getList("createdChapterIds").size())
                     .isEqualTo(chapterCount);
         });
+    }
 
+    @DisplayName("토픽을 조회한다.")
+    @Test
+    void readChapter() {
+        //given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        List<Chapter> chapters = List.of(TestDataFactory.createChapter1(book),
+                TestDataFactory.createChapter2(book));
+        chapterRepository.saveAll(chapters);
+
+        List<Topic> topics = List.of(TestDataFactory.createTopic1(chapters.get(0)),
+                TestDataFactory.createTopic2(chapters.get(0)));
+        topicRepository.saveAll(topics);
+
+        //when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .when()
+                .get("/api/chapters/" + book.getId())
+                .then().log().all()
+                .extract();
+
+        //then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(response.jsonPath().getString("[0].title"))
+                    .isEqualTo(chapters.get(0).getTitle());
+            softAssertions.assertThat(response.jsonPath().getInt("[1].topicsCount"))
+                    .isEqualTo(chapters.get(1).getTopics().size());
+        });
     }
 
     private JSONObject createRequestBody(Long bookId) throws JSONException {
