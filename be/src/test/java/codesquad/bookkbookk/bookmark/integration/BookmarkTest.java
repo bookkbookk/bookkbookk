@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 
 import codesquad.bookkbookk.IntegrationTest;
 import codesquad.bookkbookk.common.error.exception.BookmarkNotFoundException;
+import codesquad.bookkbookk.common.error.exception.MemberIsNotBookmarkWriterException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
@@ -136,6 +137,52 @@ public class BookmarkTest extends IntegrationTest {
     }
 
     @Test
+    @DisplayName("작성자가 아닌 멤버가 북마크를 수정하려 하면 예외가 발생한다.")
+    void NonWriterUpdateBookmark() throws InterruptedException {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        Member another = TestDataFactory.createAnotherMember();
+        memberRepository.save(another);
+        String accessToken = jwtProvider.createAccessToken(another.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = TestDataFactory.createChapter1(book);
+        chapterRepository.save(chapter);
+
+        Topic topic = TestDataFactory.createTopic1(chapter);
+        topicRepository.save(topic);
+
+        Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
+        bookmarkRepository.save(bookmark);
+
+        JSONObject requestBody = new JSONObject(Map.of("title", "updated title",
+                "content", "updated content"));
+        MemberIsNotBookmarkWriterException exception = new MemberIsNotBookmarkWriterException();
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .contentType(ContentType.JSON)
+                .body(requestBody.toString())
+                .when()
+                .patch("api/bookmarks/" + bookmark.getId())
+                .then()
+                .extract();
+
+        // then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(exception.getCode());
+            softAssertions.assertThat(response.jsonPath().getString("message")).isEqualTo(exception.getMessage());
+        });
+    }
+
+    @Test
     @DisplayName("북마크를 삭제한다.")
     void deleteBookmark() {
         // given
@@ -172,6 +219,48 @@ public class BookmarkTest extends IntegrationTest {
             softAssertions.assertThatThrownBy(() -> bookmarkRepository.findById(bookmark.getId())
                             .orElseThrow(BookmarkNotFoundException::new))
                     .isInstanceOf(BookmarkNotFoundException.class);
+        });
+    }
+
+    @Test
+    @DisplayName("작성자가 아닌 북마크를 삭제하려 하면 예외가 발생한다.")
+    void NonWriterDeleteBookmark() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        Member anothoer = TestDataFactory.createAnotherMember();
+        memberRepository.save(anothoer);
+        String accessToken = jwtProvider.createAccessToken(anothoer.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = TestDataFactory.createChapter1(book);
+        chapterRepository.save(chapter);
+
+        Topic topic = TestDataFactory.createTopic1(chapter);
+        topicRepository.save(topic);
+
+        Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
+        bookmarkRepository.save(bookmark);
+
+        MemberIsNotBookmarkWriterException exception = new MemberIsNotBookmarkWriterException();
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .when()
+                .delete("api/bookmarks/" + bookmark.getId())
+                .then()
+                .extract();
+
+        // then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(exception.getCode());
+            softAssertions.assertThat(response.jsonPath().getString("message")).isEqualTo(exception.getMessage());
         });
     }
 }

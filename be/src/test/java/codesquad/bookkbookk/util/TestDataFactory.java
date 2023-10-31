@@ -19,6 +19,15 @@ public class TestDataFactory {
                 .build();
     }
 
+    public static Member createAnotherMember() {
+        return Member.builder()
+                .email("gamgyul@email.com")
+                .loginType(LoginType.GOOGLE)
+                .nickname("gamgyul")
+                .profileImgUrl("profile")
+                .build();
+    }
+
     public static BookClub createBookClub() {
         return BookClub.builder()
                 .creatorId(1L)
