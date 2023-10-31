@@ -13,3 +13,8 @@ export type BookClubProfile = {
 export type BookClubStatus = {
   status: "open" | "closed";
 };
+
+export type NewBookClubInfo = {
+  bookClubId: number;
+  invitationUrl: string;
+};

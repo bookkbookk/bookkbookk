@@ -1,24 +1,33 @@
 import CongratulationImage from "@assets/images/congratulation.png";
 import { SectionDescription } from "@components/common/common.style";
 import { MESSAGE } from "@constant/index";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ROUTE_PATH } from "routes/constants";
-import { useSetBookClub } from "store/useBookClub";
+import { useBookClub, useSetBookClubMemberEmails } from "store/useBookClub";
 
 export function BookClubCongratulation() {
   const navigate = useNavigate();
-  const setBookClubInfo = useSetBookClub();
+  const [bookClubInfo, setBookClubInfo] = useBookClub();
+  const setMemberEmails = useSetBookClubMemberEmails();
 
   useEffect(() => {
-    return () => setBookClubInfo(null);
+    return () => {
+      setBookClubInfo({ type: "RESET" });
+      setMemberEmails({ type: "RESET" });
+    };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <>
+    <Stack
+      gap={4}
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      width="100%">
       <Typography variant="h3" sx={{ textAlign: "center" }}>
         북클럽 생성을 완료했어요!
       </Typography>
@@ -35,11 +44,11 @@ export function BookClubCongratulation() {
           variant="contained"
           color="primary"
           onClick={() =>
-            console.log("TODO: 해당 북클럽 상세 조회 페이지로 이동")
+            navigate(`${ROUTE_PATH.bookClub}/${bookClubInfo?.bookClubId}`)
           }>
           방금 만든 북클럽 확인하기
         </Button>
       </Box>
-    </>
+    </Stack>
   );
 }

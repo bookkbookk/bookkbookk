@@ -149,7 +149,14 @@ export const handlers = [
     //   );
     // }
 
-    return res(ctx.status(200));
+    return res(
+      ctx.status(200),
+      ctx.json({
+        bookClubId: 1,
+        invitationUrl:
+          "https://bookkbookk.site/join/6febcb9e-76ab-4852-8b38-04b3933c0538",
+      })
+    );
   }),
 
   rest.get(ALADIN_API_PATH.search, async (req, res, ctx) => {

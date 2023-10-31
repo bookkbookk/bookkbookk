@@ -3,18 +3,18 @@ import { MESSAGE } from "@constant/index";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
 import { postNewBookClub } from "./client";
-import { BookClubCreationInfo, BookClubStatus } from "./type";
+import { BookClubCreationInfo, BookClubStatus, NewBookClubInfo } from "./type";
 
 export const usePostNewBookClub = ({
   onSuccessCallback,
 }: {
-  onSuccessCallback: () => void;
+  onSuccessCallback: (newBookClubInfo: NewBookClubInfo) => void;
 }) => {
   const { mutate } = useMutation({ mutationFn: postNewBookClub });
 
   const onPostNewBookClub = (bookClubInfo: BookClubCreationInfo) => {
     mutate(bookClubInfo, {
-      onSuccess: onSuccessCallback,
+      onSuccess: (newBookClubInfo) => onSuccessCallback(newBookClubInfo),
       onError: () => {
         enqueueSnackbar(MESSAGE.NEW_BOOK_CLUB_ERROR, {
           variant: "error",

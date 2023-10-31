@@ -2,12 +2,12 @@ import { fetcher, formDataConfig } from "@api/fetcher";
 import { makeFormData } from "@api/utils";
 import { stringify } from "qs";
 import { BOOK_CLUB_API_PATH } from "../constants";
-import { BookClubCreationInfo, BookClubProfile } from "./type";
+import { BookClubCreationInfo, BookClubProfile, NewBookClubInfo } from "./type";
 
 export const postNewBookClub = async (bookClubInfo: BookClubCreationInfo) => {
   const bookClubInfoFormData = makeFormData(bookClubInfo);
 
-  const { data } = await fetcher.post<{ bookClubId: number }>(
+  const { data } = await fetcher.post<NewBookClubInfo>(
     BOOK_CLUB_API_PATH.bookClubs,
     bookClubInfoFormData,
     formDataConfig
