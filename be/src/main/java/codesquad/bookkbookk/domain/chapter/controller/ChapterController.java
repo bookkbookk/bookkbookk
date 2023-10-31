@@ -3,6 +3,7 @@ package codesquad.bookkbookk.domain.chapter.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,6 +47,13 @@ public class ChapterController {
     public ResponseEntity<Void> updateChapter(@PathVariable Long chapterId,
                                               @RequestBody UpdateChapterTitleRequest updateChapterTitleRequest) {
          chapterService.updateChapter(chapterId, updateChapterTitleRequest);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{chapterId}")
+    public ResponseEntity<Void> deleteChapter(@PathVariable Long chapterId) {
+        chapterService.deleteChapter(chapterId);
 
         return ResponseEntity.ok().build();
     }

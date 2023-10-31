@@ -56,11 +56,16 @@ public class ChapterService {
         return ReadChapterResponse.from(chapters);
     }
 
-    @Transactional()
+    @Transactional
     public void updateChapter(Long chapterId, UpdateChapterTitleRequest updateChapterTitleRequest) {
         Chapter chapter = chapterRepository.findById(chapterId).orElseThrow(ChapterNotFoundException::new);
 
         chapter.updateTitle(updateChapterTitleRequest);
+    }
+
+    @Transactional
+    public void deleteChapter(Long chapterId) {
+        chapterRepository.deleteById(chapterId);
     }
 
 }
