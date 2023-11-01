@@ -97,7 +97,7 @@ public class CommentTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("북마크를 수정한다.")
+    @DisplayName("코멘트를 수정한다.")
     void updateComment() throws InterruptedException {
         // given
         Member member = TestDataFactory.createMember();
@@ -182,6 +182,94 @@ public class CommentTest extends IntegrationTest {
                 .body(requestBody.toString())
                 .when()
                 .patch("api/comments/" + comment.getId())
+                .then().log().all()
+                .extract();
+
+        // then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(exception.getCode());
+            softAssertions.assertThat(response.jsonPath().getString("message")).isEqualTo(exception.getMessage());
+        });
+    }
+
+    @Test
+    @DisplayName("코멘트를 삭제한다.")
+    void deleteComment() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = TestDataFactory.createChapter1(book);
+        chapterRepository.save(chapter);
+
+        Topic topic = TestDataFactory.createTopic1(chapter);
+        topicRepository.save(topic);
+
+        Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
+        bookmarkRepository.save(bookmark);
+
+        Comment comment = TestDataFactory.createComment(bookmark, member);
+        commentRepository.save(comment);
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .when()
+                .delete("api/comments/" + comment.getId())
+                .then().log().all()
+                .extract();
+
+        // then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThatThrownBy(() -> commentRepository.findById(comment.getId())
+                            .orElseThrow(CommentNotFoundException::new))
+                    .isInstanceOf(CommentNotFoundException.class);
+        });
+    }
+
+    @Test
+    @DisplayName("작성자가 아닌 코멘트를 삭제하려 하면 예외가 발생한다.")
+    void NonWriterDeleteComment() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        Member anothoer = TestDataFactory.createAnotherMember();
+        memberRepository.save(anothoer);
+        String accessToken = jwtProvider.createAccessToken(anothoer.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = TestDataFactory.createChapter1(book);
+        chapterRepository.save(chapter);
+
+        Topic topic = TestDataFactory.createTopic1(chapter);
+        topicRepository.save(topic);
+
+        Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
+        bookmarkRepository.save(bookmark);
+
+        Comment comment = TestDataFactory.createComment(bookmark, member);
+        commentRepository.save(comment);
+
+        MemberIsNotCommentWriterException exception = new MemberIsNotCommentWriterException();
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .when()
+                .delete("api/comments/" + comment.getId())
                 .then().log().all()
                 .extract();
 
