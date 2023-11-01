@@ -5,6 +5,7 @@ import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
 import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
+import codesquad.bookkbookk.domain.comment.data.entity.Comment;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.topic.data.entity.Topic;
 
@@ -83,6 +84,10 @@ public class TestDataFactory {
                 .title("title")
                 .content("content")
                 .build();
+    }
+
+    public static Comment createComment(Bookmark bookmark, Member writer) {
+        return new Comment(bookmark, writer, "content");
     }
 
 }
