@@ -1,6 +1,7 @@
 package codesquad.bookkbookk.domain.comment.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +35,13 @@ public class CommentController {
     public ResponseEntity<Void> updateComment(@MemberId Long memberId, @PathVariable Long commentId,
                                               @RequestBody UpdateCommentRequest updateCommentRequest) {
         commentService.updateComment(memberId, commentId, updateCommentRequest);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<Void> deleteComment(@MemberId Long memberId, @PathVariable Long commentId) {
+        commentService.deleteComment(memberId, commentId);
 
         return ResponseEntity.ok().build();
     }

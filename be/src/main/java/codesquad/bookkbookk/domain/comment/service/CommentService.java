@@ -47,4 +47,15 @@ public class CommentService {
         comment.updateComment(updateCommentRequest);
     }
 
+    @Transactional
+    public void deleteComment(Long memberId, Long commentId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+        Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
+
+        if (comment.getWriter() != member) {
+            throw new MemberIsNotCommentWriterException();
+        }
+        commentRepository.delete(comment);
+    }
+
 }
