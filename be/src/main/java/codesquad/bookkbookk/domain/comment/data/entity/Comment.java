@@ -1,4 +1,4 @@
-package codesquad.bookkbookk.domain.bookmark.data.entity;
+package codesquad.bookkbookk.domain.comment.data.entity;
 
 import java.time.LocalDateTime;
 
@@ -14,31 +14,29 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import codesquad.bookkbookk.domain.bookmark.data.dto.UpdateBookmarkRequest;
+import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
+import codesquad.bookkbookk.domain.comment.data.dto.UpdateCommentRequest;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
-import codesquad.bookkbookk.domain.topic.data.entity.Topic;
 
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Bookmark {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "bookmark_id")
+    @Column(name = "comment_id")
     private Long id;
+    @ManyToOne
+    @JoinColumn(name = "bookmark_id")
+    private Bookmark bookmark;
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member writer;
-    @ManyToOne
-    @JoinColumn(name = "topic_id")
-    private Topic topic;
-    private String title;
     @Lob
     private String content;
     @CreationTimestamp
@@ -48,17 +46,14 @@ public class Bookmark {
     @Column(name = "update_at")
     private LocalDateTime updateAt;
 
-    @Builder
-    private Bookmark(Member writer, Topic topic, String title, String content) {
+    public Comment(Bookmark bookmark, Member writer, String content) {
+        this.bookmark = bookmark;
         this.writer = writer;
-        this.topic = topic;
-        this.title = title;
         this.content = content;
     }
 
-    public void updateBookmark(UpdateBookmarkRequest updateBookmarkRequest) {
-        this.title = updateBookmarkRequest.getTitle();
-        this.content = updateBookmarkRequest.getContent();
+    public void updateComment(UpdateCommentRequest updateCommentRequest) {
+        this.content = updateCommentRequest.getContent();
     }
 
 }
