@@ -21,7 +21,13 @@ export default function BookClubGatheringStep({
 
   const { onPostNewBook } = usePostNewBook({
     onSuccessCallback: (bookId: number) => {
-      navigate(`${ROUTE_PATH.bookDetail}/${bookId}`);
+      navigate(`${ROUTE_PATH.chapters}/${bookId}`, {
+        replace: true,
+        state: {
+          book: { ...bookChoice, bookClub: bookClubChoice },
+          isChapterAddMode: true,
+        },
+      });
       setBookClubChoice(null);
       setBookChoice(null);
     },

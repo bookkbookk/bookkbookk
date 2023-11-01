@@ -197,7 +197,7 @@ export const USER_BOOK_LIST = [
       name: "내꿈은농부!",
     },
     title:
-      "아무도 가지 않은 길에 부가 있었다 - 흔들리는 투자자를 위한 부자의 독설 41",
+      "아무도 가지 않은 길에 부가 있었다 - 흔들리는 투자자를 위한 부자의 독설 41아무도 가지 않은 길에 부가 있었다 - 흔들리는 투자자를 위한 부자의 독설 41",
     cover:
       "https://image.aladin.co.kr/product/32265/15/coversum/k722834840_1.jpg",
     author: "정민우(달천) (지은이)",

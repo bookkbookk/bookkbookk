@@ -195,4 +195,8 @@ export const handlers = [
       })
     );
   }),
+
+  rest.post(BOOK_API_PATH.chapters, async (_, res, ctx) => {
+    return res(ctx.status(200));
+  }),
 ];

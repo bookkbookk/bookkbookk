@@ -1,8 +1,8 @@
-import BookClubTabs from "@components/BookClub/BookClubTabs";
+import Tabs from "@components/common/Tabs";
 import { BoxHeader, MainBox } from "@components/common/common.style";
 import { BOOK_CLUB_TAB } from "@components/constants";
 import AddIcon from "@mui/icons-material/Add";
-import { Button } from "@mui/material";
+import Button from "@mui/material/Button";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ROUTE_PATH } from "routes/constants";
@@ -20,7 +20,7 @@ export default function BookClub() {
   return (
     <MainBox>
       <BoxHeader>
-        <BookClubTabs {...{ activeTabID, handleChange }} />
+        <Tabs {...{ activeTabID, handleChange, tabList: BOOK_CLUB_TAB }} />
         {isLogin && (
           <Button
             variant="contained"

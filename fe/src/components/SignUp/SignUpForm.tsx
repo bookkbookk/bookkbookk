@@ -2,7 +2,7 @@ import { usePatchMemberInfo } from "@api/member/queries";
 import ProfileEditAvatar from "@components/SignUp/ProfileEditAvatar";
 import { Wrapper } from "@components/SignUp/SignUp.style";
 import { useFileReader } from "@hooks/useFileReader";
-import { Button } from "@mui/material";
+import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
