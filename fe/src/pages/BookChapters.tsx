@@ -12,9 +12,7 @@ import { useIsLoginValue } from "store/useMember";
 
 export default function BookChapters() {
   const { state } = useLocation();
-  const [isViewerMode, setIsViewerMode] = useState(
-    state?.firstChapter ? false : true
-  );
+  const [isViewerMode, setIsViewerMode] = useState(!state.isChapterAddMode);
   const [activeTabID, setActiveTabID] = useState(BOOK_CHAPTERS_TAB[0].id);
   const isLogin = useIsLoginValue();
 

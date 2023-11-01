@@ -25,7 +25,7 @@ export default function BookClubGatheringStep({
         replace: true,
         state: {
           book: { ...bookChoice, bookClub: bookClubChoice },
-          firstChapter: true,
+          isChapterAddMode: true,
         },
       });
       setBookClubChoice(null);
