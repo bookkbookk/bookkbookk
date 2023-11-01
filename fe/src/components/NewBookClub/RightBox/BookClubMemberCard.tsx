@@ -11,7 +11,7 @@ export default function BookClubMemberCard() {
       {!!memberEmails.length && (
         <Stack component="ul" gap={1}>
           {memberEmails.map((email, index) => (
-            <li>
+            <li key={email}>
               <Typography variant="body1" key={email}>
                 {`${index + 1}. ${email}`}
               </Typography>

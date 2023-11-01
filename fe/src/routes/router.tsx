@@ -55,7 +55,10 @@ export const router = createBrowserRouter(
             element={<BookChapters />}
           />
           <Route path={ROUTE_PATH.newBook} element={<NewBook />} />
-          <Route path={ROUTE_PATH.bookClub} element={<BookClub />} />
+          <Route
+            path={`${ROUTE_PATH.bookClub}/:bookClubId?`}
+            element={<BookClub />}
+          />
           <Route path={ROUTE_PATH.newBookClub} element={<NewBookClub />} />
           <Route path={ROUTE_PATH.myPage} element={<MyPage />} />
         </Route>

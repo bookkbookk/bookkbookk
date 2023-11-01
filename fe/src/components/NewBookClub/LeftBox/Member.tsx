@@ -1,6 +1,5 @@
-import { usePostNewBookClub } from "@api/bookClub/queries";
+import { usePostNewBookClub, useSendEmail } from "@api/bookClub/queries.tsx";
 import Navigation from "@components/common/Navigation";
-import useEmail from "@hooks/useEmail";
 import { Stack, Typography } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import { useBookClub, useBookClubMemberEmails } from "store/useBookClub";
@@ -16,7 +15,7 @@ export default function BookClubMember({
 }) {
   const [bookClubInfo, setBookClubInfo] = useBookClub();
   const [memberEmails, setMemberEmails] = useBookClubMemberEmails();
-  const { sendEmail } = useEmail();
+  const { onSendEmail } = useSendEmail();
 
   const { onPostNewBookClub } = usePostNewBookClub({
     onSuccessCallback: (newBookClubInfo) => {
@@ -34,7 +33,7 @@ export default function BookClubMember({
   const sendInvitationEmail = (invitationUrl: string) => {
     bookClubInfo?.name &&
       !!memberEmails.length &&
-      sendEmail({
+      onSendEmail({
         bookClubName: bookClubInfo.name,
         invitationUrl,
         memberEmails,

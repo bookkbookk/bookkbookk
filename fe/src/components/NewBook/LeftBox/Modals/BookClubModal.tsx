@@ -1,4 +1,4 @@
-import { useGetBookClubList } from "@api/bookClub/queries";
+import { useGetBookClubList } from "@api/bookClub/queries.tsx";
 import ClearIcon from "@mui/icons-material/Clear";
 import { IconButton, List, Modal, Typography } from "@mui/material";
 import { useBookClubChoiceValue } from "store/newBook/useBookClubChoice";

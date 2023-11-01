@@ -1,8 +1,19 @@
 import { fetcher, formDataConfig } from "@api/fetcher";
 import { makeFormData } from "@api/utils";
+import { send } from "@emailjs/browser";
 import { stringify } from "qs";
 import { BOOK_CLUB_API_PATH } from "../constants";
-import { BookClubCreationInfo, BookClubProfile, NewBookClubInfo } from "./type";
+import {
+  BookClubCreationInfo,
+  BookClubProfile,
+  EmailSubmitInfo,
+  NewBookClubInfo,
+} from "./type";
+const {
+  VITE_EMAIL_JS_PUBLIC_KEY,
+  VITE_EMAIL_JS_SERVICE_ID,
+  VITE_EMAIL_JS_TEMPLATE_ID,
+} = import.meta.env;
 
 export const postNewBookClub = async (bookClubInfo: BookClubCreationInfo) => {
   const bookClubInfoFormData = makeFormData(bookClubInfo);
@@ -24,4 +35,18 @@ export const getBookClubList = async (option?: {
     `${BOOK_CLUB_API_PATH.bookClubs}${pathVariable && `?${pathVariable}`}`
   );
   return data;
+};
+
+export const sendEmail = async (emailSubmitInfo: EmailSubmitInfo) => {
+  return await send(
+    VITE_EMAIL_JS_SERVICE_ID,
+    VITE_EMAIL_JS_TEMPLATE_ID,
+    emailSubmitInfo,
+    VITE_EMAIL_JS_PUBLIC_KEY
+  );
+};
+
+// TODO: 테스트 코드로 옮기기
+export const mockSendEmail = async (emailSubmitInfo: EmailSubmitInfo) => {
+  throw new Error("Not implemented");
 };
