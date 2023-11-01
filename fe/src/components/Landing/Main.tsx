@@ -1,5 +1,5 @@
 import * as S from "@components/common/common.style";
-import { Button } from "@mui/material";
+import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 import { ROUTE_PATH } from "routes/constants";
 

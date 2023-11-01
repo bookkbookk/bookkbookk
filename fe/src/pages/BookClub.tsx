@@ -2,7 +2,7 @@ import Tabs from "@components/common/Tabs";
 import { BoxHeader, MainBox } from "@components/common/common.style";
 import { BOOK_CLUB_TAB } from "@components/constants";
 import AddIcon from "@mui/icons-material/Add";
-import { Button } from "@mui/material";
+import Button from "@mui/material/Button";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ROUTE_PATH } from "routes/constants";

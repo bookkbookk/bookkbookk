@@ -1,7 +1,7 @@
 import { usePostNewChapters } from "@api/chapters/queries";
 import { MESSAGE } from "@constant/index";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Button } from "@mui/material";
+import Button from "@mui/material/Button";
 import { enqueueSnackbar } from "notistack";
 import { useParams } from "react-router-dom";
 import { useChapterList } from "store/useChapterList";
