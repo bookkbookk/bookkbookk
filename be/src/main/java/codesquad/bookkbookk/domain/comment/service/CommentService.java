@@ -1,12 +1,16 @@
 package codesquad.bookkbookk.domain.comment.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import codesquad.bookkbookk.common.error.exception.BookmarkNotFoundException;
+import codesquad.bookkbookk.common.error.exception.CommentNotFoundException;
+import codesquad.bookkbookk.common.error.exception.MemberIsNotCommentWriterException;
 import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
 import codesquad.bookkbookk.domain.bookmark.repository.BookmarkRepository;
 import codesquad.bookkbookk.domain.comment.data.dto.CreateCommentRequest;
+import codesquad.bookkbookk.domain.comment.data.dto.UpdateCommentRequest;
 import codesquad.bookkbookk.domain.comment.data.entity.Comment;
 import codesquad.bookkbookk.domain.comment.repository.CommentRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
@@ -22,6 +26,7 @@ public class CommentService {
     private final MemberRepository memberRepository;
     private final BookmarkRepository bookmarkRepository;
 
+    @Transactional
     public void createComment(Long memberId, CreateCommentRequest createCommentRequest) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         Bookmark bookmark = bookmarkRepository.findById(createCommentRequest.getBookmarkId())
@@ -29,6 +34,17 @@ public class CommentService {
         Comment comment = new Comment(bookmark, member, createCommentRequest.getContent());
 
         commentRepository.save(comment);
+    }
+
+    @Transactional
+    public void updateComment(Long memberId, Long commentId, UpdateCommentRequest updateCommentRequest) {
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+        Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
+
+        if (comment.getWriter() != member) {
+            throw new MemberIsNotCommentWriterException();
+        }
+        comment.updateComment(updateCommentRequest);
     }
 
 }

@@ -15,6 +15,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
+import codesquad.bookkbookk.domain.comment.data.dto.UpdateCommentRequest;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 
 import lombok.AccessLevel;
@@ -49,6 +50,10 @@ public class Comment {
         this.bookmark = bookmark;
         this.writer = writer;
         this.content = content;
+    }
+
+    public void updateComment(UpdateCommentRequest updateCommentRequest) {
+        this.content = updateCommentRequest.getContent();
     }
 
 }
