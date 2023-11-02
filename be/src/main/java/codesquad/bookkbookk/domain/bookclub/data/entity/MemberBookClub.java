@@ -12,10 +12,12 @@ import javax.persistence.ManyToOne;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity(name = "member_book_club")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class MemberBookClub {
 
     @Id

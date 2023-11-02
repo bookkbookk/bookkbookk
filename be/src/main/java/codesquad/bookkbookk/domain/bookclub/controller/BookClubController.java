@@ -16,6 +16,8 @@ import codesquad.bookkbookk.domain.bookclub.data.dto.CreateBookClubRequest;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateBookClubResponse;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateInvitationUrlRequest;
 import codesquad.bookkbookk.domain.bookclub.data.dto.InvitationUrlResponse;
+import codesquad.bookkbookk.domain.bookclub.data.dto.JoinBookClubRequest;
+import codesquad.bookkbookk.domain.bookclub.data.dto.JoinBookClubResponse;
 import codesquad.bookkbookk.domain.bookclub.data.dto.ReadBookClubResponse;
 import codesquad.bookkbookk.domain.bookclub.service.BookClubInvitationService;
 import codesquad.bookkbookk.domain.bookclub.service.BookClubService;
@@ -59,6 +61,15 @@ public class BookClubController {
     public ResponseEntity<InvitationUrlResponse> readInvitationUrl(
             @MemberId Long memberId, @PathVariable Long bookClubId) {
         InvitationUrlResponse response = bookClubInvitationService.readInvitationUrl(memberId, bookClubId);
+
+        return ResponseEntity.ok()
+                .body(response);
+    }
+
+    @PostMapping("/join")
+    public ResponseEntity<JoinBookClubResponse> joinBookclub(@MemberId Long memberId,
+                                                             @RequestBody JoinBookClubRequest joinBookClubRequest) {
+        JoinBookClubResponse response = bookClubInvitationService.joinBookClub(memberId, joinBookClubRequest);
 
         return ResponseEntity.ok()
                 .body(response);
