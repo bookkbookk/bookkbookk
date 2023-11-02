@@ -2,6 +2,7 @@ package codesquad.bookkbookk.domain.book.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import codesquad.bookkbookk.common.error.exception.BookClubNotFoundException;
@@ -9,6 +10,7 @@ import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.common.error.exception.MemberNotInBookClubException;
 import codesquad.bookkbookk.domain.book.data.dto.CreateBookRequest;
 import codesquad.bookkbookk.domain.book.data.dto.CreateBookResponse;
+import codesquad.bookkbookk.domain.book.data.dto.ReadBookClubBookResponse;
 import codesquad.bookkbookk.domain.book.data.dto.ReadBookResponse;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.data.entity.MemberBook;
@@ -53,6 +55,12 @@ public class BookService {
         Page<Book> books = bookRepository.findBooksByMemberId(memberId, pageable);
 
         return ReadBookResponse.from(books);
+    }
+
+    public ReadBookClubBookResponse readBookClubBooks(Long bookClubId, Pageable pageable) {
+        Slice<Book> books = bookRepository.findBooksByBookClubId(bookClubId, pageable);
+
+        return ReadBookClubBookResponse.from(books);
     }
 
 }

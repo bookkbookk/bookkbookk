@@ -12,13 +12,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import codesquad.bookkbookk.IntegrationTest;
+import codesquad.bookkbookk.common.jwt.JwtProvider;
+import codesquad.bookkbookk.domain.book.data.entity.Book;
+import codesquad.bookkbookk.domain.book.repository.BookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateBookClubResponse;
 import codesquad.bookkbookk.domain.bookclub.data.dto.ReadBookClubResponse;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.data.entity.MemberBookClub;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
 import codesquad.bookkbookk.domain.bookclub.repository.MemberBookClubRepository;
-import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
 import codesquad.bookkbookk.util.TestDataFactory;
@@ -37,6 +39,8 @@ public class BookClubTest extends IntegrationTest {
 
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
+    private BookRepository bookRepository;
 
     @Autowired
     private JwtProvider jwtProvider;
@@ -98,6 +102,80 @@ public class BookClubTest extends IntegrationTest {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             softAssertions.assertThat(result.getName()).isEqualTo(bookClub.getName());
             softAssertions.assertThat(result.getCreatorId()).isEqualTo(member.getId());
+        });
+    }
+
+    @Test
+    @DisplayName("북클럽의 책들을 슬라이스 나눠서 보내준다.")
+    void readBookClubBooks() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book1 = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book1);
+        Book book2 = TestDataFactory.createBook2(bookClub);
+        bookRepository.save(book2);
+
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        // when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .queryParam("cursor", 0)
+                .queryParam("size", 1)
+                .when()
+                .get("/api/book-clubs/" + bookClub.getId() + "/books")
+                .then().log().all()
+                .extract();
+
+        // then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(response.jsonPath().getBoolean("hasNext")).isTrue();
+            softAssertions.assertThat(response.jsonPath().getString("books[0].author"))
+                    .isEqualTo(book1.getAuthor());
+        });
+    }
+
+    @Test
+    @DisplayName("북클럽의 책들의 마지막 slice를 가져온다.")
+    void readBookClubBookLastSlice() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book1 = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book1);
+        Book book2 = TestDataFactory.createBook2(bookClub);
+        bookRepository.save(book2);
+
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        // when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .queryParam("cursor", 1)
+                .queryParam("size", 1)
+                .when()
+                .get("/api/book-clubs/" + bookClub.getId() + "/books")
+                .then().log().all()
+                .extract();
+
+        // then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(response.jsonPath().getBoolean("hasNext")).isFalse();
+            softAssertions.assertThat(response.jsonPath().getString("books[0].category"))
+                    .isEqualTo(book2.getCategory());
         });
     }
 
