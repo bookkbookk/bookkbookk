@@ -1,4 +1,4 @@
-import { ReactComponent as LogoIcon } from "@assets/images/brand.svg";
+import LogoImage from "@assets/images/brand.png";
 import AccountPopover from "@components/common/AccountPopover/AccountPopover";
 import { GoogleLoginButton } from "@components/common/GoogleLoginButton";
 import ThemeSwitch from "@components/common/ThemeSwitch/ThemeSwitch";
@@ -30,7 +30,7 @@ export function Header({
           sx={{
             ...(isSideOpen && { display: "none" }),
           }}>
-          <LogoIcon />
+          <img src={LogoImage} width={50} height={50} />
         </IconButton>
         <HeaderTitle />
         <Wrapper>

@@ -123,16 +123,16 @@ export const handlers = [
   }),
 
   rest.post(AUTH_API_PATH.logout, async (req, res, ctx) => {
-    const { refreshToken } = await req.json<{ refreshToken: string | null }>();
+    // const { refreshToken } = await req.json<{ refreshToken: string | null }>();
 
-    if (!refreshToken) {
-      return res(
-        ctx.status(400),
-        ctx.json({
-          message: "잘못된 요청입니다.",
-        })
-      );
-    }
+    // if (!refreshToken) {
+    //   return res(
+    //     ctx.status(400),
+    //     ctx.json({
+    //       message: "잘못된 요청입니다.",
+    //     })
+    //   );
+    // }
 
     return res(ctx.status(200));
   }),
@@ -149,7 +149,14 @@ export const handlers = [
     //   );
     // }
 
-    return res(ctx.status(200));
+    return res(
+      ctx.status(200),
+      ctx.json({
+        bookClubId: 1,
+        invitationUrl:
+          "https://bookkbookk.site/join/6febcb9e-76ab-4852-8b38-04b3933c0538",
+      })
+    );
   }),
 
   rest.get(ALADIN_API_PATH.search, async (req, res, ctx) => {
@@ -198,5 +205,9 @@ export const handlers = [
 
   rest.post(BOOK_API_PATH.chapters, async (_, res, ctx) => {
     return res(ctx.status(200));
+  }),
+
+  rest.post(BOOK_CLUB_API_PATH.join, async (_, res, ctx) => {
+    return res(ctx.status(200), ctx.json({ bookClubId: 10 }));
   }),
 ];

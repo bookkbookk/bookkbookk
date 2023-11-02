@@ -6,19 +6,27 @@ export const THEME_MODE = {
 };
 
 export type ThemeMode = keyof typeof THEME_MODE;
-const defaultThemeMode: ThemeMode = window.matchMedia(
+const cachedThemeMode = localStorage.getItem("themeMode") as ThemeMode;
+const userPrefersDark = window.matchMedia(
   "(prefers-color-scheme: dark)"
-).matches
-  ? THEME_MODE.dark
-  : THEME_MODE.light;
+).matches;
+
+const defaultThemeMode: ThemeMode =
+  cachedThemeMode ?? (userPrefersDark ? THEME_MODE.dark : THEME_MODE.light);
 
 const themeModeAtom = atom<ThemeMode>(defaultThemeMode);
 const useThemeModeAtom = atom(
   (get) => get(themeModeAtom),
   (_, set) => {
-    set(themeModeAtom, (prev) =>
-      prev === THEME_MODE.light ? THEME_MODE.dark : THEME_MODE.light
-    );
+    set(themeModeAtom, (prev) => {
+      const isLightMode = prev === THEME_MODE.light;
+      localStorage.setItem(
+        "themeMode",
+        isLightMode ? THEME_MODE.dark : THEME_MODE.light
+      );
+
+      return isLightMode ? THEME_MODE.dark : THEME_MODE.light;
+    });
   }
 );
 

@@ -8,10 +8,19 @@ export default function HeaderTitle() {
   const { pathname, state }: Location<{ book: BookListItem }> = useLocation();
 
   const isBookChapterPath = pathname.includes(ROUTE_PATH.chapters);
+  const isBookClubPath = pathname.includes(ROUTE_PATH.bookClub);
 
-  const headerTitle = isBookChapterPath
-    ? state.book.title
-    : PAGE_TITLE[pathname].korean;
+  const getHeaderTitle = () => {
+    if (isBookChapterPath) {
+      return `${state.book.title} - ${state.book.author}`;
+    }
+
+    if (isBookClubPath) {
+      return "북클럽 조회";
+    }
+
+    return PAGE_TITLE[pathname].korean ?? "";
+  };
 
   return (
     <Stack
@@ -25,7 +34,7 @@ export default function HeaderTitle() {
         noWrap
         component="div"
         sx={{ fontFamily: "SOYO Maple Bold", maxWidth: "60vw" }}>
-        {headerTitle ?? ""}
+        {getHeaderTitle()}
       </Typography>
       {isBookChapterPath && (
         <Chip

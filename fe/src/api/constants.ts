@@ -27,6 +27,7 @@ export const AUTH_API_PATH = {
 
 export const BOOK_CLUB_API_PATH = {
   bookClubs: "/api/book-clubs",
+  join: "/api/book-clubs/join",
 };
 
 export const MEMBER_API_PATH = {

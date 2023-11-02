@@ -1,4 +1,5 @@
 import { usePostNewBook } from "@api/book/queries";
+import Navigation from "@components/common/Navigation";
 import { MESSAGE } from "@constant/index";
 import { Box, Typography } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
@@ -6,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import { ROUTE_PATH } from "routes/constants";
 import { useBookChoice } from "store/newBook/useBookChoice";
 import { useBookClubChoice } from "store/newBook/useBookClubChoice";
-import Navigation from "../Navigation";
 import { BookClubChoice } from "./BookClubChoice";
 
 export default function BookClubGatheringStep({
@@ -55,7 +55,13 @@ export default function BookClubGatheringStep({
         gap: "3rem",
         width: "100%",
       }}>
-      <Navigation {...{ onPrev, onNext }} />
+      <Navigation
+        onPrev={{ onClick: onPrev, text: "이전 단계" }}
+        onNext={{
+          onClick: onNext,
+          text: "다음 단계",
+        }}
+      />
       <BookClubChoice />
       <Box
         sx={{
