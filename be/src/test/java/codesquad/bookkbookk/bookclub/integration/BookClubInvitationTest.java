@@ -11,9 +11,9 @@ import codesquad.bookkbookk.IntegrationTest;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateInvitationUrlRequest;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
-import codesquad.bookkbookk.domain.bookclub.data.entity.BookClubInvitationUrl;
+import codesquad.bookkbookk.domain.bookclub.data.entity.BookClubInvitationCode;
 import codesquad.bookkbookk.domain.bookclub.data.entity.MemberBookClub;
-import codesquad.bookkbookk.domain.bookclub.repository.BookClubInvitationUrlRepository;
+import codesquad.bookkbookk.domain.bookclub.repository.BookClubInvitationCodeRepository;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
 import codesquad.bookkbookk.domain.bookclub.repository.MemberBookClubRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
@@ -37,7 +37,7 @@ public class BookClubInvitationTest extends IntegrationTest {
     private MemberRepository memberRepository;
 
     @Autowired
-    private BookClubInvitationUrlRepository bookClubInvitationUrlRepository;
+    private BookClubInvitationCodeRepository bookClubInvitationCodeRepository;
 
     @Autowired
     private JwtProvider jwtProvider;
@@ -73,7 +73,8 @@ public class BookClubInvitationTest extends IntegrationTest {
         //then
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softAssertions.assertThat(response.jsonPath().getString("invitationUrl")).startsWith("bookkbookk.site/join/");
+            softAssertions.assertThat(response.jsonPath().getString("invitationUrl"))
+                    .startsWith("https://bookkbookk.site/join/");
         });
     }
 
@@ -91,9 +92,9 @@ public class BookClubInvitationTest extends IntegrationTest {
         memberBookClubRepository.save(memberBookClub);
 
         CreateInvitationUrlRequest request = new CreateInvitationUrlRequest(1L);
-        String invitationUrl = "bookkbookk.site/join/test";
-        BookClubInvitationUrl bookClubInvitationUrl = new BookClubInvitationUrl(request, invitationUrl);
-        bookClubInvitationUrlRepository.save(bookClubInvitationUrl);
+        String invitationCode = "test";
+        BookClubInvitationCode bookClubInvitationCode = new BookClubInvitationCode(request, invitationCode);
+        bookClubInvitationCodeRepository.save(bookClubInvitationCode);
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
@@ -109,7 +110,8 @@ public class BookClubInvitationTest extends IntegrationTest {
         //then
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softAssertions.assertThat(response.jsonPath().getString("invitationUrl")).isEqualTo("bookkbookk.site/join/test");
+            softAssertions.assertThat(response.jsonPath().getString("invitationUrl"))
+                    .isEqualTo("https://bookkbookk.site/join/test");
         });
     }
 }

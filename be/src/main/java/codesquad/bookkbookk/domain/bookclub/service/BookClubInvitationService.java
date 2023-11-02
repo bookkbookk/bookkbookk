@@ -8,8 +8,8 @@ import codesquad.bookkbookk.common.error.exception.InvitationUrlNotFoundExceptio
 import codesquad.bookkbookk.common.error.exception.MemberNotInBookClubException;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateInvitationUrlRequest;
 import codesquad.bookkbookk.domain.bookclub.data.dto.InvitationUrlResponse;
-import codesquad.bookkbookk.domain.bookclub.data.entity.BookClubInvitationUrl;
-import codesquad.bookkbookk.domain.bookclub.repository.BookClubInvitationUrlRepository;
+import codesquad.bookkbookk.domain.bookclub.data.entity.BookClubInvitationCode;
+import codesquad.bookkbookk.domain.bookclub.repository.BookClubInvitationCodeRepository;
 import codesquad.bookkbookk.domain.bookclub.repository.MemberBookClubRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -18,28 +18,27 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BookClubInvitationService {
 
-    private static final String INVITATION_URL_PREFIX = "https://bookkbookk.site/join/";
 
-    private final BookClubInvitationUrlRepository bookClubInvitationUrlRepository;
+    private final BookClubInvitationCodeRepository bookClubInvitationCodeRepository;
     private final MemberBookClubRepository memberBookClubRepository;
 
     public InvitationUrlResponse createInvitationUrl(Long memberId, CreateInvitationUrlRequest request) {
         validateMemberAuth(memberId, request.getBookClubId());
 
-        String invitationUrl = INVITATION_URL_PREFIX + UUID.randomUUID();
-        BookClubInvitationUrl bookClubInvitationUrl = new BookClubInvitationUrl(request, invitationUrl);
-        bookClubInvitationUrlRepository.save(bookClubInvitationUrl);
+        String invitationCode = String.valueOf(UUID.randomUUID());
+        BookClubInvitationCode bookClubInvitationCode = new BookClubInvitationCode(request, invitationCode);
+        bookClubInvitationCodeRepository.save(bookClubInvitationCode);
 
-        return new InvitationUrlResponse(bookClubInvitationUrl.getInvitationUrl());
+        return new InvitationUrlResponse(bookClubInvitationCode.getInvitationCode());
     }
 
     public InvitationUrlResponse readInvitationUrl(Long memberId, Long bookClubId) {
         validateMemberAuth(memberId, bookClubId);
 
-        BookClubInvitationUrl bookClubInvitationUrl = bookClubInvitationUrlRepository.findByBookClubId(bookClubId)
+        BookClubInvitationCode bookClubInvitationCode = bookClubInvitationCodeRepository.findByBookClubId(bookClubId)
                 .orElseThrow(InvitationUrlNotFoundException::new);
 
-        return new InvitationUrlResponse(bookClubInvitationUrl.getInvitationUrl());
+        return new InvitationUrlResponse(bookClubInvitationCode.getInvitationCode());
     }
 
     private void validateMemberAuth(Long memberId, Long bookClubId) {
