@@ -1,6 +1,9 @@
 package codesquad.bookkbookk.bookclub.integration;
 
+import java.util.Map;
+
 import org.assertj.core.api.SoftAssertions;
+import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,6 +115,47 @@ public class BookClubInvitationTest extends IntegrationTest {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             softAssertions.assertThat(response.jsonPath().getString("invitationUrl"))
                     .isEqualTo("https://bookkbookk.site/join/test");
+        });
+    }
+
+    @DisplayName("멤버가 북클럽 초대 url로 북클럽에 참여한다.")
+    @Test
+    void memberJoinBookClub() {
+        //given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        Member anotherMember = TestDataFactory.createAnotherMember();
+        memberRepository.save(anotherMember);
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        MemberBookClub memberBookClub = new MemberBookClub(member, bookClub);
+        memberBookClubRepository.save(memberBookClub);
+
+        CreateInvitationUrlRequest request = new CreateInvitationUrlRequest(bookClub.getId());
+        String invitationCode = "test";
+        BookClubInvitationCode bookClubInvitationCode = new BookClubInvitationCode(request, invitationCode);
+        bookClubInvitationCodeRepository.save(bookClubInvitationCode);
+
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+        JSONObject requestBody = new JSONObject(Map.of("bookClubCode", invitationCode));
+
+        //when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .contentType(ContentType.JSON)
+                .body(requestBody.toString())
+                .when()
+                .post("/api/book-clubs/join")
+                .then().log().all()
+                .extract();
+
+        //then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(response.jsonPath().getLong("bookClubId")).isEqualTo(bookClub.getId());
         });
     }
 }
