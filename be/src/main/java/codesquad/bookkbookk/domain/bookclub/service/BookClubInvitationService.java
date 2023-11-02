@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BookClubInvitationService {
 
-    private static final String INVITATION_URL_PREFIX = "bookkbookk.site/join/";
+    private static final String INVITATION_URL_PREFIX = "https://bookkbookk.site/join/";
 
     private final BookClubInvitationUrlRepository bookClubInvitationUrlRepository;
     private final MemberBookClubRepository memberBookClubRepository;
