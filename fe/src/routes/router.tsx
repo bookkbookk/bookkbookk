@@ -39,7 +39,7 @@ export const router = createBrowserRouter(
         element={<UserProvider />}>
         <Route path={ROUTE_PATH.home} element={<Landing />} />
         <Route
-          path={`${ROUTE_PATH.join}/:bookClubCode`}
+          path={`${ROUTE_PATH.join}/:invitationCode`}
           element={<BookClubJoin />}
         />
         <Route

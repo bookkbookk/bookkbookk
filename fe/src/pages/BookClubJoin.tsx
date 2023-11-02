@@ -10,20 +10,20 @@ import { useIsLoginValue } from "store/useMember";
 
 export default function BookClubJoin() {
   const isLogin = useIsLoginValue();
-  const { bookClubCode } = useParams<{ bookClubCode: string }>();
+  const { invitationCode } = useParams<{ invitationCode: string }>();
 
   const { bookClubInfo, isLoading, isSuccess, isError } = useAuthBookClub({
-    bookClubCode: bookClubCode!,
+    invitationCode: invitationCode!,
     isLogin: !!isLogin,
   });
 
   if (!isLogin) {
-    sessionStorage.setItem("bookClubCode", bookClubCode!);
+    sessionStorage.setItem("invitationCode", invitationCode!);
   }
 
   useEffect(() => {
     if (isSuccess) {
-      sessionStorage.removeItem("bookClubCode");
+      sessionStorage.removeItem("invitationCode");
     }
   }, [isSuccess]);
 
