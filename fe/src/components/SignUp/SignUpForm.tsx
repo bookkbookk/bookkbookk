@@ -21,6 +21,8 @@ export function SignUpForm({
   const { file, previewUrl, handleFileChange } = useFileReader();
   const navigate = useNavigate();
 
+  const goMainPage = () => navigate(ROUTE_PATH.main, { replace: true });
+
   const { onPatchMemberInfo } = usePatchMemberInfo({
     onSuccessCallback: (newMemberInfo) => {
       setMemberInfo({
@@ -30,9 +32,10 @@ export function SignUpForm({
           profileImgUrl: newMemberInfo.newProfileImgUrl,
         },
       });
-      navigate(ROUTE_PATH.main, { replace: true });
+      goMainPage();
     },
   });
+
   const onSubmitMemberInfo = () =>
     onPatchMemberInfo({
       nickname: newNickname,
@@ -45,9 +48,7 @@ export function SignUpForm({
   const onNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setNewNickname(e.target.value);
 
-  const onCompleteButtonClick = isSameProfile
-    ? () => navigate(ROUTE_PATH.main, { replace: true })
-    : onSubmitMemberInfo;
+  const onCompleteButtonClick = isSameProfile ? goMainPage : onSubmitMemberInfo;
 
   return (
     <Wrapper>

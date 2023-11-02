@@ -8,7 +8,7 @@ import { useIsLoginValue } from "store/useMember";
 export default function Landing() {
   const isLoginValue = useIsLoginValue();
 
-  if (isLoginValue === true) {
+  if (isLoginValue) {
     return <Navigate to={ROUTE_PATH.main} replace />;
   }
 

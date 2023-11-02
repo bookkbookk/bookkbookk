@@ -9,7 +9,7 @@ export default function Logo({
 }) {
   return (
     <S.LogoContainer to={ROUTE_PATH.main}>
-      <img src={LogoImage} width={80} height={80} />
+      <img src={LogoImage} width={50} height={50} />
       {isTitleVisible && <S.LogoTitle>북크북크</S.LogoTitle>}
     </S.LogoContainer>
   );
