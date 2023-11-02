@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import codesquad.bookkbookk.common.error.exception.BookClubNotFoundException;
 import codesquad.bookkbookk.common.error.exception.InvitationUrlNotFoundException;
+import codesquad.bookkbookk.common.error.exception.MemberJoinedBookClubException;
 import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.common.error.exception.MemberNotInBookClubException;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateInvitationUrlRequest;
@@ -58,6 +59,7 @@ public class BookClubInvitationService {
         BookClub bookClub = bookClubRepository.findById(bookClubInvitationCode.getBookClubId())
                 .orElseThrow(BookClubNotFoundException::new);
 
+        checkMemberJoinedBookClub(member.getId(), bookClub.getId());
         MemberBookClub save = memberBookClubRepository.save(new MemberBookClub(member, bookClub));
         return JoinBookClubResponse.from(save);
     }
@@ -65,6 +67,12 @@ public class BookClubInvitationService {
     private void validateMemberAuth(Long memberId, Long bookClubId) {
         if (!memberBookClubRepository.existsByMemberIdAndBookClubId(memberId, bookClubId)) {
             throw new MemberNotInBookClubException();
+        }
+    }
+
+    private void checkMemberJoinedBookClub(Long memberId,Long bookClubId) {
+        if (memberBookClubRepository.existsByMemberIdAndBookClubId(memberId, bookClubId)) {
+            throw new MemberJoinedBookClubException();
         }
     }
 
