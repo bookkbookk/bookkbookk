@@ -7,6 +7,7 @@ export const ROUTE_PATH = {
   newBook: "/main/new-book",
   bookClub: "/main/book-club",
   newBookClub: "/main/new-book-club",
+  newGathering: "/main/new-gathering",
   myPage: "/main/my-page",
   join: "/join",
   auth: "/auth/:provider",

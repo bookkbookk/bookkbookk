@@ -1,8 +1,12 @@
 import { useGetBookClubList } from "@api/bookClub/queries.tsx";
+import {
+  ModalBody,
+  ModalBox,
+  ModalHeader,
+} from "@components/common/common.style";
 import ClearIcon from "@mui/icons-material/Clear";
 import { IconButton, List, Modal, Typography } from "@mui/material";
 import { useBookClubChoiceValue } from "store/newBook/useBookClubChoice";
-import * as S from "../../style";
 import BookClubListItem from "./BookClubListItem";
 
 export default function BookClubModal({
@@ -17,14 +21,14 @@ export default function BookClubModal({
 
   return (
     <Modal open={open} onClose={handleClose}>
-      <S.ModalBox>
-        <S.ModalHeader>
+      <ModalBox>
+        <ModalHeader>
           <Typography variant="h5">북클럽 목록</Typography>
           <IconButton size="small" onClick={handleClose}>
             <ClearIcon fontSize="inherit" />
           </IconButton>
-        </S.ModalHeader>
-        <S.ModalBody>
+        </ModalHeader>
+        <ModalBody>
           <List sx={{ width: "100%", padding: 0 }}>
             {data?.map((bookClub) => (
               <BookClubListItem
@@ -35,8 +39,8 @@ export default function BookClubModal({
               />
             ))}
           </List>
-        </S.ModalBody>
-      </S.ModalBox>
+        </ModalBody>
+      </ModalBox>
     </Modal>
   );
 }

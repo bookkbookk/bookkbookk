@@ -1,4 +1,4 @@
-import { useGetBooks } from "@api/book/queries";
+import { useGetBooks } from "@api/member/queries";
 import StatusIndicator from "@components/common/StatusIndicator/StatusIndicator";
 import { MESSAGE } from "@constant/index";
 import { Pagination, Stack } from "@mui/material";

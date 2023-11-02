@@ -25,9 +25,7 @@ export default function MemberEmails({
             <Chip
               label={email}
               onDelete={() => deleteMemberEmail(email)}
-              sx={{
-                fontSize: 16,
-              }}
+              sx={{ fontSize: 16 }}
             />
           </ListItem>
         );

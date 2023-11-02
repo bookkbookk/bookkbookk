@@ -12,7 +12,7 @@ export default function HeaderTitle() {
 
   const getHeaderTitle = () => {
     if (isBookChapterPath) {
-      return `${state.book.title} - ${state.book.author}`;
+      return state.book.title;
     }
 
     if (isBookClubPath) {

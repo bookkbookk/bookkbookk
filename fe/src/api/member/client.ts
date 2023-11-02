@@ -1,3 +1,4 @@
+import { BookList } from "@api/book/type";
 import { fetcher, formDataConfig } from "@api/fetcher";
 import { makeFormData } from "@api/utils";
 import { MEMBER_API_PATH } from "../constants";
@@ -16,5 +17,21 @@ export const patchMemberInfo = async (memberInfo: MemberInfo) => {
     memberInfoFormData,
     formDataConfig
   );
+  return data;
+};
+
+export const getMemberBookList = async ({
+  page,
+  size,
+}: {
+  page: number;
+  size: number;
+}) => {
+  const { data } = await fetcher.get<BookList>(MEMBER_API_PATH.books, {
+    params: {
+      page,
+      size,
+    },
+  });
   return data;
 };

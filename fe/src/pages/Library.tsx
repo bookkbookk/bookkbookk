@@ -1,7 +1,6 @@
 import BookList from "@components/Library/BookList";
-import * as S from "@components/Library/Library.style";
 import LibraryTabs from "@components/Library/LibraryTabs";
-import { BoxHeader, MainBox } from "@components/common/common.style";
+import { AddFab, BoxHeader, MainBox } from "@components/common/common.style";
 import { TOTAL_TAB } from "@components/constants";
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
@@ -37,12 +36,12 @@ export default function Library() {
       </BoxHeader>
       <BookList />
       <Tooltip title="새로운 책을 추가해보세요">
-        <S.BookAddFab
+        <AddFab
           color="primary"
           aria-label="add"
           onClick={() => navigate(ROUTE_PATH.newBook)}>
           <LibraryAddIcon />
-        </S.BookAddFab>
+        </AddFab>
       </Tooltip>
     </MainBox>
   );

@@ -48,38 +48,6 @@ export const BookDescription = styled(Typography)(({ theme }) => ({
   WebkitLineClamp: 3,
 }));
 
-export const ModalBox = styled(Box)(({ theme }) => ({
-  position: "absolute",
-  maxWidth: "30vw",
-  minWidth: "30vw",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  backgroundColor: theme.palette.background.paper,
-  border: `1px solid ${theme.palette.divider}`,
-  borderRadius: theme.spacing(2),
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
-  padding: theme.spacing(4),
-  gap: theme.spacing(2),
-}));
-
-export const ModalHeader = styled(Box)({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  width: "100%",
-});
-
-export const ModalBody = styled(Box)({
-  display: "flex",
-  width: "100%",
-  maxHeight: "70vh",
-  overflow: "scroll",
-});
-
 export const ImageWrapper = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "center",

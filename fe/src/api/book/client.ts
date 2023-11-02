@@ -1,6 +1,6 @@
 import { ALADIN_API_PATH, BOOK_API_PATH } from "@api/constants";
 import { fetcher } from "@api/fetcher";
-import { BookInfo, BookList, NewBookBody } from "./type";
+import { BookInfo, NewBookBody } from "./type";
 
 export const getBookSearchResult = async (searchWord: string) => {
   const { data } = await fetcher.get<BookInfo[]>(ALADIN_API_PATH.search, {
@@ -19,21 +19,5 @@ export const postNewBook = async (newBookBody: NewBookBody) => {
       ...newBookBody,
     }
   );
-  return data;
-};
-
-export const getBookList = async ({
-  page,
-  size,
-}: {
-  page: number;
-  size: number;
-}) => {
-  const { data } = await fetcher.get<BookList>(BOOK_API_PATH.books, {
-    params: {
-      page,
-      size,
-    },
-  });
   return data;
 };
