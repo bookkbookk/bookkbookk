@@ -127,7 +127,7 @@ export const handlers = [
     // }
   }),
 
-  rest.post(AUTH_API_PATH.logout, async (req, res, ctx) => {
+  rest.post(AUTH_API_PATH.logout, async (_, res, ctx) => {
     // const { refreshToken } = await req.json<{ refreshToken: string | null }>();
 
     // if (!refreshToken) {
