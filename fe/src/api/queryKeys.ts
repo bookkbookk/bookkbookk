@@ -40,5 +40,8 @@ export const queryKeys = createQueryKeyStore({
       queryKey: ["getBookClubList", option],
       queryFn: () => getBookClubList(option),
     }),
+    join: (verificationCode?: string) => ({
+      queryKey: ["postJoinBookClub", verificationCode],
+    }),
   },
 });

@@ -46,7 +46,16 @@ export const sendEmail = async (emailSubmitInfo: EmailSubmitInfo) => {
   );
 };
 
-// TODO: 테스트 코드로 옮기기
-export const mockSendEmail = async (emailSubmitInfo: EmailSubmitInfo) => {
-  throw new Error("Not implemented");
+export const postJoinBookClub = async (bookClubCode: string) => {
+  const { data } = await fetcher.post<{ bookClubId: number }>(
+    BOOK_CLUB_API_PATH.join,
+    { bookClubCode }
+  );
+
+  return data;
 };
+
+// TODO: 테스트 코드로 옮기기
+// export const mockSendEmail = async (emailSubmitInfo: EmailSubmitInfo) => {
+//   throw new Error("Not implemented");
+// };

@@ -3,7 +3,7 @@ import { MESSAGE } from "@constant/index";
 import { Button } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { closeSnackbar, enqueueSnackbar } from "notistack";
-import { mockSendEmail, postNewBookClub } from "./client";
+import { postJoinBookClub, postNewBookClub, sendEmail } from "./client";
 import {
   BookClubCreationInfo,
   BookClubStatus,
@@ -36,7 +36,7 @@ export const useGetBookClubList = (option?: BookClubStatus) =>
   useQuery(queryKeys.bookClub.list(option));
 
 export const useSendEmail = () => {
-  const { mutate } = useMutation({ mutationFn: mockSendEmail });
+  const { mutate } = useMutation({ mutationFn: sendEmail });
 
   const onSendEmail = (emailSubmitInfo: EmailSubmitInfo) => {
     mutate(emailSubmitInfo, {
@@ -63,4 +63,25 @@ export const useSendEmail = () => {
   };
 
   return { onSendEmail };
+};
+
+export const useAuthBookClub = ({
+  bookClubCode,
+  isLogin,
+}: {
+  bookClubCode: string;
+  isLogin: boolean;
+}) => {
+  const {
+    data: bookClubInfo,
+    isLoading,
+    isError,
+    isSuccess,
+  } = useQuery({
+    ...queryKeys.bookClub.join(bookClubCode),
+    queryFn: () => postJoinBookClub(bookClubCode),
+    enabled: !!bookClubCode && !!isLogin,
+  });
+
+  return { bookClubInfo, isLoading, isError, isSuccess };
 };

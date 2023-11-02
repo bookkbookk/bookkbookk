@@ -8,6 +8,7 @@ export const ROUTE_PATH = {
   bookClub: "/main/book-club",
   newBookClub: "/main/new-book-club",
   myPage: "/main/my-page",
+  join: "/join",
   auth: "/auth/:provider",
   signUp: "/sign-up",
   notFound: "404",

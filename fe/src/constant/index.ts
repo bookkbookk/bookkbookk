@@ -18,6 +18,10 @@ export const MESSAGE = {
   SEND_EMAIL_ERROR: `북클럽 초대장 전송에 실패했어요. \n 나중에 다시 시도해주세요.`,
   SEND_EMAIL_SUCCESS: `멤버들에게 북클럽 초대장 전송을 완료했어요! \n 멤버들이 초대장을 수락하도록 알려주세요.`,
   INVALID_NEW_CHAPTERS: "챕터와 토픽의 제목을 빠짐없이 모두 입력해주세요!",
+  BOOK_CLUB_JOIN_LOADING:
+    "북크북크 북클럽에 오신걸 환영합니다! \n 북클럽에 등록중이니 잠시만 기다려주세요!",
+  BOOK_CLUB_JOIN_ERROR: `북클럽 가입에 실패했어요. \n 나중에 다시 시도해주세요.`,
+  NOT_FOUND: `요청하신 페이지를 찾을 수 없어요. \n 다른 페이지로 이동해주세요.`,
 };
 
 export const PAGE_TITLE = {
