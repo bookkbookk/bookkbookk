@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import codesquad.bookkbookk.IntegrationTest;
+import codesquad.bookkbookk.common.error.exception.MemberJoinedBookClubException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateInvitationUrlRequest;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
@@ -138,7 +139,7 @@ public class BookClubInvitationTest extends IntegrationTest {
         BookClubInvitationCode bookClubInvitationCode = new BookClubInvitationCode(request, invitationCode);
         bookClubInvitationCodeRepository.save(bookClubInvitationCode);
 
-        String accessToken = jwtProvider.createAccessToken(member.getId());
+        String accessToken = jwtProvider.createAccessToken(anotherMember.getId());
         JSONObject requestBody = new JSONObject(Map.of("bookClubCode", invitationCode));
 
         //when
@@ -156,6 +157,46 @@ public class BookClubInvitationTest extends IntegrationTest {
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             softAssertions.assertThat(response.jsonPath().getLong("bookClubId")).isEqualTo(bookClub.getId());
+        });
+    }
+
+    @DisplayName("북클럽에 참여한 멤버가 해당 북클럽 초대 url에 접근해 북클럽에 참여하려 하면 예외가 발생한다.")
+    @Test
+    void joinedMemberJoinBookClub() {
+        //given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        MemberBookClub memberBookClub = new MemberBookClub(member, bookClub);
+        memberBookClubRepository.save(memberBookClub);
+
+        CreateInvitationUrlRequest request = new CreateInvitationUrlRequest(bookClub.getId());
+        String invitationCode = "test";
+        BookClubInvitationCode bookClubInvitationCode = new BookClubInvitationCode(request, invitationCode);
+        bookClubInvitationCodeRepository.save(bookClubInvitationCode);
+
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+        JSONObject requestBody = new JSONObject(Map.of("bookClubCode", invitationCode));
+        MemberJoinedBookClubException exception = new MemberJoinedBookClubException();
+
+        //when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .contentType(ContentType.JSON)
+                .body(requestBody.toString())
+                .when()
+                .post("/api/book-clubs/join")
+                .then().log().all()
+                .extract();
+
+        //then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+            softAssertions.assertThat(response.jsonPath().getString("message")).isEqualTo(exception.getMessage());
         });
     }
 }
