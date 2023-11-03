@@ -1,16 +1,20 @@
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
 import { postLogin } from "./auth/client";
 import { OAuthLoginParams } from "./auth/type";
-import { getBookList, getBookSearchResult } from "./book/client";
-import { getBookClubList } from "./bookClub/client";
+import { getBookSearchResult } from "./book/client";
+import { getBookClubDetail, getBookClubList } from "./bookClub/client";
 import { BookClubStatus } from "./bookClub/type";
-import { getMember } from "./member/client";
+import { getMember, getMemberBookList } from "./member/client";
 
 export const queryKeys = createQueryKeyStore({
   members: {
     info: () => ({
       queryKey: ["getMember"],
       queryFn: getMember,
+    }),
+    books: ({ page, size }: { page: number; size: number }) => ({
+      queryKey: ["getBookList", { page, size }],
+      queryFn: () => getMemberBookList({ page, size }),
     }),
   },
   auth: {
@@ -23,10 +27,6 @@ export const queryKeys = createQueryKeyStore({
     search: (searchWord: string) => ({
       queryKey: ["getBookSearchResult", searchWord],
       queryFn: () => getBookSearchResult(searchWord),
-    }),
-    list: ({ page, size }: { page: number; size: number }) => ({
-      queryKey: ["getBookList", { page, size }],
-      queryFn: () => getBookList({ page, size }),
     }),
   },
   chapters: {
@@ -42,6 +42,10 @@ export const queryKeys = createQueryKeyStore({
     }),
     join: (verificationCode?: string) => ({
       queryKey: ["postJoinBookClub", verificationCode],
+    }),
+    detail: (bookClubId: number) => ({
+      queryKey: ["getBookClubDetail", bookClubId],
+      queryFn: () => getBookClubDetail(bookClubId),
     }),
   },
 });

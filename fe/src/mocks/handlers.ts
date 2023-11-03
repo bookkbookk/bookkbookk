@@ -6,7 +6,12 @@ import {
   MEMBER_API_PATH,
 } from "@api/constants";
 import { rest } from "msw";
-import { BOOK_CLUB_LIST, MEMBER_INFO, USER_BOOK_LIST } from "./data";
+import {
+  BOOK_CLUB_DETAIL_OPEN,
+  BOOK_CLUB_LIST,
+  MEMBER_INFO,
+  USER_BOOK_LIST,
+} from "./data";
 import ALADIN_BOOK_SEARCH_EXAMPLE from "./data.json";
 
 const TOKEN_EXPIRATION = {
@@ -122,7 +127,7 @@ export const handlers = [
     // }
   }),
 
-  rest.post(AUTH_API_PATH.logout, async (req, res, ctx) => {
+  rest.post(AUTH_API_PATH.logout, async (_, res, ctx) => {
     // const { refreshToken } = await req.json<{ refreshToken: string | null }>();
 
     // if (!refreshToken) {
@@ -189,7 +194,7 @@ export const handlers = [
     return res(ctx.status(200), ctx.json({ createdBookId: 1 }));
   }),
 
-  rest.get(BOOK_API_PATH.books, async (_, res, ctx) => {
+  rest.get(MEMBER_API_PATH.books, async (_, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
@@ -209,5 +214,9 @@ export const handlers = [
 
   rest.post(BOOK_CLUB_API_PATH.join, async (_, res, ctx) => {
     return res(ctx.status(200), ctx.json({ bookClubId: 10 }));
+  }),
+
+  rest.get(`${BOOK_CLUB_API_PATH.bookClubs}/*`, async (_, res, ctx) => {
+    return res(ctx.status(200), ctx.json(BOOK_CLUB_DETAIL_OPEN));
   }),
 ];

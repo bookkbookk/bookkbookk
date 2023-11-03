@@ -60,3 +60,14 @@ export const usePatchMemberInfo = ({
 
   return { onPatchMemberInfo };
 };
+
+export const useGetBooks = ({ page, size }: { page: number; size: number }) => {
+  const {
+    data: books,
+    isLoading,
+    isSuccess,
+    isError,
+  } = useQuery(queryKeys.members.books({ page, size }));
+
+  return { books, isLoading, isSuccess, isError };
+};

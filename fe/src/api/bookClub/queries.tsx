@@ -66,10 +66,10 @@ export const useSendEmail = () => {
 };
 
 export const useAuthBookClub = ({
-  bookClubCode,
+  invitationCode,
   isLogin,
 }: {
-  bookClubCode: string;
+  invitationCode: string;
   isLogin: boolean;
 }) => {
   const {
@@ -78,10 +78,23 @@ export const useAuthBookClub = ({
     isError,
     isSuccess,
   } = useQuery({
-    ...queryKeys.bookClub.join(bookClubCode),
-    queryFn: () => postJoinBookClub(bookClubCode),
-    enabled: !!bookClubCode && !!isLogin,
+    ...queryKeys.bookClub.join(invitationCode),
+    queryFn: () => postJoinBookClub(invitationCode),
+    enabled: !!invitationCode && !!isLogin,
   });
 
   return { bookClubInfo, isLoading, isError, isSuccess };
+};
+
+export const useGetBookClubDetail = (bookClubId: number) => {
+  const {
+    data: bookClubDetail,
+    isLoading,
+    isError,
+  } = useQuery({
+    ...queryKeys.bookClub.detail(bookClubId),
+    enabled: !!bookClubId,
+  });
+
+  return { bookClubDetail, isLoading, isError };
 };

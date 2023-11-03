@@ -1,13 +1,14 @@
 import { fetcher, formDataConfig } from "@api/fetcher";
 import { makeFormData } from "@api/utils";
 import { send } from "@emailjs/browser";
-import { stringify } from "qs";
 import { BOOK_CLUB_API_PATH } from "../constants";
 import {
   BookClubCreationInfo,
   BookClubProfile,
+  ClosedBookClubDetail,
   EmailSubmitInfo,
   NewBookClubInfo,
+  OpenBookClubDetail,
 } from "./type";
 const {
   VITE_EMAIL_JS_PUBLIC_KEY,
@@ -26,13 +27,21 @@ export const postNewBookClub = async (bookClubInfo: BookClubCreationInfo) => {
   return data;
 };
 
+export const getBookClubDetail = async (bookClubId: number) => {
+  const { data } = await fetcher.get<ClosedBookClubDetail | OpenBookClubDetail>(
+    `${BOOK_CLUB_API_PATH.bookClubs}/${bookClubId}`
+  );
+  return data;
+};
+
 export const getBookClubList = async (option?: {
   status: "open" | "closed";
 }) => {
-  const pathVariable = stringify(option);
-
   const { data } = await fetcher.get<BookClubProfile[]>(
-    `${BOOK_CLUB_API_PATH.bookClubs}${pathVariable && `?${pathVariable}`}`
+    BOOK_CLUB_API_PATH.bookClubs,
+    {
+      params: option,
+    }
   );
   return data;
 };
@@ -46,10 +55,10 @@ export const sendEmail = async (emailSubmitInfo: EmailSubmitInfo) => {
   );
 };
 
-export const postJoinBookClub = async (bookClubCode: string) => {
+export const postJoinBookClub = async (invitationCode: string) => {
   const { data } = await fetcher.post<{ bookClubId: number }>(
     BOOK_CLUB_API_PATH.join,
-    { bookClubCode }
+    { invitationCode }
   );
 
   return data;

@@ -1,6 +1,7 @@
 import { usePostNewChapters } from "@api/chapters/queries";
 import { MESSAGE } from "@constant/index";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { Stack } from "@mui/material";
 import Button from "@mui/material/Button";
 import { enqueueSnackbar } from "notistack";
 import { useParams } from "react-router-dom";
@@ -54,7 +55,12 @@ export default function HeaderButtons({
   };
 
   return (
-    <>
+    <Stack
+      display="flex"
+      justifyContent="space-between"
+      flexDirection="row"
+      width="100%"
+      height={50}>
       <Button onClick={onChangeChapterViewer}>
         <ArrowBackIcon />
         챕터 목록으로 돌아가기
@@ -65,6 +71,6 @@ export default function HeaderButtons({
         disabled={chapterList.length === 0}>
         챕터 추가 완료하기
       </Button>
-    </>
+    </Stack>
   );
 }

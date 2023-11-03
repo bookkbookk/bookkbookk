@@ -15,3 +15,7 @@ export function validateEmail(email: string) {
     message: "",
   };
 }
+
+export function formatDate(timeStamp: string) {
+  return new Intl.DateTimeFormat("ko-KR").format(new Date(timeStamp));
+}
