@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.bookkbookk.common.resolver.MemberId;
+import codesquad.bookkbookk.domain.Temp;
 import codesquad.bookkbookk.domain.book.data.dto.ReadBookClubBookResponse;
 import codesquad.bookkbookk.domain.book.service.BookService;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateBookClubRequest;
@@ -39,11 +40,16 @@ public class BookClubController {
     private final BookService bookService;
 
     @PostMapping
-    public ResponseEntity<CreateBookClubResponse> createBookClub(@MemberId Long memberId,
+    public ResponseEntity<Temp> createBookClub(@MemberId Long memberId,
                                                                  @ModelAttribute CreateBookClubRequest request) {
         CreateBookClubResponse response = bookClubService.createBookClub(memberId, request);
+        CreateInvitationUrlRequest request2 = new CreateInvitationUrlRequest(response.getBookClubId());
+        InvitationUrlResponse response1 = bookClubInvitationService.createInvitationUrl(memberId, request2);
+        Temp temp = new Temp(response.getBookClubId(), response1.getInvitationUrl());
+
+
         return ResponseEntity.ok()
-                .body(response);
+                .body(temp);
     }
 
     @GetMapping
