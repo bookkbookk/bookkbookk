@@ -8,6 +8,11 @@ export const getBookSearchResult = async (searchWord: string) => {
       search: searchWord,
     },
   });
+  const { data } = await fetcher.get<BookInfo[]>(ALADIN_API_PATH.search, {
+    params: {
+      search: searchWord,
+    },
+  });
 
   return data;
 };
