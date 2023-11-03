@@ -15,7 +15,6 @@ import codesquad.bookkbookk.IntegrationTest;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
-import codesquad.bookkbookk.domain.bookclub.data.dto.CreateBookClubResponse;
 import codesquad.bookkbookk.domain.bookclub.data.dto.ReadBookClubResponse;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.data.entity.MemberBookClub;
@@ -67,8 +66,7 @@ public class BookClubTest extends IntegrationTest {
 
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softAssertions.assertThat(response.jsonPath().getObject("", CreateBookClubResponse.class)
-                    .getBookClubId()).isEqualTo(member.getId());
+            softAssertions.assertThat(response.jsonPath().getLong("bookClubId")).isEqualTo(member.getId());
         });
     }
 
