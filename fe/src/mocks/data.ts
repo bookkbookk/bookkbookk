@@ -1,3 +1,29 @@
+export const BOOK_CLUB_DETAIL_OPEN = {
+  name: "내가만든북클럽",
+  profileImgUrl: "https://avatars.githubusercontent.com/u/56245755?v=4",
+  members: [
+    {
+      id: 1,
+      nickname: "gamgyul",
+      email: "gamgyul@gmail.com",
+      profileImgUrl: "https://avatars.githubusercontent.com/u/56245755?v=4",
+    },
+    {
+      id: 2,
+      nickname: "nag",
+      email: "gamgyul@gmail.com",
+      profileImgUrl: "https://avatars.githubusercontent.com/u/56245755?v=4",
+    },
+  ],
+  lastBook: {
+    name: "하늘과 바람과 별과 인간",
+    author: "김상욱",
+  },
+  createdTime: "2023-08-30T10:00:00",
+  status: "open",
+  upcomingGatheringDate: "2023-11-11T10:30:00",
+};
+
 export const USER_BOOK_LIST = [
   {
     id: 1,
@@ -197,7 +223,7 @@ export const USER_BOOK_LIST = [
       name: "내꿈은농부!",
     },
     title:
-      "아무도 가지 않은 길에 부가 있었다 - 흔들리는 투자자를 위한 부자의 독설 41",
+      "아무도 가지 않은 길에 부가 있었다 - 흔들리는 투자자를 위한 부자의 독설 41아무도 가지 않은 길에 부가 있었다 - 흔들리는 투자자를 위한 부자의 독설 41",
     cover:
       "https://image.aladin.co.kr/product/32265/15/coversum/k722834840_1.jpg",
     author: "정민우(달천) (지은이)",
@@ -210,13 +236,53 @@ export const BOOK_CLUB_LIST = [
     id: 1,
     creatorId: 1,
     name: "내가만든북클럽",
-    profileImgUrl: "",
+    status: "open",
+    profileImgUrl:
+      "https://frtest12.s3.ap-northeast-2.amazonaws.com/profile-image/1",
+    lastBook: {
+      name: "책이름",
+      author: "저자이름",
+    },
+    createdTime: "2023-08-30T10:00:0000",
+    upcomingGatheringDate: "2023-11-11T10:30:0000",
+    members: [
+      {
+        id: 1,
+        nickname: "gamgyul",
+        profileImgUrl: "http://naver.com",
+      },
+      {
+        id: 2,
+        nickname: "nag",
+        profileImgUrl: "http://naver.com",
+      },
+    ],
   },
   {
     id: 2,
     creatorId: 1,
-    name: "내가만든북클럽2내가만든북클럽2내가만든북클럽2내가만든북클럽2",
-    profileImgUrl: "",
+    name: "내가만든북클럽2",
+    status: "closed",
+    profileImgUrl:
+      "https://frtest12.s3.ap-northeast-2.amazonaws.com/profile-image/2",
+    lastBook: {
+      name: "책이름",
+      author: "저자이름",
+    },
+    createdTime: "2023-08-30",
+    closedTime: "2023-10-15",
+    members: [
+      {
+        id: 1,
+        nickname: "gamgyul",
+        profileImgUrl: "https://avatars.githubusercontent.com/u/56245755?v=4",
+      },
+      {
+        id: 2,
+        nickname: "nag",
+        profileImgUrl: "https://avatars.githubusercontent.com/u/56245755?v=4",
+      },
+    ],
   },
 ];
 
@@ -224,8 +290,7 @@ export const MEMBER_INFO = {
   memberId: 1,
   nickname: "감귤차먹고아프지마세요",
   email: "gamgyul@gmail.com",
-  profileImgUrl:
-    "https://github.com/bookkbookk/bookkbookk/assets/111998760/dee53f3b-e59a-4781-9931-9d91542a7a4a",
+  profileImgUrl: "https://avatars.githubusercontent.com/u/56245755?v=4",
 };
 
 export const ALADIN_BOOK_SEARCH_EXAMPLE = [

@@ -1,6 +1,7 @@
 import { useOAuthLogin } from "@api/auth/queries";
+import { setAccessToken } from "@api/fetcher";
 import StatusIndicator from "@components/common/StatusIndicator/StatusIndicator";
-import { ACCESS_TOKEN_KEY, MESSAGE, REFRESH_TOKEN_KEY } from "@constant/index";
+import { MESSAGE, REFRESH_TOKEN_KEY } from "@constant/index";
 import { Box } from "@mui/material";
 import { useEffect } from "react";
 import { Navigate, useParams, useSearchParams } from "react-router-dom";
@@ -26,7 +27,7 @@ export default function Auth() {
 
   useEffect(() => {
     if (isSuccess) {
-      localStorage.setItem(ACCESS_TOKEN_KEY, authInfo.data.accessToken);
+      setAccessToken(authInfo.data.accessToken);
       localStorage.setItem(REFRESH_TOKEN_KEY, authInfo.data.refreshToken);
       setIsLogin(true);
     }

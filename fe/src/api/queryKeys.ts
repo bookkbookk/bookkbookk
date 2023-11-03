@@ -1,24 +1,26 @@
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
 import { postLogin } from "./auth/client";
 import { OAuthLoginParams } from "./auth/type";
-import { getBookList, getBookSearchResult } from "./book/client";
-import { getBookClubList } from "./bookClub/client";
+import { getBookSearchResult } from "./book/client";
+import { getBookClubDetail, getBookClubList } from "./bookClub/client";
 import { BookClubStatus } from "./bookClub/type";
-import { getMember } from "./member/client";
+import { getMember, getMemberBookList } from "./member/client";
 
 export const queryKeys = createQueryKeyStore({
   members: {
-    info: (option?: { enabled?: boolean }) => ({
+    info: () => ({
       queryKey: ["getMember"],
       queryFn: getMember,
-      enabled: option?.enabled,
+    }),
+    books: ({ page, size }: { page: number; size: number }) => ({
+      queryKey: ["getBookList", { page, size }],
+      queryFn: () => getMemberBookList({ page, size }),
     }),
   },
   auth: {
     login: ({ provider, authCode }: OAuthLoginParams) => ({
       queryKey: ["postLogin"],
       queryFn: () => postLogin({ provider, authCode }),
-      enabled: !!authCode && !!provider,
     }),
   },
   books: {
@@ -27,15 +29,24 @@ export const queryKeys = createQueryKeyStore({
       queryKey: ["getBookSearchResult", searchWord],
       queryFn: () => getBookSearchResult(searchWord),
     }),
+  },
+  chapters: {
     list: ({ page, size }: { page: number; size: number }) => ({
-      queryKey: ["getBookList", { page, size }],
-      queryFn: () => getBookList({ page, size }),
+      queryKey: ["getChapterList", { page, size }],
+      // queryFn: () => getChapterList({ page, size }),
     }),
   },
   bookClub: {
     list: (option?: BookClubStatus) => ({
       queryKey: ["getBookClubList", option],
       queryFn: () => getBookClubList(option),
+    }),
+    join: (verificationCode?: string) => ({
+      queryKey: ["postJoinBookClub", verificationCode],
+    }),
+    detail: (bookClubId: number) => ({
+      queryKey: ["getBookClubDetail", bookClubId],
+      queryFn: () => getBookClubDetail(bookClubId),
     }),
   },
 });

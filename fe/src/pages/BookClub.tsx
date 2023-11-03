@@ -1,35 +1,45 @@
-import BookClubTabs from "@components/BookClub/BookClubTabs";
-import { BoxHeader, MainBox } from "@components/common/common.style";
-import { BOOK_CLUB_TAB } from "@components/constants";
-import AddIcon from "@mui/icons-material/Add";
-import { Button } from "@mui/material";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ROUTE_PATH } from "routes/constants";
-import { useIsLoginValue } from "store/useMember";
+import { useGetBookClubDetail } from "@api/bookClub/queries";
+import GatheringAddModal from "@components/BookClub/GatheringAddModal";
+import BookClubInfo from "@components/BookClub/LeftBox/BookClubInfo";
+import BookClubMembersCard from "@components/BookClub/RightBox/BookClubMembersCard";
+import {
+  AddFab,
+  BoxContent,
+  LeftBox,
+  RightBox,
+} from "@components/common/common.style";
+import GroupsIcon from "@mui/icons-material/Groups";
+import { Box, Tooltip } from "@mui/material";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
 
 export default function BookClub() {
-  const [activeTabID, setActiveTabID] = useState(BOOK_CLUB_TAB[0].id);
-  const isLogin = useIsLoginValue();
-  const navigate = useNavigate();
+  const { bookClubId } = useParams<{ bookClubId: string }>();
+  const { bookClubDetail } = useGetBookClubDetail(Number(bookClubId));
 
-  const handleChange = (_: React.SyntheticEvent, newValue: number) => {
-    setActiveTabID(newValue);
-  };
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleOpen = () => setIsModalOpen(true);
+  const handleClose = () => setIsModalOpen(false);
 
   return (
-    <MainBox>
-      <BoxHeader>
-        <BookClubTabs {...{ activeTabID, handleChange }} />
-        {isLogin && (
-          <Button
-            variant="contained"
-            endIcon={<AddIcon />}
-            onClick={() => navigate(ROUTE_PATH.newBookClub)}>
-            새로운 북클럽 추가하기
-          </Button>
-        )}
-      </BoxHeader>
-    </MainBox>
+    <Box sx={{ display: "flex", height: "100%" }}>
+      <LeftBox sx={{ justifyContent: "space-between", paddingY: 4 }}>
+        {bookClubDetail && <BookClubInfo {...{ bookClubDetail }} />}
+        {/* TODO: 모임 목록 조회*/}
+      </LeftBox>
+      <RightBox>
+        <BoxContent>
+          {bookClubDetail && (
+            <BookClubMembersCard members={bookClubDetail.members} />
+          )}
+        </BoxContent>
+      </RightBox>
+      <Tooltip title="새로운 모임을 추가해보세요">
+        <AddFab color="primary" aria-label="add" onClick={handleOpen}>
+          <GroupsIcon />
+        </AddFab>
+      </Tooltip>
+      <GatheringAddModal open={isModalOpen} handleClose={handleClose} />
+    </Box>
   );
 }

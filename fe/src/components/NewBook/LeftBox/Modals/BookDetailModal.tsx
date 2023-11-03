@@ -1,6 +1,6 @@
 import { BookInfo } from "@api/book/type";
 import * as S from "@components/NewBook/style";
-import { ButtonWrapper } from "@components/common/common.style";
+import { ButtonWrapper, ModalBox } from "@components/common/common.style";
 import LaunchIcon from "@mui/icons-material/Launch";
 import { Button, Modal, Tooltip, Typography } from "@mui/material";
 import { useSetBookChoice } from "store/newBook/useBookChoice";
@@ -36,7 +36,7 @@ export default function BookDetailModal({
 
   return (
     <Modal open={open} onClose={handleClose}>
-      <S.ModalBox>
+      <ModalBox>
         <S.ImageWrapper>
           <S.BookCoverImage
             src={cover}
@@ -72,7 +72,7 @@ export default function BookDetailModal({
             선택하기
           </Button>
         </ButtonWrapper>
-      </S.ModalBox>
+      </ModalBox>
     </Modal>
   );
 }

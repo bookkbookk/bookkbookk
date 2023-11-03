@@ -5,5 +5,3 @@ export const App = styled(Box)`
   justify-content: center;
   align-items: center;
 `;
-
-export const ModalRoot = styled("div")``;

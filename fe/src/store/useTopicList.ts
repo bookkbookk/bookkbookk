@@ -10,7 +10,9 @@ type TopicListAtomActionMap = {
   UPDATE_TOPIC: { chapterIndex: number; topicIndex: number; info: Info };
 };
 
-type TopicsAtomAction = ReducerAction<TopicListAtomActionMap>;
+type TopicsAtomAction =
+  | ReducerAction<TopicListAtomActionMap>
+  | { type: "RESET_TOPIC" };
 
 const topicListAtom = atom<TopicList>(new Map());
 
@@ -68,6 +70,9 @@ const useTopicListAtom = atom(
           newTopicList.delete(newTopicList.size - 1);
           return newTopicList;
         });
+        break;
+      case "RESET_TOPIC":
+        set(topicListAtom, new Map());
         break;
     }
   }

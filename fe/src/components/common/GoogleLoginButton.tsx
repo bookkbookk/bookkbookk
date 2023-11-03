@@ -1,6 +1,6 @@
 import { GOOGLE_OAUTH_PATH } from "@api/constants";
 import { ReactComponent as GoogleIcon } from "@assets/icons/google.svg";
-import { Button } from "@mui/material";
+import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 import * as S from "../Landing/Landing.style";
 

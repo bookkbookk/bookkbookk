@@ -6,7 +6,12 @@ import {
   MEMBER_API_PATH,
 } from "@api/constants";
 import { rest } from "msw";
-import { BOOK_CLUB_LIST, MEMBER_INFO, USER_BOOK_LIST } from "./data";
+import {
+  BOOK_CLUB_DETAIL_OPEN,
+  BOOK_CLUB_LIST,
+  MEMBER_INFO,
+  USER_BOOK_LIST,
+} from "./data";
 import ALADIN_BOOK_SEARCH_EXAMPLE from "./data.json";
 
 const TOKEN_EXPIRATION = {
@@ -122,17 +127,17 @@ export const handlers = [
     // }
   }),
 
-  rest.post(AUTH_API_PATH.logout, async (req, res, ctx) => {
-    const { refreshToken } = await req.json<{ refreshToken: string | null }>();
+  rest.post(AUTH_API_PATH.logout, async (_, res, ctx) => {
+    // const { refreshToken } = await req.json<{ refreshToken: string | null }>();
 
-    if (!refreshToken) {
-      return res(
-        ctx.status(400),
-        ctx.json({
-          message: "잘못된 요청입니다.",
-        })
-      );
-    }
+    // if (!refreshToken) {
+    //   return res(
+    //     ctx.status(400),
+    //     ctx.json({
+    //       message: "잘못된 요청입니다.",
+    //     })
+    //   );
+    // }
 
     return res(ctx.status(200));
   }),
@@ -149,7 +154,14 @@ export const handlers = [
     //   );
     // }
 
-    return res(ctx.status(200));
+    return res(
+      ctx.status(200),
+      ctx.json({
+        bookClubId: 1,
+        invitationUrl:
+          "https://bookkbookk.site/join/6febcb9e-76ab-4852-8b38-04b3933c0538",
+      })
+    );
   }),
 
   rest.get(ALADIN_API_PATH.search, async (req, res, ctx) => {
@@ -182,7 +194,7 @@ export const handlers = [
     return res(ctx.status(200), ctx.json({ createdBookId: 1 }));
   }),
 
-  rest.get(BOOK_API_PATH.books, async (_, res, ctx) => {
+  rest.get(MEMBER_API_PATH.books, async (_, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
@@ -194,5 +206,17 @@ export const handlers = [
         books: USER_BOOK_LIST,
       })
     );
+  }),
+
+  rest.post(BOOK_API_PATH.chapters, async (_, res, ctx) => {
+    return res(ctx.status(200));
+  }),
+
+  rest.post(BOOK_CLUB_API_PATH.join, async (_, res, ctx) => {
+    return res(ctx.status(200), ctx.json({ bookClubId: 10 }));
+  }),
+
+  rest.get(`${BOOK_CLUB_API_PATH.bookClubs}/*`, async (_, res, ctx) => {
+    return res(ctx.status(200), ctx.json(BOOK_CLUB_DETAIL_OPEN));
   }),
 ];

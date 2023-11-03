@@ -17,7 +17,7 @@ export default function NewBookClubFunnel() {
   });
 
   return (
-    <BoxContent>
+    <BoxContent sx={{ position: "relative" }}>
       <Stepper activeStep={activeStepIndex} funnel={funnelSteps} />
       <Funnel>
         <Funnel.Step name={profile}>

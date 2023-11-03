@@ -1,4 +1,11 @@
-import { Badge, Box, Button, Card as MuiCard, styled } from "@mui/material";
+import {
+  Badge,
+  Box,
+  Button,
+  Fab,
+  Card as MuiCard,
+  styled,
+} from "@mui/material";
 import { HEADER } from "layout/constants";
 
 export const Container = styled(Box)`
@@ -29,6 +36,7 @@ export const MainBox = styled(Box)(({ theme }) => ({
   flexDirection: "column",
   justifyContent: "space-between",
   padding: theme.spacing(2, 4),
+  alignItems: "center",
 }));
 
 export const BoxHeader = styled(Box)(({ theme }) => ({
@@ -40,8 +48,8 @@ export const BoxHeader = styled(Box)(({ theme }) => ({
 
 export const LeftBox = styled(Box)(({ theme }) => ({
   display: "flex",
-  width: "70%",
   height: "100%",
+  width: `calc(70% - ${theme.spacing(2)})`,
   flexDirection: "column",
   justifyContent: "center",
   alignItems: "center",
@@ -63,15 +71,15 @@ export const RightBox = styled(Box)(({ theme }) => ({
   boxShadow: theme.shadows[1],
 }));
 
-export const BoxContent = styled(Box)(({ theme }) => ({
+export const BoxContent = styled(Box)({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
   width: "80%",
   height: "100%",
   gap: "2rem",
-  padding: theme.spacing(4),
-}));
+  padding: "2rem 0",
+});
 
 export const Section = styled("section")`
   display: flex;
@@ -128,3 +136,41 @@ export const RoundButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.main,
   border: `1px solid ${theme.palette.divider}`,
 }));
+
+export const AddFab = styled(Fab)(({ theme }) => ({
+  position: "fixed",
+  bottom: theme.spacing(6),
+  right: theme.spacing(6),
+}));
+
+export const ModalBox = styled(Box)(({ theme }) => ({
+  position: "absolute",
+  maxWidth: "30vw",
+  minWidth: "30vw",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  backgroundColor: theme.palette.background.paper,
+  border: `1px solid ${theme.palette.divider}`,
+  borderRadius: theme.spacing(2),
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: theme.spacing(4),
+  gap: theme.spacing(2),
+}));
+
+export const ModalHeader = styled(Box)({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  width: "100%",
+});
+
+export const ModalBody = styled(Box)({
+  display: "flex",
+  width: "100%",
+  maxHeight: "70vh",
+  overflow: "scroll",
+});

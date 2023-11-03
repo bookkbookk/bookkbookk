@@ -2,8 +2,10 @@ import { reissueAccessToken } from "@api/auth/utils";
 import { loader as userLoader } from "@api/member/queries";
 import StatusIndicator from "@components/common/StatusIndicator/StatusIndicator";
 import Auth from "@pages/Auth";
+import BookChapters from "@pages/BookChapters";
 import BookClub from "@pages/BookClub";
-import BookDetail from "@pages/BookDetail";
+import BookClubJoin from "@pages/BookClubJoin";
+import BookClubList from "@pages/BookClubList";
 import Landing from "@pages/Landing";
 import Library from "@pages/Library";
 import Main from "@pages/Main";
@@ -37,6 +39,10 @@ export const router = createBrowserRouter(
         element={<UserProvider />}>
         <Route path={ROUTE_PATH.home} element={<Landing />} />
         <Route
+          path={`${ROUTE_PATH.join}/:invitationCode`}
+          element={<BookClubJoin />}
+        />
+        <Route
           path={ROUTE_PATH.main}
           element={
             <Layout>
@@ -51,11 +57,15 @@ export const router = createBrowserRouter(
           <Route index element={<Main />} />
           <Route path={ROUTE_PATH.library} element={<Library />} />
           <Route
-            path={`${ROUTE_PATH.bookDetail}/:bookId`}
-            element={<BookDetail />}
+            path={`${ROUTE_PATH.chapters}/:bookId`}
+            element={<BookChapters />}
           />
           <Route path={ROUTE_PATH.newBook} element={<NewBook />} />
-          <Route path={ROUTE_PATH.bookClub} element={<BookClub />} />
+          <Route path={ROUTE_PATH.bookClub} element={<BookClubList />} />
+          <Route
+            path={`${ROUTE_PATH.bookClub}/:bookClubId`}
+            element={<BookClub />}
+          />
           <Route path={ROUTE_PATH.newBookClub} element={<NewBookClub />} />
           <Route path={ROUTE_PATH.myPage} element={<MyPage />} />
         </Route>

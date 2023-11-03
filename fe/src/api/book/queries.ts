@@ -41,14 +41,3 @@ export const usePostNewBook = ({
 
   return { onPostNewBook };
 };
-
-export const useGetBooks = ({ page, size }: { page: number; size: number }) => {
-  const {
-    data: books,
-    isLoading,
-    isSuccess,
-    isError,
-  } = useQuery(queryKeys.books.list({ page, size }));
-
-  return { books, isLoading, isSuccess, isError };
-};

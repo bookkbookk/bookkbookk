@@ -1,7 +1,7 @@
 import { PlusBadge } from "@components/common/common.style";
 import AddIcon from "@mui/icons-material/Add";
-import { Button } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import * as S from "./SignUp.style";
 

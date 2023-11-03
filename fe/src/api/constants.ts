@@ -27,10 +27,13 @@ export const AUTH_API_PATH = {
 
 export const BOOK_CLUB_API_PATH = {
   bookClubs: "/api/book-clubs",
+  join: "/api/book-clubs/join",
+  books: (bookClubId: number) => `/api/book-clubs/${bookClubId}/books`,
 };
 
 export const MEMBER_API_PATH = {
   member: "/api/members",
+  books: "/api/members/books",
 };
 
 export const ALADIN_API_PATH = {
