@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public class Temp {
 
-    private final Long bookCLubId;
+    private final Long bookClubId;
     private final String invitationUrl;
 
 }

@@ -55,7 +55,7 @@ public class BookClubInvitationService {
     public JoinBookClubResponse joinBookClub(Long memberId, JoinBookClubRequest joinBookClubRequest) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         BookClubInvitationCode bookClubInvitationCode = bookClubInvitationCodeRepository
-                .findByInvitationCode(joinBookClubRequest.getBookClubCode()).orElseThrow(InvitationUrlNotFoundException::new);
+                .findByInvitationCode(joinBookClubRequest.getInvitationCode()).orElseThrow(InvitationUrlNotFoundException::new);
         BookClub bookClub = bookClubRepository.findById(bookClubInvitationCode.getBookClubId())
                 .orElseThrow(BookClubNotFoundException::new);
 

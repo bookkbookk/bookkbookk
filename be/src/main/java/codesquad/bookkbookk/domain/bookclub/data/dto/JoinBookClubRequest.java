@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @Getter
 public class JoinBookClubRequest {
 
-    private String bookClubCode;
+    private String invitationCode;
 
 }

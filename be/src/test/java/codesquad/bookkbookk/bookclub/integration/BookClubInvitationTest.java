@@ -140,7 +140,7 @@ public class BookClubInvitationTest extends IntegrationTest {
         bookClubInvitationCodeRepository.save(bookClubInvitationCode);
 
         String accessToken = jwtProvider.createAccessToken(anotherMember.getId());
-        JSONObject requestBody = new JSONObject(Map.of("bookClubCode", invitationCode));
+        JSONObject requestBody = new JSONObject(Map.of("invitationCode", invitationCode));
 
         //when
         ExtractableResponse<Response> response = RestAssured
@@ -179,7 +179,7 @@ public class BookClubInvitationTest extends IntegrationTest {
         bookClubInvitationCodeRepository.save(bookClubInvitationCode);
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
-        JSONObject requestBody = new JSONObject(Map.of("bookClubCode", invitationCode));
+        JSONObject requestBody = new JSONObject(Map.of("invitationCode", invitationCode));
         MemberJoinedBookClubException exception = new MemberJoinedBookClubException();
 
         //when
