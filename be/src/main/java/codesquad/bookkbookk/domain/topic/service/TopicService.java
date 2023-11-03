@@ -5,7 +5,10 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import codesquad.bookkbookk.common.error.exception.ChapterNotFoundException;
 import codesquad.bookkbookk.common.error.exception.TopicNotFoundException;
+import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
+import codesquad.bookkbookk.domain.chapter.repository.ChapterRepository;
 import codesquad.bookkbookk.domain.topic.data.dto.CreateTopicRequest;
 import codesquad.bookkbookk.domain.topic.data.dto.CreateTopicResponse;
 import codesquad.bookkbookk.domain.topic.data.dto.ReadTopicResponse;
@@ -20,10 +23,13 @@ import lombok.RequiredArgsConstructor;
 public class TopicService {
 
     private final TopicRepository topicRepository;
+    private final ChapterRepository chapterRepository;
 
     @Transactional
     public CreateTopicResponse createTopic(CreateTopicRequest request) {
-        Topic topic = new Topic(request.getChapterId(), request.getTitle());
+        Chapter chapter = chapterRepository.findById(request.getChapterId())
+                .orElseThrow(ChapterNotFoundException::new);
+        Topic topic = new Topic(chapter, request.getTitle());
         topicRepository.save(topic);
         return new CreateTopicResponse(topic.getId());
     }

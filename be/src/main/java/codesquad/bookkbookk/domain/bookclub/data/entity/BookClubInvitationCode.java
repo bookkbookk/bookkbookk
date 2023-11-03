@@ -15,23 +15,23 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class BookClubInvitationUrl {
+public class BookClubInvitationCode {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "book_club_invite_url_id")
+    @Column(name = "book_club_invitation_code_id")
     private Long id;
 
     @Column(name = "book_club_id", nullable = false)
     private Long bookClubId;
 
     @Column(nullable = false)
-    private String invitationUrl;
+    private String invitationCode;
 
 
-    public BookClubInvitationUrl(CreateInvitationUrlRequest request, String invitationUrl) {
+    public BookClubInvitationCode(CreateInvitationUrlRequest request, String invitationCode) {
         this.bookClubId = request.getBookClubId();
-        this.invitationUrl = invitationUrl;
+        this.invitationCode = invitationCode;
     }
 
 }
