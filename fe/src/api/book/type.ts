@@ -40,11 +40,14 @@ export type BookList = {
   books: BookListItem[];
 };
 
-export type BookListItem = {
+export type Book = {
   id: number;
-  bookClub: { id: number; name: string };
   title: string;
   cover: string;
   author: string;
   category: string;
+};
+
+export type BookListItem = Book & {
+  bookClub: { id: number; name: string };
 };

@@ -1,9 +1,14 @@
 import { queryKeys } from "@api/queryKeys";
 import { MESSAGE } from "@constant/index";
 import { Button } from "@mui/material";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import { closeSnackbar, enqueueSnackbar } from "notistack";
-import { postJoinBookClub, postNewBookClub, sendEmail } from "./client";
+import {
+  getBookClubBooks,
+  postJoinBookClub,
+  postNewBookClub,
+  sendEmail,
+} from "./client";
 import {
   BookClubCreationInfo,
   BookClubStatus,
@@ -97,4 +102,21 @@ export const useGetBookClubDetail = (bookClubId: number) => {
   });
 
   return { bookClubDetail, isLoading, isError };
+};
+
+export const useGetBookClubBooks = (bookClubId: number) => {
+  const { data } = useInfiniteQuery({
+    ...queryKeys.bookClub.books({ bookClubId }),
+    initialPageParam: 0,
+    queryFn: ({ pageParam }) =>
+      getBookClubBooks({
+        bookClubId,
+        cursor: pageParam,
+        size: 10,
+      }),
+    getNextPageParam: (lastPage, allPages) =>
+      lastPage.hasNext ? allPages.length : undefined,
+  });
+
+  return { bookClubBooks: data?.pages.flatMap((page) => page.books) };
 };

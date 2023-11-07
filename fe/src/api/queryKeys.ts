@@ -47,5 +47,8 @@ export const queryKeys = createQueryKeyStore({
       queryKey: ["getBookClubDetail", bookClubId],
       queryFn: () => getBookClubDetail(bookClubId),
     }),
+    books: ({ bookClubId }: { bookClubId: number }) => ({
+      queryKey: ["getBookList", bookClubId],
+    }),
   },
 });

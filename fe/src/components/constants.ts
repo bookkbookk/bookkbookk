@@ -1,12 +1,18 @@
 export const NEW_BOOK_CLUB_FUNNEL = {
-  profile: "profile" as const,
-  member: "member" as const,
-  congratulation: "congratulation" as const,
+  profile: "프로필" as const,
+  member: "멤버 초대" as const,
+  congratulation: "생성 완료" as const,
 };
 
 export const NEW_BOOK_FUNNEL = {
-  bookSearch: "bookSearch" as const,
-  bookClubGathering: "bookClubGathering" as const,
+  bookSearch: "책 검색" as const,
+  bookClubGathering: "북클럽 선택" as const,
+};
+
+export const NEW_GATHERING_FUNNEL = {
+  bookChoice: "책 선택" as const,
+  gathering: "모임 추가" as const,
+  checkInfo: "모임 생성" as const,
 };
 
 export const BOOK_CHAPTERS_TAB = [
