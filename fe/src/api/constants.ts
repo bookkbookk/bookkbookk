@@ -44,3 +44,7 @@ export const BOOK_API_PATH = {
   books: "/api/books",
   chapters: "/api/chapters",
 };
+
+export const GATHERING_API_PATH = {
+  gatherings: "/api/gatherings",
+};

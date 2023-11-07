@@ -3,6 +3,7 @@ import {
   AUTH_API_PATH,
   BOOK_API_PATH,
   BOOK_CLUB_API_PATH,
+  GATHERING_API_PATH,
   MEMBER_API_PATH,
 } from "@api/constants";
 import { rest } from "msw";
@@ -216,7 +217,104 @@ export const handlers = [
     return res(ctx.status(200), ctx.json({ bookClubId: 10 }));
   }),
 
-  rest.get(`${BOOK_CLUB_API_PATH.bookClubs}/*`, async (_, res, ctx) => {
+  rest.get(`${BOOK_CLUB_API_PATH.bookClubs}/:bookId`, async (_, res, ctx) => {
     return res(ctx.status(200), ctx.json(BOOK_CLUB_DETAIL_OPEN));
+  }),
+
+  rest.get(`${BOOK_CLUB_API_PATH.bookClubs}/*/books`, async (_, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        hasNext: false,
+        books: [
+          {
+            id: 1,
+            title:
+              "우리 인생에 바람을 초대하려면 - 세계적 지성이 들려주는 모험과 발견의 철학",
+            cover:
+              "https://image.aladin.co.kr/product/32610/92/coversum/k112935541_1.jpg",
+            author: "파스칼 브뤼크네르 (지은이), 이세진 (옮긴이)",
+            category: "국내도서>인문학>철학 일반>교양 철학",
+          },
+          {
+            id: 2,
+            title: "함께 자라기 - 애자일로 가는 길",
+            cover:
+              "https://image.aladin.co.kr/product/17597/74/coversum/8966262333_1.jpg",
+            author: "김창준 (지은이)",
+            category: "국내도서>컴퓨터/모바일>컴퓨터 공학>소프트웨어 공학",
+          },
+          {
+            id: 3,
+            title: "함께 자라기 - 애자일로 가는 길",
+            cover:
+              "https://image.aladin.co.kr/product/17597/74/coversum/8966262333_1.jpg",
+            author: "김창준 (지은이)",
+            category: "국내도서>컴퓨터/모바일>컴퓨터 공학>소프트웨어 공학",
+          },
+          {
+            id: 4,
+            title: "함께 자라기 - 애자일로 가는 길",
+            cover:
+              "https://image.aladin.co.kr/product/17597/74/coversum/8966262333_1.jpg",
+            author: "김창준 (지은이)",
+            category: "국내도서>컴퓨터/모바일>컴퓨터 공학>소프트웨어 공학",
+          },
+          {
+            id: 5,
+            title: "함께 자라기 - 애자일로 가는 길",
+            cover:
+              "https://image.aladin.co.kr/product/17597/74/coversum/8966262333_1.jpg",
+            author: "김창준 (지은이)",
+            category: "국내도서>컴퓨터/모바일>컴퓨터 공학>소프트웨어 공학",
+          },
+          {
+            id: 11,
+            title:
+              "우리 인생에 바람을 초대하려면 - 세계적 지성이 들려주는 모험과 발견의 철학",
+            cover:
+              "https://image.aladin.co.kr/product/32610/92/coversum/k112935541_1.jpg",
+            author: "파스칼 브뤼크네르 (지은이), 이세진 (옮긴이)",
+            category: "국내도서>인문학>철학 일반>교양 철학",
+          },
+          {
+            id: 12,
+            title: "함께 자라기 - 애자일로 가는 길",
+            cover:
+              "https://image.aladin.co.kr/product/17597/74/coversum/8966262333_1.jpg",
+            author: "김창준 (지은이)",
+            category: "국내도서>컴퓨터/모바일>컴퓨터 공학>소프트웨어 공학",
+          },
+          {
+            id: 13,
+            title: "함께 자라기 - 애자일로 가는 길",
+            cover:
+              "https://image.aladin.co.kr/product/17597/74/coversum/8966262333_1.jpg",
+            author: "김창준 (지은이)",
+            category: "국내도서>컴퓨터/모바일>컴퓨터 공학>소프트웨어 공학",
+          },
+          {
+            id: 14,
+            title: "함께 자라기 - 애자일로 가는 길",
+            cover:
+              "https://image.aladin.co.kr/product/17597/74/coversum/8966262333_1.jpg",
+            author: "김창준 (지은이)",
+            category: "국내도서>컴퓨터/모바일>컴퓨터 공학>소프트웨어 공학",
+          },
+          {
+            id: 15,
+            title: "함께 자라기 - 애자일로 가는 길",
+            cover:
+              "https://image.aladin.co.kr/product/17597/74/coversum/8966262333_1.jpg",
+            author: "김창준 (지은이)",
+            category: "국내도서>컴퓨터/모바일>컴퓨터 공학>소프트웨어 공학",
+          },
+        ],
+      })
+    );
+  }),
+
+  rest.post(`${GATHERING_API_PATH.gatherings}/:bookId`, async (_, res, ctx) => {
+    return res(ctx.status(200));
   }),
 ];

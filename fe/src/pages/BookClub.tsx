@@ -1,5 +1,5 @@
 import { useGetBookClubDetail } from "@api/bookClub/queries";
-import GatheringAddModal from "@components/BookClub/GatheringAddModal";
+import GatheringAddModal from "@components/BookClub/GatheringAddModal/GatheringAddModal";
 import BookClubInfo from "@components/BookClub/LeftBox/BookClubInfo";
 import BookClubMembersCard from "@components/BookClub/RightBox/BookClubMembersCard";
 import {

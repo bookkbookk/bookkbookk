@@ -105,18 +105,23 @@ export const useGetBookClubDetail = (bookClubId: number) => {
 };
 
 export const useGetBookClubBooks = (bookClubId: number) => {
-  const { data } = useInfiniteQuery({
+  const { data, hasNextPage, isFetching, fetchNextPage } = useInfiniteQuery({
     ...queryKeys.bookClub.books({ bookClubId }),
     initialPageParam: 0,
     queryFn: ({ pageParam }) =>
       getBookClubBooks({
         bookClubId,
         cursor: pageParam,
-        size: 10,
+        size: 3,
       }),
     getNextPageParam: (lastPage, allPages) =>
       lastPage.hasNext ? allPages.length : undefined,
   });
 
-  return { bookClubBooks: data?.pages.flatMap((page) => page.books) };
+  return {
+    bookClubBooks: data?.pages.flatMap((page) => page.books),
+    hasNext: hasNextPage,
+    isFetching,
+    fetchNextBooks: fetchNextPage,
+  };
 };
