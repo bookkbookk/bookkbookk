@@ -1,8 +1,8 @@
 import { BookClubProfile } from "@api/bookClub/type";
+import { ListItemButton } from "@components/common/common.style";
 import CheckIcon from "@mui/icons-material/Check";
 import { Avatar, ListItem, Typography } from "@mui/material";
 import { useSetBookClubChoice } from "store/newBook/useBookClubChoice";
-import * as S from "../../style";
 
 export default function BookClubListItem({
   bookClub,
@@ -24,7 +24,7 @@ export default function BookClubListItem({
 
   return (
     <ListItem sx={{ padding: 0 }}>
-      <S.ListItemButton onClick={onSelectButtonClick}>
+      <ListItemButton onClick={onSelectButtonClick}>
         <Avatar src={profileImgUrl} alt={name} />
         <Typography variant="body1">{name}</Typography>
         {active && (
@@ -37,7 +37,7 @@ export default function BookClubListItem({
             <CheckIcon />
           </div>
         )}
-      </S.ListItemButton>
+      </ListItemButton>
     </ListItem>
   );
 }

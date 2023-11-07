@@ -1,9 +1,4 @@
-import {
-  Box,
-  ListItemButton as MuiListItemButton,
-  Typography,
-  styled,
-} from "@mui/material";
+import { Box, Typography, styled } from "@mui/material";
 import { Link } from "react-router-dom";
 
 export const InfoWrapper = styled("div")(({ theme }) => ({
@@ -38,46 +33,11 @@ export const BookSubInfo = styled(Box)(({ theme }) => ({
   color: theme.palette.text.primary,
 }));
 
-export const BookDescription = styled(Typography)(({ theme }) => ({
-  color: theme.palette.text.secondary,
-  maxWidth: "100%",
-  maxHeight: theme.spacing(8),
-  overflow: "hidden",
-  wordBreak: "keep-all",
-  textOverflow: "ellipsis",
-  WebkitLineClamp: 3,
-}));
-
-export const ImageWrapper = styled(Box)(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  backgroundColor: theme.palette.background.default,
-  width: "100%",
-  borderRadius: theme.spacing(1),
-  padding: theme.spacing(4),
-}));
-
-export const BookCoverImage = styled("img")({
-  objectFit: "fill",
-});
-
 export const BookLink = styled(Link)(({ theme }) => ({
   "color": theme.palette.text.primary,
   "fontFamily": "SOYO Maple Bold",
 
   "&:hover": {
     textDecoration: `underline ${theme.palette.secondary.light}`,
-  },
-}));
-
-export const ListItemButton = styled(MuiListItemButton)(({ theme }) => ({
-  "width": "100%",
-  "display": "flex",
-  "alignItems": "center",
-  "borderRadius": theme.spacing(1),
-  "gap": theme.spacing(2),
-  "&:hover": {
-    backgroundColor: theme.palette.action.hover,
   },
 }));

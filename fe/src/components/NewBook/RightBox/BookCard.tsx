@@ -1,8 +1,12 @@
-import * as S from "@components/NewBook/style";
-import { Card, CardContent } from "@components/common/common.style";
+import {
+  BookCoverImage,
+  BookDescription,
+  Card,
+  CardContent,
+} from "@components/common/common.style";
 import ClearIcon from "@mui/icons-material/Clear";
 import LaunchIcon from "@mui/icons-material/Launch";
-import { Box, IconButton, Tooltip, Typography } from "@mui/material";
+import { Box, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 import { useBookChoice } from "store/newBook/useBookChoice";
 
 export default function BookCard() {
@@ -36,18 +40,18 @@ export default function BookCard() {
       </Box>
       {bookChoice && (
         <CardContent>
-          <S.BookCoverImage
+          <BookCoverImage
             src={bookChoice.cover}
             alt={bookChoice.title}
             width={80}
             height={100}
           />
-          <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
+          <Stack>
             <Typography variant="body1">{bookChoice.title}</Typography>
-            <S.BookDescription variant="body2">
+            <BookDescription variant="body2">
               {bookChoice.author}
-            </S.BookDescription>
-          </Box>
+            </BookDescription>
+          </Stack>
         </CardContent>
       )}
     </Card>

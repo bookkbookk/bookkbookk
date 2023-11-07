@@ -1,6 +1,11 @@
 import { BookInfo } from "@api/book/type";
 import * as S from "@components/NewBook/style";
-import { ButtonWrapper, ModalBox } from "@components/common/common.style";
+import {
+  BookCoverImage,
+  ButtonWrapper,
+  ImageWrapper,
+  ModalBox,
+} from "@components/common/common.style";
 import LaunchIcon from "@mui/icons-material/Launch";
 import { Button, Modal, Tooltip, Typography } from "@mui/material";
 import { useSetBookChoice } from "store/newBook/useBookChoice";
@@ -37,15 +42,15 @@ export default function BookDetailModal({
   return (
     <Modal open={open} onClose={handleClose}>
       <ModalBox>
-        <S.ImageWrapper>
-          <S.BookCoverImage
+        <ImageWrapper>
+          <BookCoverImage
             src={cover}
             alt={title}
             width={160}
             height={160}
             sx={{ objectFit: "contain" }}
           />
-        </S.ImageWrapper>
+        </ImageWrapper>
         <Tooltip
           title="서점 페이지의 도서 정보로 이동해요!"
           placement="top"

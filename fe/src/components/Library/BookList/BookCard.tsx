@@ -1,5 +1,5 @@
 import { BookListItem } from "@api/book/type";
-import { BookCoverImage, ImageWrapper } from "@components/NewBook/style";
+import { BookCoverImage, ImageWrapper } from "@components/common/common.style";
 import { CardContent, Chip, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { ROUTE_PATH } from "routes/constants";
