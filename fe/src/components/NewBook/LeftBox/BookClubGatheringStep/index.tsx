@@ -1,4 +1,6 @@
 import { usePostNewBook } from "@api/book/queries";
+import { usePostNewGathering } from "@api/gatherings/queries";
+import GatheringInfo from "@components/BookClub/GatheringAddModal/GatheringInfo/GatheringInfo";
 import Navigation from "@components/common/Navigation";
 import { MESSAGE } from "@constant/index";
 import { Box, Typography } from "@mui/material";
@@ -7,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { ROUTE_PATH } from "routes/constants";
 import { useBookChoice } from "store/newBook/useBookChoice";
 import { useBookClubChoice } from "store/newBook/useBookClubChoice";
+import { useGathering } from "store/useGathering";
 import { BookClubChoice } from "./BookClubChoice";
 
 export default function BookClubGatheringStep({
@@ -14,13 +17,33 @@ export default function BookClubGatheringStep({
 }: {
   onPrev: () => void;
 }) {
+  const navigate = useNavigate();
+
   const [bookClubChoice, setBookClubChoice] = useBookClubChoice();
   const [bookChoice, setBookChoice] = useBookChoice();
-  const isFilled = bookClubChoice && bookChoice;
-  const navigate = useNavigate();
+  const [gatheringInfo, setGatheringInfo] = useGathering();
 
   const { onPostNewBook } = usePostNewBook({
     onSuccessCallback: (bookId: number) => {
+      if (!bookClubChoice) {
+        throw new Error("bookClubChoice is undefined");
+      }
+
+      onPostNewGathering({
+        bookClubId: bookClubChoice.id,
+        gatheringInfo: {
+          bookId,
+          gatherings: gatheringInfo.gatherings.map((gathering) => ({
+            dateTime: gathering.dateTime,
+            place: gathering.place,
+          })),
+        },
+      });
+    },
+  });
+
+  const { onPostNewGathering } = usePostNewGathering({
+    callback: (bookId: number) => {
       navigate(`${ROUTE_PATH.chapters}/${bookId}`, {
         replace: true,
         state: {
@@ -28,14 +51,20 @@ export default function BookClubGatheringStep({
           isChapterAddMode: true,
         },
       });
+
       setBookClubChoice(null);
       setBookChoice(null);
+      setGatheringInfo({ type: "RESET" });
     },
   });
+
   const onNext = () => {
+    const isFilled = bookClubChoice && bookChoice;
+
     if (!isFilled) {
       return enqueueSnackbar(MESSAGE.NEW_BOOK_ALERT, { variant: "error" });
     }
+
     onPostNewBook({
       bookClubId: bookClubChoice.id,
       isbn: bookChoice.isbn,
@@ -71,7 +100,7 @@ export default function BookClubGatheringStep({
           width: "100%",
         }}>
         <Typography variant="h3">북클럽 모임을 생성해보세요!</Typography>
-        {/* <GatheringTable /> */}
+        <GatheringInfo />
       </Box>
     </Box>
   );

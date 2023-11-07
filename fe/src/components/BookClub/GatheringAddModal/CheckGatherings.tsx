@@ -18,7 +18,7 @@ export default function CheckGatherings({
   const { bookClubId } = useParams<{ bookClubId: string }>();
   const [gatheringInfo, setGatheringInfo] = useGathering();
   const { onPostNewGathering } = usePostNewGathering({
-    onPostNewGatheringSuccess: () => {
+    callback: () => {
       onNext();
       setGatheringInfo({ type: "RESET" });
     },
