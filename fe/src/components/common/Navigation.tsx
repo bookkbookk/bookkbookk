@@ -22,20 +22,24 @@ export default function Navigation({
         width: "100%",
         justifyContent: "space-between",
         position: "absolute",
-        top: "5%",
+        top: "4%",
       }}>
-      {onPrev && (
-        <Button onClick={onPrev.onClick}>
-          <KeyboardArrowLeftIcon />
-          {onPrev.text}
-        </Button>
-      )}
-      {onNext && (
-        <Button onClick={onNext.onClick}>
-          {onNext.text}
-          <KeyboardArrowRightIcon />
-        </Button>
-      )}
+      <Box>
+        {onPrev && (
+          <Button onClick={onPrev.onClick}>
+            <KeyboardArrowLeftIcon />
+            {onPrev.text}
+          </Button>
+        )}
+      </Box>
+      <Box>
+        {onNext && (
+          <Button onClick={onNext.onClick}>
+            {onNext.text}
+            <KeyboardArrowRightIcon />
+          </Button>
+        )}
+      </Box>
     </Box>
   );
 }

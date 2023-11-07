@@ -1,5 +1,10 @@
 import { BookInfo as BookInfoType } from "@api/book/type";
 import * as S from "@components/NewBook/style";
+import {
+  BookCoverImage,
+  BookDescription,
+  ListItemButton,
+} from "@components/common/common.style";
 import { Typography } from "@mui/material";
 
 export function SearchBookListItem(bookInfo: BookInfoType) {
@@ -7,8 +12,8 @@ export function SearchBookListItem(bookInfo: BookInfoType) {
     bookInfo;
 
   return (
-    <S.ListItemButton>
-      <S.BookCoverImage
+    <ListItemButton>
+      <BookCoverImage
         src={cover}
         alt={title}
         sx={{
@@ -26,8 +31,8 @@ export function SearchBookListItem(bookInfo: BookInfoType) {
           <Typography variant="body2">{pubDate}</Typography>
         </S.SubInfoWrapper>
         <Typography variant="body2">{category}</Typography>
-        <S.BookDescription variant="body2">{description}</S.BookDescription>
+        <BookDescription variant="body2">{description}</BookDescription>
       </S.InfoWrapper>
-    </S.ListItemButton>
+    </ListItemButton>
   );
 }

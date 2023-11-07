@@ -23,7 +23,7 @@ export default function BookClubModal({
     <Modal open={open} onClose={handleClose}>
       <ModalBox>
         <ModalHeader>
-          <Typography variant="h5">북클럽 목록</Typography>
+          <Typography variant="h4">북클럽 목록</Typography>
           <IconButton size="small" onClick={handleClose}>
             <ClearIcon fontSize="inherit" />
           </IconButton>

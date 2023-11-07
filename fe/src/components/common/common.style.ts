@@ -4,6 +4,8 @@ import {
   Button,
   Fab,
   Card as MuiCard,
+  ListItemButton as MuiListItemButton,
+  Typography,
   styled,
 } from "@mui/material";
 import { HEADER } from "layout/constants";
@@ -145,8 +147,8 @@ export const AddFab = styled(Fab)(({ theme }) => ({
 
 export const ModalBox = styled(Box)(({ theme }) => ({
   position: "absolute",
-  maxWidth: "30vw",
-  minWidth: "30vw",
+  maxWidth: "40vw",
+  minWidth: "40vw",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
@@ -158,7 +160,6 @@ export const ModalBox = styled(Box)(({ theme }) => ({
   alignItems: "center",
   justifyContent: "center",
   padding: theme.spacing(4),
-  gap: theme.spacing(2),
 }));
 
 export const ModalHeader = styled(Box)({
@@ -173,4 +174,47 @@ export const ModalBody = styled(Box)({
   width: "100%",
   maxHeight: "70vh",
   overflow: "scroll",
+});
+
+export const ListItemButton = styled(MuiListItemButton)(({ theme }) => ({
+  "width": "100%",
+  "display": "flex",
+  "alignItems": "center",
+  "borderRadius": theme.spacing(1),
+  "gap": theme.spacing(2),
+  "&:hover": {
+    backgroundColor: theme.palette.action.hover,
+  },
+}));
+
+export const ImageWrapper = styled(Box)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  backgroundColor: theme.palette.background.default,
+  width: "100%",
+  borderRadius: theme.spacing(1),
+  padding: theme.spacing(4),
+}));
+
+export const BookCoverImage = styled("img")({
+  objectFit: "fill",
+  minWidth: "90px",
+  maxWidth: "90px",
+  minHeight: "120px",
+  maxHeight: "120px",
+});
+
+export const BookDescription = styled(Typography)(({ theme }) => ({
+  color: theme.palette.text.secondary,
+  maxWidth: "100%",
+  maxHeight: theme.spacing(8),
+  overflow: "hidden",
+  wordBreak: "keep-all",
+  textOverflow: "ellipsis",
+  WebkitLineClamp: 3,
+}));
+
+export const Target = styled("div")({
+  height: 1,
 });
