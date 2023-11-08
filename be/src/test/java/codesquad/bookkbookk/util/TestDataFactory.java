@@ -44,7 +44,7 @@ public class TestDataFactory {
                 .author("감귤")
                 .category("미스테리")
                 .cover("Cinderella")
-                .isbn("1231231231231")
+                .isbn("9791169210607")
                 .build();
 
     }

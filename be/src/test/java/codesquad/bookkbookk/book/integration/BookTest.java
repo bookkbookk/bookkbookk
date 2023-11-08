@@ -66,7 +66,7 @@ public class BookTest extends IntegrationTest {
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
         CreateBookRequest createBookRequest = CreateBookRequest.builder()
-                .isbn("123123123")
+                .isbn("9791169210607")
                 .bookClubId(bookClub.getId())
                 .title("책")
                 .cover("image.image")
