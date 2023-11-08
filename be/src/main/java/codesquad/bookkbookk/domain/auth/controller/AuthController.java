@@ -12,7 +12,7 @@ import codesquad.bookkbookk.common.resolver.Token;
 import codesquad.bookkbookk.domain.auth.data.dto.AuthCode;
 import codesquad.bookkbookk.domain.auth.data.dto.LoginResponse;
 import codesquad.bookkbookk.domain.auth.data.dto.ReissueResponse;
-import codesquad.bookkbookk.domain.auth.service.OAuthService;
+import codesquad.bookkbookk.domain.auth.service.AuthenticationService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,12 +21,12 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private final OAuthService oAuthService;
+    private final AuthenticationService authenticationService;
 
     @PostMapping("/login/{providerName}")
     public ResponseEntity<LoginResponse> login(@RequestBody AuthCode authCode,
                                                @PathVariable String providerName) {
-        LoginResponse loginResponse = oAuthService.login(authCode, providerName);
+        LoginResponse loginResponse = authenticationService.login(authCode, providerName);
 
         return ResponseEntity.ok()
                 .body(loginResponse);
@@ -34,7 +34,7 @@ public class AuthController {
 
     @PostMapping("/reissue")
     public ResponseEntity<ReissueResponse> reissueAccessToken(@Token String refreshToken) {
-        ReissueResponse response = oAuthService.reissueAccessToken(refreshToken);
+        ReissueResponse response = authenticationService.reissueAccessToken(refreshToken);
 
         return ResponseEntity.ok()
                 .body(response);
@@ -42,7 +42,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     public void reissueAccessToken(@MemberId Long memberId) {
-        oAuthService.logout(memberId);
+        authenticationService.logout(memberId);
     }
 
 }

@@ -14,7 +14,7 @@ import codesquad.bookkbookk.common.error.exception.RefreshTokenNotSavedException
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.domain.auth.data.entity.MemberRefreshToken;
 import codesquad.bookkbookk.domain.auth.repository.MemberRefreshTokenRepository;
-import codesquad.bookkbookk.domain.auth.service.OAuthService;
+import codesquad.bookkbookk.domain.auth.service.AuthenticationService;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
 import codesquad.bookkbookk.util.TestDataFactory;
@@ -26,7 +26,7 @@ import io.restassured.response.Response;
 public class AuthTest extends IntegrationTest {
 
     @Autowired
-    private OAuthService oAuthService;
+    private AuthenticationService authenticationService;
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
@@ -89,7 +89,7 @@ public class AuthTest extends IntegrationTest {
         SoftAssertions.assertSoftly(assertions -> {
             assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             assertions.assertThatThrownBy(
-                    () -> oAuthService.reissueAccessToken(refreshToken)
+                    () -> authenticationService.reissueAccessToken(refreshToken)
             ).isInstanceOf(RefreshTokenNotSavedException.class);
         });
     }
