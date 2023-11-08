@@ -15,7 +15,7 @@ import codesquad.bookkbookk.domain.bookclub.data.dto.JoinBookClubRequest;
 import codesquad.bookkbookk.domain.bookclub.data.dto.JoinBookClubResponse;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClubInvitationCode;
-import codesquad.bookkbookk.domain.bookclub.data.entity.MemberBookClub;
+import codesquad.bookkbookk.domain.bookclub.data.entity.BookClubMember;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubInvitationCodeRepository;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
 import codesquad.bookkbookk.domain.bookclub.repository.MemberBookClubRepository;
@@ -60,7 +60,7 @@ public class BookClubInvitationService {
                 .orElseThrow(BookClubNotFoundException::new);
 
         checkMemberJoinedBookClub(member.getId(), bookClub.getId());
-        MemberBookClub save = memberBookClubRepository.save(new MemberBookClub(member, bookClub));
+        BookClubMember save = memberBookClubRepository.save(new BookClubMember(bookClub, member));
         return JoinBookClubResponse.from(save);
     }
 

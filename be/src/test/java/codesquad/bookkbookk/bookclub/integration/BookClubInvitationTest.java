@@ -16,7 +16,7 @@ import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateInvitationUrlRequest;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClubInvitationCode;
-import codesquad.bookkbookk.domain.bookclub.data.entity.MemberBookClub;
+import codesquad.bookkbookk.domain.bookclub.data.entity.BookClubMember;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubInvitationCodeRepository;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
 import codesquad.bookkbookk.domain.bookclub.repository.MemberBookClubRepository;
@@ -56,8 +56,8 @@ public class BookClubInvitationTest extends IntegrationTest {
         BookClub bookClub = TestDataFactory.createBookClub();
         bookClubRepository.save(bookClub);
 
-        MemberBookClub memberBookClub = new MemberBookClub(member, bookClub);
-        memberBookClubRepository.save(memberBookClub);
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        memberBookClubRepository.save(bookClubMember);
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
@@ -92,8 +92,8 @@ public class BookClubInvitationTest extends IntegrationTest {
         BookClub bookClub = TestDataFactory.createBookClub();
         bookClubRepository.save(bookClub);
 
-        MemberBookClub memberBookClub = new MemberBookClub(member, bookClub);
-        memberBookClubRepository.save(memberBookClub);
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        memberBookClubRepository.save(bookClubMember);
 
         CreateInvitationUrlRequest request = new CreateInvitationUrlRequest(1L);
         String invitationCode = "test";
@@ -131,8 +131,8 @@ public class BookClubInvitationTest extends IntegrationTest {
         BookClub bookClub = TestDataFactory.createBookClub();
         bookClubRepository.save(bookClub);
 
-        MemberBookClub memberBookClub = new MemberBookClub(member, bookClub);
-        memberBookClubRepository.save(memberBookClub);
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        memberBookClubRepository.save(bookClubMember);
 
         CreateInvitationUrlRequest request = new CreateInvitationUrlRequest(bookClub.getId());
         String invitationCode = "test";
@@ -170,8 +170,8 @@ public class BookClubInvitationTest extends IntegrationTest {
         BookClub bookClub = TestDataFactory.createBookClub();
         bookClubRepository.save(bookClub);
 
-        MemberBookClub memberBookClub = new MemberBookClub(member, bookClub);
-        memberBookClubRepository.save(memberBookClub);
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        memberBookClubRepository.save(bookClubMember);
 
         CreateInvitationUrlRequest request = new CreateInvitationUrlRequest(bookClub.getId());
         String invitationCode = "test";

@@ -30,7 +30,7 @@ public class BookClub {
     @Column(name = "profile_img_url", nullable = false)
     private String profileImgUrl;
     @OneToMany(mappedBy = "bookClub")
-    private List<MemberBookClub> memberBookClub;
+    private List<BookClubMember> bookClubMember;
 
     @Builder
     private BookClub(Long id, Long creatorId, String name, String profileImgUrl) {

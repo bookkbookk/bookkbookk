@@ -13,7 +13,7 @@ import javax.persistence.OneToMany;
 
 import codesquad.bookkbookk.domain.auth.data.dto.LoginRequest;
 import codesquad.bookkbookk.domain.auth.data.type.LoginType;
-import codesquad.bookkbookk.domain.bookclub.data.entity.MemberBookClub;
+import codesquad.bookkbookk.domain.bookclub.data.entity.BookClubMember;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -39,7 +39,7 @@ public class Member {
     @Column(name = "profile_img_url", nullable = false)
     private String profileImgUrl;
     @OneToMany(mappedBy = "member")
-    private List<MemberBookClub> memberBookClub;
+    private List<BookClubMember> memberBookClubs;
 
     @Builder
     private Member(String email, LoginType loginType, String nickname, String profileImgUrl) {

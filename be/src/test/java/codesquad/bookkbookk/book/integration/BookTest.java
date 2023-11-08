@@ -18,7 +18,7 @@ import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
 import codesquad.bookkbookk.domain.book.repository.MemberBookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
-import codesquad.bookkbookk.domain.bookclub.data.entity.MemberBookClub;
+import codesquad.bookkbookk.domain.bookclub.data.entity.BookClubMember;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
 import codesquad.bookkbookk.domain.bookclub.repository.MemberBookClubRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
@@ -60,8 +60,8 @@ public class BookTest extends IntegrationTest {
         BookClub bookClub = TestDataFactory.createBookClub();
         bookClubRepository.save(bookClub);
 
-        MemberBookClub memberBookClub = new MemberBookClub(member, bookClub);
-        memberBookClubRepository.save(memberBookClub);
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        memberBookClubRepository.save(bookClubMember);
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
 

@@ -9,7 +9,7 @@ import codesquad.bookkbookk.domain.bookclub.data.dto.CreateBookClubRequest;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateBookClubResponse;
 import codesquad.bookkbookk.domain.bookclub.data.dto.ReadBookClubResponse;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
-import codesquad.bookkbookk.domain.bookclub.data.entity.MemberBookClub;
+import codesquad.bookkbookk.domain.bookclub.data.entity.BookClubMember;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
 import codesquad.bookkbookk.domain.bookclub.repository.MemberBookClubRepository;
 import codesquad.bookkbookk.common.image.S3ImageUploader;
@@ -47,9 +47,9 @@ public class BookClubService {
         bookClubRepository.save(bookClub);
 
         Member member = memberRepository.findById(memberId).orElseThrow();
-        MemberBookClub memberBookClub = new MemberBookClub(member, bookClub);
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
 
-        memberBookClubRepository.save(memberBookClub);
+        memberBookClubRepository.save(bookClubMember);
 
         return new CreateBookClubResponse(bookClub.getId());
 

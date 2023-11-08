@@ -17,7 +17,7 @@ import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
-import codesquad.bookkbookk.domain.bookclub.data.entity.MemberBookClub;
+import codesquad.bookkbookk.domain.bookclub.data.entity.BookClubMember;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
 import codesquad.bookkbookk.domain.bookclub.repository.MemberBookClubRepository;
 import codesquad.bookkbookk.domain.gathering.data.dto.CreateGatheringRequest;
@@ -53,7 +53,7 @@ public class GatheringTest extends IntegrationTest {
         bookClubRepository.save(bookClub);
         Book book = TestDataFactory.createBook1(bookClub);
         bookRepository.save(book);
-        memberBookClubRepository.save(new MemberBookClub(member, bookClub));
+        memberBookClubRepository.save(new BookClubMember(bookClub, member));
         String accessToken = jwtProvider.createAccessToken(member.getId());
         CreateGatheringRequest createGatheringRequest =
                 new CreateGatheringRequest(book.getId(), "코드스쿼드", LocalDateTime.of(2023, 10, 20, 12, 30));
@@ -117,7 +117,7 @@ public class GatheringTest extends IntegrationTest {
         memberRepository.save(member);
         BookClub bookClub = TestDataFactory.createBookClub();
         bookClubRepository.save(bookClub);
-        memberBookClubRepository.save(new MemberBookClub(member, bookClub));
+        memberBookClubRepository.save(new BookClubMember(bookClub, member));
         String accessToken = jwtProvider.createAccessToken(member.getId());
         CreateGatheringRequest createGatheringRequest =
                 new CreateGatheringRequest(1L, "코드스쿼드", LocalDateTime.of(2023, 10, 20, 12, 30));

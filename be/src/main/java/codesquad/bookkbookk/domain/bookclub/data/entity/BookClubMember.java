@@ -12,30 +12,30 @@ import javax.persistence.ManyToOne;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity(name = "member_book_club")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Getter
-public class MemberBookClub {
+public class BookClubMember {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_book_club_id")
     private Long id;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_club_id")
+    private BookClub bookClub;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_club_id")
-    private BookClub bookClub;
-
-    public MemberBookClub(Member member, BookClub bookClub) {
-        this.member = member;
+    public BookClubMember(BookClub bookClub, Member member) {
         this.bookClub = bookClub;
+        this.member = member;
     }
 
 }
