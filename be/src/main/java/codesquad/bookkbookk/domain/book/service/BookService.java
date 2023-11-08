@@ -18,7 +18,7 @@ import codesquad.bookkbookk.domain.book.repository.BookRepository;
 import codesquad.bookkbookk.domain.book.repository.MemberBookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
-import codesquad.bookkbookk.domain.bookclub.repository.MemberBookClubRepository;
+import codesquad.bookkbookk.domain.bookclub.repository.BookClubMemberRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
 
@@ -30,12 +30,12 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final BookClubRepository bookClubRepository;
-    private final MemberBookClubRepository memberBookClubRepository;
+    private final BookClubMemberRepository bookClubMemberRepository;
     private final MemberRepository memberRepository;
     private final MemberBookRepository memberBookRepository;
 
     public CreateBookResponse createBook(Long memberId, CreateBookRequest request) {
-        if (!memberBookClubRepository.existsByMemberIdAndBookClubId(memberId, request.getBookClubId())) {
+        if (!bookClubMemberRepository.existsByBookClubIdAndMemberId(request.getBookClubId(), memberId)) {
             throw new MemberNotInBookClubException();
         }
 

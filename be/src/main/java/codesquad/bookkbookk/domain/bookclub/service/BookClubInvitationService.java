@@ -18,7 +18,7 @@ import codesquad.bookkbookk.domain.bookclub.data.entity.BookClubInvitationCode;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClubMember;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubInvitationCodeRepository;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
-import codesquad.bookkbookk.domain.bookclub.repository.MemberBookClubRepository;
+import codesquad.bookkbookk.domain.bookclub.repository.BookClubMemberRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
 
@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 public class BookClubInvitationService {
 
     private final BookClubInvitationCodeRepository bookClubInvitationCodeRepository;
-    private final MemberBookClubRepository memberBookClubRepository;
+    private final BookClubMemberRepository bookClubMemberRepository;
     private final MemberRepository memberRepository;
     private final BookClubRepository bookClubRepository;
 
@@ -60,18 +60,18 @@ public class BookClubInvitationService {
                 .orElseThrow(BookClubNotFoundException::new);
 
         checkMemberJoinedBookClub(member.getId(), bookClub.getId());
-        BookClubMember save = memberBookClubRepository.save(new BookClubMember(bookClub, member));
+        BookClubMember save = bookClubMemberRepository.save(new BookClubMember(bookClub, member));
         return JoinBookClubResponse.from(save);
     }
 
     private void validateMemberAuth(Long memberId, Long bookClubId) {
-        if (!memberBookClubRepository.existsByMemberIdAndBookClubId(memberId, bookClubId)) {
+        if (!bookClubMemberRepository.existsByBookClubIdAndMemberId(bookClubId, memberId)) {
             throw new MemberNotInBookClubException();
         }
     }
 
     private void checkMemberJoinedBookClub(Long memberId,Long bookClubId) {
-        if (memberBookClubRepository.existsByMemberIdAndBookClubId(memberId, bookClubId)) {
+        if (bookClubMemberRepository.existsByBookClubIdAndMemberId(bookClubId, memberId)) {
             throw new MemberJoinedBookClubException();
         }
     }

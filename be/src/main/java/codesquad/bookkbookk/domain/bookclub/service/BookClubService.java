@@ -11,7 +11,7 @@ import codesquad.bookkbookk.domain.bookclub.data.dto.ReadBookClubResponse;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClubMember;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
-import codesquad.bookkbookk.domain.bookclub.repository.MemberBookClubRepository;
+import codesquad.bookkbookk.domain.bookclub.repository.BookClubMemberRepository;
 import codesquad.bookkbookk.common.image.S3ImageUploader;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
@@ -24,7 +24,7 @@ public class BookClubService {
 
     private final S3ImageUploader s3ImageUploader;
     private final BookClubRepository bookClubRepository;
-    private final MemberBookClubRepository memberBookClubRepository;
+    private final BookClubMemberRepository bookClubMemberRepository;
     private final MemberRepository memberRepository;
 
     private static final String DEFAULT_BOOK_CLUB_IMAGE_URL =
@@ -49,7 +49,7 @@ public class BookClubService {
         Member member = memberRepository.findById(memberId).orElseThrow();
         BookClubMember bookClubMember = new BookClubMember(bookClub, member);
 
-        memberBookClubRepository.save(bookClubMember);
+        bookClubMemberRepository.save(bookClubMember);
 
         return new CreateBookClubResponse(bookClub.getId());
 
