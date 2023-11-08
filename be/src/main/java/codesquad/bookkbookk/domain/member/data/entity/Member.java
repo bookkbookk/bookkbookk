@@ -1,5 +1,6 @@
 package codesquad.bookkbookk.domain.member.data.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -13,6 +14,7 @@ import javax.persistence.OneToMany;
 
 import codesquad.bookkbookk.domain.auth.data.dto.LoginRequest;
 import codesquad.bookkbookk.domain.auth.data.type.LoginType;
+import codesquad.bookkbookk.domain.book.data.entity.MemberBook;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClubMember;
 
 import lombok.AccessLevel;
@@ -39,7 +41,9 @@ public class Member {
     @Column(name = "profile_img_url", nullable = false)
     private String profileImgUrl;
     @OneToMany(mappedBy = "member")
-    private List<BookClubMember> memberBookClubs;
+    private List<BookClubMember> memberBookClubs = new ArrayList<>();
+    @OneToMany(mappedBy = "member")
+    private List<MemberBook> memberBooks = new ArrayList<>();
 
     @Builder
     private Member(String email, LoginType loginType, String nickname, String profileImgUrl) {
