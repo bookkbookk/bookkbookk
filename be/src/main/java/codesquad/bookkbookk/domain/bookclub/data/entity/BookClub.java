@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import codesquad.bookkbookk.domain.book.data.entity.Book;
+import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
 
 import lombok.AccessLevel;
 import lombok.Builder;

@@ -1,6 +1,6 @@
 package codesquad.bookkbookk.domain.bookclub.data.dto;
 
-import codesquad.bookkbookk.domain.bookclub.data.entity.BookClubMember;
+import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

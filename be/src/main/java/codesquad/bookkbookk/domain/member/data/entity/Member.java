@@ -14,8 +14,8 @@ import javax.persistence.OneToMany;
 
 import codesquad.bookkbookk.domain.auth.data.dto.LoginRequest;
 import codesquad.bookkbookk.domain.auth.data.type.LoginType;
-import codesquad.bookkbookk.domain.book.data.entity.MemberBook;
-import codesquad.bookkbookk.domain.bookclub.data.entity.BookClubMember;
+import codesquad.bookkbookk.domain.mapping.entity.MemberBook;
+import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
 
 import lombok.AccessLevel;
 import lombok.Builder;

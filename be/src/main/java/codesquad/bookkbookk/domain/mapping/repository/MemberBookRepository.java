@@ -1,8 +1,8 @@
-package codesquad.bookkbookk.domain.book.repository;
+package codesquad.bookkbookk.domain.mapping.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import codesquad.bookkbookk.domain.book.data.entity.MemberBook;
+import codesquad.bookkbookk.domain.mapping.entity.MemberBook;
 
 public interface MemberBookRepository extends JpaRepository<MemberBook, Long> {
 

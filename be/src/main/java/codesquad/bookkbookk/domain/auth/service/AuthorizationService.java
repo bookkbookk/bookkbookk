@@ -7,7 +7,7 @@ import codesquad.bookkbookk.common.error.exception.MemberIsNotBookmarkWriterExce
 import codesquad.bookkbookk.common.error.exception.MemberIsNotCommentWriterException;
 import codesquad.bookkbookk.common.error.exception.MemberJoinedBookClubException;
 import codesquad.bookkbookk.common.error.exception.MemberNotInBookClubException;
-import codesquad.bookkbookk.domain.bookclub.repository.BookClubMemberRepository;
+import codesquad.bookkbookk.domain.mapping.repository.BookClubMemberRepository;
 import codesquad.bookkbookk.domain.bookmark.repository.BookmarkRepository;
 import codesquad.bookkbookk.domain.comment.repository.CommentRepository;
 

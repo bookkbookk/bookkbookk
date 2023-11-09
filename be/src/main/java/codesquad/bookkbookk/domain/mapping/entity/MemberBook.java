@@ -1,4 +1,4 @@
-package codesquad.bookkbookk.domain.bookclub.data.entity;
+package codesquad.bookkbookk.domain.mapping.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,33 +9,33 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "book_club_member")
+@Entity(name = "member_book")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Getter
-public class BookClubMember {
+public class MemberBook {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "book_club_member_id")
+    @Column(name = "member_book_id")
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_club_id")
-    private BookClub bookClub;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public BookClubMember(BookClub bookClub, Member member) {
-        this.bookClub = bookClub;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_id")
+    private Book book;
+
+    public MemberBook(Member member, Book book) {
         this.member = member;
+        this.book = book;
     }
 
 }
+
