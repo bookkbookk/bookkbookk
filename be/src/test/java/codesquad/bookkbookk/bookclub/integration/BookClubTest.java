@@ -340,4 +340,58 @@ public class BookClubTest extends IntegrationTest {
         });
     }
 
+    @DisplayName("멤버가 북클럽에 참여하면 북클럽의 책이 멤버 책에 추가된다.")
+    @Test
+    void bookClubBooksAddToJoinedMember() {
+        //given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        Member another = TestDataFactory.createAnotherMember();
+        memberRepository.save(another);
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book1 = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book1);
+        Book book2 = TestDataFactory.createBook2(bookClub);
+        bookRepository.save(book2);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
+
+        CreateInvitationUrlRequest request = new CreateInvitationUrlRequest(bookClub.getId());
+        String invitationCode = "test";
+        BookClubInvitationCode bookClubInvitationCode = new BookClubInvitationCode(request, invitationCode);
+        bookClubInvitationCodeRepository.save(bookClubInvitationCode);
+
+        String accessToken = jwtProvider.createAccessToken(another.getId());
+        JSONObject requestBody = new JSONObject(Map.of("invitationCode", invitationCode));
+
+        //when
+        RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .contentType(ContentType.JSON)
+                .body(requestBody.toString())
+                .when()
+                .post("/api/book-clubs/join")
+                .then().log().all()
+                .extract();
+
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .when()
+                .get("/api/members/books")
+                .then().log().all()
+                .extract();
+
+        //then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(response.jsonPath().getList("books").size()).isEqualTo(2);
+        });
+    }
+
 }
