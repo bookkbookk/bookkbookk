@@ -1,17 +1,13 @@
 package codesquad.bookkbookk.domain.bookclub.data.dto;
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CreateBookClubResponse {
 
-    private Long bookClubId;
-
-    public CreateBookClubResponse(Long bookClubId) {
-        this.bookClubId = bookClubId;
-    }
+    private final Long bookClubId;
+    private final String invitationUrl;
 
 }
