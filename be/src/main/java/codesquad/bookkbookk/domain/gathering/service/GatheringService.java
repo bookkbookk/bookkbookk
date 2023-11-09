@@ -26,7 +26,8 @@ public class GatheringService {
                 .orElseThrow(BookNotFoundException::new);
         authorizationService.authorizeBookClubMembership(memberId, book.getBookClub().getId());
 
-        Gathering gathering = Gathering.of(createGatheringRequest, book);
+        Gathering gathering = new Gathering(book, createGatheringRequest.getDateTime(),
+                createGatheringRequest.getPlace());
         gatheringRepository.save(gathering);
     }
 

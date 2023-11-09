@@ -13,7 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import codesquad.bookkbookk.common.error.exception.MalformedIsbnException;
-import codesquad.bookkbookk.domain.book.data.dto.CreateBookRequest;
 import codesquad.bookkbookk.domain.book.data.type.Status;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 
@@ -61,17 +60,6 @@ public class Book {
         this.author = author;
         this.category = category;
         this.status = Status.PENDING;
-    }
-
-    public static Book of(CreateBookRequest request, BookClub bookClub) {
-        return Book.builder()
-                .isbn(request.getIsbn())
-                .bookClub(bookClub)
-                .title(request.getTitle())
-                .cover(request.getCover())
-                .author(request.getAuthor())
-                .category(request.getCategory())
-                .build();
     }
 
     private String validateAndFormatISBN(String isbn) {

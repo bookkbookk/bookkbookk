@@ -6,8 +6,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import codesquad.bookkbookk.domain.bookclub.data.dto.CreateInvitationUrlRequest;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,9 +26,8 @@ public class BookClubInvitationCode {
     @Column(nullable = false)
     private String invitationCode;
 
-
-    public BookClubInvitationCode(CreateInvitationUrlRequest request, String invitationCode) {
-        this.bookClubId = request.getBookClubId();
+    public BookClubInvitationCode(Long bookClubId, String invitationCode) {
+        this.bookClubId = bookClubId;
         this.invitationCode = invitationCode;
     }
 

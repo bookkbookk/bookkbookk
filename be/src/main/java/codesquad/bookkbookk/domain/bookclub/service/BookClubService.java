@@ -90,7 +90,8 @@ public class BookClubService {
         authorizationService.authorizeBookClubMembership(memberId, request.getBookClubId());
 
         String invitationCode = String.valueOf(UUID.randomUUID());
-        BookClubInvitationCode bookClubInvitationCode = new BookClubInvitationCode(request, invitationCode);
+        BookClubInvitationCode bookClubInvitationCode = new BookClubInvitationCode(request.getBookClubId(),
+                invitationCode);
         bookClubInvitationCodeRepository.save(bookClubInvitationCode);
 
         return new InvitationUrlResponse(bookClubInvitationCode.getInvitationCode());

@@ -12,10 +12,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import codesquad.bookkbookk.domain.auth.data.dto.LoginRequest;
 import codesquad.bookkbookk.domain.auth.data.type.LoginType;
-import codesquad.bookkbookk.domain.mapping.entity.MemberBook;
 import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
+import codesquad.bookkbookk.domain.mapping.entity.MemberBook;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -51,15 +50,6 @@ public class Member {
         this.loginType = loginType;
         this.nickname = nickname;
         this.profileImgUrl = profileImgUrl;
-    }
-
-    public static Member from(LoginRequest loginRequest) {
-        return Member.builder()
-                .email(loginRequest.getEmail())
-                .loginType(loginRequest.getLoginType())
-                .nickname(loginRequest.getNickname())
-                .profileImgUrl(loginRequest.getProfileImageUrl())
-                .build();
     }
 
     public void updateNickname(String nickname) {

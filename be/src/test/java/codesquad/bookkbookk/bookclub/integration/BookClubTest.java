@@ -237,7 +237,7 @@ public class BookClubTest extends IntegrationTest {
 
         CreateInvitationUrlRequest request = new CreateInvitationUrlRequest(1L);
         String invitationCode = "test";
-        BookClubInvitationCode bookClubInvitationCode = new BookClubInvitationCode(request, invitationCode);
+        BookClubInvitationCode bookClubInvitationCode = new BookClubInvitationCode(bookClub.getId(), invitationCode);
         bookClubInvitationCodeRepository.save(bookClubInvitationCode);
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
@@ -276,7 +276,7 @@ public class BookClubTest extends IntegrationTest {
 
         CreateInvitationUrlRequest request = new CreateInvitationUrlRequest(bookClub.getId());
         String invitationCode = "test";
-        BookClubInvitationCode bookClubInvitationCode = new BookClubInvitationCode(request, invitationCode);
+        BookClubInvitationCode bookClubInvitationCode = new BookClubInvitationCode(bookClub.getId(), invitationCode);
         bookClubInvitationCodeRepository.save(bookClubInvitationCode);
 
         String accessToken = jwtProvider.createAccessToken(anotherMember.getId());
@@ -315,7 +315,7 @@ public class BookClubTest extends IntegrationTest {
 
         CreateInvitationUrlRequest request = new CreateInvitationUrlRequest(bookClub.getId());
         String invitationCode = "test";
-        BookClubInvitationCode bookClubInvitationCode = new BookClubInvitationCode(request, invitationCode);
+        BookClubInvitationCode bookClubInvitationCode = new BookClubInvitationCode(bookClub.getId(), invitationCode);
         bookClubInvitationCodeRepository.save(bookClubInvitationCode);
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
@@ -362,7 +362,7 @@ public class BookClubTest extends IntegrationTest {
 
         CreateInvitationUrlRequest request = new CreateInvitationUrlRequest(bookClub.getId());
         String invitationCode = "test";
-        BookClubInvitationCode bookClubInvitationCode = new BookClubInvitationCode(request, invitationCode);
+        BookClubInvitationCode bookClubInvitationCode = new BookClubInvitationCode(bookClub.getId(), invitationCode);
         bookClubInvitationCodeRepository.save(bookClubInvitationCode);
 
         String accessToken = jwtProvider.createAccessToken(another.getId());
