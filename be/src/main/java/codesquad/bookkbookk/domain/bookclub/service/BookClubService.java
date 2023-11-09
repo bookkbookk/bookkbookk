@@ -12,6 +12,8 @@ import codesquad.bookkbookk.common.error.exception.InvitationUrlNotFoundExceptio
 import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.common.image.S3ImageUploader;
 import codesquad.bookkbookk.domain.auth.service.AuthorizationService;
+import codesquad.bookkbookk.domain.book.data.entity.MemberBook;
+import codesquad.bookkbookk.domain.book.repository.MemberBookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateBookClubRequest;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateBookClubResponse;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateInvitationUrlRequest;
@@ -45,6 +47,7 @@ public class BookClubService {
     private final BookClubMemberRepository bookClubMemberRepository;
     private final BookClubInvitationCodeRepository bookClubInvitationCodeRepository;
     private final MemberRepository memberRepository;
+    private final MemberBookRepository memberBookRepository;
 
     public CreateBookClubResponse createBookClub(Long memberId, CreateBookClubRequest request) {
         String profileImgUrl = DEFAULT_BOOK_CLUB_IMAGE_URL;
@@ -113,6 +116,12 @@ public class BookClubService {
         authorizationService.authorizeBookClubJoin(memberId, bookClub.getId());
 
         BookClubMember save = bookClubMemberRepository.save(new BookClubMember(bookClub, member));
+
+        bookClub.getBooks().forEach(book -> {
+            MemberBook memberBook = new MemberBook(member, book);
+            memberBookRepository.save(memberBook);
+            member.getMemberBooks().add(memberBook);
+        });
 
         return JoinBookClubResponse.from(save);
     }
