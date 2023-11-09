@@ -5,8 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import codesquad.bookkbookk.common.error.exception.BookmarkNotFoundException;
 import codesquad.bookkbookk.common.error.exception.CommentNotFoundException;
-import codesquad.bookkbookk.common.error.exception.MemberIsNotCommentWriterException;
 import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
+import codesquad.bookkbookk.domain.auth.service.AuthorizationService;
 import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
 import codesquad.bookkbookk.domain.bookmark.repository.BookmarkRepository;
 import codesquad.bookkbookk.domain.comment.data.dto.CreateCommentRequest;
@@ -21,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class CommentService {
+
+    private final AuthorizationService authorizationService;
 
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
@@ -38,24 +40,18 @@ public class CommentService {
 
     @Transactional
     public void updateComment(Long memberId, Long commentId, UpdateCommentRequest updateCommentRequest) {
-        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+        authorizationService.authorizeCommentWriter(commentId, memberId);
+
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
 
-        if (comment.getWriter() != member) {
-            throw new MemberIsNotCommentWriterException();
-        }
         comment.updateComment(updateCommentRequest);
     }
 
     @Transactional
     public void deleteComment(Long memberId, Long commentId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
-        Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
+        authorizationService.authorizeCommentWriter(commentId, memberId);
 
-        if (comment.getWriter() != member) {
-            throw new MemberIsNotCommentWriterException();
-        }
-        commentRepository.delete(comment);
+        commentRepository.deleteById(commentId);
     }
 
 }
