@@ -1,4 +1,4 @@
-package codesquad.bookkbookk.domain.book.data.entity;
+package codesquad.bookkbookk.domain.mapping.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 
 import lombok.AccessLevel;

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.bookkbookk.common.resolver.MemberId;
-import codesquad.bookkbookk.domain.Temp;
 import codesquad.bookkbookk.domain.book.data.dto.ReadBookClubBookResponse;
 import codesquad.bookkbookk.domain.book.service.BookService;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateBookClubRequest;
@@ -25,7 +24,6 @@ import codesquad.bookkbookk.domain.bookclub.data.dto.InvitationUrlResponse;
 import codesquad.bookkbookk.domain.bookclub.data.dto.JoinBookClubRequest;
 import codesquad.bookkbookk.domain.bookclub.data.dto.JoinBookClubResponse;
 import codesquad.bookkbookk.domain.bookclub.data.dto.ReadBookClubResponse;
-import codesquad.bookkbookk.domain.bookclub.service.BookClubInvitationService;
 import codesquad.bookkbookk.domain.bookclub.service.BookClubService;
 
 import lombok.RequiredArgsConstructor;
@@ -36,20 +34,15 @@ import lombok.RequiredArgsConstructor;
 public class BookClubController {
 
     private final BookClubService bookClubService;
-    private final BookClubInvitationService bookClubInvitationService;
     private final BookService bookService;
 
     @PostMapping
-    public ResponseEntity<Temp> createBookClub(@MemberId Long memberId,
+    public ResponseEntity<CreateBookClubResponse> createBookClub(@MemberId Long memberId,
                                                                  @ModelAttribute CreateBookClubRequest request) {
         CreateBookClubResponse response = bookClubService.createBookClub(memberId, request);
-        CreateInvitationUrlRequest request2 = new CreateInvitationUrlRequest(response.getBookClubId());
-        InvitationUrlResponse response1 = bookClubInvitationService.createInvitationUrl(memberId, request2);
-        Temp temp = new Temp(response.getBookClubId(), response1.getInvitationUrl());
-
 
         return ResponseEntity.ok()
-                .body(temp);
+                .body(response);
     }
 
     @GetMapping
@@ -61,27 +54,27 @@ public class BookClubController {
     }
 
     @PostMapping("/invitation")
-    public ResponseEntity<InvitationUrlResponse> createInvitationUrl(
-            @MemberId Long memberId, @RequestBody CreateInvitationUrlRequest request) {
-        InvitationUrlResponse response = bookClubInvitationService.createInvitationUrl(memberId, request);
+    public ResponseEntity<InvitationUrlResponse> createInvitationUrl(@MemberId Long memberId,
+                                                                     @RequestBody CreateInvitationUrlRequest request) {
+        InvitationUrlResponse response = bookClubService.createInvitationUrl(memberId, request);
 
         return ResponseEntity.ok()
                 .body(response);
     }
 
     @GetMapping("/invitation/{bookClubId}")
-    public ResponseEntity<InvitationUrlResponse> readInvitationUrl(
-            @MemberId Long memberId, @PathVariable Long bookClubId) {
-        InvitationUrlResponse response = bookClubInvitationService.readInvitationUrl(memberId, bookClubId);
+    public ResponseEntity<InvitationUrlResponse> readInvitationUrl(@MemberId Long memberId,
+                                                                   @PathVariable Long bookClubId) {
+        InvitationUrlResponse response = bookClubService.readInvitationUrl(memberId, bookClubId);
 
         return ResponseEntity.ok()
                 .body(response);
     }
 
     @PostMapping("/join")
-    public ResponseEntity<JoinBookClubResponse> joinBookclub(@MemberId Long memberId,
+    public ResponseEntity<JoinBookClubResponse> joinBookClub(@MemberId Long memberId,
                                                              @RequestBody JoinBookClubRequest joinBookClubRequest) {
-        JoinBookClubResponse response = bookClubInvitationService.joinBookClub(memberId, joinBookClubRequest);
+        JoinBookClubResponse response = bookClubService.joinBookClub(memberId, joinBookClubRequest);
 
         return ResponseEntity.ok()
                 .body(response);

@@ -12,8 +12,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.common.error.exception.RefreshTokenNotSavedException;
+import codesquad.bookkbookk.common.jwt.Jwt;
+import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.domain.auth.data.dto.AuthCode;
 import codesquad.bookkbookk.domain.auth.data.dto.LoginRequest;
 import codesquad.bookkbookk.domain.auth.data.dto.LoginResponse;
@@ -21,8 +22,6 @@ import codesquad.bookkbookk.domain.auth.data.dto.OAuthTokenResponse;
 import codesquad.bookkbookk.domain.auth.data.dto.ReissueResponse;
 import codesquad.bookkbookk.domain.auth.data.entity.MemberRefreshToken;
 import codesquad.bookkbookk.domain.auth.data.provider.OAuthProvider;
-import codesquad.bookkbookk.common.jwt.Jwt;
-import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.domain.auth.repository.MemberRefreshTokenRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
@@ -31,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class OAuthService {
+public class AuthenticationService {
 
     private final MemberRepository memberRepository;
     private final MemberRefreshTokenRepository memberRefreshTokenRepository;
@@ -73,7 +72,13 @@ public class OAuthService {
             return memberRepository.findByEmail(loginRequest.getEmail())
                     .orElseThrow(RuntimeException::new);
         }
-        return memberRepository.save(Member.from(loginRequest));
+        Member member = Member.builder()
+                .email(loginRequest.getEmail())
+                .loginType(loginRequest.getLoginType())
+                .nickname(loginRequest.getNickname())
+                .profileImgUrl(loginRequest.getProfileImageUrl())
+                .build();
+        return memberRepository.save(member);
     }
 
     private String requestOAuthToken(OAuthProvider.Property oAuthProperty, String oAuthCode) {

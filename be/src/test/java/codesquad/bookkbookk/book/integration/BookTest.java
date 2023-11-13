@@ -16,11 +16,11 @@ import codesquad.bookkbookk.domain.book.data.dto.CreateBookRequest;
 import codesquad.bookkbookk.domain.book.data.dto.CreateBookResponse;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
-import codesquad.bookkbookk.domain.book.repository.MemberBookRepository;
+import codesquad.bookkbookk.domain.mapping.repository.MemberBookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
-import codesquad.bookkbookk.domain.bookclub.data.entity.MemberBookClub;
+import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
-import codesquad.bookkbookk.domain.bookclub.repository.MemberBookClubRepository;
+import codesquad.bookkbookk.domain.mapping.repository.BookClubMemberRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
 import codesquad.bookkbookk.util.TestDataFactory;
@@ -42,7 +42,7 @@ public class BookTest extends IntegrationTest {
     private BookClubRepository bookClubRepository;
 
     @Autowired
-    private MemberBookClubRepository memberBookClubRepository;
+    private BookClubMemberRepository bookClubMemberRepository;
 
     @Autowired
     private MemberBookRepository memberBookRepository;
@@ -60,13 +60,13 @@ public class BookTest extends IntegrationTest {
         BookClub bookClub = TestDataFactory.createBookClub();
         bookClubRepository.save(bookClub);
 
-        MemberBookClub memberBookClub = new MemberBookClub(member, bookClub);
-        memberBookClubRepository.save(memberBookClub);
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
         CreateBookRequest createBookRequest = CreateBookRequest.builder()
-                .isbn("123123123")
+                .isbn("9791169210607")
                 .bookClubId(bookClub.getId())
                 .title("책")
                 .cover("image.image")

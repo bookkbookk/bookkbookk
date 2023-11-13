@@ -1,6 +1,6 @@
 package codesquad.bookkbookk.domain.bookclub.data.dto;
 
-import codesquad.bookkbookk.domain.bookclub.data.entity.MemberBookClub;
+import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +11,8 @@ public class JoinBookClubResponse {
 
     private final Long bookClubId;
 
-    public static JoinBookClubResponse from(MemberBookClub memberBookClub) {
-        return new JoinBookClubResponse(memberBookClub.getBookClub().getId());
+    public static JoinBookClubResponse from(BookClubMember bookClubMember) {
+        return new JoinBookClubResponse(bookClubMember.getBookClub().getId());
     }
 
 }

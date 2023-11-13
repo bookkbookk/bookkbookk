@@ -1,5 +1,6 @@
 package codesquad.bookkbookk.domain.member.data.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -11,9 +12,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import codesquad.bookkbookk.domain.auth.data.dto.LoginRequest;
 import codesquad.bookkbookk.domain.auth.data.type.LoginType;
-import codesquad.bookkbookk.domain.bookclub.data.entity.MemberBookClub;
+import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
+import codesquad.bookkbookk.domain.mapping.entity.MemberBook;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -39,7 +40,9 @@ public class Member {
     @Column(name = "profile_img_url", nullable = false)
     private String profileImgUrl;
     @OneToMany(mappedBy = "member")
-    private List<MemberBookClub> memberBookClub;
+    private List<BookClubMember> memberBookClubs = new ArrayList<>();
+    @OneToMany(mappedBy = "member")
+    private List<MemberBook> memberBooks = new ArrayList<>();
 
     @Builder
     private Member(String email, LoginType loginType, String nickname, String profileImgUrl) {
@@ -47,15 +50,6 @@ public class Member {
         this.loginType = loginType;
         this.nickname = nickname;
         this.profileImgUrl = profileImgUrl;
-    }
-
-    public static Member from(LoginRequest loginRequest) {
-        return Member.builder()
-                .email(loginRequest.getEmail())
-                .loginType(loginRequest.getLoginType())
-                .nickname(loginRequest.getNickname())
-                .profileImgUrl(loginRequest.getProfileImageUrl())
-                .build();
     }
 
     public void updateNickname(String nickname) {
