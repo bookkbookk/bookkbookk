@@ -13,7 +13,7 @@ export default function BookCard({ book }: { book: BookListItem }) {
     <S.BookCard
       variant="outlined"
       onClick={() =>
-        navigate(`${ROUTE_PATH.chapters}/${book.id}`, {
+        navigate(`${ROUTE_PATH.bookDetail}/${book.id}`, {
           state: { book },
         })
       }>

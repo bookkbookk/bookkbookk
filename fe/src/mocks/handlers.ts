@@ -10,6 +10,7 @@ import { rest } from "msw";
 import {
   BOOK_CLUB_DETAIL_OPEN,
   BOOK_CLUB_LIST,
+  CHAPTER_LIST,
   MEMBER_INFO,
   USER_BOOK_LIST,
 } from "./data";
@@ -316,5 +317,9 @@ export const handlers = [
 
   rest.post(`${GATHERING_API_PATH.gatherings}/:bookId`, async (_, res, ctx) => {
     return res(ctx.status(200));
+  }),
+
+  rest.get(BOOK_API_PATH.chapters, async (_, res, ctx) => {
+    return res(ctx.status(200), ctx.json(CHAPTER_LIST));
   }),
 ];

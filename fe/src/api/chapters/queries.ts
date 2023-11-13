@@ -1,9 +1,13 @@
 import { queryKeys } from "@api/queryKeys";
 import { MESSAGE } from "@constant/index";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
-import { postChapters } from "./client";
-import { NewChapterBody } from "./type";
+import { getChapters, postChapters } from "./client";
+import { BookChapterStatus, NewChapterBody } from "./type";
 
 export const usePostNewChapters = ({
   onSuccessCallback,
@@ -20,7 +24,9 @@ export const usePostNewChapters = ({
     mutate(newChapterBody, {
       onSuccess: () => {
         queryClient.invalidateQueries(
-          queryKeys.chapters.list({ page: 1, size: 10 })
+          queryKeys.chapters.list({
+            bookId: newChapterBody.bookId,
+          })
         );
         onSuccessCallback();
       },
@@ -35,20 +41,17 @@ export const usePostNewChapters = ({
   return { onPostChapters };
 };
 
-// TODO: 챕터 상태 필터링 조건 추가 필요
-// export const useGetChapters = ({
-//   page,
-//   size,
-// }: {
-//   page: number;
-//   size: number;
-// }) => {
-//   const {
-//     data: chapters,
-//     isLoading,
-//     isSuccess,
-//     isError,
-//   } = useQuery(queryKeys.chapters.list({ page, size }));
+export const useGetChapters = ({
+  bookId,
+  statusId,
+}: {
+  bookId: number;
+  statusId: BookChapterStatus["id"];
+}) => {
+  const { data: chapters } = useSuspenseQuery({
+    ...queryKeys.chapters.list({ bookId }),
+    queryFn: () => getChapters(bookId, statusId),
+  });
 
-//   return { chapters, isLoading, isSuccess, isError };
-// };
+  return chapters;
+};

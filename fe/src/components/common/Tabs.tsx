@@ -1,3 +1,5 @@
+import { BookChapterStatus } from "@api/chapters/type";
+import { BOOK_CHAPTERS_TAB } from "@components/constants";
 import { a11yProps } from "@components/utils";
 import { Box, Tab, Tabs } from "@mui/material";
 import React from "react";
@@ -7,9 +9,12 @@ export default function BookClubTabs({
   handleChange,
   tabList,
 }: {
-  activeTabID: number;
-  handleChange: (event: React.SyntheticEvent, newValue: number) => void;
-  tabList: { id: number; label: string }[];
+  activeTabID: BookChapterStatus["id"];
+  handleChange: (
+    event: React.SyntheticEvent,
+    newValue: BookChapterStatus["id"]
+  ) => void;
+  tabList: typeof BOOK_CHAPTERS_TAB;
 }) {
   return (
     <Box

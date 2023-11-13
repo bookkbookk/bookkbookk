@@ -1,3 +1,44 @@
+export const CHAPTER_LIST = [
+  {
+    chapterId: 15,
+    statusId: 1,
+    title: "chapter 1",
+    recentBookmark: {
+      authorProfileImgUrl: "profileImgUrl",
+      content: "asdfsd",
+    },
+    topics: [
+      {
+        topicId: 52,
+        title: "chapter 1의 토픽 1의 제목",
+        recentBookmark: {
+          authorProfileImgUrl: "profileImgUrl",
+          content: "asdfsd",
+        },
+      },
+    ],
+  },
+  {
+    chapterId: 16,
+    statusId: 2,
+    title: "chapter 2",
+    recentBookmark: {
+      authorProfileImgUrl: "profileImgUrl",
+      content: "asdfsd",
+    },
+    topics: [
+      {
+        topicId: 55,
+        title: "chapter 2의 토픽 1의 제목",
+        recentBookmark: {
+          authorProfileImgUrl: "profileImgUrl",
+          content: "asdfsd",
+        },
+      },
+    ],
+  },
+];
+
 export const BOOK_CLUB_DETAIL_OPEN = {
   name: "내가만든북클럽",
   profileImgUrl: "https://avatars.githubusercontent.com/u/56245755?v=4",

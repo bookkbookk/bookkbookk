@@ -32,7 +32,7 @@ export const BOOK_CHAPTERS_TAB = [
     id: 3,
     label: "독서 완료 챕터",
   },
-];
+] as const;
 
 export const BOOK_CLUB_TAB = [
   {

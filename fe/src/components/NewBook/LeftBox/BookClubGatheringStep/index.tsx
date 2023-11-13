@@ -44,7 +44,7 @@ export default function BookClubGatheringStep({
 
   const { onPostNewGathering } = usePostNewGathering({
     callback: (bookId: number) => {
-      navigate(`${ROUTE_PATH.chapters}/${bookId}`, {
+      navigate(`${ROUTE_PATH.bookDetail}/${bookId}`, {
         replace: true,
         state: {
           book: { ...bookChoice, bookClub: bookClubChoice },
@@ -86,10 +86,7 @@ export default function BookClubGatheringStep({
       }}>
       <Navigation
         onPrev={{ onClick: onPrev, text: "이전 단계" }}
-        onNext={{
-          onClick: onNext,
-          text: "다음 단계",
-        }}
+        onNext={{ onClick: onNext, text: "다음 단계" }}
       />
       <BookClubChoice />
       <Box
