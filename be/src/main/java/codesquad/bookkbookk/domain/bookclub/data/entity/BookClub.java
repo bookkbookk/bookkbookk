@@ -61,9 +61,14 @@ public class BookClub {
     }
 
     public void updateUpcomingGatheringDate(LocalDateTime gatheringDate) {
-        if (gatheringDate.isBefore(upcomingGatheringDate)) {
+        if (upcomingGatheringDate == null || upcomingGatheringDate.isAfter(gatheringDate)) {
             upcomingGatheringDate = gatheringDate;
         }
+    }
+
+    public void close() {
+        this.bookClubStatus = BookClubStatus.CLOSED;
+        closedTime = LocalDateTime.now();
     }
 
 }

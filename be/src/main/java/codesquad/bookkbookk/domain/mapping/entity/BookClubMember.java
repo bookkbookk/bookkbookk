@@ -1,5 +1,8 @@
 package codesquad.bookkbookk.domain.mapping.entity;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -37,6 +40,12 @@ public class BookClubMember {
     public BookClubMember(BookClub bookClub, Member member) {
         this.bookClub = bookClub;
         this.member = member;
+    }
+
+    public static List<Member> toMembers(List<BookClubMember> bookClubMembers) {
+        return bookClubMembers.stream()
+                .map(BookClubMember::getMember)
+                .collect(Collectors.toUnmodifiableList());
     }
 
 }
