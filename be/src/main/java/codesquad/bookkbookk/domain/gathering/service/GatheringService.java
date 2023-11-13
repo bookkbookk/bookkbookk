@@ -6,6 +6,7 @@ import codesquad.bookkbookk.common.error.exception.BookNotFoundException;
 import codesquad.bookkbookk.domain.auth.service.AuthorizationService;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
+import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.gathering.data.dto.CreateGatheringRequest;
 import codesquad.bookkbookk.domain.gathering.data.entity.Gathering;
 import codesquad.bookkbookk.domain.gathering.repository.GatheringRepository;
@@ -24,11 +25,14 @@ public class GatheringService {
     public void createGathering(CreateGatheringRequest createGatheringRequest, Long memberId) {
         Book book = bookRepository.findById(createGatheringRequest.getBookId())
                 .orElseThrow(BookNotFoundException::new);
-        authorizationService.authorizeBookClubMembership(memberId, book.getBookClub().getId());
+        BookClub bookClub = book.getBookClub();
+        authorizationService.authorizeBookClubMembership(memberId, bookClub.getId());
 
         Gathering gathering = new Gathering(book, createGatheringRequest.getDateTime(),
                 createGatheringRequest.getPlace());
         gatheringRepository.save(gathering);
+
+        bookClub.updateUpcomingGatheringDate(gathering.getDateTime());
     }
 
 }

@@ -1,6 +1,6 @@
 package codesquad.bookkbookk.domain.book.data.type;
 
-public enum Status {
+public enum BookStatus {
 
     PENDING, IN_PROGRESS, COMPLETED;
 

@@ -12,6 +12,7 @@ import codesquad.bookkbookk.common.error.exception.InvitationUrlNotFoundExceptio
 import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.common.image.S3ImageUploader;
 import codesquad.bookkbookk.domain.auth.service.AuthorizationService;
+import codesquad.bookkbookk.domain.bookclub.data.dto.ReadBookClubDetailResponse;
 import codesquad.bookkbookk.domain.mapping.entity.MemberBook;
 import codesquad.bookkbookk.domain.mapping.repository.MemberBookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateBookClubRequest;
@@ -125,6 +126,12 @@ public class BookClubService {
         });
 
         return JoinBookClubResponse.from(save);
+    }
+
+    public ReadBookClubDetailResponse readBookClubDetail(Long bookClubId) {
+        BookClub bookClub = bookClubRepository.findById(bookClubId).orElseThrow(BookClubNotFoundException::new);
+
+        return bookClub.getBookClubStatus().from(bookClub);
     }
 
 }

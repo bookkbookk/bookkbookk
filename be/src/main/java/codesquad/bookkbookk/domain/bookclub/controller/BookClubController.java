@@ -23,6 +23,7 @@ import codesquad.bookkbookk.domain.bookclub.data.dto.CreateInvitationUrlRequest;
 import codesquad.bookkbookk.domain.bookclub.data.dto.InvitationUrlResponse;
 import codesquad.bookkbookk.domain.bookclub.data.dto.JoinBookClubRequest;
 import codesquad.bookkbookk.domain.bookclub.data.dto.JoinBookClubResponse;
+import codesquad.bookkbookk.domain.bookclub.data.dto.ReadBookClubDetailResponse;
 import codesquad.bookkbookk.domain.bookclub.data.dto.ReadBookClubResponse;
 import codesquad.bookkbookk.domain.bookclub.service.BookClubService;
 
@@ -85,6 +86,14 @@ public class BookClubController {
                                                          @RequestParam Integer size) {
         Pageable pageable = PageRequest.of(cursor, size);
         ReadBookClubBookResponse response = bookService.readBookClubBooks(bookClubId, pageable);
+
+        return ResponseEntity.ok()
+                .body(response);
+    }
+
+    @GetMapping("/{bookClubId}")
+    public ResponseEntity<ReadBookClubDetailResponse> readBookClubDetail(@PathVariable Long bookClubId) {
+        ReadBookClubDetailResponse response = bookClubService.readBookClubDetail(bookClubId);
 
         return ResponseEntity.ok()
                 .body(response);
