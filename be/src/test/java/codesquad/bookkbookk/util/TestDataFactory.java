@@ -1,11 +1,14 @@
 package codesquad.bookkbookk.util;
 
+import java.time.LocalDateTime;
+
 import codesquad.bookkbookk.domain.auth.data.type.LoginType;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
 import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
 import codesquad.bookkbookk.domain.comment.data.entity.Comment;
+import codesquad.bookkbookk.domain.gathering.data.entity.Gathering;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.topic.data.entity.Topic;
 
@@ -90,4 +93,7 @@ public class TestDataFactory {
         return new Comment(bookmark, writer, "content");
     }
 
+    public static Gathering createGathering(Book book) {
+        return new Gathering(book, LocalDateTime.now(), "코드 스쿼드");
+    }
 }
