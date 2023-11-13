@@ -60,4 +60,10 @@ public class BookClub {
         this.bookClubStatus = BookClubStatus.OPEN;
     }
 
+    public void updateUpcomingGatheringDate(LocalDateTime gatheringDate) {
+        if (gatheringDate.isBefore(upcomingGatheringDate)) {
+            upcomingGatheringDate = gatheringDate;
+        }
+    }
+
 }
