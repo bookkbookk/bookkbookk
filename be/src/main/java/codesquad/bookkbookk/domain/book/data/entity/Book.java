@@ -13,7 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import codesquad.bookkbookk.common.error.exception.MalformedIsbnException;
-import codesquad.bookkbookk.domain.book.data.type.Status;
+import codesquad.bookkbookk.domain.book.data.type.BookStatus;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 
 import lombok.AccessLevel;
@@ -47,8 +47,8 @@ public class Book {
     @Column(nullable = false)
     private String category;
     @Enumerated(value = EnumType.STRING)
-    @Column(nullable = false)
-    private Status status;
+    @Column(name = "book_status", nullable = false)
+    private BookStatus bookStatus;
 
 
     @Builder
@@ -59,7 +59,7 @@ public class Book {
         this.cover = cover;
         this.author = author;
         this.category = category;
-        this.status = Status.PENDING;
+        this.bookStatus = BookStatus.PENDING;
     }
 
     private String validateAndFormatISBN(String isbn) {
