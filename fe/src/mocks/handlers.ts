@@ -47,12 +47,12 @@ export const handlers = [
     return res(ctx.status(200), ctx.json(MEMBER_INFO));
   }),
 
-  rest.post(AUTH_API_PATH.reissueToken, async (_, res, ctx) => {
-    if (TOKEN_EXPIRATION.refreshToken) {
+  rest.post(AUTH_API_PATH.reissueToken, async (req, res, ctx) => {
+    if (!req.cookies["refreshToken"]) {
       return res(
-        ctx.status(401),
+        ctx.status(400),
         ctx.json({
-          message: "만료된 토큰입니다.",
+          message: "토큰이 없습니다.",
         })
       );
     }
@@ -81,15 +81,16 @@ export const handlers = [
 
     return res(
       ctx.status(200),
+      ctx.cookie("refreshToken", "iAmRefreshToken", {
+        httpOnly: true,
+        secure: true,
+      }),
       ctx.json<{
         accessToken: string;
-        refreshToken: string;
         isNewMember: boolean;
       }>({
         accessToken:
           "eyJhbGciOiJIUzI1NiJ9.eyJtZW1iZXJJZCI6MSwiZXhwIjoxNjkxOTIyNjAzfQ.vCxUGMiv9bnb4JQGwk6NVx6kHi5hG80tDxafIvrfKbA",
-        refreshToken:
-          "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2OTcxMDMwMDN9.FgoFySrenum985OrDzwwtaEhu1Iz7IVJtz5M6H8lzX8",
         isNewMember: true,
       })
     );
@@ -141,7 +142,7 @@ export const handlers = [
     //   );
     // }
 
-    return res(ctx.status(200));
+    return res(ctx.status(200), ctx.cookie("refreshToken", "", { maxAge: 0 }));
   }),
 
   rest.post(BOOK_CLUB_API_PATH.bookClubs, async (_, res, ctx) => {

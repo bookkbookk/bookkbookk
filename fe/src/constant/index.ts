@@ -1,6 +1,5 @@
 import { ROUTE_PATH } from "routes/constants";
 export const ACCESS_TOKEN_KEY = "bookk-accessToken";
-export const REFRESH_TOKEN_KEY = "bookk-refreshToken";
 
 export const MESSAGE = {
   LOGIN_LOADING: `로그인중이에요... \n 새로고침을 하지 마세요!`,
