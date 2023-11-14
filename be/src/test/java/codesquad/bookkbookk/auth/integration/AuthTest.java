@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 
 import codesquad.bookkbookk.IntegrationTest;
 import codesquad.bookkbookk.common.error.exception.RefreshTokenNotSavedException;
@@ -40,20 +41,29 @@ public class AuthTest extends IntegrationTest {
         // given
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
+
         String accessToken = jwtProvider.createAccessToken(member.getId());
         String refreshToken = jwtProvider.createRefreshToken();
+
         MemberRefreshToken memberRefreshToken = new MemberRefreshToken(member.getId(), refreshToken);
         memberRefreshTokenRepository.save(memberRefreshToken);
+
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true)
+                .secure(true)
+                .domain("bookkbookk.site")
+                .path("/")
+                .build();
         sleep(3000);
 
         // when
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + refreshToken)
+                .header(HttpHeaders.COOKIE, cookie.toString())
                 .when()
-                    .post("/api/auth/reissue")
+                .post("/api/auth/reissue")
                 .then().log().all()
-                    .extract();
+                .extract();
 
         // then
         SoftAssertions.assertSoftly(assertions -> {
@@ -79,11 +89,11 @@ public class AuthTest extends IntegrationTest {
         // when
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .when()
-                    .post("/api/auth/logout")
+                .post("/api/auth/logout")
                 .then().log().all()
-                    .extract();
+                .extract();
 
         // then
         SoftAssertions.assertSoftly(assertions -> {
