@@ -1,7 +1,7 @@
 export const CHAPTER_LIST = [
   {
     chapterId: 15,
-    statusId: 1,
+    statusId: 4,
     title: "chapter 1",
     recentBookmark: {
       authorProfileImgUrl: "profileImgUrl",
@@ -11,6 +11,41 @@ export const CHAPTER_LIST = [
       {
         topicId: 52,
         title: "chapter 1의 토픽 1의 제목",
+        recentBookmark: {
+          authorProfileImgUrl: "profileImgUrl",
+          content: "asdfsd",
+        },
+      },
+      {
+        topicId: 552,
+        title: "chapter 1의 토픽 2의 제목",
+        recentBookmark: {
+          authorProfileImgUrl: "profileImgUrl",
+          content: "asdfsd",
+        },
+      },
+    ],
+  },
+  {
+    chapterId: 155,
+    statusId: 3,
+    title: "chapter 1",
+    recentBookmark: {
+      authorProfileImgUrl: "profileImgUrl",
+      content: "asdfsd",
+    },
+    topics: [
+      {
+        topicId: 532,
+        title: "chapter 1의 토픽 1의 제목",
+        recentBookmark: {
+          authorProfileImgUrl: "profileImgUrl",
+          content: "asdfsd",
+        },
+      },
+      {
+        topicId: 5525,
+        title: "chapter 1의 토픽 2의 제목",
         recentBookmark: {
           authorProfileImgUrl: "profileImgUrl",
           content: "asdfsd",
@@ -160,116 +195,116 @@ export const USER_BOOK_LIST = [
     author: "김창준 (지은이)",
     category: "국내도서>컴퓨터/모바일>컴퓨터 공학>소프트웨어 공학",
   },
-  {
-    id: 13,
-    isbn: "9788991268807",
-    bookClub: {
-      id: 1,
-      name: "낙감귤조이",
-    },
-    title: "프로그래머의 길, 멘토에게 묻다",
-    cover:
-      "https://image.aladin.co.kr/product/741/54/coversum/8991268803_1.jpg",
-    author: "데이브 후버, 애디웨일 오시나이 (지은이), 강중빈 (옮긴이)",
-    category:
-      "국내도서>컴퓨터/모바일>프로그래밍 개발/방법론>프로그래밍 기초/개발 방법론",
-  },
-  {
-    id: 14,
-    isbn: "9791168341364",
-    bookClub: {
-      id: 1,
-      name: "낙감귤조이",
-    },
-    title:
-      "우리 인생에 바람을 초대하려면 - 세계적 지성이 들려주는 모험과 발견의 철학",
-    cover:
-      "https://image.aladin.co.kr/product/32610/92/coversum/k112935541_1.jpg",
-    author: "파스칼 브뤼크네르 (지은이), 이세진 (옮긴이)",
-    category: "국내도서>인문학>철학 일반>교양 철학",
-  },
-  {
-    id: 15,
-    isbn: "9791130645278",
-    bookClub: {
-      id: 3,
-      name: "내꿈은농부!",
-    },
-    title:
-      "아무도 가지 않은 길에 부가 있었다 - 흔들리는 투자자를 위한 부자의 독설 41",
-    cover:
-      "https://image.aladin.co.kr/product/32265/15/coversum/k722834840_1.jpg",
-    author: "정민우(달천) (지은이)",
-    category: "국내도서>경제경영>재테크/투자>재테크/투자 일반",
-  },
-  {
-    id: 21,
-    isbn: "9788966262335",
-    bookClub: {
-      id: 1,
-      name: "낙감귤조이",
-    },
-    title: "함께 자라기 - 애자일로 가는 길",
-    cover:
-      "https://image.aladin.co.kr/product/17597/74/coversum/8966262333_1.jpg",
-    author: "김창준 (지은이)",
-    category: "국내도서>컴퓨터/모바일>컴퓨터 공학>소프트웨어 공학",
-  },
-  {
-    id: 22,
-    isbn: "9788966262335",
-    bookClub: {
-      id: 1,
-      name: "낙감귤조이",
-    },
-    title: "함께 자라기 - 애자일로 가는 길",
-    cover:
-      "https://image.aladin.co.kr/product/17597/74/coversum/8966262333_1.jpg",
-    author: "김창준 (지은이)",
-    category: "국내도서>컴퓨터/모바일>컴퓨터 공학>소프트웨어 공학",
-  },
-  {
-    id: 23,
-    isbn: "9788991268807",
-    bookClub: {
-      id: 1,
-      name: "낙감귤조이",
-    },
-    title: "프로그래머의 길, 멘토에게 묻다",
-    cover:
-      "https://image.aladin.co.kr/product/741/54/coversum/8991268803_1.jpg",
-    author: "데이브 후버, 애디웨일 오시나이 (지은이), 강중빈 (옮긴이)",
-    category:
-      "국내도서>컴퓨터/모바일>프로그래밍 개발/방법론>프로그래밍 기초/개발 방법론",
-  },
-  {
-    id: 24,
-    isbn: "9791168341364",
-    bookClub: {
-      id: 1,
-      name: "낙감귤조이",
-    },
-    title:
-      "우리 인생에 바람을 초대하려면 - 세계적 지성이 들려주는 모험과 발견의 철학",
-    cover:
-      "https://image.aladin.co.kr/product/32610/92/coversum/k112935541_1.jpg",
-    author: "파스칼 브뤼크네르 (지은이), 이세진 (옮긴이)",
-    category: "국내도서>인문학>철학 일반>교양 철학",
-  },
-  {
-    id: 25,
-    isbn: "9791130645278",
-    bookClub: {
-      id: 3,
-      name: "내꿈은농부!",
-    },
-    title:
-      "아무도 가지 않은 길에 부가 있었다 - 흔들리는 투자자를 위한 부자의 독설 41아무도 가지 않은 길에 부가 있었다 - 흔들리는 투자자를 위한 부자의 독설 41",
-    cover:
-      "https://image.aladin.co.kr/product/32265/15/coversum/k722834840_1.jpg",
-    author: "정민우(달천) (지은이)",
-    category: "국내도서>경제경영>재테크/투자>재테크/투자 일반",
-  },
+  // {
+  //   id: 13,
+  //   isbn: "9788991268807",
+  //   bookClub: {
+  //     id: 1,
+  //     name: "낙감귤조이",
+  //   },
+  //   title: "프로그래머의 길, 멘토에게 묻다",
+  //   cover:
+  //     "https://image.aladin.co.kr/product/741/54/coversum/8991268803_1.jpg",
+  //   author: "데이브 후버, 애디웨일 오시나이 (지은이), 강중빈 (옮긴이)",
+  //   category:
+  //     "국내도서>컴퓨터/모바일>프로그래밍 개발/방법론>프로그래밍 기초/개발 방법론",
+  // },
+  // {
+  //   id: 14,
+  //   isbn: "9791168341364",
+  //   bookClub: {
+  //     id: 1,
+  //     name: "낙감귤조이",
+  //   },
+  //   title:
+  //     "우리 인생에 바람을 초대하려면 - 세계적 지성이 들려주는 모험과 발견의 철학",
+  //   cover:
+  //     "https://image.aladin.co.kr/product/32610/92/coversum/k112935541_1.jpg",
+  //   author: "파스칼 브뤼크네르 (지은이), 이세진 (옮긴이)",
+  //   category: "국내도서>인문학>철학 일반>교양 철학",
+  // },
+  // {
+  //   id: 15,
+  //   isbn: "9791130645278",
+  //   bookClub: {
+  //     id: 3,
+  //     name: "내꿈은농부!",
+  //   },
+  //   title:
+  //     "아무도 가지 않은 길에 부가 있었다 - 흔들리는 투자자를 위한 부자의 독설 41",
+  //   cover:
+  //     "https://image.aladin.co.kr/product/32265/15/coversum/k722834840_1.jpg",
+  //   author: "정민우(달천) (지은이)",
+  //   category: "국내도서>경제경영>재테크/투자>재테크/투자 일반",
+  // },
+  // {
+  //   id: 21,
+  //   isbn: "9788966262335",
+  //   bookClub: {
+  //     id: 1,
+  //     name: "낙감귤조이",
+  //   },
+  //   title: "함께 자라기 - 애자일로 가는 길",
+  //   cover:
+  //     "https://image.aladin.co.kr/product/17597/74/coversum/8966262333_1.jpg",
+  //   author: "김창준 (지은이)",
+  //   category: "국내도서>컴퓨터/모바일>컴퓨터 공학>소프트웨어 공학",
+  // },
+  // {
+  //   id: 22,
+  //   isbn: "9788966262335",
+  //   bookClub: {
+  //     id: 1,
+  //     name: "낙감귤조이",
+  //   },
+  //   title: "함께 자라기 - 애자일로 가는 길",
+  //   cover:
+  //     "https://image.aladin.co.kr/product/17597/74/coversum/8966262333_1.jpg",
+  //   author: "김창준 (지은이)",
+  //   category: "국내도서>컴퓨터/모바일>컴퓨터 공학>소프트웨어 공학",
+  // },
+  // {
+  //   id: 23,
+  //   isbn: "9788991268807",
+  //   bookClub: {
+  //     id: 1,
+  //     name: "낙감귤조이",
+  //   },
+  //   title: "프로그래머의 길, 멘토에게 묻다",
+  //   cover:
+  //     "https://image.aladin.co.kr/product/741/54/coversum/8991268803_1.jpg",
+  //   author: "데이브 후버, 애디웨일 오시나이 (지은이), 강중빈 (옮긴이)",
+  //   category:
+  //     "국내도서>컴퓨터/모바일>프로그래밍 개발/방법론>프로그래밍 기초/개발 방법론",
+  // },
+  // {
+  //   id: 24,
+  //   isbn: "9791168341364",
+  //   bookClub: {
+  //     id: 1,
+  //     name: "낙감귤조이",
+  //   },
+  //   title:
+  //     "우리 인생에 바람을 초대하려면 - 세계적 지성이 들려주는 모험과 발견의 철학",
+  //   cover:
+  //     "https://image.aladin.co.kr/product/32610/92/coversum/k112935541_1.jpg",
+  //   author: "파스칼 브뤼크네르 (지은이), 이세진 (옮긴이)",
+  //   category: "국내도서>인문학>철학 일반>교양 철학",
+  // },
+  // {
+  //   id: 25,
+  //   isbn: "9791130645278",
+  //   bookClub: {
+  //     id: 3,
+  //     name: "내꿈은농부!",
+  //   },
+  //   title:
+  //     "아무도 가지 않은 길에 부가 있었다 - 흔들리는 투자자를 위한 부자의 독설 41아무도 가지 않은 길에 부가 있었다 - 흔들리는 투자자를 위한 부자의 독설 41",
+  //   cover:
+  //     "https://image.aladin.co.kr/product/32265/15/coversum/k722834840_1.jpg",
+  //   author: "정민우(달천) (지은이)",
+  //   category: "국내도서>경제경영>재테크/투자>재테크/투자 일반",
+  // },
 ];
 
 export const BOOK_CLUB_LIST = [

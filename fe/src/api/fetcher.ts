@@ -43,14 +43,12 @@ fetcher.interceptors.request.use(
   }
 );
 
-// TODO: 리팩토링
-
 fetcher.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response.status === ERROR_CODE.UNAUTHORIZED) {
+    if (error.response.data.code === ERROR_CODE.EXPIRED_ACCESS_TOKEN) {
       try {
         const accessToken = await reissueAccessToken();
         accessToken && setAccessToken(accessToken);

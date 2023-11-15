@@ -29,7 +29,7 @@ export const handlers = [
       return res(
         ctx.status(401),
         ctx.json({
-          errorCode: "E0001",
+          code: 4011,
           message: "Authorization 헤더가 없습니다.",
         })
       );
@@ -39,6 +39,7 @@ export const handlers = [
       return res(
         ctx.status(401),
         ctx.json({
+          code: 4011,
           message: "만료된 토큰입니다.",
         })
       );
@@ -50,9 +51,10 @@ export const handlers = [
   rest.post(AUTH_API_PATH.reissueToken, async (req, res, ctx) => {
     if (!req.cookies["refreshToken"]) {
       return res(
-        ctx.status(400),
+        ctx.status(401),
         ctx.json({
-          message: "토큰이 없습니다.",
+          code: 4012,
+          message: "리프레쉬 토큰이 없습니다.",
         })
       );
     }

@@ -16,7 +16,7 @@ export const GOOGLE_OAUTH_PATH = `${GOOGLE_AUTHORIZE_URI}?${stringify(
 )}`;
 
 export const ERROR_CODE = {
-  UNAUTHORIZED: 401,
+  EXPIRED_ACCESS_TOKEN: 4011,
 };
 
 export const AUTH_API_PATH = {
