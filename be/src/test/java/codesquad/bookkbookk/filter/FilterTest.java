@@ -8,16 +8,15 @@ import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 
 import codesquad.bookkbookk.common.error.ErrorResponse;
+import codesquad.bookkbookk.common.error.exception.RefreshTokenNotFoundException;
 import codesquad.bookkbookk.common.error.exception.jwt.MalformedTokenException;
 import codesquad.bookkbookk.common.error.exception.jwt.NoAuthorizationHeaderException;
-import codesquad.bookkbookk.common.jwt.JwtProvider;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -31,17 +30,14 @@ class FilterTest {
     @LocalServerPort
     private int port;
 
-    @Autowired
-    private JwtProvider jwtProvider;
-
     @BeforeEach
     public void setup() {
         RestAssured.port = port;
     }
 
     @Test
-    @DisplayName("토큰이 필요한 요청에 토큰을 넣지 않으면 필터가 작동한다.")
-    void requestWithOutToken() throws Exception {
+    @DisplayName("access token이 필요한 요청에 토큰을 넣지 않으면 예외가 발생한다.")
+    void requestWithOutAccessToken() throws Exception {
         // given
         NoAuthorizationHeaderException exception = new NoAuthorizationHeaderException();
 
@@ -63,11 +59,11 @@ class FilterTest {
     }
 
     @Test
-    @DisplayName("변형된 토큰이 요청에 포함되면 필터가 작동한다.")
-    void requestWithMalformedToken() throws Exception {
+    @DisplayName("변형된 access token이 요청에 포함되면 에외가 한다.")
+    void requestWithMalformedAccessToken() throws Exception {
         // given
         MalformedTokenException exception = new MalformedTokenException();
-        String token = Jwts.builder()
+        String accessToken = Jwts.builder()
                 .expiration(new Date(System.currentTimeMillis() + 30000))
                 .signWith(Keys.hmacShaKeyFor("thisiskeyfortestbookkbookk1234512356!!".getBytes()))
                 .compact();
@@ -75,7 +71,7 @@ class FilterTest {
         // when
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .when()
                     .get("api/members")
                 .then().log().all()
@@ -89,4 +85,57 @@ class FilterTest {
         });
     }
 
+    @Test
+    @DisplayName("refresh token이 필요한 요청에 토큰을 넣지 않으면 예외가 발생한다.")
+    void requestWithMalformedToken() throws Exception {
+        // given
+        RefreshTokenNotFoundException exception = new RefreshTokenNotFoundException();
+
+        // when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .when()
+                .post("api/auth/reissue")
+                .then().log().all()
+                .extract();
+
+        // then
+        SoftAssertions.assertSoftly(assertions -> {
+            assertThat(response.statusCode()).isEqualTo(exception.getCode());
+            assertThat(response.jsonPath().getObject("", ErrorResponse.class).getMessage())
+                    .isEqualTo(exception.getMessage());
+        });
+    }
+
+    @Test
+    @DisplayName("변형된 refresh token이 요청에 포함되면 에외가 한다.")
+    void requestWithMalformedRefreshToken() throws Exception {
+        // given
+        MalformedTokenException exception = new MalformedTokenException();
+        String token = Jwts.builder()
+                .signWith(Keys.hmacShaKeyFor("thisiskeyfortestbookkbookk1234512356!!".getBytes()))
+                .compact();
+        ResponseCookie refreshToken = ResponseCookie.from("refreshToken", token)
+                .httpOnly(true)
+                .secure(true)
+                .domain("bookkbookk.site")
+                .path("/")
+                .build();
+
+        // when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.COOKIE, refreshToken.toString())
+                .when()
+                .post("api/auth/reissue")
+                .then().log().all()
+                .extract();
+
+        // then
+        SoftAssertions.assertSoftly(assertions -> {
+            assertThat(response.statusCode()).isEqualTo(exception.getCode());
+            assertThat(response.jsonPath().getObject("", ErrorResponse.class).getMessage())
+                    .isEqualTo(exception.getMessage());
+        });
+    }
 }
