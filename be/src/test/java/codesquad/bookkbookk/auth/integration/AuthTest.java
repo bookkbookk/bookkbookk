@@ -12,6 +12,7 @@ import org.springframework.http.ResponseCookie;
 
 import codesquad.bookkbookk.IntegrationTest;
 import codesquad.bookkbookk.common.error.exception.RefreshTokenNotSavedException;
+import codesquad.bookkbookk.common.jwt.JwtProperties;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.domain.auth.data.entity.MemberRefreshToken;
 import codesquad.bookkbookk.domain.auth.repository.MemberRefreshTokenRepository;
@@ -34,6 +35,8 @@ public class AuthTest extends IntegrationTest {
     private MemberRefreshTokenRepository memberRefreshTokenRepository;
     @Autowired
     private JwtProvider jwtProvider;
+    @Autowired
+    private JwtProperties jwtProperties;
 
     @Test
     @DisplayName("refreshToken으로 accessToken 재발급을 한다.")
@@ -53,6 +56,7 @@ public class AuthTest extends IntegrationTest {
                 .secure(true)
                 .domain("bookkbookk.site")
                 .path("/")
+                .maxAge(jwtProperties.getRefreshTokenExpiration())
                 .build();
         sleep(3000);
 

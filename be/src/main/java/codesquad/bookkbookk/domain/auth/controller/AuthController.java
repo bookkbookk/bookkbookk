@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import codesquad.bookkbookk.common.jwt.JwtProperties;
 import codesquad.bookkbookk.common.resolver.MemberId;
 import codesquad.bookkbookk.common.resolver.RefreshToken;
 import codesquad.bookkbookk.domain.auth.data.dto.AuthCode;
@@ -24,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 
     private final AuthenticationService authenticationService;
+    private final JwtProperties jwtProperties;
 
     @PostMapping("/login/{providerName}")
     public ResponseEntity<LoginResponse> login(@RequestBody AuthCode authCode, @PathVariable String providerName) {
@@ -31,6 +33,7 @@ public class AuthController {
         ResponseCookie refreshToken = ResponseCookie.from("refreshToken", loginResponse.getRefreshToken())
                 .httpOnly(true)
                 .secure(true)
+                .maxAge(jwtProperties.getRefreshTokenExpiration())
                 .domain("bookkbookk.site")
                 .path("/")
                 .build();
