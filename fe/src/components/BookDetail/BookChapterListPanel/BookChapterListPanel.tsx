@@ -1,25 +1,31 @@
 import { useGetChapters } from "@api/chapters/queries";
-import { BookChapterStatus } from "@api/chapters/type";
+import { BookChapterTabID } from "@api/chapters/type";
+import Paper from "@mui/material/Paper";
 import { useParams } from "react-router-dom";
+import { ChapterFieldHeader } from "./ChapterFieldHeader";
+import { ChapterTree } from "./ChapterTree";
 
 export default function BookChapterListPanel({
   statusId,
 }: {
-  statusId: BookChapterStatus["id"];
+  statusId: BookChapterTabID["id"];
 }) {
   const { bookId } = useParams<{ bookId: string }>();
-  const chapters = useGetChapters({
+  const chapterList = useGetChapters({
     bookId: Number(bookId),
     statusId,
   });
-  // TODO: chapters로 챕터 목록을 렌더링
-  console.log(chapters);
 
   return (
-    <div>
-      <span>
-        bookId: {bookId} statusId: {statusId} 챕터 목록 렌더링
-      </span>
-    </div>
+    <Paper
+      sx={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}>
+      <ChapterFieldHeader />
+      <ChapterTree chapterList={chapterList} />
+    </Paper>
   );
 }

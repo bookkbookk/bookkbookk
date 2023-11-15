@@ -1,20 +1,24 @@
-import { BOOK_CHAPTERS_TAB } from "@components/constants";
+import {
+  BOOK_CHAPTERS_STATUS_LIST,
+  BOOK_CHAPTERS_TAB,
+} from "@components/constants";
 
 export type ChapterListItem = {
   chapterId: number;
-  statusId: BookChapterStatus["id"];
+  statusId: BookChapterStatusID["id"];
   title: string;
-  recentBookmark: RecentBookmark;
-  topics: {
-    topicId: number;
-    title: string;
-    recentBookmark: RecentBookmark;
-  }[];
+  topics: TopicItemInfo[];
 };
 
-type RecentBookmark = {
+type BookmarkInfo = {
   authorProfileImgUrl: string;
   content: string;
+};
+
+export type TopicItemInfo = {
+  topicId: number;
+  title: string;
+  recentBookmark: BookmarkInfo;
 };
 
 export type NewChapterBody = {
@@ -27,4 +31,5 @@ export type Chapter = {
   topics?: { title: string }[];
 };
 
-export type BookChapterStatus = (typeof BOOK_CHAPTERS_TAB)[number];
+export type BookChapterTabID = (typeof BOOK_CHAPTERS_TAB)[number];
+export type BookChapterStatusID = (typeof BOOK_CHAPTERS_STATUS_LIST)[number];

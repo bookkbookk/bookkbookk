@@ -1,4 +1,4 @@
-import { BookChapterStatus } from "@api/chapters/type";
+import { BookChapterTabID } from "@api/chapters/type";
 import Tabs from "@components/common/Tabs";
 import { BoxHeader, LeftBox, RightBox } from "@components/common/common.style";
 import { BOOK_CHAPTERS_TAB } from "@components/constants";
@@ -7,13 +7,13 @@ import React, { useState } from "react";
 import BookChapterListPanel from "./BookChapterListPanel/BookChapterListPanel";
 
 export default function BookChapterList() {
-  const [activeTabID, setActiveTabID] = useState<BookChapterStatus["id"]>(
+  const [activeTabID, setActiveTabID] = useState<BookChapterTabID["id"]>(
     BOOK_CHAPTERS_TAB[0].id
   );
 
   const handleChange = (
     _: React.SyntheticEvent,
-    newValue: BookChapterStatus["id"]
+    newValue: BookChapterTabID["id"]
   ) => {
     setActiveTabID(newValue);
   };

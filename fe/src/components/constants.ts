@@ -15,24 +15,31 @@ export const NEW_GATHERING_FUNNEL = {
   checkInfo: "모임 생성" as const,
 };
 
-export const BOOK_CHAPTERS_TAB = [
-  {
-    id: 0,
-    label: "전체 챕터",
-  },
-  {
-    id: 1,
-    label: "독서 전 챕터",
-  },
-  {
+export const BOOK_CHAPTER_STATUS = {
+  BEFORE_READING: {
     id: 2,
-    label: "독서 중 챕터",
+    label: "독서 전",
   },
-  {
+  READING: {
     id: 3,
-    label: "독서 완료 챕터",
+    label: "독서 중",
   },
-] as const;
+  AFTER_READING: {
+    id: 4,
+    label: "독서 완료",
+  },
+} as const;
+
+export const BOOK_CHAPTER_TABS = {
+  ALL: {
+    id: 1,
+    label: "전체",
+  },
+  ...BOOK_CHAPTER_STATUS,
+} as const;
+
+export const BOOK_CHAPTERS_TAB = Object.values(BOOK_CHAPTER_TABS);
+export const BOOK_CHAPTERS_STATUS_LIST = Object.values(BOOK_CHAPTER_STATUS);
 
 export const BOOK_CLUB_TAB = [
   {
