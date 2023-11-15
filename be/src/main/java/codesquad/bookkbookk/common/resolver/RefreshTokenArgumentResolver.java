@@ -34,10 +34,6 @@ public class RefreshTokenArgumentResolver implements HandlerMethodArgumentResolv
                                   @NonNull NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         Cookie[] cookies = Objects.requireNonNull(webRequest.getNativeRequest(HttpServletRequest.class)).getCookies();
 
-        if (cookies == null) {
-            throw new RefreshTokenNotFoundException();
-        }
-
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals("refreshToken")) {
                 return cookie.getValue();
