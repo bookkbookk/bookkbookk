@@ -52,8 +52,20 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public void reissueAccessToken(@MemberId Long memberId) {
+    public ResponseEntity<Void> reissueAccessToken(@MemberId Long memberId) {
         authenticationService.logout(memberId);
+
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
+                .httpOnly(true)
+                .secure(true)
+                .maxAge(0)
+                .domain("bookkbookk.site")
+                .path("/")
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .build();
     }
 
 }
