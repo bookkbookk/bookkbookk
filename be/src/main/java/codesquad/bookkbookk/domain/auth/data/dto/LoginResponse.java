@@ -1,5 +1,7 @@
 package codesquad.bookkbookk.domain.auth.data.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import codesquad.bookkbookk.common.jwt.Jwt;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,6 +10,7 @@ import lombok.Getter;
 public class LoginResponse {
 
     private final String accessToken;
+    @JsonIgnore
     private final String refreshToken;
     private final Boolean isNewMember;
 
