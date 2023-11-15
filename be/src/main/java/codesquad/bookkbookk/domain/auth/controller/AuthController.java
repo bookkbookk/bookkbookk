@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import codesquad.bookkbookk.common.jwt.JwtProperties;
 import codesquad.bookkbookk.common.resolver.MemberId;
 import codesquad.bookkbookk.common.resolver.RefreshToken;
 import codesquad.bookkbookk.domain.auth.data.dto.AuthCode;
@@ -24,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 
     private final AuthenticationService authenticationService;
+    private final JwtProperties jwtProperties;
 
     @PostMapping("/login/{providerName}")
     public ResponseEntity<LoginResponse> login(@RequestBody AuthCode authCode, @PathVariable String providerName) {
@@ -31,6 +33,7 @@ public class AuthController {
         ResponseCookie refreshToken = ResponseCookie.from("refreshToken", loginResponse.getRefreshToken())
                 .httpOnly(true)
                 .secure(true)
+                .maxAge(jwtProperties.getRefreshTokenExpiration())
                 .domain("bookkbookk.site")
                 .path("/")
                 .build();
@@ -49,8 +52,20 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public void reissueAccessToken(@MemberId Long memberId) {
+    public ResponseEntity<Void> reissueAccessToken(@MemberId Long memberId) {
         authenticationService.logout(memberId);
+
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
+                .httpOnly(true)
+                .secure(true)
+                .maxAge(0)
+                .domain("bookkbookk.site")
+                .path("/")
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .build();
     }
 
 }
