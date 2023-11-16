@@ -103,7 +103,7 @@ public class GatheringTest extends IntegrationTest {
 
         // then
         SoftAssertions.assertSoftly(assertions -> {
-            assertions.assertThat(response.statusCode()).isEqualTo(exception.getCode());
+            assertions.assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
             assertions.assertThat(response.jsonPath().getString("message")).isEqualTo(exception.getMessage());
         });
 
@@ -137,7 +137,7 @@ public class GatheringTest extends IntegrationTest {
 
         // then
         SoftAssertions.assertSoftly(assertions -> {
-            assertions.assertThat(response.statusCode()).isEqualTo(exception.getCode());
+            assertions.assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
             assertions.assertThat(response.jsonPath().getString("message")).isEqualTo(exception.getMessage());
         });
     }
