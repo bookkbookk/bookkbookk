@@ -12,8 +12,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import codesquad.bookkbookk.common.error.exception.RefreshTokenNotFoundException;
-import codesquad.bookkbookk.common.jwt.JwtProvider;
+import codesquad.bookkbookk.common.error.exception.auth.TokenNotIncludedException;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +20,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Component
 public class RefreshTokenArgumentResolver implements HandlerMethodArgumentResolver {
-
-    private final JwtProvider jwtProvider;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -39,7 +36,7 @@ public class RefreshTokenArgumentResolver implements HandlerMethodArgumentResolv
                 return cookie.getValue();
             }
         }
-        throw new RefreshTokenNotFoundException();
+        throw new TokenNotIncludedException(4012);
     }
 
 }
