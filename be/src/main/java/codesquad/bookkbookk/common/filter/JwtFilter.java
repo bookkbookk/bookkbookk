@@ -20,13 +20,12 @@ import org.springframework.util.PatternMatchUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import codesquad.bookkbookk.common.error.ErrorResponse;
-import codesquad.bookkbookk.common.error.exception.ApiException;
-import codesquad.bookkbookk.common.error.exception.RefreshTokenNotFoundException;
-import codesquad.bookkbookk.common.error.exception.jwt.MalformedTokenException;
-import codesquad.bookkbookk.common.error.exception.jwt.NoAuthorizationHeaderException;
-import codesquad.bookkbookk.common.error.exception.jwt.BearerPrefixNotIncludedException;
-import codesquad.bookkbookk.common.error.exception.jwt.TokenExpiredException;
-import codesquad.bookkbookk.common.error.exception.jwt.TokenNotIncludedException;
+import codesquad.bookkbookk.common.error.exception.auth.AuthException;
+import codesquad.bookkbookk.common.error.exception.auth.BearerPrefixNotIncludedException;
+import codesquad.bookkbookk.common.error.exception.auth.MalformedTokenException;
+import codesquad.bookkbookk.common.error.exception.auth.NoAuthorizationHeaderException;
+import codesquad.bookkbookk.common.error.exception.auth.TokenExpiredException;
+import codesquad.bookkbookk.common.error.exception.auth.TokenNotIncludedException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -82,13 +81,13 @@ public class JwtFilter implements Filter {
         try {
             jwtProvider.validateToken(accessToken);
         } catch (IllegalArgumentException e) {
-            writeErrorResponse(new TokenNotIncludedException(), httpServletResponse);
+            writeErrorResponse(new TokenNotIncludedException(4011), httpServletResponse);
             return false;
         } catch (MalformedJwtException | SecurityException e) {
-            writeErrorResponse(new MalformedTokenException(), httpServletResponse);
+            writeErrorResponse(new MalformedTokenException(4011), httpServletResponse);
             return false;
         } catch (ExpiredJwtException e) {
-            writeErrorResponse(new TokenExpiredException(), httpServletResponse);
+            writeErrorResponse(new TokenExpiredException(4011), httpServletResponse);
             return false;
         }
         return true;
@@ -99,7 +98,7 @@ public class JwtFilter implements Filter {
         String refreshToken = null;
 
         if (cookies == null) {
-            writeErrorResponse(new RefreshTokenNotFoundException(), httpServletResponse);
+            writeErrorResponse(new TokenNotIncludedException(4012), httpServletResponse);
             return false;
         }
         for (Cookie cookie : cookies) {
@@ -111,13 +110,13 @@ public class JwtFilter implements Filter {
         try {
             jwtProvider.validateToken(refreshToken);
         } catch (IllegalArgumentException e) {
-            writeErrorResponse(new TokenNotIncludedException(), httpServletResponse);
+            writeErrorResponse(new TokenNotIncludedException(4012), httpServletResponse);
             return false;
         } catch (MalformedJwtException | SecurityException e) {
-            writeErrorResponse(new MalformedTokenException(), httpServletResponse);
+            writeErrorResponse(new MalformedTokenException(4012), httpServletResponse);
             return false;
         } catch (ExpiredJwtException e) {
-            writeErrorResponse(new TokenExpiredException(), httpServletResponse);
+            writeErrorResponse(new TokenExpiredException(4012), httpServletResponse);
             return false;
         }
         return true;
@@ -133,16 +132,16 @@ public class JwtFilter implements Filter {
         return httpServletRequest.getMethod().equals("POST") && PatternMatchUtils.simpleMatch(postUrlWhiteList, url);
     }
 
-    private void writeErrorResponse(ApiException apiException, HttpServletResponse httpServletResponse)
+    private void writeErrorResponse(AuthException exception, HttpServletResponse httpServletResponse)
             throws IOException {
         httpServletResponse.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
         httpServletResponse.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        ErrorResponse errorResponse = ErrorResponse.from(apiException);
+        ErrorResponse errorResponse = ErrorResponse.from(exception);
         PrintWriter writer = httpServletResponse.getWriter();
 
-        log.error(apiException.getClass().getSimpleName() + ": " + apiException.getMessage());
-        httpServletResponse.setStatus(errorResponse.getCode());
+        log.error(exception.getClass().getSimpleName() + ": " + exception.getMessage());
+        httpServletResponse.setStatus(errorResponse.getStatus().value());
         String jsonBody = objectMapper.writeValueAsString(errorResponse);
         writer.print(jsonBody);
     }
