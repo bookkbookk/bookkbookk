@@ -103,6 +103,7 @@ export const BOOK_CLUB_DETAIL_OPEN = {
 export const USER_BOOK_LIST = [
   {
     id: 1,
+    statusId: 2,
     isbn: "9788966262335",
     bookClub: {
       id: 1,
@@ -116,6 +117,7 @@ export const USER_BOOK_LIST = [
   },
   {
     id: 2,
+    statusId: 3,
     isbn: "9788966262335",
     bookClub: {
       id: 1,
@@ -129,6 +131,7 @@ export const USER_BOOK_LIST = [
   },
   {
     id: 3,
+    statusId: 4,
     isbn: "9788991268807",
     bookClub: {
       id: 1,

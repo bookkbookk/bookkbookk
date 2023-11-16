@@ -7,7 +7,9 @@ import { useGatheringValue } from "store/useGathering";
 
 export default function BookClubGatheringCard() {
   const bookClubChoice = useBookClubChoiceValue();
-  const gatheringInfo = useGatheringValue();
+  const { gatherings } = useGatheringValue();
+
+  const hasGatherings = !!gatherings.length;
 
   return (
     <Card>
@@ -21,21 +23,23 @@ export default function BookClubGatheringCard() {
           <Typography variant="body1">{bookClubChoice.name}</Typography>
         </CardContent>
       )}
-      <GatheringTable
-        tableBody={
-          <TableBody>
-            {gatheringInfo.gatherings.map((gathering, index) => (
-              <TableRow key={gathering.id}>
-                <GatheringTableItemCell
-                  index={index}
-                  dateTime={gathering.dateTime}
-                  place={gathering.place}
-                />
-              </TableRow>
-            ))}
-          </TableBody>
-        }
-      />
+      {hasGatherings && (
+        <GatheringTable
+          tableBody={
+            <TableBody>
+              {gatherings.map((gathering, index) => (
+                <TableRow key={gathering.id}>
+                  <GatheringTableItemCell
+                    index={index}
+                    dateTime={gathering.dateTime}
+                    place={gathering.place}
+                  />
+                </TableRow>
+              ))}
+            </TableBody>
+          }
+        />
+      )}
     </Card>
   );
 }
