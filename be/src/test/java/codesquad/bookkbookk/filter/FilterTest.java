@@ -14,9 +14,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 
 import codesquad.bookkbookk.common.error.ErrorResponse;
-import codesquad.bookkbookk.common.error.exception.RefreshTokenNotFoundException;
-import codesquad.bookkbookk.common.error.exception.jwt.MalformedTokenException;
-import codesquad.bookkbookk.common.error.exception.jwt.NoAuthorizationHeaderException;
+import codesquad.bookkbookk.common.error.exception.auth.MalformedTokenException;
+import codesquad.bookkbookk.common.error.exception.auth.NoAuthorizationHeaderException;
+import codesquad.bookkbookk.common.error.exception.auth.TokenNotIncludedException;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -51,7 +51,8 @@ class FilterTest {
 
         // then
         SoftAssertions.assertSoftly(assertions -> {
-            assertThat(response.statusCode()).isEqualTo(exception.getCode());
+            assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
+            assertThat(response.jsonPath().getInt("code")).isEqualTo(exception.getCode());
             assertThat(response.jsonPath().getObject("", ErrorResponse.class).getMessage())
                     .isEqualTo(exception.getMessage());
         });
@@ -62,7 +63,7 @@ class FilterTest {
     @DisplayName("변형된 access token이 요청에 포함되면 에외가 한다.")
     void requestWithMalformedAccessToken() throws Exception {
         // given
-        MalformedTokenException exception = new MalformedTokenException();
+        MalformedTokenException exception = new MalformedTokenException(4011);
         String accessToken = Jwts.builder()
                 .expiration(new Date(System.currentTimeMillis() + 30000))
                 .signWith(Keys.hmacShaKeyFor("thisiskeyfortestbookkbookk1234512356!!".getBytes()))
@@ -79,7 +80,8 @@ class FilterTest {
 
         // then
         SoftAssertions.assertSoftly(assertions -> {
-            assertThat(response.statusCode()).isEqualTo(exception.getCode());
+            assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
+            assertThat(response.jsonPath().getInt("code")).isEqualTo(exception.getCode());
             assertThat(response.jsonPath().getObject("", ErrorResponse.class).getMessage())
                     .isEqualTo(exception.getMessage());
         });
@@ -89,7 +91,7 @@ class FilterTest {
     @DisplayName("refresh token이 필요한 요청에 토큰을 넣지 않으면 예외가 발생한다.")
     void requestWithMalformedToken() throws Exception {
         // given
-        RefreshTokenNotFoundException exception = new RefreshTokenNotFoundException();
+        TokenNotIncludedException exception = new TokenNotIncludedException(4012);
 
         // when
         ExtractableResponse<Response> response = RestAssured
@@ -101,7 +103,8 @@ class FilterTest {
 
         // then
         SoftAssertions.assertSoftly(assertions -> {
-            assertThat(response.statusCode()).isEqualTo(exception.getCode());
+            assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
+            assertThat(response.jsonPath().getInt("code")).isEqualTo(exception.getCode());
             assertThat(response.jsonPath().getObject("", ErrorResponse.class).getMessage())
                     .isEqualTo(exception.getMessage());
         });
@@ -111,7 +114,7 @@ class FilterTest {
     @DisplayName("변형된 refresh token이 요청에 포함되면 에외가 한다.")
     void requestWithMalformedRefreshToken() throws Exception {
         // given
-        MalformedTokenException exception = new MalformedTokenException();
+        MalformedTokenException exception = new MalformedTokenException(4012);
         String token = Jwts.builder()
                 .signWith(Keys.hmacShaKeyFor("thisiskeyfortestbookkbookk1234512356!!".getBytes()))
                 .compact();
@@ -133,7 +136,8 @@ class FilterTest {
 
         // then
         SoftAssertions.assertSoftly(assertions -> {
-            assertThat(response.statusCode()).isEqualTo(exception.getCode());
+            assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
+            assertThat(response.jsonPath().getInt("code")).isEqualTo(exception.getCode());
             assertThat(response.jsonPath().getObject("", ErrorResponse.class).getMessage())
                     .isEqualTo(exception.getMessage());
         });

@@ -177,7 +177,7 @@ public class BookmarkTest extends IntegrationTest {
 
         // then
         SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(response.statusCode()).isEqualTo(exception.getCode());
+            softAssertions.assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
             softAssertions.assertThat(response.jsonPath().getString("message")).isEqualTo(exception.getMessage());
         });
     }
@@ -259,7 +259,7 @@ public class BookmarkTest extends IntegrationTest {
 
         // then
         SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(response.statusCode()).isEqualTo(exception.getCode());
+            softAssertions.assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
             softAssertions.assertThat(response.jsonPath().getString("message")).isEqualTo(exception.getMessage());
         });
     }
