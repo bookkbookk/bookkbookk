@@ -1,5 +1,4 @@
 import { useGetChapters } from "@api/chapters/queries";
-import { BookChapterTabID } from "@api/chapters/type";
 import Paper from "@mui/material/Paper";
 import { useParams } from "react-router-dom";
 import { ChapterFieldHeader } from "./ChapterFieldHeader";
@@ -8,7 +7,7 @@ import { ChapterTree } from "./ChapterTree";
 export default function BookChapterListPanel({
   statusId,
 }: {
-  statusId: BookChapterTabID["id"];
+  statusId: number;
 }) {
   const { bookId } = useParams<{ bookId: string }>();
   const chapterList = useGetChapters({

@@ -1,35 +1,34 @@
-import { BookChapterTabID } from "@api/chapters/type";
-import { BOOK_CHAPTERS_TAB } from "@components/constants";
 import { a11yProps } from "@components/utils";
-import { Box, Tab, Tabs } from "@mui/material";
+import { Box, Tabs as MuiTabs, Tab } from "@mui/material";
 import React from "react";
 
-export default function BookClubTabs({
+type TabList = { id: number; label: string }[];
+
+export default function Tabs({
   activeTabID,
   handleChange,
   tabList,
 }: {
-  activeTabID: BookChapterTabID["id"];
-  handleChange: (
-    event: React.SyntheticEvent,
-    newValue: BookChapterTabID["id"]
-  ) => void;
-  tabList: typeof BOOK_CHAPTERS_TAB;
+  activeTabID: number;
+  handleChange: (event: React.SyntheticEvent, newValue: number) => void;
+  tabList: TabList;
 }) {
+  const activeTabIndex = activeTabID - 1;
+
   return (
     <Box
       sx={{
         borderBottom: 1,
         borderColor: "divider",
       }}>
-      <Tabs
-        value={activeTabID}
+      <MuiTabs
+        value={activeTabIndex}
         onChange={handleChange}
         aria-label="book club list tabs">
         {tabList.map((tab) => (
           <Tab key={tab.id} label={tab.label} {...a11yProps(tab.id)} />
         ))}
-      </Tabs>
+      </MuiTabs>
     </Box>
   );
 }

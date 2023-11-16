@@ -1,20 +1,22 @@
-import { BookChapterTabID } from "@api/chapters/type";
 import Tabs from "@components/common/Tabs";
-import { BoxHeader, LeftBox, RightBox } from "@components/common/common.style";
-import { BOOK_CHAPTERS_TAB } from "@components/constants";
-import { Box } from "@mui/material";
+import {
+  BoxContent,
+  BoxHeader,
+  LeftBox,
+  RightBox,
+} from "@components/common/common.style";
+import { BOOK_CHAPTERS_TAB, BOOK_CHAPTER_TABS } from "@components/constants";
+import Box from "@mui/material/Box";
 import React, { useState } from "react";
 import BookChapterListPanel from "./BookChapterListPanel/BookChapterListPanel";
+import ChapterBookCard from "./ChapterBookCard";
 
 export default function BookChapterList() {
-  const [activeTabID, setActiveTabID] = useState<BookChapterTabID["id"]>(
-    BOOK_CHAPTERS_TAB[0].id
+  const [activeTabID, setActiveTabID] = useState<number>(
+    BOOK_CHAPTER_TABS.ALL.id
   );
 
-  const handleChange = (
-    _: React.SyntheticEvent,
-    newValue: BookChapterTabID["id"]
-  ) => {
+  const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setActiveTabID(newValue);
   };
 
@@ -32,7 +34,11 @@ export default function BookChapterList() {
       <LeftBox>
         <BookChapterListPanel statusId={activeTabID} />
       </LeftBox>
-      <RightBox>책 정보, 책 상태 변경, 책 삭제, 멤버 독서율</RightBox>
+      <RightBox>
+        <BoxContent>
+          <ChapterBookCard />
+        </BoxContent>
+      </RightBox>
     </Box>
   );
 }

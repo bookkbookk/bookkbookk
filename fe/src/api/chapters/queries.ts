@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
 import { getChapters, postChapters } from "./client";
-import { BookChapterTabID, NewChapterBody } from "./type";
+import { NewChapterBody } from "./type";
 
 export const usePostNewChapters = ({
   onSuccessCallback,
@@ -46,7 +46,7 @@ export const useGetChapters = ({
   statusId,
 }: {
   bookId: number;
-  statusId: BookChapterTabID["id"];
+  statusId: number;
 }) => {
   const { data: chapters } = useSuspenseQuery({
     ...queryKeys.chapters.list({ bookId }),

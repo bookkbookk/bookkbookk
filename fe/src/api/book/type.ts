@@ -1,3 +1,5 @@
+import { BOOK_CHAPTERS_STATUS_LIST } from "@components/constants";
+
 export type BookInfo = {
   title: string;
   link: string;
@@ -42,6 +44,7 @@ export type BookList = {
 
 export type Book = {
   id: number;
+  statusId: (typeof BOOK_CHAPTERS_STATUS_LIST)[number]["id"];
   title: string;
   cover: string;
   author: string;

@@ -38,26 +38,27 @@ export const BOOK_CHAPTER_TABS = {
   ...BOOK_CHAPTER_STATUS,
 } as const;
 
-export const BOOK_CHAPTERS_TAB = Object.values(BOOK_CHAPTER_TABS);
-export const BOOK_CHAPTERS_STATUS_LIST = Object.values(BOOK_CHAPTER_STATUS);
-
-export const BOOK_CLUB_TAB = [
-  {
-    id: 0,
+export const BOOK_CLUB_STATUS = {
+  ALL: {
+    id: 1,
     label: "전체 북클럽",
   },
-  {
-    id: 1,
+  OPEN: {
+    id: 2,
     label: "열린 북클럽",
   },
-  {
-    id: 2,
+  CLOSE: {
+    id: 3,
     label: "닫힌 북클럽",
   },
-];
+} as const;
+
+export const BOOK_CHAPTERS_TAB = Object.values(BOOK_CHAPTER_TABS);
+export const BOOK_CHAPTERS_STATUS_LIST = Object.values(BOOK_CHAPTER_STATUS);
+export const BOOK_CLUB_TAB = Object.values(BOOK_CLUB_STATUS);
 
 export const TOTAL_TAB = {
-  id: 0,
+  id: 1,
   label: "전체 책장",
 };
 

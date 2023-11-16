@@ -1,6 +1,6 @@
 import { BOOK_API_PATH } from "@api/constants";
 import { fetcher } from "@api/fetcher";
-import { BookChapterTabID, ChapterListItem, NewChapterBody } from "./type";
+import { ChapterListItem, NewChapterBody } from "./type";
 
 export const postChapters = async ({ bookId, chapters }: NewChapterBody) => {
   const { data } = await fetcher.post<{ createdChapterIds: number[] }>(
@@ -13,10 +13,7 @@ export const postChapters = async ({ bookId, chapters }: NewChapterBody) => {
   return data;
 };
 
-export const getChapters = async (
-  bookId: number,
-  statusId: BookChapterTabID["id"]
-) => {
+export const getChapters = async (bookId: number, statusId: number) => {
   const { data } = await fetcher.get<ChapterListItem[]>(
     BOOK_API_PATH.chapters,
     {

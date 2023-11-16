@@ -1,11 +1,11 @@
-import { BookChapterStatusID } from "@api/chapters/type";
+import { BookChapterStatus } from "@api/chapters/type";
 import { BOOK_CHAPTER_TABS } from "@components/constants";
 import { Chip } from "@mui/material";
 
 export default function StatusChip({
   statusId,
 }: {
-  statusId: BookChapterStatusID["id"];
+  statusId: BookChapterStatus["id"];
 }) {
   return (
     <Chip
