@@ -1,4 +1,5 @@
-import { BookListItem } from "@api/book/type";
+import { BookChapterStatusID, BookListItem } from "@api/book/type";
+import StatusChip from "@components/common/StatusChip";
 import {
   BookCoverImage,
   BookDescription,
@@ -6,21 +7,31 @@ import {
   CardContent,
 } from "@components/common/common.style";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { useState } from "react";
 import { Location, useLocation } from "react-router-dom";
+import BookStatusMenu from "./BookStatusMenu";
 
 export default function ChapterBookCard() {
   const {
     state: { book },
   }: Location<{ book: BookListItem }> = useLocation();
+  const [statusId, setStatusId] = useState(book.statusId);
+
+  const onChangeBookStatus = (statusId: BookChapterStatusID) => {
+    setStatusId(statusId);
+  };
 
   return (
     <Card>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography variant="h6">책 정보</Typography>
+        <Typography variant="h6">북클럽 책</Typography>
+        <BookStatusMenu
+          {...{ bookId: book.id, statusId, onChangeBookStatus }}
+        />
       </Box>
+      <StatusChip statusId={statusId} />
       <CardContent>
         <BookCoverImage
           src={book.cover}
@@ -33,16 +44,6 @@ export default function ChapterBookCard() {
           <BookDescription variant="body2">{book.author}</BookDescription>
         </Stack>
       </CardContent>
-      {/* TODO: menu component 적용해서 상태 변경하기 */}
-      {book.statusId === 2 && (
-        <Button variant="outlined">북클럽에서 독서를 시작합니다</Button>
-      )}
-      {book.statusId === 3 && (
-        <Button variant="contained">북클럽에서 독서를 마칩니다</Button>
-      )}
-      {book.statusId === 4 && (
-        <Button>북클럽에서 독서를 다시 시작합니다</Button>
-      )}
     </Card>
   );
 }

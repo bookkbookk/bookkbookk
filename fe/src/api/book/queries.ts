@@ -2,8 +2,8 @@ import { queryKeys } from "@api/queryKeys";
 import { MESSAGE } from "@constant/index";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
-import { postNewBook } from "./client";
-import { NewBookBody } from "./type";
+import { postNewBook, putBookStatus } from "./client";
+import { BookChapterStatusID, NewBookBody } from "./type";
 
 export const useGetBookSearchResult = (searchWord: string) => {
   const { data: bookSearchResult } = useQuery({
@@ -40,4 +40,36 @@ export const usePostNewBook = ({
   };
 
   return { onPostNewBook };
+};
+
+export const usePutBookStatus = ({
+  onSuccessCallback,
+}: {
+  onSuccessCallback: (statusId: BookChapterStatusID) => void;
+}) => {
+  const { mutate } = useMutation({
+    mutationFn: putBookStatus,
+  });
+
+  const onPutBookStatus = ({
+    bookId,
+    statusId,
+  }: {
+    bookId: number;
+    statusId: BookChapterStatusID;
+  }) => {
+    mutate(
+      { bookId, statusId },
+      {
+        onSuccess: () => onSuccessCallback(statusId),
+        onError: () => {
+          enqueueSnackbar(MESSAGE.UPDATE_BOOK_STATUS_ERROR, {
+            variant: "error",
+          });
+        },
+      }
+    );
+  };
+
+  return { onPutBookStatus };
 };

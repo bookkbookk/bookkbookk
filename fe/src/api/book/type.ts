@@ -44,7 +44,7 @@ export type BookList = {
 
 export type Book = {
   id: number;
-  statusId: (typeof BOOK_CHAPTERS_STATUS_LIST)[number]["id"];
+  statusId: BookChapterStatusID;
   title: string;
   cover: string;
   author: string;
@@ -54,3 +54,6 @@ export type Book = {
 export type BookListItem = Book & {
   bookClub: { id: number; name: string };
 };
+
+export type BookChapterStatusID =
+  (typeof BOOK_CHAPTERS_STATUS_LIST)[number]["id"];
