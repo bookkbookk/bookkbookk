@@ -1,6 +1,10 @@
 import { queryKeys } from "@api/queryKeys";
 import { MESSAGE } from "@constant/index";
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
 import { getTopics, patchTopic } from "./client";
 
@@ -18,21 +22,27 @@ export const usePatchTopic = ({
 }: {
   onTitleChange: (newTitle: string) => void;
 }) => {
+  const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: patchTopic,
   });
 
   const onPatchTopicTitle = ({
+    chapterId,
     topicId,
     title,
   }: {
+    chapterId: number;
     topicId: number;
     title: string;
   }) => {
     mutate(
       { topicId, title },
       {
-        onSuccess: () => onTitleChange?.(title),
+        onSuccess: () => {
+          queryClient.invalidateQueries(queryKeys.topics.list({ chapterId }));
+          onTitleChange?.(title);
+        },
         onError: () => {
           enqueueSnackbar(MESSAGE.UPDATE_TOPIC_TITLE_ERROR, {
             variant: "error",

@@ -3,6 +3,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import { Button, Stack, TextField } from "@mui/material";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 
 export function TopicTitleEditor({
   defaultValue,
@@ -15,11 +16,16 @@ export function TopicTitleEditor({
   onTitleChange: (newTitle: string) => void;
   topicId: number;
 }) {
+  const { chapterId } = useParams<{ chapterId: string }>();
   const [topicTitle, setTopicTitle] = useState(defaultValue);
   const { onPatchTopicTitle } = usePatchTopic({ onTitleChange });
 
   const onEditTopicTitle = () => {
-    onPatchTopicTitle({ topicId, title: topicTitle });
+    onPatchTopicTitle({
+      chapterId: Number(chapterId),
+      topicId,
+      title: topicTitle,
+    });
   };
 
   return (

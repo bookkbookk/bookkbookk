@@ -16,7 +16,7 @@ export function ChapterItem({ chapter }: { chapter: ChapterListItem }) {
   }: Location<{ book: BookListItem }> = useLocation();
 
   const onTopicClick = (topic: Pick<TopicItemInfo, "topicId" | "title">) => {
-    navigate(`${ROUTE_PATH.chapter}/${chapterId}/topics/${topic.topicId}`, {
+    navigate(`${ROUTE_PATH.chapter}/${chapterId}`, {
       state: {
         chapter,
         topic,

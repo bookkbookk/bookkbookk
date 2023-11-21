@@ -21,6 +21,18 @@ const TOKEN_EXPIRATION = {
   refreshToken: false,
 };
 
+// eslint-disable-next-line
+let TOPIC_LIST = [
+  {
+    topicId: 1,
+    title: "id 1 첫번째 토픽",
+  },
+  {
+    topicId: 52,
+    title: "id 52 두번째 토픽",
+  },
+];
+
 export const handlers = [
   rest.get(MEMBER_API_PATH.member, (req, res, ctx) => {
     const Authorization = req.headers.get("Authorization");
@@ -345,23 +357,26 @@ export const handlers = [
     return res(ctx.status(200));
   }),
 
-  rest.patch(`${BOOK_API_PATH.topics}/*`, async (req, res, ctx) => {
+  rest.patch(`${BOOK_API_PATH.topics}/:topicId`, async (req, res, ctx) => {
+    const { title } = await req.json<{ title: string }>();
+    const { topicId } = req.params;
+
+    TOPIC_LIST = TOPIC_LIST.map((topic) => {
+      if (topic.topicId === Number(topicId)) {
+        return {
+          ...topic,
+          title,
+        };
+      }
+
+      return topic;
+    });
+
     return res(ctx.status(200));
   }),
 
   rest.get(`${BOOK_API_PATH.topics}/*`, async (_, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json([
-        {
-          topicId: 1,
-          title: "토픽",
-        },
-        {
-          topicId: 52,
-          title: "토픽",
-        },
-      ])
-    );
+    console.log(TOPIC_LIST);
+    return res(ctx.status(200), ctx.json(TOPIC_LIST));
   }),
 ];

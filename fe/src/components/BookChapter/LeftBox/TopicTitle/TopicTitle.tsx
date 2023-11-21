@@ -6,17 +6,20 @@ import { Button, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { TopicTitleEditor } from "./TopicTitleEditor";
 
-export default function TopicTitle(
-  topicTitleInfo: Pick<TopicItemInfo, "topicId" | "title">
-) {
+export default function TopicTitle({
+  topicTitleInfo,
+  onTopicTitleChange,
+}: {
+  topicTitleInfo: Pick<TopicItemInfo, "topicId" | "title">;
+  onTopicTitleChange: (newTitle: string) => void;
+}) {
   const { topicId, title } = topicTitleInfo;
 
   const [isEditing, setIsEditing] = useState(false);
   const toggleEditing = () => setIsEditing((prev) => !prev);
 
-  const [topicTitle, setTopicTitle] = useState(title);
   const onTitleChange = (newTitle: string) => {
-    setTopicTitle(newTitle);
+    onTopicTitleChange(newTitle);
     toggleEditing();
   };
 
@@ -37,12 +40,12 @@ export default function TopicTitle(
         <LabelImportantIcon />
         {isEditing ? (
           <TopicTitleEditor
-            defaultValue={topicTitle}
+            defaultValue={title}
             {...{ toggleEditing, isEditing, onTitleChange, topicId }}
           />
         ) : (
           <Typography variant="h6" width="100%">
-            {topicTitle}
+            {title}
           </Typography>
         )}
       </Stack>

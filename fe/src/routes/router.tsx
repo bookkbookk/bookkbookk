@@ -62,7 +62,7 @@ export const router = createBrowserRouter(
             element={<BookDetail />}
           />
           <Route
-            path={`${ROUTE_PATH.chapter}/:chapterId/topics/:topicId`}
+            path={`${ROUTE_PATH.chapter}/:chapterId`}
             element={<BookChapter />}
           />
           <Route path={ROUTE_PATH.newBook} element={<NewBook />} />
