@@ -37,7 +37,6 @@ public class AuthController {
         LoginResponse loginResponse = authenticationService.login(authCode, providerName);
         ResponseCookie refreshToken = ResponseCookie.from("refreshToken", loginResponse.getRefreshToken())
                 .httpOnly(true)
-                .secure(true)
                 .maxAge(jwtProperties.getRefreshTokenExpiration())
                 .domain(cookieDomain)
                 .path("/")
@@ -62,7 +61,6 @@ public class AuthController {
 
         ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
                 .httpOnly(true)
-                .secure(true)
                 .maxAge(0)
                 .domain(cookieDomain)
                 .path("/")
