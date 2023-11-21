@@ -25,6 +25,7 @@ export const MESSAGE = {
   UPDATE_BOOK_STATUS_ERROR: `책 상태 변경에 실패했어요. \n 나중에 다시 시도해주세요.`,
   UPDATE_CHAPTER_STATUS_ERROR: `챕터 상태 변경에 실패했어요. \n 나중에 다시 시도해주세요.`,
   UPDATE_CHAPTER_TITLE_ERROR: `챕터 제목 변경에 실패했어요. \n 나중에 다시 시도해주세요.`,
+  UPDATE_TOPIC_TITLE_ERROR: `토픽 제목 변경에 실패했어요. \n 나중에 다시 시도해주세요.`,
 };
 
 export const PAGE_TITLE = {

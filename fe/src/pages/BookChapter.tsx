@@ -1,7 +1,7 @@
 import { ChapterListItem, TopicItemInfo } from "@api/chapters/type";
-import ChapterTitle from "@components/BookChapter/ChapterTitle";
-import TopicListCard from "@components/BookChapter/TopicListCard";
-import TopicTitle from "@components/BookChapter/TopicTitle";
+import ChapterTitle from "@components/BookChapter/LeftBox/ChapterTitle/ChapterTitle";
+import TopicTitle from "@components/BookChapter/LeftBox/TopicTitle/TopicTitle";
+import TopicListCard from "@components/BookChapter/RightBox/TopicListCard";
 import { BoxContent, LeftBox, RightBox } from "@components/common/common.style";
 import { Box } from "@mui/material";
 import { Location, useLocation } from "react-router-dom";

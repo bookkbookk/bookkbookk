@@ -3,7 +3,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ModeRoundedIcon from "@mui/icons-material/ModeRounded";
 import { Button, Stack, Typography } from "@mui/material";
 import { useState } from "react";
-import ChapterStatusMenu from "./ChapterStatusMenu";
+import ChapterStatusMenu from "../ChapterStatusMenu";
 import { ChapterTitleEditor } from "./ChapterTitleEditor";
 
 export default function ChapterTitle(

@@ -9,3 +9,17 @@ export const getTopics = async (chapterId: number) => {
 
   return data;
 };
+
+export const patchTopic = async ({
+  topicId,
+  title,
+}: {
+  topicId: number;
+  title: string;
+}) => {
+  const { data } = await fetcher.patch(`${BOOK_API_PATH.topics}/${topicId}`, {
+    title,
+  });
+
+  return data;
+};

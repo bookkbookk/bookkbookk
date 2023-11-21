@@ -345,6 +345,10 @@ export const handlers = [
     return res(ctx.status(200));
   }),
 
+  rest.patch(`${BOOK_API_PATH.topics}/*`, async (req, res, ctx) => {
+    return res(ctx.status(200));
+  }),
+
   rest.get(`${BOOK_API_PATH.topics}/*`, async (_, res, ctx) => {
     return res(
       ctx.status(200),
