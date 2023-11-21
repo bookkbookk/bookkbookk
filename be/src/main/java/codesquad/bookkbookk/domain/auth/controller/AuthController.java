@@ -1,5 +1,6 @@
 package codesquad.bookkbookk.domain.auth.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,9 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/auth")
 public class AuthController {
 
+    @Value("${cookie.domain}")
+    private static String COOKIE_DOMAIN;
+
     private final AuthenticationService authenticationService;
     private final JwtProperties jwtProperties;
 
@@ -34,7 +38,7 @@ public class AuthController {
                 .httpOnly(true)
                 .secure(true)
                 .maxAge(jwtProperties.getRefreshTokenExpiration())
-                .domain("bookkbookk.site")
+                .domain(COOKIE_DOMAIN)
                 .path("/")
                 .build();
 
@@ -59,7 +63,7 @@ public class AuthController {
                 .httpOnly(true)
                 .secure(true)
                 .maxAge(0)
-                .domain("bookkbookk.site")
+                .domain(COOKIE_DOMAIN)
                 .path("/")
                 .build();
 
