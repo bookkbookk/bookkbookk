@@ -17,22 +17,22 @@ export const NEW_GATHERING_FUNNEL = {
 
 export const BOOK_CHAPTER_STATUS = {
   BEFORE_READING: {
-    id: 2,
+    id: 1,
     label: "독서 전",
   },
   READING: {
-    id: 3,
+    id: 2,
     label: "독서 중",
   },
   AFTER_READING: {
-    id: 4,
+    id: 3,
     label: "독서 완료",
   },
 } as const;
 
 export const BOOK_CHAPTER_TABS = {
   ALL: {
-    id: 1,
+    id: 0,
     label: "전체",
   },
   ...BOOK_CHAPTER_STATUS,
@@ -40,15 +40,15 @@ export const BOOK_CHAPTER_TABS = {
 
 export const BOOK_CLUB_STATUS = {
   ALL: {
-    id: 1,
+    id: 0,
     label: "전체 북클럽",
   },
   OPEN: {
-    id: 2,
+    id: 1,
     label: "열린 북클럽",
   },
   CLOSE: {
-    id: 3,
+    id: 2,
     label: "닫힌 북클럽",
   },
 } as const;
@@ -58,7 +58,7 @@ export const BOOK_CHAPTERS_STATUS_LIST = Object.values(BOOK_CHAPTER_STATUS);
 export const BOOK_CLUB_TAB = Object.values(BOOK_CLUB_STATUS);
 
 export const TOTAL_TAB = {
-  id: 1,
+  id: 0,
   label: "전체 책장",
 };
 

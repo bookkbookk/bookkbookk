@@ -322,7 +322,7 @@ export const handlers = [
     return res(ctx.status(200));
   }),
 
-  rest.get(BOOK_API_PATH.chapters, async (_, res, ctx) => {
+  rest.get(`${BOOK_API_PATH.chapters}/*`, async (_, res, ctx) => {
     return res(ctx.status(200), ctx.json(CHAPTER_LIST));
   }),
 
@@ -339,5 +339,36 @@ export const handlers = [
     }
 
     return res(ctx.status(200));
+  }),
+
+  rest.put(BOOK_API_PATH.chapterStatus(16), async (req, res, ctx) => {
+    const { statusId } = await req.json<{ statusId: string }>();
+
+    if (!statusId) {
+      return res(
+        ctx.status(400),
+        ctx.json({
+          message: "statusId가 없습니다. 잘못된 요청입니다.",
+        })
+      );
+    }
+
+    return res(ctx.status(200));
+  }),
+
+  rest.get(`${BOOK_API_PATH.topics}/*`, async (_, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json([
+        {
+          topicId: 1,
+          title: "토픽",
+        },
+        {
+          topicId: 52,
+          title: "토픽",
+        },
+      ])
+    );
   }),
 ];

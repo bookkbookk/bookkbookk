@@ -34,6 +34,11 @@ export const queryKeys = createQueryKeyStore({
       queryKey: ["getChapters", { bookId }],
     }),
   },
+  topics: {
+    list: ({ chapterId }: { chapterId: number }) => ({
+      queryKey: ["getTopics", { chapterId }],
+    }),
+  },
   bookClub: {
     list: (option?: BookClubStatus) => ({
       queryKey: ["getBookClubList", option],

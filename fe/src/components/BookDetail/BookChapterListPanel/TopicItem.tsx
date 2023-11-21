@@ -5,20 +5,23 @@ import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 import { TreeItem } from "@mui/x-tree-view";
 
-export function TopicItem({ topic }: { topic: TopicItemInfo }) {
+export function TopicItem({
+  topic,
+  onClick,
+}: {
+  topic: TopicItemInfo;
+  onClick: (topic: Pick<TopicItemInfo, "topicId" | "title">) => void;
+}) {
   const { topicId, title, recentBookmark } = topic;
 
   return (
     <TreeItem
       nodeId={topicId + ""}
       icon={<LabelImportantIcon />}
+      onClick={() => onClick({ topicId, title })}
       label={
-        <Stack
-          display={"flex"}
-          flexDirection={"row"}
-          gap={3}
-          justifySelf={"start"}>
-          <Content sx={{ minWidth: "40%" }}>{title}</Content>
+        <Stack display={"flex"} flexDirection={"row"} gap={1}>
+          <Content sx={{ width: "60%" }}>{title}</Content>
           <Stack display={"flex"} flexDirection={"row"} gap={1} width={"60%"}>
             <Avatar
               src={recentBookmark.authorProfileImgUrl}

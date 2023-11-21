@@ -1,8 +1,8 @@
 export const CHAPTER_LIST = [
   {
     chapterId: 15,
-    statusId: 4,
-    title: "chapter 1",
+    statusId: 1,
+    title: "K는 대한민국이 아니다",
     recentBookmark: {
       authorProfileImgUrl: "profileImgUrl",
       content: "asdfsd",
@@ -10,7 +10,7 @@ export const CHAPTER_LIST = [
     topics: [
       {
         topicId: 52,
-        title: "chapter 1의 토픽 1의 제목",
+        title: "K 프리미엄, 국적은 사라지고 스타일은 남아",
         recentBookmark: {
           authorProfileImgUrl: "profileImgUrl",
           content: "asdfsd",
@@ -18,7 +18,7 @@ export const CHAPTER_LIST = [
       },
       {
         topicId: 552,
-        title: "chapter 1의 토픽 2의 제목",
+        title: "‘서울러’라는 소속감 혹은 구별 짓기",
         recentBookmark: {
           authorProfileImgUrl: "profileImgUrl",
           content: "asdfsd",

@@ -13,8 +13,6 @@ export default function Tabs({
   handleChange: (event: React.SyntheticEvent, newValue: number) => void;
   tabList: TabList;
 }) {
-  const activeTabIndex = activeTabID - 1;
-
   return (
     <Box
       sx={{
@@ -22,7 +20,7 @@ export default function Tabs({
         borderColor: "divider",
       }}>
       <MuiTabs
-        value={activeTabIndex}
+        value={activeTabID}
         onChange={handleChange}
         aria-label="book club list tabs">
         {tabList.map((tab) => (

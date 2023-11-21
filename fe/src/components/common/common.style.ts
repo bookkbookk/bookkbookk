@@ -51,7 +51,7 @@ export const BoxHeader = styled(Box)(({ theme }) => ({
 export const LeftBox = styled(Box)(({ theme }) => ({
   display: "flex",
   height: "100%",
-  width: `calc(70% - ${theme.spacing(2)})`,
+  width: `calc(75% - ${theme.spacing(2)})`,
   flexDirection: "column",
   justifyContent: "center",
   alignItems: "center",
@@ -63,7 +63,7 @@ export const RightBox = styled(Box)(({ theme }) => ({
   right: 0,
   top: `${HEADER.height}px`,
   display: "flex",
-  width: "30%",
+  width: "25%",
   height: "100%",
   backgroundColor: theme.palette.background.paper,
   flexDirection: "column",

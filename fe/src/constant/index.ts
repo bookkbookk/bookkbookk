@@ -23,6 +23,7 @@ export const MESSAGE = {
   NOT_FOUND: `요청하신 페이지를 찾을 수 없어요. \n 다른 페이지로 이동해주세요.`,
   NEW_GATHERING_ERROR: `모임 생성에 실패했어요. 나중에 다시 시도해주세요. 우선 챕터를 추가해볼까요?`,
   UPDATE_BOOK_STATUS_ERROR: `책 상태 변경에 실패했어요. \n 나중에 다시 시도해주세요.`,
+  UPDATE_CHAPTER_STATUS_ERROR: `챕터 상태 변경에 실패했어요. \n 나중에 다시 시도해주세요.`,
 };
 
 export const PAGE_TITLE = {

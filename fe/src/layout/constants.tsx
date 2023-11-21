@@ -28,7 +28,12 @@ export const NAVIGATION_CONFIG = [
   },
   {
     label: PAGE_TITLE[ROUTE_PATH.library].english,
-    path: [ROUTE_PATH.library, ROUTE_PATH.newBook, ROUTE_PATH.bookDetail],
+    path: [
+      ROUTE_PATH.library,
+      ROUTE_PATH.newBook,
+      ROUTE_PATH.bookDetail,
+      ROUTE_PATH.chapter,
+    ],
     icon: <MenuBookRoundedIcon />,
   },
   {

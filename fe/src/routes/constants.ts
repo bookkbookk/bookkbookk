@@ -4,6 +4,7 @@ export const ROUTE_PATH = {
   main: "/main",
   library: "/main/library",
   bookDetail: "/main/book-detail",
+  chapter: "/main/chapter",
   newBook: "/main/new-book",
   bookClub: "/main/book-club",
   newBookClub: "/main/new-book-club",
