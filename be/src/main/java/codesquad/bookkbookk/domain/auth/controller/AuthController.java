@@ -25,11 +25,12 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    @Value("${cookie.domain}")
-    private static String COOKIE_DOMAIN;
 
     private final AuthenticationService authenticationService;
     private final JwtProperties jwtProperties;
+
+    @Value("${cookie.domain}")
+    private String cookieDomain;
 
     @PostMapping("/login/{providerName}")
     public ResponseEntity<LoginResponse> login(@RequestBody AuthCode authCode, @PathVariable String providerName) {
@@ -38,7 +39,7 @@ public class AuthController {
                 .httpOnly(true)
                 .secure(true)
                 .maxAge(jwtProperties.getRefreshTokenExpiration())
-                .domain(COOKIE_DOMAIN)
+                .domain(cookieDomain)
                 .path("/")
                 .build();
 
@@ -63,7 +64,7 @@ public class AuthController {
                 .httpOnly(true)
                 .secure(true)
                 .maxAge(0)
-                .domain(COOKIE_DOMAIN)
+                .domain(cookieDomain)
                 .path("/")
                 .build();
 
