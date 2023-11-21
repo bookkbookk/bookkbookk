@@ -326,7 +326,7 @@ export const handlers = [
     return res(ctx.status(200), ctx.json(CHAPTER_LIST));
   }),
 
-  rest.put(BOOK_API_PATH.bookStatus(1), async (req, res, ctx) => {
+  rest.patch(`${BOOK_API_PATH.books}/*`, async (req, res, ctx) => {
     const { statusId } = await req.json<{ statusId: string }>();
 
     if (!statusId) {
@@ -341,18 +341,7 @@ export const handlers = [
     return res(ctx.status(200));
   }),
 
-  rest.put(BOOK_API_PATH.chapterStatus(16), async (req, res, ctx) => {
-    const { statusId } = await req.json<{ statusId: string }>();
-
-    if (!statusId) {
-      return res(
-        ctx.status(400),
-        ctx.json({
-          message: "statusId가 없습니다. 잘못된 요청입니다.",
-        })
-      );
-    }
-
+  rest.patch(`${BOOK_API_PATH.chapters}/*`, async (req, res, ctx) => {
     return res(ctx.status(200));
   }),
 

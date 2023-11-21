@@ -45,8 +45,6 @@ export const BOOK_API_PATH = {
   books: "/api/books",
   chapters: "/api/chapters",
   topics: "/api/topics",
-  bookStatus: (bookId: number) => `/api/books/${bookId}/status`,
-  chapterStatus: (chapterId: number) => `/api/chapters/${chapterId}/status`,
 };
 
 export const GATHERING_API_PATH = {

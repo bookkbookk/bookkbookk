@@ -1,4 +1,4 @@
-import { usePutBookStatus } from "@api/book/queries";
+import { usePatchBookStatus } from "@api/book/queries";
 import { BookChapterStatusID } from "@api/book/type";
 import { BOOK_CHAPTERS_STATUS_LIST } from "@components/constants";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -14,7 +14,7 @@ export default function BookStatusMenu({
   statusId: BookChapterStatusID;
   onChangeBookStatus: (statusId: BookChapterStatusID) => void;
 }) {
-  const { onPutBookStatus } = usePutBookStatus({
+  const { onPatchBookStatus } = usePatchBookStatus({
     onSuccessCallback: onChangeBookStatus,
   });
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -28,7 +28,7 @@ export default function BookStatusMenu({
   };
 
   const onMenuClick = (statusId: BookChapterStatusID) => {
-    onPutBookStatus({ bookId, statusId });
+    onPatchBookStatus({ bookId, statusId });
     handleClose();
   };
 

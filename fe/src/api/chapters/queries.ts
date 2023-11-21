@@ -7,7 +7,7 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
-import { getChapters, postChapters, putChapterStatus } from "./client";
+import { getChapters, patchChapter, postChapters } from "./client";
 import { NewChapterBody } from "./type";
 
 export const usePostNewChapters = ({
@@ -57,16 +57,18 @@ export const useGetChapters = ({
   return chapters;
 };
 
-export const usePutChapterStatus = ({
-  onSuccessCallback,
+export const usePatchChapter = ({
+  onStatusChange,
+  onTitleChange,
 }: {
-  onSuccessCallback: (statusId: BookChapterStatusID) => void;
+  onStatusChange?: (statusId: BookChapterStatusID) => void;
+  onTitleChange?: (newTitle: string) => void;
 }) => {
   const { mutate } = useMutation({
-    mutationFn: putChapterStatus,
+    mutationFn: patchChapter,
   });
 
-  const onPutChapterStatus = ({
+  const onPatchChapterStatus = ({
     chapterId,
     statusId,
   }: {
@@ -76,7 +78,7 @@ export const usePutChapterStatus = ({
     mutate(
       { chapterId, statusId },
       {
-        onSuccess: () => onSuccessCallback(statusId),
+        onSuccess: () => onStatusChange?.(statusId),
         onError: () => {
           enqueueSnackbar(MESSAGE.UPDATE_CHAPTER_STATUS_ERROR, {
             variant: "error",
@@ -86,5 +88,25 @@ export const usePutChapterStatus = ({
     );
   };
 
-  return { onPutChapterStatus };
+  const onPatchChapterTitle = ({
+    chapterId,
+    title,
+  }: {
+    chapterId: number;
+    title: string;
+  }) => {
+    mutate(
+      { chapterId, title },
+      {
+        onSuccess: () => onTitleChange?.(title),
+        onError: () => {
+          enqueueSnackbar(MESSAGE.UPDATE_CHAPTER_TITLE_ERROR, {
+            variant: "error",
+          });
+        },
+      }
+    );
+  };
+
+  return { onPatchChapterStatus, onPatchChapterTitle };
 };

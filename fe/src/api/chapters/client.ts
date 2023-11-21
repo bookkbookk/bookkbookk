@@ -24,15 +24,21 @@ export const getChapters = async (bookId: number, statusId: number) => {
   return data;
 };
 
-export const putChapterStatus = async ({
+export const patchChapter = async ({
   chapterId,
   statusId,
+  title,
 }: {
   chapterId: number;
-  statusId: number;
+  statusId?: number;
+  title?: string;
 }) => {
-  const { data } = await fetcher.put(BOOK_API_PATH.chapterStatus(chapterId), {
-    statusId,
-  });
+  const { data } = await fetcher.patch(
+    `${BOOK_API_PATH.chapters}/${chapterId}`,
+    {
+      statusId,
+      title,
+    }
+  );
   return data;
 };

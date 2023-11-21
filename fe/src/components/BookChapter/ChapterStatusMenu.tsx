@@ -1,5 +1,5 @@
 import { BookChapterStatusID } from "@api/book/type";
-import { usePutChapterStatus } from "@api/chapters/queries";
+import { usePatchChapter } from "@api/chapters/queries";
 import StatusChip from "@components/common/StatusChip";
 import { BOOK_CHAPTERS_STATUS_LIST } from "@components/constants";
 import { Button, Menu, MenuItem, Tooltip } from "@mui/material";
@@ -13,12 +13,12 @@ export default function ChapterStatusMenu({
   statusId: BookChapterStatusID;
 }) {
   const [chapterStatus, setChapterStatus] = useState(statusId);
-  const onChapterStatusChange = (statusId: BookChapterStatusID) => {
+  const onStatusChange = (statusId: BookChapterStatusID) => {
     setChapterStatus(statusId);
   };
 
-  const { onPutChapterStatus } = usePutChapterStatus({
-    onSuccessCallback: onChapterStatusChange,
+  const { onPatchChapterStatus } = usePatchChapter({
+    onStatusChange,
   });
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -32,7 +32,7 @@ export default function ChapterStatusMenu({
   };
 
   const onMenuClick = (statusId: BookChapterStatusID) => {
-    onPutChapterStatus({ chapterId, statusId });
+    onPatchChapterStatus({ chapterId, statusId });
     handleClose();
   };
 

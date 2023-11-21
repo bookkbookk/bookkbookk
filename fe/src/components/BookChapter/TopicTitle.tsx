@@ -25,12 +25,16 @@ export default function TopicTitle(
         <Typography variant="h6">{topicTitle}</Typography>
       </Stack>
       <Stack display="flex" flexDirection="row" gap={1} alignSelf="flex-end">
-        <Button variant="outlined" size="small" sx={{ gap: 0.5 }}>
-          <ModeRoundedIcon fontSize="small" />
+        <Button
+          variant="outlined"
+          size="small"
+          startIcon={<ModeRoundedIcon fontSize="small" />}>
           토픽 제목 편집
         </Button>
-        <Button variant="outlined" size="small" sx={{ gap: 0.5 }}>
-          <DeleteIcon fontSize="small" />
+        <Button
+          variant="outlined"
+          size="small"
+          startIcon={<DeleteIcon fontSize="small" />}>
           토픽 삭제
         </Button>
       </Stack>

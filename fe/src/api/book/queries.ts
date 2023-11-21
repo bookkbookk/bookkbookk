@@ -2,7 +2,7 @@ import { queryKeys } from "@api/queryKeys";
 import { MESSAGE } from "@constant/index";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
-import { postNewBook, putBookStatus } from "./client";
+import { patchBookStatus, postNewBook } from "./client";
 import { BookChapterStatusID, NewBookBody } from "./type";
 
 export const useGetBookSearchResult = (searchWord: string) => {
@@ -42,16 +42,16 @@ export const usePostNewBook = ({
   return { onPostNewBook };
 };
 
-export const usePutBookStatus = ({
+export const usePatchBookStatus = ({
   onSuccessCallback,
 }: {
   onSuccessCallback: (statusId: BookChapterStatusID) => void;
 }) => {
   const { mutate } = useMutation({
-    mutationFn: putBookStatus,
+    mutationFn: patchBookStatus,
   });
 
-  const onPutBookStatus = ({
+  const onPatchBookStatus = ({
     bookId,
     statusId,
   }: {
@@ -71,5 +71,5 @@ export const usePutBookStatus = ({
     );
   };
 
-  return { onPutBookStatus };
+  return { onPatchBookStatus };
 };

@@ -22,14 +22,14 @@ export const postNewBook = async (newBookBody: NewBookBody) => {
   return data;
 };
 
-export const putBookStatus = async ({
+export const patchBookStatus = async ({
   bookId,
   statusId,
 }: {
   bookId: number;
   statusId: number;
 }) => {
-  const { data } = await fetcher.put(BOOK_API_PATH.bookStatus(bookId), {
+  const { data } = await fetcher.patch(`${BOOK_API_PATH.books}/${bookId}`, {
     statusId,
   });
   return data;

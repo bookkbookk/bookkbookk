@@ -11,8 +11,6 @@ export default function LibraryTabs({
   activeTabID: number;
   handleChange: (event: React.SyntheticEvent, newValue: number) => void;
 }) {
-  const activeTabIndex = activeTabID - 1;
-
   return (
     <Box sx={{ maxWidth: "80%" }}>
       <Tabs
@@ -23,7 +21,7 @@ export default function LibraryTabs({
         }}
         variant="scrollable"
         scrollButtons={true}
-        value={activeTabIndex}
+        value={activeTabID}
         onChange={handleChange}
         aria-label="library tab list">
         <Tab
