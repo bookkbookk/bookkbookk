@@ -62,6 +62,31 @@ export const TOTAL_TAB = {
   label: "전체 책장",
 };
 
+export const REACTIONS = {
+  LIKE: {
+    id: 1,
+    unicode: "1F44D",
+  },
+  LOVE: {
+    id: 2,
+    unicode: "1F495",
+  },
+  CLAP: {
+    id: 3,
+    unicode: "1F44F",
+  },
+  CONGRATULATION: {
+    id: 4,
+    unicode: "1F389",
+  },
+  ROCKET: {
+    id: 5,
+    unicode: "1F680",
+  },
+} as const;
+
+export const REACTION_LIST = Object.values(REACTIONS);
+
 /* TODO: DB에 기본 책장으로 추가 요청 */
 // export const DEFAULT_TABS = [
 //   {

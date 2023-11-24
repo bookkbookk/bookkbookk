@@ -15,7 +15,7 @@ export const postChapters = async ({ bookId, chapters }: NewChapterBody) => {
 
 export const getChapters = async (bookId: number, statusId: number) => {
   const { data } = await fetcher.get<ChapterListItem[]>(
-    `${BOOK_API_PATH.chapters}/${bookId}`,
+    `${BOOK_API_PATH.books}/${bookId}/chapters`,
     {
       params: { statusId },
     }

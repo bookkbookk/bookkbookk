@@ -1,3 +1,66 @@
+export const COMMENTS = [
+  {
+    commentId: 1,
+    author: {
+      memberId: 5,
+      nickname: "내이름은말이지",
+      profileImgUrl: "www.asdjfk.com",
+    },
+    createdTime: "2023-09-11T14:30:00",
+    reaction: {
+      likeCount: 2,
+    },
+    content: "나는 근데 공감이 안돼 정말 공감이 안돼 진짜 공감이 안돼",
+  },
+  {
+    commentId: 2,
+    author: {
+      memberId: 6,
+      nickname: "랄랄라",
+      profileImgUrl: "www.asdjfk.com",
+    },
+    createdTime: "2023-09-11T14:30:00",
+    reaction: {
+      likeCount: 2,
+    },
+    content: "나도 정말 공감이 돼 정말 공감이 돼 진짜 공감이 돼",
+  },
+];
+
+export const BOOKMARKS = [
+  {
+    bookmarkId: 3,
+    author: {
+      memberId: 1,
+      nickname: "뭐당가이름이",
+      profileImgUrl: "www.asdjfk.com",
+    },
+    createdTime: "2023-09-11T14:30:00",
+    reaction: {
+      likeCount: 2,
+    },
+    content:
+      "책 인용 문장 어쩌고 저쩌고 더 선진화된 것이 아니라 개인이 힘을 더 갖게 된 것뿐입니다. 집단으로 작동하던 생산 모둠의 집합 시스템이 개인 중심의 플랫폼 사회로 바뀌면서 기성세대가 생각을 수정하기도 전에 갑자기 힘의 흐름이 바뀐 것입니다. 굴뚝 산업이 IT 산업으로 전환되면서 한 사람 한 사람의 힘이 커지게 된 것과 같습니다. 따라서 젊은 층은 자신들의 번영과 생명력을 제한하는 그 모든 것을 ‘권위적’이라고 느낍니다. 앞으로의 핵개인들 은 ‘권위적이다’라는 말 자체를 더욱 혐오의 감정으로 받아들일 확률이 높습니다.",
+    commentCount: 5,
+    page: 24,
+  },
+  {
+    bookmarkId: 4,
+    author: {
+      memberId: 1,
+      nickname: "뭐당가이름이",
+      profileImgUrl: "www.asdjfk.com",
+    },
+    createdTime: "2023-09-11T14:30:00",
+    reaction: {
+      likeCount: 2,
+    },
+    content:
+      "책 인용 문장 어쩌고 저쩌고 더 선진화된 것이 아니라 개인이 힘을 더 갖게 된 것뿐입니다. 집단으로 작동하던 생산 모둠의 집합 시스템이 개인 중심의 플랫폼 사회로 바뀌면서 기성세대가 생각을 수정하기도 전에 갑자기 힘의 흐름이 바뀐 것입니다. 굴뚝 산업이 IT 산업으로 전환되면서 한 사람 한 사람의 힘이 커지게 된 것과 같습니다. 따라서 젊은 층은 자신들의 번영과 생명력을 제한하는 그 모든 것을 ‘권위적’이라고 느낍니다. 앞으로의 핵개인들 은 ‘권위적이다’라는 말 자체를 더욱 혐오의 감정으로 받아들일 확률이 높습니다.",
+    commentCount: 5,
+  },
+];
+
 export const CHAPTER_LIST = [
   {
     chapterId: 15,
@@ -366,7 +429,7 @@ export const BOOK_CLUB_LIST = [
 ];
 
 export const MEMBER_INFO = {
-  memberId: 1,
+  id: 1,
   nickname: "감귤차먹고아프지마세요",
   email: "gamgyul@gmail.com",
   profileImgUrl: "https://avatars.githubusercontent.com/u/56245755?v=4",

@@ -2,7 +2,7 @@ import { usePatchBookStatus } from "@api/book/queries";
 import { BookChapterStatusID } from "@api/book/type";
 import { BOOK_CHAPTERS_STATUS_LIST } from "@components/constants";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { IconButton, Menu, MenuItem } from "@mui/material";
+import { IconButton, Menu, MenuItem, Stack, Tooltip } from "@mui/material";
 import React, { useState } from "react";
 
 export default function BookStatusMenu({
@@ -33,16 +33,19 @@ export default function BookStatusMenu({
   };
 
   return (
-    <div>
-      <IconButton
-        aria-label="more"
-        id="status-menu-button"
-        aria-controls={isOpen ? "status-menu" : undefined}
-        aria-expanded={isOpen ? "true" : undefined}
-        aria-haspopup="true"
-        onClick={handleClick}>
-        <MoreVertIcon />
-      </IconButton>
+    <Stack>
+      <Tooltip title="북클럽의 독서 상태를 변경하세요" placement="top" arrow>
+        <IconButton
+          aria-label="more"
+          id="status-menu-button"
+          aria-controls={isOpen ? "status-menu" : undefined}
+          aria-expanded={isOpen ? "true" : undefined}
+          aria-haspopup="true"
+          size="small"
+          onClick={handleClick}>
+          <MoreVertIcon />
+        </IconButton>
+      </Tooltip>
       <Menu
         id="status-menu"
         MenuListProps={{
@@ -67,6 +70,6 @@ export default function BookStatusMenu({
           )
         )}
       </Menu>
-    </div>
+    </Stack>
   );
 }

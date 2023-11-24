@@ -45,6 +45,7 @@ export const BOOK_API_PATH = {
   books: "/api/books",
   chapters: "/api/chapters",
   topics: "/api/topics",
+  bookmarks: "/api/bookmarks",
 };
 
 export const GATHERING_API_PATH = {

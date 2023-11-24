@@ -4,7 +4,7 @@ import { Topic } from "./type";
 
 export const getTopics = async (chapterId: number) => {
   const { data } = await fetcher.get<Topic[]>(
-    `${BOOK_API_PATH.topics}/${chapterId}`
+    `${BOOK_API_PATH.chapters}/${chapterId}/topics`
   );
 
   return data;

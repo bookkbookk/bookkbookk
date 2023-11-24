@@ -1,6 +1,6 @@
 import { BookListItem } from "@api/book/type";
 import { ChapterListItem, TopicItemInfo } from "@api/chapters/type";
-import StatusChip from "@components/common/StatusChip";
+import ChapterStatusMenu from "@components/BookChapter/LeftBox/ChapterStatusMenu";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { TreeItem } from "@mui/x-tree-view";
@@ -32,7 +32,12 @@ export function ChapterItem({ chapter }: { chapter: ChapterListItem }) {
       width={"90%"}
       gap={2}
       padding={1}>
-      <StatusChip statusId={chapter.statusId} />
+      <Stack>
+        <ChapterStatusMenu
+          statusId={chapter.statusId}
+          chapterId={chapter.chapterId}
+        />
+      </Stack>
       <TreeItem
         sx={{ width: "90%" }}
         nodeId={chapterId + ""}

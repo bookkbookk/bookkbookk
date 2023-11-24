@@ -17,28 +17,45 @@ export const queryKeys = createQueryKeyStore({
       queryFn: () => getMemberBookList({ page, size }),
     }),
   },
+
   auth: {
     login: ({ provider, authCode }: OAuthLoginParams) => ({
       queryKey: ["postLogin"],
       queryFn: () => postLogin({ provider, authCode }),
     }),
   },
+
   books: {
     search: (searchWord: string) => ({
       queryKey: ["getBookSearchResult", searchWord],
       queryFn: () => getBookSearchResult(searchWord),
     }),
   },
+
   chapters: {
     list: ({ bookId }: { bookId: number }) => ({
       queryKey: ["getChapters", { bookId }],
     }),
   },
+
   topics: {
     list: ({ chapterId }: { chapterId: number }) => ({
       queryKey: ["getTopics", { chapterId }],
     }),
   },
+
+  bookmarks: {
+    list: ({ topicId }: { topicId: number }) => ({
+      queryKey: ["getBookmarks", { topicId }],
+    }),
+  },
+
+  comments: {
+    list: ({ bookmarkId }: { bookmarkId: number }) => ({
+      queryKey: ["getComments", { bookmarkId }],
+    }),
+  },
+
   bookClub: {
     list: (option?: BookClubStatus) => ({
       queryKey: ["getBookClubList", option],

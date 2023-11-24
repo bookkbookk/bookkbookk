@@ -8,9 +8,11 @@ import {
 } from "@api/constants";
 import { rest } from "msw";
 import {
+  BOOKMARKS,
   BOOK_CLUB_DETAIL_OPEN,
   BOOK_CLUB_LIST,
   CHAPTER_LIST,
+  COMMENTS,
   MEMBER_INFO,
   USER_BOOK_LIST,
 } from "./data";
@@ -334,7 +336,7 @@ export const handlers = [
     return res(ctx.status(200));
   }),
 
-  rest.get(`${BOOK_API_PATH.chapters}/*`, async (_, res, ctx) => {
+  rest.get(`${BOOK_API_PATH.books}/*/chapters`, async (_, res, ctx) => {
     return res(ctx.status(200), ctx.json(CHAPTER_LIST));
   }),
 
@@ -375,8 +377,26 @@ export const handlers = [
     return res(ctx.status(200));
   }),
 
-  rest.get(`${BOOK_API_PATH.topics}/*`, async (_, res, ctx) => {
-    console.log(TOPIC_LIST);
-    return res(ctx.status(200), ctx.json(TOPIC_LIST));
-  }),
+  rest.get(
+    `${BOOK_API_PATH.chapters}/:chapterId/topics`,
+    async (_, res, ctx) => {
+      return res(ctx.status(200), ctx.json(TOPIC_LIST));
+    }
+  ),
+
+  rest.get(
+    `${BOOK_API_PATH.topics}/:topicId/bookmarks`,
+    async (req, res, ctx) => {
+      // const { topicId } = req.params;
+
+      return res(ctx.status(200), ctx.json(BOOKMARKS));
+    }
+  ),
+
+  rest.get(
+    `${BOOK_API_PATH.bookmarks}/:bookmarkId/comments`,
+    async (_, res, ctx) => {
+      return res(ctx.status(200), ctx.json(COMMENTS));
+    }
+  ),
 ];

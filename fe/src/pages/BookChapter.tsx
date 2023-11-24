@@ -1,10 +1,13 @@
 import { ChapterListItem, TopicItemInfo } from "@api/chapters/type";
 import { Topic } from "@api/topics/type";
+import BookmarkList from "@components/BookChapter/LeftBox/BookmarkList/BookmarkList";
 import ChapterTitle from "@components/BookChapter/LeftBox/ChapterTitle/ChapterTitle";
+import { CommentTextarea } from "@components/BookChapter/LeftBox/CommentTextarea";
 import TopicTitle from "@components/BookChapter/LeftBox/TopicTitle/TopicTitle";
 import TopicListCard from "@components/BookChapter/RightBox/TopicListCard";
+import ChapterBookCard from "@components/BookDetail/ChapterBookCard";
 import { BoxContent, LeftBox, RightBox } from "@components/common/common.style";
-import { Box } from "@mui/material";
+import { Box, Divider } from "@mui/material";
 import { useState } from "react";
 import { Location, useLocation } from "react-router-dom";
 
@@ -38,9 +41,17 @@ export default function BookChapter() {
           topicTitleInfo={currentTopic}
           onTopicTitleChange={handleTopicTitleChange}
         />
+        <Divider sx={{ width: "100%" }} />
+        <BookmarkList topicId={currentTopic.topicId} />
+        <CommentTextarea>
+          <CommentTextarea.PageField />
+          <CommentTextarea.Content />
+          <CommentTextarea.Footer />
+        </CommentTextarea>
       </LeftBox>
       <RightBox>
         <BoxContent>
+          <ChapterBookCard />
           <TopicListCard
             chapterId={chapterId}
             currentTopicId={currentTopic.topicId}

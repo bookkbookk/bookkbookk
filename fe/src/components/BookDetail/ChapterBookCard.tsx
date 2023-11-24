@@ -26,7 +26,7 @@ export default function ChapterBookCard() {
   return (
     <Card>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography variant="h6">북클럽 책</Typography>
+        <Typography variant="h6">북클럽 책 정보</Typography>
         <BookStatusMenu
           {...{ bookId: book.id, statusId, onChangeBookStatus }}
         />
