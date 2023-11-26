@@ -1,6 +1,9 @@
 package codesquad.bookkbookk.util;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import codesquad.bookkbookk.domain.auth.data.type.LoginType;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
@@ -95,5 +98,16 @@ public class TestDataFactory {
 
     public static Gathering createGathering(Book book) {
         return new Gathering(book, LocalDateTime.now(), "코드 스쿼드");
+    }
+
+    public static List<Bookmark> createBookmarks(int count, Member writer, Topic topic) {
+        return IntStream.range(1, count + 1)
+                .mapToObj(index -> Bookmark.builder()
+                        .writer(writer)
+                        .topic(topic)
+                        .title("title" + index)
+                        .content("content" + index)
+                        .build())
+                .collect(Collectors.toUnmodifiableList());
     }
 }
