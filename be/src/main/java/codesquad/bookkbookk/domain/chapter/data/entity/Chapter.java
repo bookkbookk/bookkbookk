@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,6 +37,7 @@ public class Chapter {
     private Book book;
     private String title;
     @Column(name = "chapter_status")
+    @Enumerated(value = EnumType.STRING)
     private ChapterStatus status;
 
     @OneToMany(mappedBy = "chapter")
