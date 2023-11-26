@@ -2,6 +2,9 @@ package codesquad.bookkbookk.domain.chapter.data.type;
 
 import codesquad.bookkbookk.common.error.exception.ChapterStatusNotFoundException;
 
+import lombok.Getter;
+
+@Getter
 public enum ChapterStatus {
 
     BEFORE_READING("독서 전", 1),
