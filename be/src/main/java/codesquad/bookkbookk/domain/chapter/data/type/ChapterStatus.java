@@ -1,5 +1,7 @@
 package codesquad.bookkbookk.domain.chapter.data.type;
 
+import codesquad.bookkbookk.common.error.exception.ChapterStatusNotFoundException;
+
 public enum ChapterStatus {
 
     BEFORE_READING("독서 전", 1),
@@ -12,6 +14,15 @@ public enum ChapterStatus {
     ChapterStatus(String name, int id) {
         this.name = name;
         this.id = id;
+    }
+
+    public static ChapterStatus of(int id) {
+        for (ChapterStatus status : ChapterStatus.values()) {
+            if (status.id == id) {
+                return status;
+            }
+        }
+        throw new ChapterStatusNotFoundException();
     }
 }
 
