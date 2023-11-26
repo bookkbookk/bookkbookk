@@ -32,6 +32,7 @@ export default function CommentTextareaFooter() {
       alignItems={"center"}
       paddingTop={1}
       paddingX={2}>
+      {/* TODO: 파일 첨부, 에디터 기능 */}
       <Stack display="flex" flexDirection="row" alignItems={"center"}>
         <ToggleButtonGroup
           size="small"

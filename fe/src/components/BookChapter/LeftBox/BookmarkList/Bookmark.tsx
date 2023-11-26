@@ -2,7 +2,7 @@ import { Bookmark as BookmarkProps } from "@api/bookmarks/type";
 import { Comment } from "@components/common/Comment";
 import { Divider, Stack } from "@mui/material";
 import { useState } from "react";
-import { CommentTextarea } from "../CommentTextarea";
+import BookmarkComment from "../BookmarkComment";
 import { BookmarkCommentList } from "./BookmarkCommentList";
 
 export function Bookmark({ bookmark }: { bookmark: BookmarkProps }) {
@@ -27,12 +27,7 @@ export function Bookmark({ bookmark }: { bookmark: BookmarkProps }) {
         <Divider orientation="vertical" />
         <Stack width="100%" paddingY={2} gap={3}>
           <BookmarkCommentList bookmarkId={bookmarkId} />
-          {isReplying && (
-            <CommentTextarea>
-              <CommentTextarea.Content />
-              <CommentTextarea.Footer />
-            </CommentTextarea>
-          )}
+          {isReplying && <BookmarkComment />}
         </Stack>
       </Stack>
     </Stack>

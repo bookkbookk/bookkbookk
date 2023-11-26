@@ -2,9 +2,9 @@ import { useState } from "react";
 
 type useInputOptions = {
   initialValue?: string;
-  validators?: ((value: string) => {
+  validators: ((value: string) => {
     isValid: boolean;
-    message: string;
+    message?: string;
   })[];
 };
 
