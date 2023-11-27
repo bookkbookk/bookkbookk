@@ -1,5 +1,5 @@
 import { MESSAGE } from "@constant/index";
-import { Button } from "@mui/material";
+import Button from "@mui/material/Button";
 import { useMutation } from "@tanstack/react-query";
 import { closeSnackbar, enqueueSnackbar } from "notistack";
 import { postNewGathering } from "./client";

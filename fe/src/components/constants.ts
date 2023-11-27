@@ -15,44 +15,77 @@ export const NEW_GATHERING_FUNNEL = {
   checkInfo: "모임 생성" as const,
 };
 
-export const BOOK_CHAPTERS_TAB = [
-  {
-    id: 0,
-    label: "전체 챕터",
-  },
-  {
+export const BOOK_CHAPTER_STATUS = {
+  BEFORE_READING: {
     id: 1,
-    label: "독서 전 챕터",
+    label: "독서 전",
   },
-  {
+  READING: {
     id: 2,
-    label: "독서 중 챕터",
+    label: "독서 중",
   },
-  {
+  AFTER_READING: {
     id: 3,
-    label: "독서 완료 챕터",
+    label: "독서 완료",
   },
-];
+} as const;
 
-export const BOOK_CLUB_TAB = [
-  {
+export const BOOK_CHAPTER_TABS = {
+  ALL: {
+    id: 0,
+    label: "전체",
+  },
+  ...BOOK_CHAPTER_STATUS,
+} as const;
+
+export const BOOK_CLUB_STATUS = {
+  ALL: {
     id: 0,
     label: "전체 북클럽",
   },
-  {
+  OPEN: {
     id: 1,
     label: "열린 북클럽",
   },
-  {
+  CLOSE: {
     id: 2,
     label: "닫힌 북클럽",
   },
-];
+} as const;
+
+export const BOOK_CHAPTERS_TAB = Object.values(BOOK_CHAPTER_TABS);
+export const BOOK_CHAPTERS_STATUS_LIST = Object.values(BOOK_CHAPTER_STATUS);
+export const BOOK_CLUB_TAB = Object.values(BOOK_CLUB_STATUS);
 
 export const TOTAL_TAB = {
   id: 0,
   label: "전체 책장",
 };
+
+export const REACTIONS = {
+  LIKE: {
+    id: 1,
+    unicode: "1F44D",
+  },
+  LOVE: {
+    id: 2,
+    unicode: "1F495",
+  },
+  CLAP: {
+    id: 3,
+    unicode: "1F44F",
+  },
+  CONGRATULATION: {
+    id: 4,
+    unicode: "1F389",
+  },
+  ROCKET: {
+    id: 5,
+    unicode: "1F680",
+  },
+} as const;
+
+export const REACTION_LIST = Object.values(REACTIONS);
 
 /* TODO: DB에 기본 책장으로 추가 요청 */
 // export const DEFAULT_TABS = [

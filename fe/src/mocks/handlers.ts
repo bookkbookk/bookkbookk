@@ -8,8 +8,11 @@ import {
 } from "@api/constants";
 import { rest } from "msw";
 import {
+  BOOKMARKS,
   BOOK_CLUB_DETAIL_OPEN,
   BOOK_CLUB_LIST,
+  CHAPTER_LIST,
+  COMMENTS,
   MEMBER_INFO,
   USER_BOOK_LIST,
 } from "./data";
@@ -20,6 +23,18 @@ const TOKEN_EXPIRATION = {
   refreshToken: false,
 };
 
+// eslint-disable-next-line
+let TOPIC_LIST = [
+  {
+    topicId: 1,
+    title: "id 1 첫번째 토픽",
+  },
+  {
+    topicId: 52,
+    title: "id 52 두번째 토픽",
+  },
+];
+
 export const handlers = [
   rest.get(MEMBER_API_PATH.member, (req, res, ctx) => {
     const Authorization = req.headers.get("Authorization");
@@ -28,7 +43,7 @@ export const handlers = [
       return res(
         ctx.status(401),
         ctx.json({
-          errorCode: "E0001",
+          code: 4011,
           message: "Authorization 헤더가 없습니다.",
         })
       );
@@ -38,6 +53,7 @@ export const handlers = [
       return res(
         ctx.status(401),
         ctx.json({
+          code: 4011,
           message: "만료된 토큰입니다.",
         })
       );
@@ -46,12 +62,13 @@ export const handlers = [
     return res(ctx.status(200), ctx.json(MEMBER_INFO));
   }),
 
-  rest.post(AUTH_API_PATH.reissueToken, async (_, res, ctx) => {
-    if (TOKEN_EXPIRATION.refreshToken) {
+  rest.post(AUTH_API_PATH.reissueToken, async (req, res, ctx) => {
+    if (!req.cookies["refreshToken"]) {
       return res(
         ctx.status(401),
         ctx.json({
-          message: "만료된 토큰입니다.",
+          code: 4012,
+          message: "리프레쉬 토큰이 없습니다.",
         })
       );
     }
@@ -80,15 +97,16 @@ export const handlers = [
 
     return res(
       ctx.status(200),
+      ctx.cookie("refreshToken", "iAmRefreshToken", {
+        httpOnly: true,
+        secure: true,
+      }),
       ctx.json<{
         accessToken: string;
-        refreshToken: string;
         isNewMember: boolean;
       }>({
         accessToken:
           "eyJhbGciOiJIUzI1NiJ9.eyJtZW1iZXJJZCI6MSwiZXhwIjoxNjkxOTIyNjAzfQ.vCxUGMiv9bnb4JQGwk6NVx6kHi5hG80tDxafIvrfKbA",
-        refreshToken:
-          "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2OTcxMDMwMDN9.FgoFySrenum985OrDzwwtaEhu1Iz7IVJtz5M6H8lzX8",
         isNewMember: true,
       })
     );
@@ -140,7 +158,7 @@ export const handlers = [
     //   );
     // }
 
-    return res(ctx.status(200));
+    return res(ctx.status(200), ctx.cookie("refreshToken", "", { maxAge: 0 }));
   }),
 
   rest.post(BOOK_CLUB_API_PATH.bookClubs, async (_, res, ctx) => {
@@ -317,4 +335,68 @@ export const handlers = [
   rest.post(`${GATHERING_API_PATH.gatherings}/:bookId`, async (_, res, ctx) => {
     return res(ctx.status(200));
   }),
+
+  rest.get(`${BOOK_API_PATH.books}/*/chapters`, async (_, res, ctx) => {
+    return res(ctx.status(200), ctx.json(CHAPTER_LIST));
+  }),
+
+  rest.patch(`${BOOK_API_PATH.books}/*`, async (req, res, ctx) => {
+    const { statusId } = await req.json<{ statusId: string }>();
+
+    if (!statusId) {
+      return res(
+        ctx.status(400),
+        ctx.json({
+          message: "statusId가 없습니다. 잘못된 요청입니다.",
+        })
+      );
+    }
+
+    return res(ctx.status(200));
+  }),
+
+  rest.patch(`${BOOK_API_PATH.chapters}/*`, async (req, res, ctx) => {
+    return res(ctx.status(200));
+  }),
+
+  rest.patch(`${BOOK_API_PATH.topics}/:topicId`, async (req, res, ctx) => {
+    const { title } = await req.json<{ title: string }>();
+    const { topicId } = req.params;
+
+    TOPIC_LIST = TOPIC_LIST.map((topic) => {
+      if (topic.topicId === Number(topicId)) {
+        return {
+          ...topic,
+          title,
+        };
+      }
+
+      return topic;
+    });
+
+    return res(ctx.status(200));
+  }),
+
+  rest.get(
+    `${BOOK_API_PATH.chapters}/:chapterId/topics`,
+    async (_, res, ctx) => {
+      return res(ctx.status(200), ctx.json(TOPIC_LIST));
+    }
+  ),
+
+  rest.get(
+    `${BOOK_API_PATH.topics}/:topicId/bookmarks`,
+    async (req, res, ctx) => {
+      // const { topicId } = req.params;
+
+      return res(ctx.status(200), ctx.json(BOOKMARKS));
+    }
+  ),
+
+  rest.get(
+    `${BOOK_API_PATH.bookmarks}/:bookmarkId/comments`,
+    async (_, res, ctx) => {
+      return res(ctx.status(200), ctx.json(COMMENTS));
+    }
+  ),
 ];
