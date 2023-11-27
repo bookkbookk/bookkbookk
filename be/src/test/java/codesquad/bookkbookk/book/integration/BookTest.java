@@ -1,6 +1,10 @@
 package codesquad.bookkbookk.book.integration;
 
+import java.util.Map;
+
 import org.assertj.core.api.SoftAssertions;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +20,9 @@ import codesquad.bookkbookk.domain.book.data.dto.CreateBookRequest;
 import codesquad.bookkbookk.domain.book.data.dto.CreateBookResponse;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
-import codesquad.bookkbookk.domain.mapping.repository.MemberBookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
-import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
+import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
 import codesquad.bookkbookk.domain.mapping.repository.BookClubMemberRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
@@ -43,9 +46,6 @@ public class BookTest extends IntegrationTest {
 
     @Autowired
     private BookClubMemberRepository bookClubMemberRepository;
-
-    @Autowired
-    private MemberBookRepository memberBookRepository;
 
     @Autowired
     private JwtProvider jwtProvider;
@@ -133,11 +133,47 @@ public class BookTest extends IntegrationTest {
                 .extract();
 
         //then
-
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
             softAssertions.assertThat(response.jsonPath().getObject("", ApiException.class).getMessage())
                     .isEqualTo(exception.getMessage());
+        });
+    }
+
+    @Test
+    @DisplayName("책의 상태를 변경한다.")
+    void updateBookStatus() throws JSONException {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        Map<String, Integer> requestMap = Map.of("statusId", 2);
+        JSONObject requestBody = new JSONObject(requestMap);
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .contentType(ContentType.JSON)
+                .body(requestBody.toString())
+                .when()
+                .patch("/api/books/" + book.getId())
+                .then().log().all()
+                .extract();
+
+        // then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(response.jsonPath().getLong("bookId")).isEqualTo(book.getId());
+            softAssertions.assertThat(response.jsonPath().getInt("statusId"))
+                    .isEqualTo(requestMap.get("statusId"));
         });
     }
 
