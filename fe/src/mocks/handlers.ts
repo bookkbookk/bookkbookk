@@ -355,7 +355,7 @@ export const handlers = [
     return res(ctx.status(200));
   }),
 
-  rest.patch(`${BOOK_API_PATH.chapters}/*`, async (req, res, ctx) => {
+  rest.patch(`${BOOK_API_PATH.chapters}/*`, async (_, res, ctx) => {
     return res(ctx.status(200));
   }),
 
@@ -386,9 +386,7 @@ export const handlers = [
 
   rest.get(
     `${BOOK_API_PATH.topics}/:topicId/bookmarks`,
-    async (req, res, ctx) => {
-      // const { topicId } = req.params;
-
+    async (_, res, ctx) => {
       return res(ctx.status(200), ctx.json(BOOKMARKS));
     }
   ),
