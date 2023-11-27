@@ -15,6 +15,7 @@ import codesquad.bookkbookk.domain.chapter.data.dto.CreateChapterResponse;
 import codesquad.bookkbookk.domain.chapter.data.dto.ReadChapterResponse;
 import codesquad.bookkbookk.domain.chapter.data.dto.UpdateChapterTitleRequest;
 import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
+import codesquad.bookkbookk.domain.chapter.data.type.ChapterStatus;
 import codesquad.bookkbookk.domain.chapter.repository.ChapterRepository;
 import codesquad.bookkbookk.domain.topic.data.entity.Topic;
 import codesquad.bookkbookk.domain.topic.repository.TopicRepository;
@@ -24,6 +25,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class ChapterService {
+
+    private static final int ALL_STATUS = 0;
 
     private final ChapterRepository chapterRepository;
     private final TopicRepository topicRepository;
@@ -50,10 +53,12 @@ public class ChapterService {
     }
 
     @Transactional(readOnly = true)
-    public List<ReadChapterResponse> readChapters(Long bookId) {
-        List<Chapter> chapters = chapterRepository.findAllByBookId(bookId);
-
-        return ReadChapterResponse.from(chapters);
+    public List<ReadChapterResponse> readChapters(Long bookId, int chapterStatusId) {
+        if (chapterStatusId == ALL_STATUS) {
+            return ReadChapterResponse.from(chapterRepository.findAllByBookId(bookId));
+        }
+        ChapterStatus chapterStatus = ChapterStatus.of(chapterStatusId);
+        return ReadChapterResponse.from(chapterRepository.findAllByBookIdAndStatus(bookId, chapterStatus));
     }
 
     @Transactional

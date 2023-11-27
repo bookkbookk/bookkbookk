@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,6 +16,7 @@ import javax.persistence.OneToMany;
 
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.chapter.data.dto.UpdateChapterTitleRequest;
+import codesquad.bookkbookk.domain.chapter.data.type.ChapterStatus;
 import codesquad.bookkbookk.domain.topic.data.entity.Topic;
 
 import lombok.AccessLevel;
@@ -29,12 +32,13 @@ public class Chapter {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "chapter_id")
     private Long id;
-
     @ManyToOne
     @JoinColumn(name = "book_id")
     private Book book;
-
     private String title;
+    @Column(name = "chapter_status")
+    @Enumerated(value = EnumType.STRING)
+    private ChapterStatus status;
 
     @OneToMany(mappedBy = "chapter")
     private List<Topic> topics = new ArrayList<>();
@@ -42,6 +46,7 @@ public class Chapter {
     public Chapter(Book book, String title) {
         this.book = book;
         this.title = title;
+        this.status = ChapterStatus.BEFORE_READING;
     }
 
     public void updateTitle(UpdateChapterTitleRequest updateChapterTitleRequest) {

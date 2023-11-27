@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.bookkbookk.domain.chapter.data.dto.CreateChapterRequest;
@@ -36,8 +37,8 @@ public class ChapterController {
     }
 
     @GetMapping("/{bookId}")
-    public ResponseEntity<List<ReadChapterResponse>> readChapters(@PathVariable Long bookId) {
-        List<ReadChapterResponse> response = chapterService.readChapters(bookId);
+    public ResponseEntity<List<ReadChapterResponse>> readChapters(@PathVariable Long bookId, @RequestParam int statusId) {
+        List<ReadChapterResponse> response = chapterService.readChapters(bookId, statusId);
 
         return ResponseEntity.ok()
                 .body(response);
