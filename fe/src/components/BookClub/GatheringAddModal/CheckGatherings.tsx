@@ -1,11 +1,7 @@
 import { usePostNewGathering } from "@api/gatherings/queries";
 import BookInfo from "@components/common/BookInfo";
 import Navigation from "@components/common/Navigation";
-import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
-import TableBody from "@mui/material/TableBody";
-import TableRow from "@mui/material/TableRow";
-import Typography from "@mui/material/Typography";
+import { Button, Stack, TableBody, TableRow, Typography } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import { useParams } from "react-router-dom";
 import { useGathering } from "store/useGathering";
