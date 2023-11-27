@@ -1,6 +1,6 @@
 package codesquad.bookkbookk.common.type;
 
-import codesquad.bookkbookk.common.error.exception.ChapterStatusNotFoundException;
+import codesquad.bookkbookk.common.error.exception.StatusNotFoundException;
 
 import lombok.Getter;
 
@@ -25,6 +25,6 @@ public enum Status {
                 return status;
             }
         }
-        throw new ChapterStatusNotFoundException();
+        throw new StatusNotFoundException();
     }
 }
