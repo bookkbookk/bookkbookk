@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 
 import codesquad.bookkbookk.common.error.exception.MalformedIsbnException;
 import codesquad.bookkbookk.common.type.Status;
+import codesquad.bookkbookk.domain.book.data.dto.UpdateBookStatusRequest;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 
 import lombok.AccessLevel;
@@ -116,6 +117,10 @@ public class Book {
         if ((sum + checkDigit) % divisor != 0) {
             throw new MalformedIsbnException();
         }
+    }
+
+    public void updateStatus(UpdateBookStatusRequest request) {
+        this.status = Status.of(request.getStatusId());
     }
 
 }
