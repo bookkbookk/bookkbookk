@@ -10,7 +10,6 @@ export default function MemberEmailInput({
   const { value, onChange, error } = useInput({
     validators: [validateEmail],
   });
-
   const onClickAddMemberEmail = () => {
     addMemberEmail(value);
     onChange("");
