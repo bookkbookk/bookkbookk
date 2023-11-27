@@ -1,15 +1,17 @@
 import { a11yProps } from "@components/utils";
-import { Box, Tab, Tabs } from "@mui/material";
+import { Box, Tabs as MuiTabs, Tab } from "@mui/material";
 import React from "react";
 
-export default function BookClubTabs({
+type TabList = { id: number; label: string }[];
+
+export default function Tabs({
   activeTabID,
   handleChange,
   tabList,
 }: {
   activeTabID: number;
   handleChange: (event: React.SyntheticEvent, newValue: number) => void;
-  tabList: { id: number; label: string }[];
+  tabList: TabList;
 }) {
   return (
     <Box
@@ -17,14 +19,14 @@ export default function BookClubTabs({
         borderBottom: 1,
         borderColor: "divider",
       }}>
-      <Tabs
+      <MuiTabs
         value={activeTabID}
         onChange={handleChange}
         aria-label="book club list tabs">
         {tabList.map((tab) => (
           <Tab key={tab.id} label={tab.label} {...a11yProps(tab.id)} />
         ))}
-      </Tabs>
+      </MuiTabs>
     </Box>
   );
 }

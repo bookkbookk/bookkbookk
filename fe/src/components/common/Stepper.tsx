@@ -11,7 +11,10 @@ export default function Stepper({
 }) {
   return (
     <MuiStepper
-      sx={{ padding: "1.5rem 0", width: "60%" }}
+      sx={{
+        padding: "1.5rem 0",
+        margin: "0 auto",
+      }}
       activeStep={activeStep}>
       {funnel.map((step) => {
         const stepProps: { completed?: boolean } = {};

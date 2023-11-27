@@ -1,8 +1,13 @@
+import { BookChapterStatusID } from "@api/book/type";
 import { queryKeys } from "@api/queryKeys";
 import { MESSAGE } from "@constant/index";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
-import { postChapters } from "./client";
+import { getChapters, patchChapter, postChapters } from "./client";
 import { NewChapterBody } from "./type";
 
 export const usePostNewChapters = ({
@@ -20,7 +25,9 @@ export const usePostNewChapters = ({
     mutate(newChapterBody, {
       onSuccess: () => {
         queryClient.invalidateQueries(
-          queryKeys.chapters.list({ page: 1, size: 10 })
+          queryKeys.chapters.list({
+            bookId: newChapterBody.bookId,
+          })
         );
         onSuccessCallback();
       },
@@ -35,20 +42,71 @@ export const usePostNewChapters = ({
   return { onPostChapters };
 };
 
-// TODO: 챕터 상태 필터링 조건 추가 필요
-// export const useGetChapters = ({
-//   page,
-//   size,
-// }: {
-//   page: number;
-//   size: number;
-// }) => {
-//   const {
-//     data: chapters,
-//     isLoading,
-//     isSuccess,
-//     isError,
-//   } = useQuery(queryKeys.chapters.list({ page, size }));
+export const useGetChapters = ({
+  bookId,
+  statusId,
+}: {
+  bookId: number;
+  statusId: number;
+}) => {
+  const { data: chapters } = useSuspenseQuery({
+    ...queryKeys.chapters.list({ bookId }),
+    queryFn: () => getChapters(bookId, statusId),
+  });
 
-//   return { chapters, isLoading, isSuccess, isError };
-// };
+  return chapters;
+};
+
+export const usePatchChapter = ({
+  onStatusChange,
+  onTitleChange,
+}: {
+  onStatusChange?: (statusId: BookChapterStatusID) => void;
+  onTitleChange?: (newTitle: string) => void;
+}) => {
+  const { mutate } = useMutation({
+    mutationFn: patchChapter,
+  });
+
+  const onPatchChapterStatus = ({
+    chapterId,
+    statusId,
+  }: {
+    chapterId: number;
+    statusId: BookChapterStatusID;
+  }) => {
+    mutate(
+      { chapterId, statusId },
+      {
+        onSuccess: () => onStatusChange?.(statusId),
+        onError: () => {
+          enqueueSnackbar(MESSAGE.UPDATE_CHAPTER_STATUS_ERROR, {
+            variant: "error",
+          });
+        },
+      }
+    );
+  };
+
+  const onPatchChapterTitle = ({
+    chapterId,
+    title,
+  }: {
+    chapterId: number;
+    title: string;
+  }) => {
+    mutate(
+      { chapterId, title },
+      {
+        onSuccess: () => onTitleChange?.(title),
+        onError: () => {
+          enqueueSnackbar(MESSAGE.UPDATE_CHAPTER_TITLE_ERROR, {
+            variant: "error",
+          });
+        },
+      }
+    );
+  };
+
+  return { onPatchChapterStatus, onPatchChapterTitle };
+};

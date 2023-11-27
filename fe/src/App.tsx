@@ -13,7 +13,7 @@ export default function App() {
     <ThemeProvider>
       <Global styles={GlobalStyle} />
       <QueryClientProvider client={queryClient}>
-        <SnackbarProvider maxSnack={1} autoHideDuration={2000}>
+        <SnackbarProvider maxSnack={2} autoHideDuration={2000}>
           <S.App>
             <RouterProvider router={router} />
           </S.App>

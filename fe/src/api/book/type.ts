@@ -1,3 +1,5 @@
+import { BOOK_CHAPTERS_STATUS_LIST } from "@components/constants";
+
 export type BookInfo = {
   title: string;
   link: string;
@@ -40,11 +42,18 @@ export type BookList = {
   books: BookListItem[];
 };
 
-export type BookListItem = {
+export type Book = {
   id: number;
-  bookClub: { id: number; name: string };
+  statusId: BookChapterStatusID;
   title: string;
   cover: string;
   author: string;
   category: string;
 };
+
+export type BookListItem = Book & {
+  bookClub: { id: number; name: string };
+};
+
+export type BookChapterStatusID =
+  (typeof BOOK_CHAPTERS_STATUS_LIST)[number]["id"];

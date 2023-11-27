@@ -7,7 +7,7 @@ type MemberAtomActionMap = {
   UPDATE: Partial<Member>;
 };
 
-type MemberAtomAction = ReducerAction<MemberAtomActionMap>;
+type MemberAtomAction = ReducerAction<MemberAtomActionMap> | { type: "RESET" };
 
 const isLoginAtom = atom<boolean | undefined>(undefined);
 const memberAtom = atom<Member | undefined>(undefined);
@@ -32,6 +32,8 @@ const useMemberAtom = atom(
           return { ...prev, ...action.payload };
         });
         break;
+      case "RESET":
+        set(memberAtom, undefined);
     }
   }
 );

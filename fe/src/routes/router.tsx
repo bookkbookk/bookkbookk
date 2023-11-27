@@ -2,10 +2,11 @@ import { reissueAccessToken } from "@api/auth/utils";
 import { loader as userLoader } from "@api/member/queries";
 import StatusIndicator from "@components/common/StatusIndicator/StatusIndicator";
 import Auth from "@pages/Auth";
-import BookChapters from "@pages/BookChapters";
+import BookChapter from "@pages/BookChapter";
 import BookClub from "@pages/BookClub";
 import BookClubJoin from "@pages/BookClubJoin";
 import BookClubList from "@pages/BookClubList";
+import BookDetail from "@pages/BookDetail";
 import Landing from "@pages/Landing";
 import Library from "@pages/Library";
 import Main from "@pages/Main";
@@ -57,8 +58,12 @@ export const router = createBrowserRouter(
           <Route index element={<Main />} />
           <Route path={ROUTE_PATH.library} element={<Library />} />
           <Route
-            path={`${ROUTE_PATH.chapters}/:bookId`}
-            element={<BookChapters />}
+            path={`${ROUTE_PATH.bookDetail}/:bookId`}
+            element={<BookDetail />}
+          />
+          <Route
+            path={`${ROUTE_PATH.chapter}/:chapterId`}
+            element={<BookChapter />}
           />
           <Route path={ROUTE_PATH.newBook} element={<NewBook />} />
           <Route path={ROUTE_PATH.bookClub} element={<BookClubList />} />

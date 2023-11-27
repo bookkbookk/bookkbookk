@@ -1,6 +1,5 @@
 import { ROUTE_PATH } from "routes/constants";
 export const ACCESS_TOKEN_KEY = "bookk-accessToken";
-export const REFRESH_TOKEN_KEY = "bookk-refreshToken";
 
 export const MESSAGE = {
   LOGIN_LOADING: `로그인중이에요... \n 새로고침을 하지 마세요!`,
@@ -22,6 +21,11 @@ export const MESSAGE = {
     "북크북크 북클럽에 오신걸 환영합니다! \n 북클럽에 등록중이니 잠시만 기다려주세요!",
   BOOK_CLUB_JOIN_ERROR: `북클럽 가입에 실패했어요. \n 나중에 다시 시도해주세요.`,
   NOT_FOUND: `요청하신 페이지를 찾을 수 없어요. \n 다른 페이지로 이동해주세요.`,
+  NEW_GATHERING_ERROR: `모임 생성에 실패했어요. 나중에 다시 시도해주세요. 우선 챕터를 추가해볼까요?`,
+  UPDATE_BOOK_STATUS_ERROR: `책 상태 변경에 실패했어요. \n 나중에 다시 시도해주세요.`,
+  UPDATE_CHAPTER_STATUS_ERROR: `챕터 상태 변경에 실패했어요. \n 나중에 다시 시도해주세요.`,
+  UPDATE_CHAPTER_TITLE_ERROR: `챕터 제목 변경에 실패했어요. \n 나중에 다시 시도해주세요.`,
+  UPDATE_TOPIC_TITLE_ERROR: `토픽 제목 변경에 실패했어요. \n 나중에 다시 시도해주세요.`,
 };
 
 export const PAGE_TITLE = {

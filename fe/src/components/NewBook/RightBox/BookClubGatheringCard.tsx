@@ -1,9 +1,15 @@
+import { GatheringTable } from "@components/BookClub/GatheringAddModal/GatheringInfo/GatheringTable/GatheringTable";
+import { GatheringTableItemCell } from "@components/BookClub/GatheringAddModal/GatheringInfo/GatheringTable/GatheringTableItemCell";
 import { Card, CardContent } from "@components/common/common.style";
-import { Avatar, Typography } from "@mui/material";
+import { Avatar, TableBody, TableRow, Typography } from "@mui/material";
 import { useBookClubChoiceValue } from "store/newBook/useBookClubChoice";
+import { useGatheringValue } from "store/useGathering";
 
 export default function BookClubGatheringCard() {
   const bookClubChoice = useBookClubChoiceValue();
+  const { gatherings } = useGatheringValue();
+
+  const hasGatherings = !!gatherings.length;
 
   return (
     <Card>
@@ -16,6 +22,23 @@ export default function BookClubGatheringCard() {
           />
           <Typography variant="body1">{bookClubChoice.name}</Typography>
         </CardContent>
+      )}
+      {hasGatherings && (
+        <GatheringTable
+          tableBody={
+            <TableBody>
+              {gatherings.map((gathering, index) => (
+                <TableRow key={gathering.id}>
+                  <GatheringTableItemCell
+                    index={index}
+                    dateTime={gathering.dateTime}
+                    place={gathering.place}
+                  />
+                </TableRow>
+              ))}
+            </TableBody>
+          }
+        />
       )}
     </Card>
   );

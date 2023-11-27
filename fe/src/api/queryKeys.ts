@@ -17,25 +17,45 @@ export const queryKeys = createQueryKeyStore({
       queryFn: () => getMemberBookList({ page, size }),
     }),
   },
+
   auth: {
     login: ({ provider, authCode }: OAuthLoginParams) => ({
       queryKey: ["postLogin"],
       queryFn: () => postLogin({ provider, authCode }),
     }),
   },
+
   books: {
-    // TODO: 여기에 enabled 조건 추가하면 적용이 안되는 이유 찾아보기
     search: (searchWord: string) => ({
       queryKey: ["getBookSearchResult", searchWord],
       queryFn: () => getBookSearchResult(searchWord),
     }),
   },
+
   chapters: {
-    list: ({ page, size }: { page: number; size: number }) => ({
-      queryKey: ["getChapterList", { page, size }],
-      // queryFn: () => getChapterList({ page, size }),
+    list: ({ bookId }: { bookId: number }) => ({
+      queryKey: ["getChapters", { bookId }],
     }),
   },
+
+  topics: {
+    list: ({ chapterId }: { chapterId: number }) => ({
+      queryKey: ["getTopics", { chapterId }],
+    }),
+  },
+
+  bookmarks: {
+    list: ({ topicId }: { topicId: number }) => ({
+      queryKey: ["getBookmarks", { topicId }],
+    }),
+  },
+
+  comments: {
+    list: ({ bookmarkId }: { bookmarkId: number }) => ({
+      queryKey: ["getComments", { bookmarkId }],
+    }),
+  },
+
   bookClub: {
     list: (option?: BookClubStatus) => ({
       queryKey: ["getBookClubList", option],
@@ -47,6 +67,9 @@ export const queryKeys = createQueryKeyStore({
     detail: (bookClubId: number) => ({
       queryKey: ["getBookClubDetail", bookClubId],
       queryFn: () => getBookClubDetail(bookClubId),
+    }),
+    books: ({ bookClubId }: { bookClubId: number }) => ({
+      queryKey: ["getBookList", bookClubId],
     }),
   },
 });

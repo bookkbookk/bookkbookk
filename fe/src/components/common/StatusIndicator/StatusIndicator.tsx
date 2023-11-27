@@ -1,4 +1,5 @@
 import ErrorImage from "@assets/images/error.png";
+import HeartImage from "@assets/images/heart.png";
 import LoadingImage from "@assets/images/loading.gif";
 import { Box, Button } from "@mui/material";
 import { ROUTE_PATH } from "routes/constants";
@@ -8,7 +9,7 @@ export default function StatusIndicator({
   status,
   message,
 }: {
-  status: "loading" | "error";
+  status: "loading" | "error" | "developing";
   message?: string;
 }) {
   const indicatorImage = getIndicatorImage(status);
@@ -34,12 +35,14 @@ export default function StatusIndicator({
   );
 }
 
-function getIndicatorImage(status: "loading" | "error") {
+function getIndicatorImage(status: "loading" | "error" | "developing") {
   switch (status) {
     case "loading":
       return <img src={LoadingImage} />;
     case "error":
       return <img src={ErrorImage} />;
+    case "developing":
+      return <img src={HeartImage} />;
     default:
       return null;
   }

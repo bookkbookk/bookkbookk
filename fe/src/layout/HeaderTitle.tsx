@@ -5,9 +5,12 @@ import { Location, useLocation } from "react-router-dom";
 import { ROUTE_PATH } from "routes/constants";
 
 export default function HeaderTitle() {
+  // TODO: 개선 필요
   const { pathname, state }: Location<{ book: BookListItem }> = useLocation();
 
-  const isBookChapterPath = pathname.includes(ROUTE_PATH.chapters);
+  const isBookChapterPath =
+    pathname.includes(ROUTE_PATH.bookDetail) ||
+    pathname.includes(ROUTE_PATH.chapter);
   const isBookClubPath = pathname.includes(ROUTE_PATH.bookClub);
 
   const getHeaderTitle = () => {

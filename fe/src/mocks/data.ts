@@ -1,3 +1,142 @@
+export const COMMENTS = [
+  {
+    commentId: 1,
+    author: {
+      memberId: 5,
+      nickname: "내이름은말이지",
+      profileImgUrl: "www.asdjfk.com",
+    },
+    createdTime: "2023-09-11T14:30:00",
+    reaction: {
+      likeCount: 2,
+    },
+    content: "나는 근데 공감이 안돼 정말 공감이 안돼 진짜 공감이 안돼",
+  },
+  {
+    commentId: 2,
+    author: {
+      memberId: 6,
+      nickname: "랄랄라",
+      profileImgUrl: "www.asdjfk.com",
+    },
+    createdTime: "2023-09-11T14:30:00",
+    reaction: {
+      likeCount: 2,
+    },
+    content: "나도 정말 공감이 돼 정말 공감이 돼 진짜 공감이 돼",
+  },
+];
+
+export const BOOKMARKS = [
+  {
+    bookmarkId: 3,
+    author: {
+      memberId: 1,
+      nickname: "뭐당가이름이",
+      profileImgUrl: "www.asdjfk.com",
+    },
+    createdTime: "2023-09-11T14:30:00",
+    reaction: {
+      likeCount: 2,
+    },
+    content:
+      "책 인용 문장 어쩌고 저쩌고 더 선진화된 것이 아니라 개인이 힘을 더 갖게 된 것뿐입니다. 집단으로 작동하던 생산 모둠의 집합 시스템이 개인 중심의 플랫폼 사회로 바뀌면서 기성세대가 생각을 수정하기도 전에 갑자기 힘의 흐름이 바뀐 것입니다. 굴뚝 산업이 IT 산업으로 전환되면서 한 사람 한 사람의 힘이 커지게 된 것과 같습니다. 따라서 젊은 층은 자신들의 번영과 생명력을 제한하는 그 모든 것을 ‘권위적’이라고 느낍니다. 앞으로의 핵개인들 은 ‘권위적이다’라는 말 자체를 더욱 혐오의 감정으로 받아들일 확률이 높습니다.",
+    commentCount: 5,
+    page: 24,
+  },
+  {
+    bookmarkId: 4,
+    author: {
+      memberId: 1,
+      nickname: "뭐당가이름이",
+      profileImgUrl: "www.asdjfk.com",
+    },
+    createdTime: "2023-09-11T14:30:00",
+    reaction: {
+      likeCount: 2,
+    },
+    content:
+      "책 인용 문장 어쩌고 저쩌고 더 선진화된 것이 아니라 개인이 힘을 더 갖게 된 것뿐입니다. 집단으로 작동하던 생산 모둠의 집합 시스템이 개인 중심의 플랫폼 사회로 바뀌면서 기성세대가 생각을 수정하기도 전에 갑자기 힘의 흐름이 바뀐 것입니다. 굴뚝 산업이 IT 산업으로 전환되면서 한 사람 한 사람의 힘이 커지게 된 것과 같습니다. 따라서 젊은 층은 자신들의 번영과 생명력을 제한하는 그 모든 것을 ‘권위적’이라고 느낍니다. 앞으로의 핵개인들 은 ‘권위적이다’라는 말 자체를 더욱 혐오의 감정으로 받아들일 확률이 높습니다.",
+    commentCount: 5,
+  },
+];
+
+export const CHAPTER_LIST = [
+  {
+    chapterId: 15,
+    statusId: 1,
+    title: "K는 대한민국이 아니다",
+    recentBookmark: {
+      authorProfileImgUrl: "profileImgUrl",
+      content: "asdfsd",
+    },
+    topics: [
+      {
+        topicId: 52,
+        title: "K 프리미엄, 국적은 사라지고 스타일은 남아",
+        recentBookmark: {
+          authorProfileImgUrl: "profileImgUrl",
+          content: "asdfsd",
+        },
+      },
+      {
+        topicId: 552,
+        title: "‘서울러’라는 소속감 혹은 구별 짓기",
+        recentBookmark: {
+          authorProfileImgUrl: "profileImgUrl",
+          content: "asdfsd",
+        },
+      },
+    ],
+  },
+  {
+    chapterId: 155,
+    statusId: 3,
+    title: "chapter 1",
+    recentBookmark: {
+      authorProfileImgUrl: "profileImgUrl",
+      content: "asdfsd",
+    },
+    topics: [
+      {
+        topicId: 532,
+        title: "chapter 1의 토픽 1의 제목",
+        recentBookmark: {
+          authorProfileImgUrl: "profileImgUrl",
+          content: "asdfsd",
+        },
+      },
+      {
+        topicId: 5525,
+        title: "chapter 1의 토픽 2의 제목",
+        recentBookmark: {
+          authorProfileImgUrl: "profileImgUrl",
+          content: "asdfsd",
+        },
+      },
+    ],
+  },
+  {
+    chapterId: 16,
+    statusId: 2,
+    title: "chapter 2",
+    recentBookmark: {
+      authorProfileImgUrl: "profileImgUrl",
+      content: "asdfsd",
+    },
+    topics: [
+      {
+        topicId: 55,
+        title: "chapter 2의 토픽 1의 제목",
+        recentBookmark: {
+          authorProfileImgUrl: "profileImgUrl",
+          content: "asdfsd",
+        },
+      },
+    ],
+  },
+];
+
 export const BOOK_CLUB_DETAIL_OPEN = {
   name: "내가만든북클럽",
   profileImgUrl: "https://avatars.githubusercontent.com/u/56245755?v=4",
@@ -27,6 +166,7 @@ export const BOOK_CLUB_DETAIL_OPEN = {
 export const USER_BOOK_LIST = [
   {
     id: 1,
+    statusId: 2,
     isbn: "9788966262335",
     bookClub: {
       id: 1,
@@ -40,6 +180,7 @@ export const USER_BOOK_LIST = [
   },
   {
     id: 2,
+    statusId: 3,
     isbn: "9788966262335",
     bookClub: {
       id: 1,
@@ -53,6 +194,7 @@ export const USER_BOOK_LIST = [
   },
   {
     id: 3,
+    statusId: 4,
     isbn: "9788991268807",
     bookClub: {
       id: 1,
@@ -119,116 +261,116 @@ export const USER_BOOK_LIST = [
     author: "김창준 (지은이)",
     category: "국내도서>컴퓨터/모바일>컴퓨터 공학>소프트웨어 공학",
   },
-  {
-    id: 13,
-    isbn: "9788991268807",
-    bookClub: {
-      id: 1,
-      name: "낙감귤조이",
-    },
-    title: "프로그래머의 길, 멘토에게 묻다",
-    cover:
-      "https://image.aladin.co.kr/product/741/54/coversum/8991268803_1.jpg",
-    author: "데이브 후버, 애디웨일 오시나이 (지은이), 강중빈 (옮긴이)",
-    category:
-      "국내도서>컴퓨터/모바일>프로그래밍 개발/방법론>프로그래밍 기초/개발 방법론",
-  },
-  {
-    id: 14,
-    isbn: "9791168341364",
-    bookClub: {
-      id: 1,
-      name: "낙감귤조이",
-    },
-    title:
-      "우리 인생에 바람을 초대하려면 - 세계적 지성이 들려주는 모험과 발견의 철학",
-    cover:
-      "https://image.aladin.co.kr/product/32610/92/coversum/k112935541_1.jpg",
-    author: "파스칼 브뤼크네르 (지은이), 이세진 (옮긴이)",
-    category: "국내도서>인문학>철학 일반>교양 철학",
-  },
-  {
-    id: 15,
-    isbn: "9791130645278",
-    bookClub: {
-      id: 3,
-      name: "내꿈은농부!",
-    },
-    title:
-      "아무도 가지 않은 길에 부가 있었다 - 흔들리는 투자자를 위한 부자의 독설 41",
-    cover:
-      "https://image.aladin.co.kr/product/32265/15/coversum/k722834840_1.jpg",
-    author: "정민우(달천) (지은이)",
-    category: "국내도서>경제경영>재테크/투자>재테크/투자 일반",
-  },
-  {
-    id: 21,
-    isbn: "9788966262335",
-    bookClub: {
-      id: 1,
-      name: "낙감귤조이",
-    },
-    title: "함께 자라기 - 애자일로 가는 길",
-    cover:
-      "https://image.aladin.co.kr/product/17597/74/coversum/8966262333_1.jpg",
-    author: "김창준 (지은이)",
-    category: "국내도서>컴퓨터/모바일>컴퓨터 공학>소프트웨어 공학",
-  },
-  {
-    id: 22,
-    isbn: "9788966262335",
-    bookClub: {
-      id: 1,
-      name: "낙감귤조이",
-    },
-    title: "함께 자라기 - 애자일로 가는 길",
-    cover:
-      "https://image.aladin.co.kr/product/17597/74/coversum/8966262333_1.jpg",
-    author: "김창준 (지은이)",
-    category: "국내도서>컴퓨터/모바일>컴퓨터 공학>소프트웨어 공학",
-  },
-  {
-    id: 23,
-    isbn: "9788991268807",
-    bookClub: {
-      id: 1,
-      name: "낙감귤조이",
-    },
-    title: "프로그래머의 길, 멘토에게 묻다",
-    cover:
-      "https://image.aladin.co.kr/product/741/54/coversum/8991268803_1.jpg",
-    author: "데이브 후버, 애디웨일 오시나이 (지은이), 강중빈 (옮긴이)",
-    category:
-      "국내도서>컴퓨터/모바일>프로그래밍 개발/방법론>프로그래밍 기초/개발 방법론",
-  },
-  {
-    id: 24,
-    isbn: "9791168341364",
-    bookClub: {
-      id: 1,
-      name: "낙감귤조이",
-    },
-    title:
-      "우리 인생에 바람을 초대하려면 - 세계적 지성이 들려주는 모험과 발견의 철학",
-    cover:
-      "https://image.aladin.co.kr/product/32610/92/coversum/k112935541_1.jpg",
-    author: "파스칼 브뤼크네르 (지은이), 이세진 (옮긴이)",
-    category: "국내도서>인문학>철학 일반>교양 철학",
-  },
-  {
-    id: 25,
-    isbn: "9791130645278",
-    bookClub: {
-      id: 3,
-      name: "내꿈은농부!",
-    },
-    title:
-      "아무도 가지 않은 길에 부가 있었다 - 흔들리는 투자자를 위한 부자의 독설 41아무도 가지 않은 길에 부가 있었다 - 흔들리는 투자자를 위한 부자의 독설 41",
-    cover:
-      "https://image.aladin.co.kr/product/32265/15/coversum/k722834840_1.jpg",
-    author: "정민우(달천) (지은이)",
-    category: "국내도서>경제경영>재테크/투자>재테크/투자 일반",
-  },
+  // {
+  //   id: 13,
+  //   isbn: "9788991268807",
+  //   bookClub: {
+  //     id: 1,
+  //     name: "낙감귤조이",
+  //   },
+  //   title: "프로그래머의 길, 멘토에게 묻다",
+  //   cover:
+  //     "https://image.aladin.co.kr/product/741/54/coversum/8991268803_1.jpg",
+  //   author: "데이브 후버, 애디웨일 오시나이 (지은이), 강중빈 (옮긴이)",
+  //   category:
+  //     "국내도서>컴퓨터/모바일>프로그래밍 개발/방법론>프로그래밍 기초/개발 방법론",
+  // },
+  // {
+  //   id: 14,
+  //   isbn: "9791168341364",
+  //   bookClub: {
+  //     id: 1,
+  //     name: "낙감귤조이",
+  //   },
+  //   title:
+  //     "우리 인생에 바람을 초대하려면 - 세계적 지성이 들려주는 모험과 발견의 철학",
+  //   cover:
+  //     "https://image.aladin.co.kr/product/32610/92/coversum/k112935541_1.jpg",
+  //   author: "파스칼 브뤼크네르 (지은이), 이세진 (옮긴이)",
+  //   category: "국내도서>인문학>철학 일반>교양 철학",
+  // },
+  // {
+  //   id: 15,
+  //   isbn: "9791130645278",
+  //   bookClub: {
+  //     id: 3,
+  //     name: "내꿈은농부!",
+  //   },
+  //   title:
+  //     "아무도 가지 않은 길에 부가 있었다 - 흔들리는 투자자를 위한 부자의 독설 41",
+  //   cover:
+  //     "https://image.aladin.co.kr/product/32265/15/coversum/k722834840_1.jpg",
+  //   author: "정민우(달천) (지은이)",
+  //   category: "국내도서>경제경영>재테크/투자>재테크/투자 일반",
+  // },
+  // {
+  //   id: 21,
+  //   isbn: "9788966262335",
+  //   bookClub: {
+  //     id: 1,
+  //     name: "낙감귤조이",
+  //   },
+  //   title: "함께 자라기 - 애자일로 가는 길",
+  //   cover:
+  //     "https://image.aladin.co.kr/product/17597/74/coversum/8966262333_1.jpg",
+  //   author: "김창준 (지은이)",
+  //   category: "국내도서>컴퓨터/모바일>컴퓨터 공학>소프트웨어 공학",
+  // },
+  // {
+  //   id: 22,
+  //   isbn: "9788966262335",
+  //   bookClub: {
+  //     id: 1,
+  //     name: "낙감귤조이",
+  //   },
+  //   title: "함께 자라기 - 애자일로 가는 길",
+  //   cover:
+  //     "https://image.aladin.co.kr/product/17597/74/coversum/8966262333_1.jpg",
+  //   author: "김창준 (지은이)",
+  //   category: "국내도서>컴퓨터/모바일>컴퓨터 공학>소프트웨어 공학",
+  // },
+  // {
+  //   id: 23,
+  //   isbn: "9788991268807",
+  //   bookClub: {
+  //     id: 1,
+  //     name: "낙감귤조이",
+  //   },
+  //   title: "프로그래머의 길, 멘토에게 묻다",
+  //   cover:
+  //     "https://image.aladin.co.kr/product/741/54/coversum/8991268803_1.jpg",
+  //   author: "데이브 후버, 애디웨일 오시나이 (지은이), 강중빈 (옮긴이)",
+  //   category:
+  //     "국내도서>컴퓨터/모바일>프로그래밍 개발/방법론>프로그래밍 기초/개발 방법론",
+  // },
+  // {
+  //   id: 24,
+  //   isbn: "9791168341364",
+  //   bookClub: {
+  //     id: 1,
+  //     name: "낙감귤조이",
+  //   },
+  //   title:
+  //     "우리 인생에 바람을 초대하려면 - 세계적 지성이 들려주는 모험과 발견의 철학",
+  //   cover:
+  //     "https://image.aladin.co.kr/product/32610/92/coversum/k112935541_1.jpg",
+  //   author: "파스칼 브뤼크네르 (지은이), 이세진 (옮긴이)",
+  //   category: "국내도서>인문학>철학 일반>교양 철학",
+  // },
+  // {
+  //   id: 25,
+  //   isbn: "9791130645278",
+  //   bookClub: {
+  //     id: 3,
+  //     name: "내꿈은농부!",
+  //   },
+  //   title:
+  //     "아무도 가지 않은 길에 부가 있었다 - 흔들리는 투자자를 위한 부자의 독설 41아무도 가지 않은 길에 부가 있었다 - 흔들리는 투자자를 위한 부자의 독설 41",
+  //   cover:
+  //     "https://image.aladin.co.kr/product/32265/15/coversum/k722834840_1.jpg",
+  //   author: "정민우(달천) (지은이)",
+  //   category: "국내도서>경제경영>재테크/투자>재테크/투자 일반",
+  // },
 ];
 
 export const BOOK_CLUB_LIST = [
@@ -287,7 +429,7 @@ export const BOOK_CLUB_LIST = [
 ];
 
 export const MEMBER_INFO = {
-  memberId: 1,
+  id: 1,
   nickname: "감귤차먹고아프지마세요",
   email: "gamgyul@gmail.com",
   profileImgUrl: "https://avatars.githubusercontent.com/u/56245755?v=4",

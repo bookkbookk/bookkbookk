@@ -104,8 +104,8 @@ const dark = {
     disabled: grey[300],
   },
   background: {
-    paper: grey[800],
-    default: grey[900],
+    paper: grey[700],
+    default: grey[800],
     neutral: grey[900],
   },
   action: {

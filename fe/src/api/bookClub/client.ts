@@ -1,3 +1,4 @@
+import { BookListItem } from "@api/book/type";
 import { fetcher, formDataConfig } from "@api/fetcher";
 import { makeFormData } from "@api/utils";
 import { send } from "@emailjs/browser";
@@ -61,6 +62,24 @@ export const postJoinBookClub = async (invitationCode: string) => {
     { invitationCode }
   );
 
+  return data;
+};
+
+export const getBookClubBooks = async ({
+  bookClubId,
+  cursor,
+  size,
+}: {
+  bookClubId: number;
+  cursor: number;
+  size: number;
+}) => {
+  const { data } = await fetcher.get<{
+    books: Omit<BookListItem, "bookClub">;
+    hasNext: boolean;
+  }>(`${BOOK_CLUB_API_PATH.bookClubs}/${bookClubId}/books`, {
+    params: { cursor, size },
+  });
   return data;
 };
 
