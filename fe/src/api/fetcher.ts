@@ -51,9 +51,12 @@ fetcher.interceptors.response.use(
     if (error.response.data.code === ERROR_CODE.EXPIRED_ACCESS_TOKEN) {
       try {
         const accessToken = await reissueAccessToken();
-        accessToken && setAccessToken(accessToken);
 
-        return fetcher(originalRequest);
+        if (accessToken) {
+          setAccessToken(accessToken);
+
+          return fetcher(originalRequest);
+        }
       } catch {
         return Promise.reject(error);
       }

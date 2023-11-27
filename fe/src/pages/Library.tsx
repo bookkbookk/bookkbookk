@@ -34,15 +34,17 @@ export default function Library() {
           </Button>
         )}
       </BoxHeader>
-      <BookList />
-      <Tooltip title="새로운 책을 추가해보세요">
-        <AddFab
-          color="primary"
-          aria-label="add"
-          onClick={() => navigate(ROUTE_PATH.newBook)}>
-          <LibraryAddIcon />
-        </AddFab>
-      </Tooltip>
+      {isLogin && <BookList />}
+      {isLogin && (
+        <Tooltip title="새로운 책을 추가해보세요">
+          <AddFab
+            color="primary"
+            aria-label="add"
+            onClick={() => navigate(ROUTE_PATH.newBook)}>
+            <LibraryAddIcon />
+          </AddFab>
+        </Tooltip>
+      )}
     </MainBox>
   );
 }
