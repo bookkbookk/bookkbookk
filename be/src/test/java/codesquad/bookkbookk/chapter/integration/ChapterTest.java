@@ -137,7 +137,7 @@ public class ChapterTest extends IntegrationTest {
         });
     }
 
-    @DisplayName("챕터 제목을 변경한다.")
+    @DisplayName("챕터의 상태와 제목을 변경한다.")
     @Test
     void updateChapterTitle() {
         //given
@@ -154,7 +154,7 @@ public class ChapterTest extends IntegrationTest {
         Chapter chapter = TestDataFactory.createChapter1(book);
         chapterRepository.save(chapter);
 
-        JSONObject requestBody = new JSONObject(Map.of("title", "update"));
+        JSONObject requestBody = new JSONObject(Map.of("title", "update", "statusId", 2));
 
         //when
         ExtractableResponse<Response> response = RestAssured
@@ -168,10 +168,10 @@ public class ChapterTest extends IntegrationTest {
                 .extract();
 
         //then
-        Chapter actual = chapterRepository.findById(chapter.getId()).orElseThrow(ChapterNotFoundException::new);
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softAssertions.assertThat(actual.getTitle()).isEqualTo("update");
+            softAssertions.assertThat(response.jsonPath().getString("title")).isEqualTo("update");
+            softAssertions.assertThat(response.jsonPath().getString("statusId")).isEqualTo("2");
         });
     }
 

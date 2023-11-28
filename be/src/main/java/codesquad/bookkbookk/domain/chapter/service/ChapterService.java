@@ -8,14 +8,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import codesquad.bookkbookk.common.error.exception.BookNotFoundException;
 import codesquad.bookkbookk.common.error.exception.ChapterNotFoundException;
+import codesquad.bookkbookk.common.type.Status;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
 import codesquad.bookkbookk.domain.chapter.data.dto.CreateChapterRequest;
 import codesquad.bookkbookk.domain.chapter.data.dto.CreateChapterResponse;
 import codesquad.bookkbookk.domain.chapter.data.dto.ReadChapterResponse;
-import codesquad.bookkbookk.domain.chapter.data.dto.UpdateChapterTitleRequest;
+import codesquad.bookkbookk.domain.chapter.data.dto.UpdateChapterRequest;
+import codesquad.bookkbookk.domain.chapter.data.dto.UpdateChapterResponse;
 import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
-import codesquad.bookkbookk.domain.chapter.data.type.ChapterStatus;
 import codesquad.bookkbookk.domain.chapter.repository.ChapterRepository;
 import codesquad.bookkbookk.domain.topic.data.entity.Topic;
 import codesquad.bookkbookk.domain.topic.repository.TopicRepository;
@@ -57,15 +58,16 @@ public class ChapterService {
         if (chapterStatusId == ALL_STATUS) {
             return ReadChapterResponse.from(chapterRepository.findAllByBookId(bookId));
         }
-        ChapterStatus chapterStatus = ChapterStatus.of(chapterStatusId);
+        Status chapterStatus = Status.of(chapterStatusId);
         return ReadChapterResponse.from(chapterRepository.findAllByBookIdAndStatus(bookId, chapterStatus));
     }
 
     @Transactional
-    public void updateChapter(Long chapterId, UpdateChapterTitleRequest updateChapterTitleRequest) {
+    public UpdateChapterResponse updateChapter(Long chapterId, UpdateChapterRequest request) {
         Chapter chapter = chapterRepository.findById(chapterId).orElseThrow(ChapterNotFoundException::new);
 
-        chapter.updateTitle(updateChapterTitleRequest);
+        Chapter updated = chapter.update(request);
+        return UpdateChapterResponse.from(updated);
     }
 
     @Transactional

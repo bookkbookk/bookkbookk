@@ -14,9 +14,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import codesquad.bookkbookk.common.type.Status;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
-import codesquad.bookkbookk.domain.chapter.data.dto.UpdateChapterTitleRequest;
-import codesquad.bookkbookk.domain.chapter.data.type.ChapterStatus;
+import codesquad.bookkbookk.domain.chapter.data.dto.UpdateChapterRequest;
 import codesquad.bookkbookk.domain.topic.data.entity.Topic;
 
 import lombok.AccessLevel;
@@ -36,9 +36,9 @@ public class Chapter {
     @JoinColumn(name = "book_id")
     private Book book;
     private String title;
-    @Column(name = "chapter_status")
+    @Column(name = "chapter_status", nullable = false)
     @Enumerated(value = EnumType.STRING)
-    private ChapterStatus status;
+    private Status status;
 
     @OneToMany(mappedBy = "chapter")
     private List<Topic> topics = new ArrayList<>();
@@ -46,11 +46,14 @@ public class Chapter {
     public Chapter(Book book, String title) {
         this.book = book;
         this.title = title;
-        this.status = ChapterStatus.BEFORE_READING;
+        this.status = Status.BEFORE_READING;
     }
 
-    public void updateTitle(UpdateChapterTitleRequest updateChapterTitleRequest) {
-        this.title = updateChapterTitleRequest.getTitle();
+    public Chapter update(UpdateChapterRequest request) {
+        this.title = request.getTitle();
+        this.status = Status.of(request.getStatusId());
+
+        return this;
     }
 
 }

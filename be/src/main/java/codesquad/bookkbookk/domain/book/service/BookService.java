@@ -4,14 +4,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import codesquad.bookkbookk.common.error.exception.BookClubNotFoundException;
+import codesquad.bookkbookk.common.error.exception.BookNotFoundException;
 import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.domain.auth.service.AuthorizationService;
 import codesquad.bookkbookk.domain.book.data.dto.CreateBookRequest;
 import codesquad.bookkbookk.domain.book.data.dto.CreateBookResponse;
 import codesquad.bookkbookk.domain.book.data.dto.ReadBookClubBookResponse;
 import codesquad.bookkbookk.domain.book.data.dto.ReadBookResponse;
+import codesquad.bookkbookk.domain.book.data.dto.UpdateBookStatusRequest;
+import codesquad.bookkbookk.domain.book.data.dto.UpdateBookStatusResponse;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
@@ -67,6 +71,14 @@ public class BookService {
         Slice<Book> books = bookRepository.findBooksByBookClubId(bookClubId, pageable);
 
         return ReadBookClubBookResponse.from(books);
+    }
+
+    @Transactional
+    public UpdateBookStatusResponse updateBookStatus(Long bookId, UpdateBookStatusRequest request) {
+        Book book = bookRepository.findById(bookId).orElseThrow(BookNotFoundException::new);
+
+        book.updateStatus(request);
+        return UpdateBookStatusResponse.from(book);
     }
 
 }
