@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import codesquad.bookkbookk.domain.chapter.data.dto.CreateChapterRequest;
 import codesquad.bookkbookk.domain.chapter.data.dto.CreateChapterResponse;
 import codesquad.bookkbookk.domain.chapter.data.dto.ReadChapterResponse;
-import codesquad.bookkbookk.domain.chapter.data.dto.UpdateChapterTitleRequest;
+import codesquad.bookkbookk.domain.chapter.data.dto.UpdateChapterRequest;
+import codesquad.bookkbookk.domain.chapter.data.dto.UpdateChapterResponse;
 import codesquad.bookkbookk.domain.chapter.service.ChapterService;
 
 import lombok.RequiredArgsConstructor;
@@ -45,11 +46,12 @@ public class ChapterController {
     }
 
     @PatchMapping("/{chapterId}")
-    public ResponseEntity<Void> updateChapter(@PathVariable Long chapterId,
-                                              @RequestBody UpdateChapterTitleRequest updateChapterTitleRequest) {
-         chapterService.updateChapter(chapterId, updateChapterTitleRequest);
+    public ResponseEntity<UpdateChapterResponse> updateChapter(@PathVariable Long chapterId,
+                                                               @RequestBody UpdateChapterRequest request) {
+        UpdateChapterResponse response = chapterService.updateChapter(chapterId, request);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok()
+                .body(response);
     }
 
     @DeleteMapping("/{chapterId}")

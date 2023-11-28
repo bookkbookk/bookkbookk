@@ -8,8 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
-public class UpdateChapterTitleRequest {
+public class UpdateChapterRequest {
 
     private String title;
+    private Integer statusId;
 
 }

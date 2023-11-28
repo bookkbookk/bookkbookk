@@ -16,7 +16,7 @@ import javax.persistence.OneToMany;
 
 import codesquad.bookkbookk.common.type.Status;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
-import codesquad.bookkbookk.domain.chapter.data.dto.UpdateChapterTitleRequest;
+import codesquad.bookkbookk.domain.chapter.data.dto.UpdateChapterRequest;
 import codesquad.bookkbookk.domain.topic.data.entity.Topic;
 
 import lombok.AccessLevel;
@@ -49,8 +49,11 @@ public class Chapter {
         this.status = Status.BEFORE_READING;
     }
 
-    public void updateTitle(UpdateChapterTitleRequest updateChapterTitleRequest) {
-        this.title = updateChapterTitleRequest.getTitle();
+    public Chapter update(UpdateChapterRequest request) {
+        this.title = request.getTitle();
+        this.status = Status.of(request.getStatusId());
+
+        return this;
     }
 
 }
