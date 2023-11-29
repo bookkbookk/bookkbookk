@@ -14,6 +14,7 @@ export function BookmarkCommentList({ bookmarkId }: { bookmarkId: number }) {
           <Comment key={commentId}>
             <Comment.Header {...{ author, createdTime }} />
             <Comment.Content {...{ content }} />
+            <Comment.Footer />
           </Comment>
         );
       })}

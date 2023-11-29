@@ -6,11 +6,13 @@ type useInputOptions = {
     isValid: boolean;
     message?: string;
   })[];
+  callback?: (value: string) => void;
 };
 
 export default function useInput({
   initialValue = "",
   validators = [],
+  callback,
 }: useInputOptions) {
   const [value, setValue] = useState(initialValue);
   const [error, setError] = useState<Error | null>(null);
@@ -21,6 +23,8 @@ export default function useInput({
 
       if (!isValid) {
         setError(new Error(message));
+        newValue === "" && setValue("");
+
         return false;
       }
 
@@ -28,10 +32,10 @@ export default function useInput({
     });
 
     if (isValidValue) {
+      setValue(newValue);
+      callback?.(newValue);
       setError(null);
     }
-
-    setValue(newValue);
   };
 
   return {

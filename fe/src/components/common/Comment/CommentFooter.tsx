@@ -5,7 +5,7 @@ import ReactionMenu from "./ReactionMenu";
 export default function CommentFooter({
   onReplyButtonClick,
 }: {
-  onReplyButtonClick: () => void;
+  onReplyButtonClick?: () => void;
 }) {
   return (
     <Stack
@@ -14,12 +14,15 @@ export default function CommentFooter({
       justifyContent="space-between"
       padding={1}>
       <ReactionMenu />
-      <Button
-        color="inherit"
-        startIcon={<ReplyIcon />}
-        onClick={onReplyButtonClick}>
-        Reply
-      </Button>
+      {onReplyButtonClick && (
+        <Button
+          color="inherit"
+          size="small"
+          startIcon={<ReplyIcon />}
+          onClick={onReplyButtonClick}>
+          Reply
+        </Button>
+      )}
     </Stack>
   );
 }
