@@ -59,3 +59,18 @@ export const convertPastTimestamp = (timestamp: string) => {
 
   return `${year}/${month + 1}/${date}`;
 };
+
+export function validatePageNumber(input: string) {
+  const numberRegex = new RegExp(/^[0-9]+$/);
+
+  if (!numberRegex.test(input)) {
+    return {
+      isValid: false,
+      message: "페이지는 숫자만 입력 가능합니다.",
+    };
+  }
+
+  return {
+    isValid: true,
+  };
+}

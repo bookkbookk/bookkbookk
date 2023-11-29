@@ -27,7 +27,7 @@ export function Bookmark({ bookmark }: { bookmark: BookmarkProps }) {
         <Divider orientation="vertical" />
         <Stack width="100%" paddingY={2} gap={3}>
           <BookmarkCommentList bookmarkId={bookmarkId} />
-          {isReplying && <BookmarkComment />}
+          {isReplying && <BookmarkComment bookmarkId={bookmarkId} />}
         </Stack>
       </Stack>
     </Stack>
