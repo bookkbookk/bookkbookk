@@ -1,9 +1,9 @@
-export type NewBookmarkState = {
+export type BookmarkState = {
   page?: string;
   content: string;
 };
 
-export type NewBookmarkAction = {
+export type BookmarkAction = {
   setPage: (page: string) => void;
   setContent: (content: string) => void;
 };

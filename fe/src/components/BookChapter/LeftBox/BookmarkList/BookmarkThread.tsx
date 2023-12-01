@@ -1,7 +1,7 @@
 import { Bookmark as BookmarkProps } from "@api/bookmarks/type";
 import { Divider, Stack } from "@mui/material";
 import { useState } from "react";
-import BookmarkComment from "../BookmarkComment";
+import NewBookmarkComment from "../NewBookmarkComment";
 import Bookmark from "./Bookmark";
 import { BookmarkCommentList } from "./BookmarkCommentList";
 
@@ -23,7 +23,9 @@ export function BookmarkThread({ bookmark }: { bookmark: BookmarkProps }) {
         <Divider orientation="vertical" />
         <Stack width="100%" paddingY={2} gap={3}>
           <BookmarkCommentList bookmarkId={bookmarkId} />
-          {isReplying && <BookmarkComment bookmarkId={bookmarkId} />}
+          {isReplying && (
+            <NewBookmarkComment {...{ bookmarkId, toggleReplying }} />
+          )}
         </Stack>
       </Stack>
     </Stack>

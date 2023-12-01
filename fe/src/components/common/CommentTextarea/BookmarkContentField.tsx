@@ -1,14 +1,15 @@
 import { usePostNewBookmark } from "@api/bookmarks/queries";
 import "@blocknote/core/style.css";
 import { BlockNoteView, useBlockNote } from "@blocknote/react";
-import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
+import CheckIcon from "@mui/icons-material/Check";
+import ClearIcon from "@mui/icons-material/Clear";
 import { Stack } from "@mui/material";
 import Button from "@mui/material/Button";
 import { editorTheme } from "@styles/theme/palette";
 import {
+  useBookmarkState,
   useNewBookmarkActions,
-  useNewBookmarkState,
-} from "context/NewBookmark/useNewBookmark";
+} from "context/BookmarkProvider/useBookmark";
 import { enqueueSnackbar } from "notistack";
 import { useThemeModeValue } from "store/useTheme";
 
@@ -19,7 +20,7 @@ export default function BookmarkContentField({
   topicId: number;
   toggleNewBookmark: () => void;
 }) {
-  const { page, content } = useNewBookmarkState();
+  const { page, content } = useBookmarkState();
   const { setPage, setContent } = useNewBookmarkActions();
 
   const themeMode = useThemeModeValue();
@@ -56,14 +57,23 @@ export default function BookmarkContentField({
       <Stack minHeight={120} flexGrow={1}>
         <BlockNoteView editor={editor} theme={editorTheme[themeMode]} />
       </Stack>
-      <Button
-        variant="contained"
-        startIcon={<BookmarkAddIcon />}
-        size="small"
-        onClick={postNewBookmark}
-        sx={{ alignSelf: "flex-end" }}>
-        작성 완료
-      </Button>
+      <Stack display="flex" flexDirection="row" alignSelf="end" gap={1}>
+        <Button
+          variant="outlined"
+          startIcon={<ClearIcon />}
+          size="small"
+          sx={{ alignSelf: "flex-end" }}>
+          작성 취소
+        </Button>
+        <Button
+          variant="contained"
+          startIcon={<CheckIcon />}
+          size="small"
+          onClick={postNewBookmark}
+          sx={{ alignSelf: "flex-end" }}>
+          작성 완료
+        </Button>
+      </Stack>
     </Stack>
   );
 }

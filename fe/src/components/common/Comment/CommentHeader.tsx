@@ -1,4 +1,6 @@
 import { CommentContent } from "@api/comments/type";
+import CheckIcon from "@mui/icons-material/Check";
+import ClearIcon from "@mui/icons-material/Clear";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModeRoundedIcon from "@mui/icons-material/ModeRounded";
 import { Avatar, Button, Stack, Typography } from "@mui/material";
@@ -39,38 +41,40 @@ export default function CommentHeader(
       {isAuthor && (
         <Stack display="flex" flexDirection="row">
           {!isEditing && (
-            <Button
-              size="small"
-              color="inherit"
-              onClick={toggleEditing}
-              startIcon={<ModeRoundedIcon fontSize="small" />}>
-              편집
-            </Button>
+            <>
+              <Button
+                size="small"
+                color="inherit"
+                onClick={toggleEditing}
+                startIcon={<ModeRoundedIcon fontSize="small" />}>
+                편집
+              </Button>
+              <Button
+                size="small"
+                color="inherit"
+                startIcon={<DeleteIcon fontSize="small" />}>
+                삭제
+              </Button>
+            </>
           )}
           {isEditing && (
-            <Button
-              size="small"
-              color="inherit"
-              onClick={toggleEditing}
-              startIcon={<ModeRoundedIcon fontSize="small" />}>
-              편집 취소
-            </Button>
+            <>
+              <Button
+                size="small"
+                color="inherit"
+                onClick={toggleEditing}
+                startIcon={<ClearIcon fontSize="small" />}>
+                취소
+              </Button>
+              <Button
+                size="small"
+                color="inherit"
+                onClick={toggleEditing}
+                startIcon={<CheckIcon fontSize="small" />}>
+                완료
+              </Button>
+            </>
           )}
-          {isEditing && (
-            <Button
-              size="small"
-              color="inherit"
-              onClick={toggleEditing}
-              startIcon={<ModeRoundedIcon fontSize="small" />}>
-              편집 완료
-            </Button>
-          )}
-          <Button
-            size="small"
-            color="inherit"
-            startIcon={<DeleteIcon fontSize="small" />}>
-            삭제
-          </Button>
         </Stack>
       )}
     </S.CommentHeader>

@@ -1,33 +1,65 @@
-export const COMMENTS = [
-  {
-    commentId: 1,
-    author: {
-      memberId: 1,
-      nickname: "뭐당가이름이",
-      profileImgUrl: "www.asdjfk.com",
+export const COMMENTS = {
+  3: [
+    {
+      commentId: 1,
+      author: {
+        memberId: 1,
+        nickname: "뭐당가이름이",
+        profileImgUrl: "www.asdjfk.com",
+      },
+      createdTime: "2023-09-11T14:30:00",
+      reaction: {
+        likeCount: 2,
+      },
+      content:
+        '[{"id":"aff887cc-b2df-43b4-a89d-1c19e77adb08","type":"paragraph","props":{"textColor":"default","backgroundColor":"default","textAlignment":"left"},"content":[{"type":"text","text":"1111","styles":{}}],"children":[]},{"id":"c8b0b593-80db-4555-bf7a-81fc0ee4200c","type":"paragraph","props":{"textColor":"default","backgroundColor":"default","textAlignment":"left"},"content":[],"children":[]}]',
     },
-    createdTime: "2023-09-11T14:30:00",
-    reaction: {
-      likeCount: 2,
+    {
+      commentId: 2,
+      author: {
+        memberId: 6,
+        nickname: "랄랄라",
+        profileImgUrl: "www.asdjfk.com",
+      },
+      createdTime: "2023-09-11T14:30:00",
+      reaction: {
+        likeCount: 2,
+      },
+      content:
+        '[{"id":"aff887cc-b2df-43b4-a89d-1c19e77adb08","type":"paragraph","props":{"textColor":"default","backgroundColor":"default","textAlignment":"left"},"content":[{"type":"text","text":"2222","styles":{}}],"children":[]},{"id":"c8b0b593-80db-4555-bf7a-81fc0ee4200c","type":"paragraph","props":{"textColor":"default","backgroundColor":"default","textAlignment":"left"},"content":[],"children":[]}]',
     },
-    content:
-      '[{"id":"aff887cc-b2df-43b4-a89d-1c19e77adb08","type":"paragraph","props":{"textColor":"default","backgroundColor":"default","textAlignment":"left"},"content":[{"type":"text","text":"ㅁㄴㅇㄹㄴㅇㄹ","styles":{}}],"children":[]},{"id":"c8b0b593-80db-4555-bf7a-81fc0ee4200c","type":"paragraph","props":{"textColor":"default","backgroundColor":"default","textAlignment":"left"},"content":[],"children":[]}]',
-  },
-  {
-    commentId: 2,
-    author: {
-      memberId: 6,
-      nickname: "랄랄라",
-      profileImgUrl: "www.asdjfk.com",
+  ],
+  4: [
+    {
+      commentId: 4,
+      author: {
+        memberId: 1,
+        nickname: "뭐당가이름이",
+        profileImgUrl: "www.asdjfk.com",
+      },
+      createdTime: "2023-09-11T14:30:00",
+      reaction: {
+        likeCount: 2,
+      },
+      content:
+        '[{"id":"aff887cc-b2df-43b4-a89d-1c19e77adb08","type":"paragraph","props":{"textColor":"default","backgroundColor":"default","textAlignment":"left"},"content":[{"type":"text","text":"333","styles":{}}],"children":[]},{"id":"c8b0b593-80db-4555-bf7a-81fc0ee4200c","type":"paragraph","props":{"textColor":"default","backgroundColor":"default","textAlignment":"left"},"content":[],"children":[]}]',
     },
-    createdTime: "2023-09-11T14:30:00",
-    reaction: {
-      likeCount: 2,
+    {
+      commentId: 5,
+      author: {
+        memberId: 6,
+        nickname: "랄랄라",
+        profileImgUrl: "www.asdjfk.com",
+      },
+      createdTime: "2023-09-11T14:30:00",
+      reaction: {
+        likeCount: 2,
+      },
+      content:
+        '[{"id":"aff887cc-b2df-43b4-a89d-1c19e77adb08","type":"paragraph","props":{"textColor":"default","backgroundColor":"default","textAlignment":"left"},"content":[{"type":"text","text":"4444","styles":{}}],"children":[]},{"id":"c8b0b593-80db-4555-bf7a-81fc0ee4200c","type":"paragraph","props":{"textColor":"default","backgroundColor":"default","textAlignment":"left"},"content":[],"children":[]}]',
     },
-    content:
-      '[{"id":"aff887cc-b2df-43b4-a89d-1c19e77adb08","type":"paragraph","props":{"textColor":"default","backgroundColor":"default","textAlignment":"left"},"content":[{"type":"text","text":"ㅁㄴㅇㄹㄴㅇㄹ","styles":{}}],"children":[]},{"id":"c8b0b593-80db-4555-bf7a-81fc0ee4200c","type":"paragraph","props":{"textColor":"default","backgroundColor":"default","textAlignment":"left"},"content":[],"children":[]}]',
-  },
-];
+  ],
+};
 
 export const BOOKMARKS = [
   {

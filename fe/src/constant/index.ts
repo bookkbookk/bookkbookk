@@ -27,6 +27,7 @@ export const MESSAGE = {
   UPDATE_CHAPTER_TITLE_ERROR: `챕터 제목 변경에 실패했어요. \n 나중에 다시 시도해주세요.`,
   UPDATE_TOPIC_TITLE_ERROR: `토픽 제목 변경에 실패했어요. \n 나중에 다시 시도해주세요.`,
   NEW_BOOKMARK_ERROR: `북마크 추가에 실패했어요. \n 나중에 다시 시도해주세요.`,
+  NEW_COMMENT_ERROR: `댓글 추가에 실패했어요. \n 나중에 다시 시도해주세요.`,
 };
 
 export const PAGE_TITLE = {
