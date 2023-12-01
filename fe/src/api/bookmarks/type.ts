@@ -5,3 +5,9 @@ export type Bookmark = {
   commentCount: number;
   page?: number;
 } & CommentContent;
+
+export type NewBookmarkBody = {
+  topicId: number;
+  content: string;
+  page?: number;
+};

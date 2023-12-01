@@ -1,4 +1,4 @@
-import { timeUnits } from "./constants";
+import { numberRegex, timeUnits } from "./constants";
 
 export function validateEmail(email: string) {
   const emailRegex = new RegExp(
@@ -61,8 +61,6 @@ export const convertPastTimestamp = (timestamp: string) => {
 };
 
 export function validatePageNumber(input: string) {
-  const numberRegex = new RegExp(/^[0-9]+$/);
-
   if (!numberRegex.test(input)) {
     return {
       isValid: false,

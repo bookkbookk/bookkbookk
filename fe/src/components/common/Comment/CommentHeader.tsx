@@ -7,12 +7,17 @@ import { useMemberValue } from "store/useMember";
 import * as S from "./style";
 
 export default function CommentHeader(
-  props: Pick<CommentContent, "author" | "createdTime">
+  props: Pick<CommentContent, "author" | "createdTime"> & {
+    toggleEditing: () => void;
+    isEditing: boolean;
+  }
 ) {
   const member = useMemberValue();
   const {
     author: { memberId, profileImgUrl, nickname },
     createdTime,
+    toggleEditing,
+    isEditing,
   } = props;
 
   const isAuthor = member?.id === memberId;
@@ -33,12 +38,33 @@ export default function CommentHeader(
       </Stack>
       {isAuthor && (
         <Stack display="flex" flexDirection="row">
-          <Button
-            size="small"
-            color="inherit"
-            startIcon={<ModeRoundedIcon fontSize="small" />}>
-            편집
-          </Button>
+          {!isEditing && (
+            <Button
+              size="small"
+              color="inherit"
+              onClick={toggleEditing}
+              startIcon={<ModeRoundedIcon fontSize="small" />}>
+              편집
+            </Button>
+          )}
+          {isEditing && (
+            <Button
+              size="small"
+              color="inherit"
+              onClick={toggleEditing}
+              startIcon={<ModeRoundedIcon fontSize="small" />}>
+              편집 취소
+            </Button>
+          )}
+          {isEditing && (
+            <Button
+              size="small"
+              color="inherit"
+              onClick={toggleEditing}
+              startIcon={<ModeRoundedIcon fontSize="small" />}>
+              편집 완료
+            </Button>
+          )}
           <Button
             size="small"
             color="inherit"

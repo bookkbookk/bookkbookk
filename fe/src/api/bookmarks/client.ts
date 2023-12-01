@@ -9,3 +9,21 @@ export const getBookmarks = async (topicId: number) => {
 
   return data;
 };
+
+export const postBookmark = async ({
+  topicId,
+  content,
+  page,
+}: {
+  topicId: number;
+  content: string;
+  page?: number;
+}) => {
+  const { data } = await fetcher.post<Bookmark>(BOOK_API_PATH.bookmarks, {
+    topicId,
+    content,
+    page,
+  });
+
+  return data;
+};
