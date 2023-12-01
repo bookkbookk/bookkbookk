@@ -5,13 +5,7 @@ import {
   BookmarkCommentStateContext,
 } from "./BookmarkCommentContext";
 
-export function BookmarkCommentProvider({
-  bookmarkId,
-  children,
-}: {
-  bookmarkId: number;
-  children: ReactNode;
-}) {
+export function BookmarkCommentProvider({ children }: { children: ReactNode }) {
   const [commentState, setCommentState] = useState<BookmarkCommentState>({
     content: "",
   });

@@ -1,23 +1,48 @@
+import { usePostComment } from "@api/comments/queries";
 import "@blocknote/core/style.css";
 import { BlockNoteView, useBlockNote } from "@blocknote/react";
-import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
+import CheckIcon from "@mui/icons-material/Check";
+import ClearIcon from "@mui/icons-material/Clear";
 import { Stack } from "@mui/material";
 import Button from "@mui/material/Button";
 import { editorTheme } from "@styles/theme/palette";
-import { useBookmarkCommentActions } from "context/BookmarkComment/useBookmarkComment";
+import {
+  useBookmarkCommentActions,
+  useBookmarkCommentState,
+} from "context/BookmarkComment/useBookmarkComment";
+import { enqueueSnackbar } from "notistack";
 import { useThemeModeValue } from "store/useTheme";
 
-// TODO: BookmarkContentField.tsx와 중복되는 코드를 어떻게 줄일 수 있을지 고민해보기
-export default function CommentContentField() {
+export default function CommentContentField({
+  bookmarkId,
+  toggleReplying,
+}: {
+  bookmarkId: number;
+  toggleReplying: () => void;
+}) {
+  const { content } = useBookmarkCommentState();
   const { setContent } = useBookmarkCommentActions();
   const themeMode = useThemeModeValue();
 
   const editor = useBlockNote({
     onEditorContentChange: async (editor) => {
-      const content = await editor.blocksToMarkdown(editor.topLevelBlocks);
-      setContent(content);
+      setContent(JSON.stringify(editor.topLevelBlocks));
     },
   });
+
+  const { onPostComment } = usePostComment({
+    onSuccessCallback: toggleReplying,
+  });
+
+  const postComment = () => {
+    if (!content) {
+      return enqueueSnackbar("댓글 내용은 필수로 입력해야 해요!", {
+        variant: "error",
+      });
+    }
+
+    onPostComment({ bookmarkId, content });
+  };
 
   return (
     <Stack display="flex" padding={2}>
@@ -25,13 +50,24 @@ export default function CommentContentField() {
       <Stack minHeight={80} flexGrow={1}>
         <BlockNoteView editor={editor} theme={editorTheme[themeMode]} />
       </Stack>
-      <Button
-        variant="contained"
-        startIcon={<BookmarkAddIcon />}
-        size="small"
-        sx={{ alignSelf: "flex-end" }}>
-        작성 완료
-      </Button>
+      <Stack display="flex" flexDirection="row" alignSelf="end" gap={1}>
+        <Button
+          variant="outlined"
+          startIcon={<ClearIcon />}
+          size="small"
+          onClick={toggleReplying}
+          sx={{ alignSelf: "flex-end" }}>
+          작성 취소
+        </Button>
+        <Button
+          variant="contained"
+          startIcon={<CheckIcon />}
+          size="small"
+          onClick={postComment}
+          sx={{ alignSelf: "flex-end" }}>
+          작성 완료
+        </Button>
+      </Stack>
     </Stack>
   );
 }

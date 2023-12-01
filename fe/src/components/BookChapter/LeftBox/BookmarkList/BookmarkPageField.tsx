@@ -7,7 +7,11 @@ import {
   useNewBookmarkActions,
 } from "context/BookmarkProvider/useBookmark";
 
-export default function BookmarkPageField() {
+export default function BookmarkPageField({
+  isEditing,
+}: {
+  isEditing: boolean;
+}) {
   const { page } = useBookmarkState();
   const { setPage } = useNewBookmarkActions();
   const { isValid, message } = validatePageNumber(page ?? "");
@@ -27,6 +31,7 @@ export default function BookmarkPageField() {
       id="standard-start-adornment"
       sx={{ mx: 2, my: 1, width: "5rem" }}
       InputProps={{
+        disabled: isEditing ? false : true,
         startAdornment: (
           <InputAdornment position="start">
             <Typography variant="caption">p.</Typography>
@@ -34,7 +39,7 @@ export default function BookmarkPageField() {
         ),
       }}
       variant="standard"
-      value={page ?? ""}
+      value={page}
       onChange={onChange}
       helperText={!isValid && message}
     />
