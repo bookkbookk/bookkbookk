@@ -1,16 +1,26 @@
-import useInput from "@hooks/useInput";
 import { TextField, Typography } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
+import { numberRegex } from "@utils/constants";
 import { validatePageNumber } from "@utils/index";
-import { useNewBookmarkActions } from "context/NewBookmark/useNewBookmark";
+import {
+  useNewBookmarkActions,
+  useNewBookmarkState,
+} from "context/NewBookmark/useNewBookmark";
 
 export default function BookmarkPageField() {
+  const { page } = useNewBookmarkState();
   const { setPage } = useNewBookmarkActions();
+  const { isValid, message } = validatePageNumber(page ?? "");
 
-  const { value, onChange, error } = useInput({
-    validators: [validatePageNumber],
-    callback: setPage,
-  });
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.trim();
+
+    if (value === "") {
+      return setPage("");
+    }
+
+    numberRegex.test(value) && setPage(value);
+  };
 
   return (
     <TextField
@@ -25,9 +35,9 @@ export default function BookmarkPageField() {
         ),
       }}
       variant="standard"
-      value={value}
-      onChange={(e) => onChange(e.target.value.trim())}
-      helperText={error}
+      value={page ?? ""}
+      onChange={onChange}
+      helperText={!isValid && message}
     />
   );
 }

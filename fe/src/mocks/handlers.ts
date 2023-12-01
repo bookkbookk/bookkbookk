@@ -397,4 +397,26 @@ export const handlers = [
       return res(ctx.status(200), ctx.json(COMMENTS));
     }
   ),
+
+  rest.post(BOOK_API_PATH.bookmarks, async (req, res, ctx) => {
+    const { content, page } = await req.json();
+
+    BOOKMARKS.push({
+      bookmarkId: 100,
+      author: {
+        memberId: 1,
+        nickname: "뭐당가이름이",
+        profileImgUrl: "www.asdjfk.com",
+      },
+      createdTime: "2023-12-01T12:00:00",
+      reaction: {
+        likeCount: 2,
+      },
+      commentCount: 0,
+      content,
+      page,
+    });
+
+    return res(ctx.status(200));
+  }),
 ];

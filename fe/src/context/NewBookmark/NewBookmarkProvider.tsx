@@ -5,13 +5,7 @@ import {
   NewBookmarkStateContext,
 } from "./NewBookmarkContext";
 
-export function NewBookmarkProvider({
-  topicId,
-  children,
-}: {
-  topicId: number;
-  children: ReactNode;
-}) {
+export function NewBookmarkProvider({ children }: { children: ReactNode }) {
   const [newBookmarkState, setNewBookmarkState] = useState<NewBookmarkState>({
     content: "",
   });
