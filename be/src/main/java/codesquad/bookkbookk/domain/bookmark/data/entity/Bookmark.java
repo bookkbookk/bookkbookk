@@ -1,6 +1,8 @@
 package codesquad.bookkbookk.domain.bookmark.data.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,11 +12,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import codesquad.bookkbookk.domain.bookmark.data.dto.UpdateBookmarkRequest;
+import codesquad.bookkbookk.domain.mapping.entity.BookmarkReaction;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.topic.data.entity.Topic;
 
@@ -47,6 +51,9 @@ public class Bookmark {
     @UpdateTimestamp
     @Column(name = "update_at")
     private LocalDateTime updateAt;
+
+    @OneToMany(mappedBy = "bookmark")
+    List<BookmarkReaction> bookmarkReactions = new ArrayList<>();
 
     @Builder
     private Bookmark(Member writer, Topic topic, String title, String content) {
