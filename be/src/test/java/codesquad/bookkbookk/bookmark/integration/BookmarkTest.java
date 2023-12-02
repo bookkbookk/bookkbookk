@@ -1,5 +1,7 @@
 package codesquad.bookkbookk.bookmark.integration;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.util.Map;
 
 import org.assertj.core.api.SoftAssertions;
@@ -263,4 +265,44 @@ public class BookmarkTest extends IntegrationTest {
             softAssertions.assertThat(response.jsonPath().getString("message")).isEqualTo(exception.getMessage());
         });
     }
+
+    @Test
+    @DisplayName("Bookmark에 리액션을 생성한다.")
+    void createBookmarkReaction() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = TestDataFactory.createChapter1(book);
+        chapterRepository.save(chapter);
+
+        Topic topic = TestDataFactory.createTopic1(chapter);
+        topicRepository.save(topic);
+
+        Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
+        bookmarkRepository.save(bookmark);
+
+        JSONObject requestBody = new JSONObject(Map.of("reactionName", "like"));
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .contentType(ContentType.JSON)
+                .body(requestBody.toString())
+                .when()
+                .post("api/bookmarks/" + bookmark.getId() + "/reactions")
+                .then().log().all()
+                .extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
 }
