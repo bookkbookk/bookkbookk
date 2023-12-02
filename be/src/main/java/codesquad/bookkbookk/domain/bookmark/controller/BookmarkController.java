@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.bookkbookk.common.resolver.MemberId;
+import codesquad.bookkbookk.domain.bookmark.data.dto.CreateBookmarkReactionRequest;
 import codesquad.bookkbookk.domain.bookmark.data.dto.CreateBookmarkRequest;
 import codesquad.bookkbookk.domain.bookmark.data.dto.UpdateBookmarkRequest;
 import codesquad.bookkbookk.domain.bookmark.service.BookmarkService;
@@ -42,6 +43,14 @@ public class BookmarkController {
     @DeleteMapping("/{bookmarkId}")
     public ResponseEntity<Void> deleteBookmark(@MemberId Long memberId, @PathVariable Long bookmarkId) {
         bookmarkService.deleteBookmark(memberId, bookmarkId);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{bookmarkId}/reactions")
+    public ResponseEntity<Void> createBookmarkReaction(@MemberId Long memberId, @PathVariable Long bookmarkId,
+                                                       @RequestBody CreateBookmarkReactionRequest request) {
+        bookmarkService.createBookmarkReaction(memberId, bookmarkId, request);
 
         return ResponseEntity.ok().build();
     }
