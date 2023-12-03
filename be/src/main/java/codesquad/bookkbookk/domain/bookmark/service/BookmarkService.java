@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codesquad.bookkbookk.common.error.exception.BookmarkNotFoundException;
+import codesquad.bookkbookk.common.error.exception.BookmarkReactionExistsException;
 import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.common.error.exception.TopicNotFoundException;
 import codesquad.bookkbookk.common.type.Reaction;
@@ -67,6 +68,9 @@ public class BookmarkService {
     @Transactional
     public void createBookmarkReaction(Long memberId, Long bookmarkId, CreateBookmarkReactionRequest request) {
         Reaction reaction = Reaction.of(request.getReactionName());
+        if (bookmarkReactionRepository.existsByBookmarkIdAndReactorIdAndReaction(bookmarkId, memberId, reaction)) {
+            throw new BookmarkReactionExistsException();
+        }
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         Bookmark bookmark = bookmarkRepository.findById(bookmarkId).orElseThrow(BookmarkNotFoundException::new);
 
