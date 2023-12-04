@@ -4,7 +4,9 @@ import { OAuthLoginParams, Tokens } from "./type";
 
 export const postRefreshToken = async () => {
   return await fetcher.post<{ accessToken: string }>(
-    AUTH_API_PATH.reissueToken
+    AUTH_API_PATH.reissueToken,
+    null,
+    { withCredentials: true }
   );
 };
 
@@ -13,7 +15,8 @@ export const postLogin = async ({ provider, authCode }: OAuthLoginParams) => {
     `${AUTH_API_PATH.login}/${provider}`,
     {
       authCode,
-    }
+    },
+    { withCredentials: true }
   );
 };
 
