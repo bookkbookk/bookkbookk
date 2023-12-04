@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.bookkbookk.common.resolver.MemberId;
+import codesquad.bookkbookk.domain.comment.data.dto.CreateCommentReactionRequest;
 import codesquad.bookkbookk.domain.comment.data.dto.CreateCommentRequest;
+import codesquad.bookkbookk.domain.comment.data.dto.DeleteCommentReactionRequest;
 import codesquad.bookkbookk.domain.comment.data.dto.UpdateCommentRequest;
 import codesquad.bookkbookk.domain.comment.service.CommentService;
 
@@ -42,6 +44,22 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(@MemberId Long memberId, @PathVariable Long commentId) {
         commentService.deleteComment(memberId, commentId);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{commentId}/reactions")
+    public ResponseEntity<Void> createBookmarkReaction(@MemberId Long memberId, @PathVariable Long commentId,
+                                                       @RequestBody CreateCommentReactionRequest request) {
+        commentService.createCommentReaction(memberId, commentId, request);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{commentId}/reactions")
+    public ResponseEntity<Void> deleteBookmarkReaction(@MemberId Long memberId, @PathVariable Long commentId,
+                                                       @RequestBody DeleteCommentReactionRequest request) {
+        commentService.deleteCommentReaction(memberId, commentId, request);
 
         return ResponseEntity.ok().build();
     }
