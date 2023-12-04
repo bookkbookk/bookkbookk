@@ -5,12 +5,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import codesquad.bookkbookk.common.error.exception.BookmarkNotFoundException;
 import codesquad.bookkbookk.common.error.exception.BookmarkReactionExistsException;
+import codesquad.bookkbookk.common.error.exception.BookmarkReactionNotFoundException;
 import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.common.error.exception.TopicNotFoundException;
 import codesquad.bookkbookk.common.type.Reaction;
 import codesquad.bookkbookk.domain.auth.service.AuthorizationService;
 import codesquad.bookkbookk.domain.bookmark.data.dto.CreateBookmarkReactionRequest;
 import codesquad.bookkbookk.domain.bookmark.data.dto.CreateBookmarkRequest;
+import codesquad.bookkbookk.domain.bookmark.data.dto.DeleteBookmarkReactionRequest;
 import codesquad.bookkbookk.domain.bookmark.data.dto.UpdateBookmarkRequest;
 import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
 import codesquad.bookkbookk.domain.bookmark.repository.BookmarkRepository;
@@ -77,6 +79,17 @@ public class BookmarkService {
         BookmarkReaction bookmarkReaction = new BookmarkReaction(bookmark, member, reaction);
         bookmarkReactionRepository.save(bookmarkReaction);
         bookmark.getBookmarkReactions().add(bookmarkReaction);
+    }
+
+    @Transactional
+    public void deleteBookmarkReaction(Long memberId, Long bookmarkId, DeleteBookmarkReactionRequest request) {
+        Reaction reaction = Reaction.of(request.getReactionName());
+
+        BookmarkReaction bookmarkReaction = bookmarkReactionRepository
+                .findByBookmarkIdAndReactorIdAndReaction(bookmarkId, memberId, reaction)
+                .orElseThrow(BookmarkReactionNotFoundException::new);
+        bookmarkReaction.getBookmark().getBookmarkReactions().remove(bookmarkReaction);
+        bookmarkReactionRepository.delete(bookmarkReaction);
     }
 
 }
