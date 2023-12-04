@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import codesquad.bookkbookk.IntegrationTest;
 import codesquad.bookkbookk.common.error.exception.CommentNotFoundException;
 import codesquad.bookkbookk.common.error.exception.CommentReactionExistsException;
+import codesquad.bookkbookk.common.error.exception.CommentReactionNotFoundException;
 import codesquad.bookkbookk.common.error.exception.MemberIsNotCommentWriterException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.common.type.Reaction;
@@ -369,6 +370,97 @@ public class CommentTest extends IntegrationTest {
                 .body(requestBody.toString())
                 .when()
                 .post("api/comments/" + bookmark.getId() + "/reactions")
+                .then().log().all()
+                .extract();
+
+        // then
+        SoftAssertions.assertSoftly(assertions -> {
+            assertions.assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
+            assertions.assertThat(response.jsonPath().getString("message")).isEqualTo(exception.getMessage());
+        });
+    }
+
+    @Test
+    @DisplayName("Comment의 reaction을 삭제한다.")
+    void deleteCommentReaction() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = TestDataFactory.createChapter1(book);
+        chapterRepository.save(chapter);
+
+        Topic topic = TestDataFactory.createTopic1(chapter);
+        topicRepository.save(topic);
+
+        Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
+        bookmarkRepository.save(bookmark);
+
+        Comment comment = TestDataFactory.createComment(bookmark, member);
+        commentRepository.save(comment);
+
+        CommentReaction commentReaction = new CommentReaction(comment, member, Reaction.LIKE);
+        commentReactionRepository.save(commentReaction);
+
+        JSONObject requestBody = new JSONObject(Map.of("reactionName", "like"));
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .contentType(ContentType.JSON)
+                .body(requestBody.toString())
+                .when()
+                .delete("api/comments/" + comment.getId() + "/reactions")
+                .then().log().all()
+                .extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("Comment에 없는 reaction을 삭제하려하면 예외가 발생한다.")
+    void deleteUnsavedCommentReaction() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = TestDataFactory.createChapter1(book);
+        chapterRepository.save(chapter);
+
+        Topic topic = TestDataFactory.createTopic1(chapter);
+        topicRepository.save(topic);
+
+        Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
+        bookmarkRepository.save(bookmark);
+
+        Comment comment = TestDataFactory.createComment(bookmark, member);
+        commentRepository.save(comment);
+
+        CommentReactionNotFoundException exception = new CommentReactionNotFoundException();
+        JSONObject requestBody = new JSONObject(Map.of("reactionName", "like"));
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .contentType(ContentType.JSON)
+                .body(requestBody.toString())
+                .when()
+                .delete("api/comments/" + comment.getId() + "/reactions")
                 .then().log().all()
                 .extract();
 
