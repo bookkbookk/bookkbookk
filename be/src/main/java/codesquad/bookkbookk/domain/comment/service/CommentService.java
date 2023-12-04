@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import codesquad.bookkbookk.common.error.exception.BookmarkNotFoundException;
 import codesquad.bookkbookk.common.error.exception.CommentNotFoundException;
 import codesquad.bookkbookk.common.error.exception.CommentReactionExistsException;
+import codesquad.bookkbookk.common.error.exception.CommentReactionNotFoundException;
 import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.common.type.Reaction;
 import codesquad.bookkbookk.domain.auth.service.AuthorizationService;
@@ -13,6 +14,7 @@ import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
 import codesquad.bookkbookk.domain.bookmark.repository.BookmarkRepository;
 import codesquad.bookkbookk.domain.comment.data.dto.CreateCommentReactionRequest;
 import codesquad.bookkbookk.domain.comment.data.dto.CreateCommentRequest;
+import codesquad.bookkbookk.domain.comment.data.dto.DeleteCommentReactionRequest;
 import codesquad.bookkbookk.domain.comment.data.dto.UpdateCommentRequest;
 import codesquad.bookkbookk.domain.comment.data.entity.Comment;
 import codesquad.bookkbookk.domain.comment.repository.CommentRepository;
@@ -72,6 +74,17 @@ public class CommentService {
         CommentReaction commentReaction = new CommentReaction(comment, member, reaction);
         commentReactionRepository.save(commentReaction);
         comment.getCommentReactions().add(commentReaction);
+    }
+
+    @Transactional
+    public void deleteCommentReaction(Long memberId, Long commentId, DeleteCommentReactionRequest request) {
+        Reaction reaction = Reaction.of(request.getReactionName());
+
+        CommentReaction commentReaction = commentReactionRepository
+                .findByCommentIdAndReactorIdAndReaction(commentId, memberId, reaction)
+                .orElseThrow(CommentReactionNotFoundException::new);
+        commentReaction.getComment().getCommentReactions().remove(commentReaction);
+        commentReactionRepository.delete(commentReaction);
     }
 
 }
