@@ -6,7 +6,7 @@ import {
 } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
 import { queryKeys } from "./../queryKeys";
-import { getComments, postComment } from "./client";
+import { getComments, patchComment, postComment } from "./client";
 import { NewCommentBody } from "./type";
 
 export const useGetComments = ({ bookmarkId }: { bookmarkId: number }) => {
@@ -48,4 +48,32 @@ export const usePostComment = ({
   };
 
   return { onPostComment };
+};
+
+export const usePatchComment = ({
+  commentId,
+  onSuccessCallback,
+}: {
+  commentId: number;
+  onSuccessCallback: ({ updatedContent }: { updatedContent: string }) => void;
+}) => {
+  const { mutate } = useMutation({
+    mutationFn: patchComment,
+  });
+
+  const onPatchComment = ({ content }: { content: string }) => {
+    mutate(
+      { commentId, content },
+      {
+        onSuccess: () => onSuccessCallback({ updatedContent: content }),
+        onError: () => {
+          enqueueSnackbar(MESSAGE.UPDATE_COMMENT_ERROR, {
+            variant: "error",
+          });
+        },
+      }
+    );
+  };
+
+  return { onPatchComment };
 };

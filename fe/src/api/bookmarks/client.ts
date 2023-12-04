@@ -23,3 +23,22 @@ export const postBookmark = async ({
 
   return data;
 };
+
+export const patchBookmark = async ({
+  bookmarkId,
+  page,
+  content,
+}: {
+  bookmarkId: number;
+  page?: number;
+  content?: string;
+}) => {
+  const { data } = await fetcher.patch(
+    `${BOOK_API_PATH.bookmarks}/${bookmarkId}`,
+    {
+      page,
+      content,
+    }
+  );
+  return data;
+};

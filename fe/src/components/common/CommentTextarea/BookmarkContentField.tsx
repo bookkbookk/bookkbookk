@@ -7,9 +7,9 @@ import { Stack } from "@mui/material";
 import Button from "@mui/material/Button";
 import { editorTheme } from "@styles/theme/palette";
 import {
-  useBookmarkState,
   useNewBookmarkActions,
-} from "context/BookmarkProvider/useBookmark";
+  useNewBookmarkState,
+} from "context/NewBookmark/useNewBookmark";
 import { enqueueSnackbar } from "notistack";
 import { useThemeModeValue } from "store/useTheme";
 
@@ -20,7 +20,7 @@ export default function BookmarkContentField({
   topicId: number;
   toggleNewBookmark: () => void;
 }) {
-  const { page, content } = useBookmarkState();
+  const { page, content } = useNewBookmarkState();
   const { setPage, setContent } = useNewBookmarkActions();
 
   const themeMode = useThemeModeValue();

@@ -6,8 +6,8 @@ import {
 } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
 import { queryKeys } from "./../queryKeys";
-import { getBookmarks, postBookmark } from "./client";
-import { NewBookmarkBody } from "./type";
+import { getBookmarks, patchBookmark, postBookmark } from "./client";
+import { NewBookmarkBody, PatchBookmarkBody } from "./type";
 
 export const useGetBookmarks = ({ topicId }: { topicId: number }) => {
   const { data: bookmarks } = useSuspenseQuery({
@@ -48,4 +48,32 @@ export const usePostNewBookmark = ({
   };
 
   return { onPostNewBookmark };
+};
+
+export const usePatchBookmark = ({
+  bookmarkId,
+  onSuccessCallback,
+}: {
+  bookmarkId: number;
+  onSuccessCallback: ({ updatedContent }: { updatedContent?: string }) => void;
+}) => {
+  const { mutate } = useMutation({
+    mutationFn: patchBookmark,
+  });
+
+  const onPatchBookmark = ({ page, content }: Partial<PatchBookmarkBody>) => {
+    mutate(
+      { bookmarkId, page, content },
+      {
+        onSuccess: () => onSuccessCallback({ updatedContent: content }),
+        onError: () => {
+          enqueueSnackbar(MESSAGE.UPDATE_BOOKMARK_ERROR, {
+            variant: "error",
+          });
+        },
+      }
+    );
+  };
+
+  return { onPatchBookmark };
 };

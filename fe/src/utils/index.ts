@@ -64,7 +64,7 @@ export function validatePageNumber(input: string) {
   if (!numberRegex.test(input)) {
     return {
       isValid: false,
-      message: "페이지는 숫자만 입력 가능합니다.",
+      message: "숫자만 입력할 수 있어요!",
     };
   }
 

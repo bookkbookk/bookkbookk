@@ -14,6 +14,7 @@ import {
 } from "@components/common/common.style";
 import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
 import { Box, Divider, Tooltip } from "@mui/material";
+import { BookmarkListProvider } from "context/BookmarkList/BookmarkListProvider";
 import { useState } from "react";
 import { Location, useLocation } from "react-router-dom";
 
@@ -52,7 +53,9 @@ export default function BookChapter() {
           onTopicTitleChange={handleTopicTitleChange}
         />
         <Divider sx={{ width: "100%" }} />
-        <BookmarkList topicId={currentTopic.topicId} />
+        <BookmarkListProvider topicId={currentTopic.topicId}>
+          <BookmarkList />
+        </BookmarkListProvider>
         {isNewBookmarkOpen && (
           <NewBookmark
             topicId={currentTopic.topicId}

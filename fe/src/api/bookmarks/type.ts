@@ -11,3 +11,8 @@ export type NewBookmarkBody = {
   content: string;
   page?: number;
 };
+
+export type PatchBookmarkBody = {
+  page: number;
+  content: string;
+};

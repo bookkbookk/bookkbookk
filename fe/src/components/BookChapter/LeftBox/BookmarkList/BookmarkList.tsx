@@ -1,13 +1,13 @@
-import { useGetBookmarks } from "@api/bookmarks/queries";
 import { Stack } from "@mui/material";
-import { BookmarkThread } from "./BookmarkThread";
+import { useBookmarkListState } from "context/BookmarkList/useBookmarkList";
+import BookmarkThread from "./BookmarkThread";
 
-export default function BookmarkList({ topicId }: { topicId: number }) {
-  const bookmarks = useGetBookmarks({ topicId });
+export default function BookmarkList() {
+  const bookmarkList = useBookmarkListState();
 
   return (
     <Stack width="100%">
-      {bookmarks.map((bookmark) => (
+      {bookmarkList.map((bookmark) => (
         <BookmarkThread key={bookmark.bookmarkId} {...{ bookmark }} />
       ))}
     </Stack>

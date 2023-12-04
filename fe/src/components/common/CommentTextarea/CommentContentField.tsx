@@ -7,9 +7,9 @@ import { Stack } from "@mui/material";
 import Button from "@mui/material/Button";
 import { editorTheme } from "@styles/theme/palette";
 import {
-  useBookmarkCommentActions,
-  useBookmarkCommentState,
-} from "context/BookmarkComment/useBookmarkComment";
+  useNewCommentActions,
+  useNewCommentState,
+} from "context/NewComment/useNewComment";
 import { enqueueSnackbar } from "notistack";
 import { useThemeModeValue } from "store/useTheme";
 
@@ -20,8 +20,8 @@ export default function CommentContentField({
   bookmarkId: number;
   toggleReplying: () => void;
 }) {
-  const { content } = useBookmarkCommentState();
-  const { setContent } = useBookmarkCommentActions();
+  const { content } = useNewCommentState();
+  const { setContent } = useNewCommentActions();
   const themeMode = useThemeModeValue();
 
   const editor = useBlockNote({

@@ -1,6 +1,7 @@
 import { ROUTE_PATH } from "routes/constants";
 export const ACCESS_TOKEN_KEY = "bookk-accessToken";
 
+// TODO: 도메인 별로 메시지 상수 관리
 export const MESSAGE = {
   LOGIN_LOADING: `로그인중이에요... \n 새로고침을 하지 마세요!`,
   LOGIN_ERROR: `로그인에 실패했어요. \n 나중에 다시 시도해주세요.`,
@@ -28,6 +29,8 @@ export const MESSAGE = {
   UPDATE_TOPIC_TITLE_ERROR: `토픽 제목 변경에 실패했어요. \n 나중에 다시 시도해주세요.`,
   NEW_BOOKMARK_ERROR: `북마크 추가에 실패했어요. \n 나중에 다시 시도해주세요.`,
   NEW_COMMENT_ERROR: `댓글 추가에 실패했어요. \n 나중에 다시 시도해주세요.`,
+  UPDATE_BOOKMARK_ERROR: `북마크 수정에 실패했어요. \n 나중에 다시 시도해주세요.`,
+  UPDATE_COMMENT_ERROR: `댓글 수정에 실패했어요. \n 나중에 다시 시도해주세요.`,
 };
 
 export const PAGE_TITLE = {

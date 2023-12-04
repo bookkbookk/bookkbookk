@@ -13,6 +13,7 @@ import {
   BOOK_CLUB_LIST,
   CHAPTER_LIST,
   COMMENTS,
+  COMMENTS_MAP,
   MEMBER_INFO,
   USER_BOOK_LIST,
 } from "./data";
@@ -107,7 +108,7 @@ export const handlers = [
       }>({
         accessToken:
           "eyJhbGciOiJIUzI1NiJ9.eyJtZW1iZXJJZCI6MSwiZXhwIjoxNjkxOTIyNjAzfQ.vCxUGMiv9bnb4JQGwk6NVx6kHi5hG80tDxafIvrfKbA",
-        isNewMember: true,
+        isNewMember: false,
       })
     );
   }),
@@ -393,8 +394,11 @@ export const handlers = [
 
   rest.get(
     `${BOOK_API_PATH.bookmarks}/:bookmarkId/comments`,
-    async (_, res, ctx) => {
-      return res(ctx.status(200), ctx.json(COMMENTS));
+    async (req, res, ctx) => {
+      const { bookmarkId } = req.params;
+      const comments = COMMENTS_MAP.get(bookmarkId);
+
+      return res(ctx.status(200), ctx.json(comments));
     }
   ),
 
@@ -402,7 +406,7 @@ export const handlers = [
     const { content, page } = await req.json();
 
     BOOKMARKS.push({
-      bookmarkId: 100,
+      bookmarkId: 5,
       author: {
         memberId: 1,
         nickname: "뭐당가이름이",
@@ -415,6 +419,68 @@ export const handlers = [
       commentCount: 0,
       content,
       page,
+    });
+
+    return res(ctx.status(200));
+  }),
+
+  rest.post(BOOK_API_PATH.comments, async (req, res, ctx) => {
+    const { bookmarkId, content } = await req.json();
+
+    const COMMENTS = COMMENTS_MAP.get(bookmarkId + "");
+
+    COMMENTS.push({
+      commentId: 100,
+      author: {
+        memberId: 1,
+        nickname: "뭐당가이름이",
+        profileImgUrl: "www.asdjfk.com",
+      },
+      createdTime: "2023-09-11T14:30:00",
+      reaction: {
+        likeCount: 2,
+      },
+      content,
+    });
+
+    return res(ctx.status(200));
+  }),
+
+  rest.patch(
+    `${BOOK_API_PATH.bookmarks}/:bookmarkId`,
+    async (req, res, ctx) => {
+      const { bookmarkId } = req.params;
+      const { content, page } = await req.json();
+
+      BOOKMARKS.forEach((bookmark) => {
+        if (bookmark.bookmarkId === Number(bookmarkId)) {
+          return {
+            ...bookmark,
+            content,
+            page,
+          };
+        }
+
+        return bookmark;
+      });
+
+      return res(ctx.status(200));
+    }
+  ),
+
+  rest.patch(`${BOOK_API_PATH.comments}/:commentId`, async (req, res, ctx) => {
+    const { commentId } = req.params;
+    const { content } = await req.json();
+
+    COMMENTS.forEach((comment) => {
+      if (comment.commentId === Number(commentId)) {
+        return {
+          ...comment,
+          content,
+        };
+      }
+
+      return comment;
     });
 
     return res(ctx.status(200));

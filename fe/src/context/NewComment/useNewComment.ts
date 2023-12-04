@@ -1,11 +1,11 @@
 import { useContext } from "react";
 import {
-  BookmarkCommentActionsContext,
-  BookmarkCommentStateContext,
-} from "./BookmarkCommentContext";
+  NewCommentActionsContext,
+  NewCommentStateContext,
+} from "./NewCommentContext";
 
-export function useBookmarkCommentState() {
-  const context = useContext(BookmarkCommentStateContext);
+export function useNewCommentState() {
+  const context = useContext(NewCommentStateContext);
 
   if (context === undefined) {
     throw new Error(
@@ -16,8 +16,8 @@ export function useBookmarkCommentState() {
   return context;
 }
 
-export function useBookmarkCommentActions() {
-  const context = useContext(BookmarkCommentActionsContext);
+export function useNewCommentActions() {
+  const context = useContext(NewCommentActionsContext);
 
   if (context === undefined) {
     throw new Error(

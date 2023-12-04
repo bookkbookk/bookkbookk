@@ -1,11 +1,11 @@
 import { useContext } from "react";
 import {
-  BookmarkActionsContext,
-  BookmarkStateContext,
-} from "./BookmarkContext";
+  NewBookmarkActionsContext,
+  NewBookmarkStateContext,
+} from "./NewBookmarkContext";
 
-export function useBookmarkState() {
-  const context = useContext(BookmarkStateContext);
+export function useNewBookmarkState() {
+  const context = useContext(NewBookmarkStateContext);
 
   if (context === undefined) {
     throw new Error(
@@ -17,7 +17,7 @@ export function useBookmarkState() {
 }
 
 export function useNewBookmarkActions() {
-  const context = useContext(BookmarkActionsContext);
+  const context = useContext(NewBookmarkActionsContext);
 
   if (context === undefined) {
     throw new Error(

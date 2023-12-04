@@ -3,12 +3,12 @@ import InputAdornment from "@mui/material/InputAdornment";
 import { numberRegex } from "@utils/constants";
 import { validatePageNumber } from "@utils/index";
 import {
-  useBookmarkState,
   useNewBookmarkActions,
-} from "context/BookmarkProvider/useBookmark";
+  useNewBookmarkState,
+} from "context/NewBookmark/useNewBookmark";
 
 export default function BookmarkPageField() {
-  const { page } = useBookmarkState();
+  const { page } = useNewBookmarkState();
   const { setPage } = useNewBookmarkActions();
   const { isValid, message } = validatePageNumber(page ?? "");
 

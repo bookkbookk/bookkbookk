@@ -24,3 +24,20 @@ export const postComment = async ({
 
   return data;
 };
+
+export const patchComment = async ({
+  commentId,
+  content,
+}: {
+  commentId: number;
+  content: string;
+}) => {
+  const { data } = await fetcher.patch(
+    `${BOOK_API_PATH.comments}/${commentId}`,
+    {
+      content,
+    }
+  );
+
+  return data;
+};

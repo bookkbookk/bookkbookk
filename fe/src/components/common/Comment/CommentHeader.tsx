@@ -1,6 +1,5 @@
 import { CommentContent } from "@api/comments/type";
 import CheckIcon from "@mui/icons-material/Check";
-import ClearIcon from "@mui/icons-material/Clear";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModeRoundedIcon from "@mui/icons-material/ModeRounded";
 import { Avatar, Button, Stack, Typography } from "@mui/material";
@@ -8,18 +7,20 @@ import { convertPastTimestamp } from "@utils/index";
 import { useMemberValue } from "store/useMember";
 import * as S from "./style";
 
-export default function CommentHeader(
-  props: Pick<CommentContent, "author" | "createdTime"> & {
-    toggleEditing: () => void;
-    isEditing: boolean;
-  }
-) {
+type Props = Pick<CommentContent, "author" | "createdTime"> & {
+  toggleEditing: () => void;
+  isEditing: boolean;
+  onCompleteClick: () => void;
+};
+
+export default function CommentHeader(props: Props) {
   const member = useMemberValue();
   const {
     author: { memberId, profileImgUrl, nickname },
     createdTime,
     toggleEditing,
     isEditing,
+    onCompleteClick,
   } = props;
 
   const isAuthor = member?.id === memberId;
@@ -58,22 +59,13 @@ export default function CommentHeader(
             </>
           )}
           {isEditing && (
-            <>
-              <Button
-                size="small"
-                color="inherit"
-                onClick={toggleEditing}
-                startIcon={<ClearIcon fontSize="small" />}>
-                취소
-              </Button>
-              <Button
-                size="small"
-                color="inherit"
-                onClick={toggleEditing}
-                startIcon={<CheckIcon fontSize="small" />}>
-                완료
-              </Button>
-            </>
+            <Button
+              size="small"
+              color="inherit"
+              onClick={onCompleteClick}
+              startIcon={<CheckIcon fontSize="small" />}>
+              완료
+            </Button>
           )}
         </Stack>
       )}

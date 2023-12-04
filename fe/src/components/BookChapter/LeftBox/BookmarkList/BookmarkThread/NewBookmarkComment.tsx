@@ -1,7 +1,7 @@
 import { CommentTextarea } from "@components/common/CommentTextarea";
 import { Target } from "@components/common/common.style";
 import useAutoScroll from "@hooks/useAutoScroll";
-import { BookmarkCommentProvider } from "context/BookmarkComment/BookmarkCommentProvider";
+import { NewCommentProvider } from "context/NewComment/NewCommentProvider";
 
 export default function NewBookmarkComment({
   bookmarkId,
@@ -13,11 +13,11 @@ export default function NewBookmarkComment({
   const targetRef = useAutoScroll();
 
   return (
-    <BookmarkCommentProvider>
+    <NewCommentProvider>
+      <Target ref={targetRef} />
       <CommentTextarea>
         <CommentTextarea.Comment {...{ bookmarkId, toggleReplying }} />
       </CommentTextarea>
-      <Target ref={targetRef} />
-    </BookmarkCommentProvider>
+    </NewCommentProvider>
   );
 }
