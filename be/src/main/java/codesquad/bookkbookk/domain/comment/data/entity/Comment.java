@@ -1,6 +1,8 @@
 package codesquad.bookkbookk.domain.comment.data.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,12 +12,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
 import codesquad.bookkbookk.domain.comment.data.dto.UpdateCommentRequest;
+import codesquad.bookkbookk.domain.mapping.entity.CommentReaction;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 
 import lombok.AccessLevel;
@@ -45,6 +49,9 @@ public class Comment {
     @UpdateTimestamp
     @Column(name = "update_at")
     private LocalDateTime updateAt;
+
+    @OneToMany(mappedBy = "comment")
+    List<CommentReaction> commentReactions = new ArrayList<>();
 
     public Comment(Bookmark bookmark, Member writer, String content) {
         this.bookmark = bookmark;
