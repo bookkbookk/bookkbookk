@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import codesquad.bookkbookk.IntegrationTest;
 import codesquad.bookkbookk.common.error.exception.BookmarkNotFoundException;
 import codesquad.bookkbookk.common.error.exception.BookmarkReactionExistsException;
+import codesquad.bookkbookk.common.error.exception.BookmarkReactionNotFoundException;
 import codesquad.bookkbookk.common.error.exception.MemberIsNotBookmarkWriterException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.common.type.Reaction;
@@ -347,6 +348,91 @@ public class BookmarkTest extends IntegrationTest {
                 .body(requestBody.toString())
                 .when()
                 .post("api/bookmarks/" + bookmark.getId() + "/reactions")
+                .then().log().all()
+                .extract();
+
+        // then
+        SoftAssertions.assertSoftly(assertions -> {
+            assertions.assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
+            assertions.assertThat(response.jsonPath().getString("message")).isEqualTo(exception.getMessage());
+        });
+    }
+
+    @Test
+    @DisplayName("Bookmark의 reaction을 삭제한다.")
+    void deleteBookmarkReaction() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = TestDataFactory.createChapter1(book);
+        chapterRepository.save(chapter);
+
+        Topic topic = TestDataFactory.createTopic1(chapter);
+        topicRepository.save(topic);
+
+        Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
+        bookmarkRepository.save(bookmark);
+
+        BookmarkReaction bookmarkReaction = new BookmarkReaction(bookmark, member, Reaction.LIKE);
+        bookmarkReactionRepository.save(bookmarkReaction);
+
+        JSONObject requestBody = new JSONObject(Map.of("reactionName", "like"));
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .contentType(ContentType.JSON)
+                .body(requestBody.toString())
+                .when()
+                .delete("api/bookmarks/" + bookmark.getId() + "/reactions")
+                .then().log().all()
+                .extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("Bookmark에 없는 reaction을 삭제하려하면 예외가 발생한다.")
+    void deleteUnsavedBookmarkReaction() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = TestDataFactory.createChapter1(book);
+        chapterRepository.save(chapter);
+
+        Topic topic = TestDataFactory.createTopic1(chapter);
+        topicRepository.save(topic);
+
+        Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
+        bookmarkRepository.save(bookmark);
+
+        BookmarkReactionNotFoundException exception = new BookmarkReactionNotFoundException();
+        JSONObject requestBody = new JSONObject(Map.of("reactionName", "like"));
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .contentType(ContentType.JSON)
+                .body(requestBody.toString())
+                .when()
+                .delete("api/bookmarks/" + bookmark.getId() + "/reactions")
                 .then().log().all()
                 .extract();
 
