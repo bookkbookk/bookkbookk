@@ -1,6 +1,7 @@
 import { usePatchComment } from "@api/comments/queries";
 import { Comment as CommentType } from "@api/comments/type";
 import { Comment } from "@components/common/Comment";
+import { useCommentListActions } from "context/CommentList/useCommentList";
 import { useState } from "react";
 
 export function BookmarkComment({ comment }: { comment: CommentType }) {
@@ -14,11 +15,12 @@ export function BookmarkComment({ comment }: { comment: CommentType }) {
   const [isEditing, setIsEditing] = useState(false);
   const toggleEditing = () => setIsEditing((prev) => !prev);
 
+  const { setContent } = useCommentListActions();
   const { onPatchComment } = usePatchComment({
     commentId,
     onSuccessCallback: ({ updatedContent }) => {
       toggleEditing();
-      // TODO: 전역 상태 동기화
+      setContent({ commentId, newContent: updatedContent });
     },
   });
 
@@ -28,15 +30,21 @@ export function BookmarkComment({ comment }: { comment: CommentType }) {
       return;
     }
 
-    onPatchComment({ content });
+    onPatchComment({ content: updatedContent });
   };
+
+  const cancelEditing = () => {
+    setUpdatedContent(content);
+    toggleEditing();
+  };
+
   // TODO: 댓글 삭제 요청
 
   return (
     <Comment>
       <Comment.Header
         {...{ author, createdTime, toggleEditing, isEditing }}
-        onCancelClick={toggleEditing}
+        onCancelClick={cancelEditing}
         onCompleteClick={patchBookmark}
       />
       {isEditing ? (

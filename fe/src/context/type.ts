@@ -38,10 +38,14 @@ export type BookmarkListAction = {
   }) => void;
 };
 
-export type CommentListState = {
-  comments: Comment[];
-};
+export type CommentListState = Comment[];
 
 export type CommentListAction = {
-  setComments: (comments: Comment[]) => void;
+  setContent: ({
+    commentId,
+    newContent,
+  }: {
+    commentId: number;
+    newContent: string;
+  }) => void;
 };

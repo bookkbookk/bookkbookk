@@ -1,5 +1,5 @@
-import { useGetComments } from "@api/comments/queries";
 import { Divider, Stack } from "@mui/material";
+import { useCommentListState } from "context/CommentList/useCommentList";
 import NewBookmarkComment from "../NewBookmarkComment";
 import { BookmarkComment } from "./BookmarkComment";
 
@@ -12,7 +12,7 @@ export function BookmarkCommentList({
   bookmarkId: number;
   toggleReplying: () => void;
 }) {
-  const comments = useGetComments({ bookmarkId });
+  const comments = useCommentListState();
   const hasComments = !!comments.length;
 
   return (
