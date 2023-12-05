@@ -1,9 +1,9 @@
 import { usePatchBookmark } from "@api/bookmarks/queries";
 import { Bookmark as BookmarkType } from "@api/bookmarks/type";
 import { Comment } from "@components/common/Comment";
+import { CommentTextarea } from "@components/common/CommentTextarea";
 import { useBookmarkListActions } from "context/BookmarkList/useBookmarkList";
 import { useState } from "react";
-import BookmarkPageField from "../BookmarkPageField";
 
 export default function Bookmark({
   bookmark: { author, createdTime, content, page, bookmarkId },
@@ -13,40 +13,46 @@ export default function Bookmark({
   toggleReplying: () => void;
 }) {
   const [updatedContent, setUpdatedContent] = useState(content);
-  const [updatedPage, setUpdatedPage] = useState(page);
-
   const onBookmarkContentChange = (content: string) => {
     setUpdatedContent(content);
+  };
+
+  const [updatedPage, setUpdatedPage] = useState(page + "");
+  const onBookmarkPageChange = (updatedPage: string) => {
+    setUpdatedPage(updatedPage);
   };
 
   const [isEditing, setIsEditing] = useState(false);
   const toggleEditing = () => setIsEditing((prev) => !prev);
 
-  const isVisiblePageField = !!page || isEditing;
-
-  const { setContent } = useBookmarkListActions();
+  const { setPage, setContent } = useBookmarkListActions();
   const { onPatchBookmark } = usePatchBookmark({
     bookmarkId,
-    onSuccessCallback: ({ updatedContent }) => {
+    onSuccessCallback: ({ updatedContent, updatedPage }) => {
       updatedContent && setContent({ bookmarkId, newContent: updatedContent });
+      updatedPage && setPage({ bookmarkId, newPage: updatedPage });
+
       toggleEditing();
     },
   });
 
   const patchBookmark = () => {
-    if (content === updatedContent && page === updatedPage) {
+    const pageNum = Number(updatedPage);
+
+    if (content === updatedContent && page === pageNum) {
       toggleEditing();
       return;
     }
 
     onPatchBookmark({
       content: updatedContent,
-      page: updatedPage,
+      page: pageNum,
     });
   };
 
   const cancelEditing = () => {
     setUpdatedContent(content);
+    setUpdatedPage(page + "");
     toggleEditing();
   };
 
@@ -59,7 +65,15 @@ export default function Bookmark({
         onCancelClick={cancelEditing}
         onCompleteClick={patchBookmark}
       />
-      {isVisiblePageField && <BookmarkPageField {...{ isEditing }} />}
+      {!!page && !isEditing && (
+        <CommentTextarea.PageViewer value={updatedPage + ""} disabled={true} />
+      )}
+      {!!page && isEditing && (
+        <CommentTextarea.PageEditor
+          value={page + ""}
+          onChange={onBookmarkPageChange}
+        />
+      )}
       {isEditing ? (
         <Comment.Editor
           content={updatedContent}

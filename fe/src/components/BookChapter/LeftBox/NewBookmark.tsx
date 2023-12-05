@@ -1,7 +1,10 @@
 import { CommentTextarea } from "@components/common/CommentTextarea";
 import { Target } from "@components/common/common.style";
 import useAutoScroll from "@hooks/useAutoScroll";
-import { NewBookmarkProvider } from "context/NewBookmark/NewBookmarkProvider";
+import {
+  useNewBookmarkActions,
+  useNewBookmarkState,
+} from "context/NewBookmark/useNewBookmark";
 
 export default function NewBookmark({
   topicId,
@@ -12,13 +15,23 @@ export default function NewBookmark({
 }) {
   const targetRef = useAutoScroll();
 
+  const { page } = useNewBookmarkState();
+  const { setPage } = useNewBookmarkActions();
+
+  const onPageChange = (value: string) => {
+    setPage(value);
+  };
+
   return (
-    <NewBookmarkProvider>
+    <>
+      <Target ref={targetRef} />
       <CommentTextarea>
-        <CommentTextarea.PageField />
+        <CommentTextarea.PageEditor
+          value={page ?? ""}
+          onChange={onPageChange}
+        />
         <CommentTextarea.Bookmark {...{ topicId, toggleNewBookmark }} />
       </CommentTextarea>
-      <Target ref={targetRef} />
-    </NewBookmarkProvider>
+    </>
   );
 }

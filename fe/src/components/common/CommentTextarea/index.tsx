@@ -1,10 +1,11 @@
 import BookmarkContentField from "./BookmarkContentField";
-import BookmarkPageField from "./BookmarkPageField";
+import { BookmarkPageEditor, BookmarkPageViewer } from "./BookmarkPageField";
 import CommentContentField from "./CommentContentField";
 import CommentTextareaWrapper from "./CommentTextareaWrapper";
 
 export const CommentTextarea = Object.assign(CommentTextareaWrapper, {
-  PageField: BookmarkPageField,
+  PageEditor: BookmarkPageEditor,
+  PageViewer: BookmarkPageViewer,
   Bookmark: BookmarkContentField,
   Comment: CommentContentField,
 });

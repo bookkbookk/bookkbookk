@@ -2,24 +2,33 @@ import { TextField, Typography } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
 import { numberRegex } from "@utils/constants";
 import { validatePageNumber } from "@utils/index";
-import {
-  useNewBookmarkActions,
-  useNewBookmarkState,
-} from "context/NewBookmark/useNewBookmark";
+import { useState } from "react";
 
-export default function BookmarkPageField() {
-  const { page } = useNewBookmarkState();
-  const { setPage } = useNewBookmarkActions();
-  const { isValid, message } = validatePageNumber(page ?? "");
+type BookmarkPageViewerProps = {
+  value: string;
+  disabled: true;
+};
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.trim();
+type BookmarkPageEditorProps = {
+  value: string;
+  onChange: (value: string) => void;
+};
 
+export function BookmarkPageEditor(props: BookmarkPageEditorProps) {
+  const [value, setValue] = useState(props.value);
+  const { isValid, message } = validatePageNumber(value);
+
+  const onValueChange = (value: string) => {
     if (value === "") {
-      return setPage("");
+      setValue(value);
+      props.onChange("");
+      return;
     }
 
-    numberRegex.test(value) && setPage(value);
+    if (numberRegex.test(value)) {
+      props.onChange(value);
+      setValue(value);
+    }
   };
 
   return (
@@ -34,9 +43,30 @@ export default function BookmarkPageField() {
         ),
       }}
       variant="standard"
-      value={page ?? ""}
-      onChange={onChange}
+      value={value}
+      onChange={(e) => onValueChange(e.target.value.trim())}
       helperText={!isValid && message}
+    />
+  );
+}
+
+export function BookmarkPageViewer(props: BookmarkPageViewerProps) {
+  const { value, disabled } = props;
+
+  return (
+    <TextField
+      id="standard-start-adornment"
+      sx={{ mx: 2, my: 1, width: "5rem" }}
+      InputProps={{
+        disabled,
+        startAdornment: (
+          <InputAdornment position="start">
+            <Typography variant="caption">p.</Typography>
+          </InputAdornment>
+        ),
+      }}
+      variant="standard"
+      value={value}
     />
   );
 }

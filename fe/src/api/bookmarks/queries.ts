@@ -55,7 +55,13 @@ export const usePatchBookmark = ({
   onSuccessCallback,
 }: {
   bookmarkId: number;
-  onSuccessCallback: ({ updatedContent }: { updatedContent?: string }) => void;
+  onSuccessCallback: ({
+    updatedContent,
+    updatedPage,
+  }: {
+    updatedContent?: string;
+    updatedPage?: number;
+  }) => void;
 }) => {
   const { mutate } = useMutation({
     mutationFn: patchBookmark,
@@ -65,7 +71,8 @@ export const usePatchBookmark = ({
     mutate(
       { bookmarkId, page, content },
       {
-        onSuccess: () => onSuccessCallback({ updatedContent: content }),
+        onSuccess: () =>
+          onSuccessCallback({ updatedContent: content, updatedPage: page }),
         onError: () => {
           enqueueSnackbar(MESSAGE.UPDATE_BOOKMARK_ERROR, {
             variant: "error",
