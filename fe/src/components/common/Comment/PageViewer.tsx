@@ -1,13 +1,13 @@
 import { TextField, Typography } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
 
-export default function BookmarkPageField() {
+export default function PageViewer({ value }: { value: string }) {
   return (
     <TextField
-      label="북마크 페이지"
       id="standard-start-adornment"
-      sx={{ mx: 2, my: 1, width: "25ch" }}
+      sx={{ mx: 2, my: 1, width: "3rem" }}
       InputProps={{
+        disabled: true,
         startAdornment: (
           <InputAdornment position="start">
             <Typography variant="caption">p.</Typography>
@@ -15,13 +15,7 @@ export default function BookmarkPageField() {
         ),
       }}
       variant="standard"
-      // TODO: value, onChange, error, helperText context value 로 받아오기
-      // value={value}
-      // onChange={(e) => {
-      //   onChange(e.target.value);
-      // }}
-      // helperText={!!value && error}
-      // error={!!error && !!value}
+      value={value}
     />
   );
 }

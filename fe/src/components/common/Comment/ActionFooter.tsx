@@ -2,10 +2,10 @@ import ReplyIcon from "@mui/icons-material/Reply";
 import { Button, Stack } from "@mui/material";
 import ReactionMenu from "./ReactionMenu";
 
-export default function CommentFooter({
+export default function ActionFooter({
   onReplyButtonClick,
 }: {
-  onReplyButtonClick: () => void;
+  onReplyButtonClick?: () => void;
 }) {
   return (
     <Stack
@@ -14,12 +14,15 @@ export default function CommentFooter({
       justifyContent="space-between"
       padding={1}>
       <ReactionMenu />
-      <Button
-        color="inherit"
-        startIcon={<ReplyIcon />}
-        onClick={onReplyButtonClick}>
-        Reply
-      </Button>
+      {onReplyButtonClick && (
+        <Button
+          color="inherit"
+          size="small"
+          startIcon={<ReplyIcon />}
+          onClick={onReplyButtonClick}>
+          Reply
+        </Button>
+      )}
     </Stack>
   );
 }

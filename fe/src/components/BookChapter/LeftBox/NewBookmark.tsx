@@ -1,14 +1,60 @@
-import { CommentTextarea } from "@components/common/CommentTextarea";
+import { usePostNewBookmark } from "@api/bookmarks/queries";
+import { Comment } from "@components/common/Comment";
+import { Target } from "@components/common/common.style";
+import useAutoScroll from "@hooks/useAutoScroll";
+import { enqueueSnackbar } from "notistack";
+import { useState } from "react";
 
-export default function NewBookmark({ topicId }: { topicId: number }) {
-  // TODO: 새로운 북마크 추가 Context 만들기
-  console.log(`TODO: ${topicId} 북마크 추가하기`);
+export default function NewBookmark({
+  topicId,
+  toggleNewBookmark,
+}: {
+  topicId: number;
+  toggleNewBookmark: () => void;
+}) {
+  const targetRef = useAutoScroll();
+  const [bookmarkPage, setBookmarkPage] = useState("");
+  const [bookmarkContent, setBookmarkContent] = useState("");
+
+  const onContentChange = (content: string) => {
+    setBookmarkContent(content);
+  };
+
+  const onPageChange = (page: string) => {
+    setBookmarkPage(page);
+  };
+
+  const { onPostNewBookmark } = usePostNewBookmark({
+    onSuccessCallback: toggleNewBookmark,
+  });
+
+  const postNewBookmark = () => {
+    const pageNumber = Number(bookmarkPage);
+
+    if (!bookmarkContent) {
+      return enqueueSnackbar("북마크 내용은 필수로 입력해야 해요!", {
+        variant: "error",
+      });
+    }
+
+    onPostNewBookmark({
+      topicId,
+      content: bookmarkContent,
+      page: pageNumber,
+    });
+  };
 
   return (
-    <CommentTextarea>
-      <CommentTextarea.PageField />
-      <CommentTextarea.Content />
-      <CommentTextarea.Footer />
-    </CommentTextarea>
+    <>
+      <Target ref={targetRef} />
+      <Comment>
+        <Comment.PageEditor value={bookmarkPage} onChange={onPageChange} />
+        <Comment.ContentEditor onChange={onContentChange} />
+        <Comment.ButtonFooter
+          onCancelClick={toggleNewBookmark}
+          onPostClick={postNewBookmark}
+        />
+      </Comment>
+    </>
   );
 }
