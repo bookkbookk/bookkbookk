@@ -1,10 +1,9 @@
+import { usePostNewBookmark } from "@api/bookmarks/queries";
 import { CommentTextarea } from "@components/common/CommentTextarea";
 import { Target } from "@components/common/common.style";
 import useAutoScroll from "@hooks/useAutoScroll";
-import {
-  useNewBookmarkActions,
-  useNewBookmarkState,
-} from "context/NewBookmark/useNewBookmark";
+import { enqueueSnackbar } from "notistack";
+import { useState } from "react";
 
 export default function NewBookmark({
   topicId,
@@ -14,12 +13,35 @@ export default function NewBookmark({
   toggleNewBookmark: () => void;
 }) {
   const targetRef = useAutoScroll();
+  const [bookmarkPage, setBookmarkPage] = useState("");
+  const [bookmarkContent, setBookmarkContent] = useState("");
 
-  const { page } = useNewBookmarkState();
-  const { setPage } = useNewBookmarkActions();
+  const onContentChange = (content: string) => {
+    setBookmarkContent(content);
+  };
 
-  const onPageChange = (value: string) => {
-    setPage(value);
+  const onPageChange = (page: string) => {
+    setBookmarkPage(page);
+  };
+
+  const { onPostNewBookmark } = usePostNewBookmark({
+    onSuccessCallback: toggleNewBookmark,
+  });
+
+  const postNewBookmark = () => {
+    const pageNumber = Number(bookmarkPage);
+
+    if (!bookmarkContent) {
+      return enqueueSnackbar("북마크 내용은 필수로 입력해야 해요!", {
+        variant: "error",
+      });
+    }
+
+    onPostNewBookmark({
+      topicId,
+      content: bookmarkContent,
+      page: pageNumber,
+    });
   };
 
   return (
@@ -27,10 +49,14 @@ export default function NewBookmark({
       <Target ref={targetRef} />
       <CommentTextarea>
         <CommentTextarea.PageEditor
-          value={page ?? ""}
+          value={bookmarkPage}
           onChange={onPageChange}
         />
-        <CommentTextarea.Bookmark {...{ topicId, toggleNewBookmark }} />
+        <CommentTextarea.Content onChange={onContentChange} />
+        <CommentTextarea.Footer
+          onCancelClick={toggleNewBookmark}
+          onPostClick={postNewBookmark}
+        />
       </CommentTextarea>
     </>
   );

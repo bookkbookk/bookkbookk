@@ -1,3 +1,4 @@
+import "@blocknote/core/style.css";
 import { BlockNoteView, useBlockNote } from "@blocknote/react";
 import { editorTheme } from "@styles/theme/palette";
 import { useThemeModeValue } from "store/useTheme";
