@@ -21,7 +21,7 @@ export function useBookmarkListActions() {
 
   if (context === undefined) {
     throw new Error(
-      "useNewBookmarkActions must be used within a BookmarkListProvider"
+      "useBookmarkListActions must be used within a BookmarkListProvider"
     );
   }
 
