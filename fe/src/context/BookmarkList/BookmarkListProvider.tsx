@@ -16,7 +16,7 @@ export function BookmarkListProvider({
 
   const bookmarkActions = useMemo(
     () => ({
-      setContent: ({
+      updateContent: ({
         bookmarkId,
         newContent,
       }: {
@@ -38,7 +38,7 @@ export function BookmarkListProvider({
           return newBookmarkList;
         });
       },
-      setPage: ({
+      updatePage: ({
         bookmarkId,
         newPage,
       }: {
@@ -56,6 +56,15 @@ export function BookmarkListProvider({
 
             return bookmark;
           });
+
+          return newBookmarkList;
+        });
+      },
+      deleteBookmark: ({ bookmarkId }: { bookmarkId: number }) => {
+        setBookmarkListState((prev) => {
+          const newBookmarkList = prev.filter(
+            (bookmark) => bookmark.bookmarkId !== bookmarkId
+          );
 
           return newBookmarkList;
         });

@@ -41,3 +41,11 @@ export const patchComment = async ({
 
   return data;
 };
+
+export const deleteComment = async (commentId: number) => {
+  const { data } = await fetcher.delete(
+    `${BOOK_API_PATH.comments}/${commentId}`
+  );
+
+  return data;
+};

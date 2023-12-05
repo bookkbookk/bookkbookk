@@ -6,7 +6,12 @@ import {
 } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
 import { queryKeys } from "./../queryKeys";
-import { getBookmarks, patchBookmark, postBookmark } from "./client";
+import {
+  deleteBookmark,
+  getBookmarks,
+  patchBookmark,
+  postBookmark,
+} from "./client";
 import { NewBookmarkBody, PatchBookmarkBody } from "./type";
 
 export const useGetBookmarks = ({ topicId }: { topicId: number }) => {
@@ -83,4 +88,29 @@ export const usePatchBookmark = ({
   };
 
   return { onPatchBookmark };
+};
+
+export const useDeleteBookmark = ({
+  bookmarkId,
+  onSuccessCallback,
+}: {
+  bookmarkId: number;
+  onSuccessCallback: () => void;
+}) => {
+  const { mutate } = useMutation({
+    mutationFn: deleteBookmark,
+  });
+
+  const onDeleteBookmark = () => {
+    mutate(bookmarkId, {
+      onSuccess: onSuccessCallback,
+      onError: () => {
+        enqueueSnackbar(MESSAGE.DELETE_BOOKMARK_ERROR, {
+          variant: "error",
+        });
+      },
+    });
+  };
+
+  return { onDeleteBookmark };
 };

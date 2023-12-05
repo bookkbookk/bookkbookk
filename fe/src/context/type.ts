@@ -4,30 +4,32 @@ import { Comment } from "@api/comments/type";
 export type BookmarkListState = Bookmark[];
 
 export type BookmarkListAction = {
-  setContent: ({
+  updateContent: ({
     bookmarkId,
     newContent,
   }: {
     bookmarkId: number;
     newContent: string;
   }) => void;
-  setPage: ({
+  updatePage: ({
     bookmarkId,
     newPage,
   }: {
     bookmarkId: number;
     newPage: number;
   }) => void;
+  deleteBookmark: ({ bookmarkId }: { bookmarkId: number }) => void;
 };
 
 export type CommentListState = Comment[];
 
 export type CommentListAction = {
-  setContent: ({
+  updateContent: ({
     commentId,
     newContent,
   }: {
     commentId: number;
     newContent: string;
   }) => void;
+  deleteComment: ({ commentId }: { commentId: number }) => void;
 };

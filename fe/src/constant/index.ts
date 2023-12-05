@@ -31,6 +31,8 @@ export const MESSAGE = {
   NEW_COMMENT_ERROR: `댓글 추가에 실패했어요. \n 나중에 다시 시도해주세요.`,
   UPDATE_BOOKMARK_ERROR: `북마크 수정에 실패했어요. \n 나중에 다시 시도해주세요.`,
   UPDATE_COMMENT_ERROR: `댓글 수정에 실패했어요. \n 나중에 다시 시도해주세요.`,
+  DELETE_BOOKMARK_ERROR: `북마크 삭제에 실패했어요. \n 나중에 다시 시도해주세요.`,
+  DELETE_COMMENT_ERROR: `댓글 삭제에 실패했어요. \n 나중에 다시 시도해주세요.`,
 };
 
 export const PAGE_TITLE = {

@@ -16,7 +16,7 @@ export function CommentListProvider({
 
   const commentsAction = useMemo(
     () => ({
-      setContent: ({
+      updateContent: ({
         commentId,
         newContent,
       }: {
@@ -34,6 +34,13 @@ export function CommentListProvider({
 
             return c;
           });
+
+          return newCommentList;
+        });
+      },
+      deleteComment: ({ commentId }: { commentId: number }) => {
+        setComments((prev) => {
+          const newCommentList = prev.filter((c) => c.commentId !== commentId);
 
           return newCommentList;
         });

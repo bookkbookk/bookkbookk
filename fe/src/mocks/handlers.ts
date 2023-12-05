@@ -485,4 +485,31 @@ export const handlers = [
 
     return res(ctx.status(200));
   }),
+
+  rest.delete(`${BOOK_API_PATH.comments}/:commentId`, async (req, res, ctx) => {
+    const { commentId } = req.params;
+
+    COMMENTS.forEach((comment, index) => {
+      if (comment.commentId === Number(commentId)) {
+        COMMENTS.splice(index, 1);
+      }
+    });
+
+    return res(ctx.status(200));
+  }),
+
+  rest.delete(
+    `${BOOK_API_PATH.bookmarks}/:bookmarkId`,
+    async (req, res, ctx) => {
+      const { bookmarkId } = req.params;
+
+      BOOKMARKS.forEach((bookmark, index) => {
+        if (bookmark.bookmarkId === Number(bookmarkId)) {
+          BOOKMARKS.splice(index, 1);
+        }
+      });
+
+      return res(ctx.status(200));
+    }
+  ),
 ];

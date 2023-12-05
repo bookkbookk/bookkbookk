@@ -1,4 +1,4 @@
-import { usePatchBookmark } from "@api/bookmarks/queries";
+import { useDeleteBookmark, usePatchBookmark } from "@api/bookmarks/queries";
 import { Bookmark as BookmarkType } from "@api/bookmarks/type";
 import { Comment } from "@components/common/Comment";
 import { useBookmarkListActions } from "context/BookmarkList/useBookmarkList";
@@ -24,15 +24,24 @@ export default function Bookmark({
   const [isEditing, setIsEditing] = useState(false);
   const toggleEditing = () => setIsEditing((prev) => !prev);
 
-  const { setPage, setContent } = useBookmarkListActions();
+  const { updatePage, updateContent, deleteBookmark } =
+    useBookmarkListActions();
+
   const { onPatchBookmark } = usePatchBookmark({
     bookmarkId,
     onSuccessCallback: ({ updatedContent, updatedPage }) => {
-      updatedContent && setContent({ bookmarkId, newContent: updatedContent });
+      updatedContent &&
+        updateContent({ bookmarkId, newContent: updatedContent });
       (updatedPage || updatedPage === 0) &&
-        setPage({ bookmarkId, newPage: updatedPage });
+        updatePage({ bookmarkId, newPage: updatedPage });
 
       toggleEditing();
+    },
+  });
+  const { onDeleteBookmark } = useDeleteBookmark({
+    bookmarkId,
+    onSuccessCallback: () => {
+      deleteBookmark({ bookmarkId });
     },
   });
 
@@ -64,10 +73,9 @@ export default function Bookmark({
         {...{ author, createdTime, isEditing, toggleEditing }}
         onCancelClick={cancelEditing}
         onCompleteClick={patchBookmark}
+        onDeleteClick={onDeleteBookmark}
       />
-      {!!page && !isEditing && (
-        <Comment.PageViewer value={updatedPage + ""} disabled={true} />
-      )}
+      {!!page && !isEditing && <Comment.PageViewer value={updatedPage + ""} />}
       {isEditing && (
         <Comment.PageEditor
           value={page ? page + "" : ""}

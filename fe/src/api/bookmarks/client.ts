@@ -42,3 +42,11 @@ export const patchBookmark = async ({
   );
   return data;
 };
+
+export const deleteBookmark = async (bookmarkId: number) => {
+  const { data } = await fetcher.delete(
+    `${BOOK_API_PATH.bookmarks}/${bookmarkId}`
+  );
+
+  return data;
+};

@@ -6,7 +6,12 @@ import {
 } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
 import { queryKeys } from "./../queryKeys";
-import { getComments, patchComment, postComment } from "./client";
+import {
+  deleteComment,
+  getComments,
+  patchComment,
+  postComment,
+} from "./client";
 import { NewCommentBody } from "./type";
 
 export const useGetComments = ({ bookmarkId }: { bookmarkId: number }) => {
@@ -76,4 +81,29 @@ export const usePatchComment = ({
   };
 
   return { onPatchComment };
+};
+
+export const useDeleteComment = ({
+  commentId,
+  onSuccessCallback,
+}: {
+  commentId: number;
+  onSuccessCallback: () => void;
+}) => {
+  const { mutate } = useMutation({
+    mutationFn: deleteComment,
+  });
+
+  const onDeleteComment = () => {
+    mutate(commentId, {
+      onSuccess: onSuccessCallback,
+      onError: () => {
+        enqueueSnackbar(MESSAGE.DELETE_COMMENT_ERROR, {
+          variant: "error",
+        });
+      },
+    });
+  };
+
+  return { onDeleteComment };
 };

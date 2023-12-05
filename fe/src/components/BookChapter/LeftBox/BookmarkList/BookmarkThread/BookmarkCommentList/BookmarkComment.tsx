@@ -1,4 +1,4 @@
-import { usePatchComment } from "@api/comments/queries";
+import { useDeleteComment, usePatchComment } from "@api/comments/queries";
 import { Comment as CommentType } from "@api/comments/type";
 import { Comment } from "@components/common/Comment";
 import { useCommentListActions } from "context/CommentList/useCommentList";
@@ -15,13 +15,19 @@ export function BookmarkComment({ comment }: { comment: CommentType }) {
   const [isEditing, setIsEditing] = useState(false);
   const toggleEditing = () => setIsEditing((prev) => !prev);
 
-  const { setContent } = useCommentListActions();
+  const { updateContent, deleteComment } = useCommentListActions();
+
   const { onPatchComment } = usePatchComment({
     commentId,
     onSuccessCallback: ({ updatedContent }) => {
       toggleEditing();
-      setContent({ commentId, newContent: updatedContent });
+      updateContent({ commentId, newContent: updatedContent });
     },
+  });
+
+  const { onDeleteComment } = useDeleteComment({
+    commentId,
+    onSuccessCallback: () => deleteComment({ commentId }),
   });
 
   const patchBookmark = () => {
@@ -38,13 +44,12 @@ export function BookmarkComment({ comment }: { comment: CommentType }) {
     toggleEditing();
   };
 
-  // TODO: 댓글 삭제 요청
-
   return (
     <Comment>
       <Comment.Header
         {...{ author, createdTime, toggleEditing, isEditing }}
         onCancelClick={cancelEditing}
+        onDeleteClick={onDeleteComment}
         onCompleteClick={patchBookmark}
       />
       {isEditing ? (

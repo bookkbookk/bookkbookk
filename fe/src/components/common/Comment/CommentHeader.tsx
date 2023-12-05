@@ -12,6 +12,7 @@ type Props = Pick<CommentContent, "author" | "createdTime"> & {
   toggleEditing: () => void;
   isEditing: boolean;
   onCancelClick: () => void;
+  onDeleteClick: () => void;
   onCompleteClick: () => void;
 };
 
@@ -23,6 +24,7 @@ export default function CommentHeader(props: Props) {
     toggleEditing,
     isEditing,
     onCancelClick,
+    onDeleteClick,
     onCompleteClick,
   } = props;
 
@@ -56,6 +58,7 @@ export default function CommentHeader(props: Props) {
               <Button
                 size="small"
                 color="inherit"
+                onClick={onDeleteClick}
                 startIcon={<DeleteIcon fontSize="small" />}>
                 삭제
               </Button>
