@@ -1,5 +1,5 @@
 import { usePostNewBookmark } from "@api/bookmarks/queries";
-import { CommentTextarea } from "@components/common/CommentTextarea";
+import { Comment } from "@components/common/Comment";
 import { Target } from "@components/common/common.style";
 import useAutoScroll from "@hooks/useAutoScroll";
 import { enqueueSnackbar } from "notistack";
@@ -47,17 +47,14 @@ export default function NewBookmark({
   return (
     <>
       <Target ref={targetRef} />
-      <CommentTextarea>
-        <CommentTextarea.PageEditor
-          value={bookmarkPage}
-          onChange={onPageChange}
-        />
-        <CommentTextarea.Content onChange={onContentChange} />
-        <CommentTextarea.Footer
+      <Comment>
+        <Comment.PageEditor value={bookmarkPage} onChange={onPageChange} />
+        <Comment.ContentEditor onChange={onContentChange} />
+        <Comment.ButtonFooter
           onCancelClick={toggleNewBookmark}
           onPostClick={postNewBookmark}
         />
-      </CommentTextarea>
+      </Comment>
     </>
   );
 }

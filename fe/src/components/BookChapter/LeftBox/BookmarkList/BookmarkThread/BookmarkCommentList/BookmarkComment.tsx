@@ -48,14 +48,14 @@ export function BookmarkComment({ comment }: { comment: CommentType }) {
         onCompleteClick={patchBookmark}
       />
       {isEditing ? (
-        <Comment.Editor
+        <Comment.ContentEditor
           content={updatedContent}
           onChange={onCommentContentChange}
         />
       ) : (
-        <Comment.Viewer content={content} />
+        <Comment.ContentViewer content={content} />
       )}
-      <Comment.Footer />
+      <Comment.ActionFooter />
     </Comment>
   );
 }

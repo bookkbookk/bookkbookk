@@ -1,7 +1,6 @@
 import { usePatchBookmark } from "@api/bookmarks/queries";
 import { Bookmark as BookmarkType } from "@api/bookmarks/type";
 import { Comment } from "@components/common/Comment";
-import { CommentTextarea } from "@components/common/CommentTextarea";
 import { useBookmarkListActions } from "context/BookmarkList/useBookmarkList";
 import { useState } from "react";
 
@@ -30,7 +29,8 @@ export default function Bookmark({
     bookmarkId,
     onSuccessCallback: ({ updatedContent, updatedPage }) => {
       updatedContent && setContent({ bookmarkId, newContent: updatedContent });
-      updatedPage && setPage({ bookmarkId, newPage: updatedPage });
+      (updatedPage || updatedPage === 0) &&
+        setPage({ bookmarkId, newPage: updatedPage });
 
       toggleEditing();
     },
@@ -66,23 +66,23 @@ export default function Bookmark({
         onCompleteClick={patchBookmark}
       />
       {!!page && !isEditing && (
-        <CommentTextarea.PageViewer value={updatedPage + ""} disabled={true} />
+        <Comment.PageViewer value={updatedPage + ""} disabled={true} />
       )}
-      {!!page && isEditing && (
-        <CommentTextarea.PageEditor
-          value={page + ""}
+      {isEditing && (
+        <Comment.PageEditor
+          value={page ? page + "" : ""}
           onChange={onBookmarkPageChange}
         />
       )}
       {isEditing ? (
-        <Comment.Editor
+        <Comment.ContentEditor
           content={updatedContent}
           onChange={onBookmarkContentChange}
         />
       ) : (
-        <Comment.Viewer content={content} />
+        <Comment.ContentViewer content={content} />
       )}
-      <Comment.Footer onReplyButtonClick={toggleReplying} />
+      <Comment.ActionFooter onReplyButtonClick={toggleReplying} />
     </Comment>
   );
 }

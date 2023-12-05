@@ -8,11 +8,11 @@ export default function CommentEditor({
   content,
   onChange,
 }: {
-  content: string;
+  content?: string;
   onChange: (content: string) => void;
 }) {
   const themeMode = useThemeModeValue();
-  const blocks = JSON.parse(content);
+  const blocks = content && JSON.parse(content);
 
   const editor = useBlockNote({
     initialContent: blocks,

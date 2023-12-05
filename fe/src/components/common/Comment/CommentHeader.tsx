@@ -1,5 +1,6 @@
 import { CommentContent } from "@api/comments/type";
 import CheckIcon from "@mui/icons-material/Check";
+import ClearIcon from "@mui/icons-material/Clear";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModeRoundedIcon from "@mui/icons-material/ModeRounded";
 import { Avatar, Button, Stack, Typography } from "@mui/material";
@@ -66,7 +67,7 @@ export default function CommentHeader(props: Props) {
                 size="small"
                 color="inherit"
                 onClick={onCancelClick}
-                startIcon={<CheckIcon fontSize="small" />}>
+                startIcon={<ClearIcon fontSize="small" />}>
                 취소
               </Button>
               <Button

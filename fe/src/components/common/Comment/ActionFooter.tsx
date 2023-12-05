@@ -2,7 +2,7 @@ import ReplyIcon from "@mui/icons-material/Reply";
 import { Button, Stack } from "@mui/material";
 import ReactionMenu from "./ReactionMenu";
 
-export default function CommentFooter({
+export default function ActionFooter({
   onReplyButtonClick,
 }: {
   onReplyButtonClick?: () => void;

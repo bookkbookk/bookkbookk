@@ -1,5 +1,5 @@
 import { usePostComment } from "@api/comments/queries";
-import { CommentTextarea } from "@components/common/CommentTextarea";
+import { Comment } from "@components/common/Comment";
 import { Target } from "@components/common/common.style";
 import useAutoScroll from "@hooks/useAutoScroll";
 import { enqueueSnackbar } from "notistack";
@@ -36,13 +36,13 @@ export default function NewBookmarkComment({
   return (
     <>
       <Target ref={targetRef} />
-      <CommentTextarea>
-        <CommentTextarea.Content onChange={onContentChange} />
-        <CommentTextarea.Footer
+      <Comment>
+        <Comment.ContentEditor onChange={onContentChange} />
+        <Comment.ButtonFooter
           onCancelClick={toggleReplying}
           onPostClick={postComment}
         />
-      </CommentTextarea>
+      </Comment>
     </>
   );
 }
