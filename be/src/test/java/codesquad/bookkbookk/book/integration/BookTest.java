@@ -1,5 +1,6 @@
 package codesquad.bookkbookk.book.integration;
 
+import java.util.List;
 import java.util.Map;
 
 import org.assertj.core.api.SoftAssertions;
@@ -22,10 +23,16 @@ import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
+import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
+import codesquad.bookkbookk.domain.bookmark.repository.BookmarkRepository;
+import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
+import codesquad.bookkbookk.domain.chapter.repository.ChapterRepository;
 import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
 import codesquad.bookkbookk.domain.mapping.repository.BookClubMemberRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
+import codesquad.bookkbookk.domain.topic.data.entity.Topic;
+import codesquad.bookkbookk.domain.topic.repository.TopicRepository;
 import codesquad.bookkbookk.util.TestDataFactory;
 
 import io.restassured.RestAssured;
@@ -46,6 +53,12 @@ public class BookTest extends IntegrationTest {
 
     @Autowired
     private BookClubMemberRepository bookClubMemberRepository;
+    @Autowired
+    private TopicRepository topicRepository;
+    @Autowired
+    private ChapterRepository chapterRepository;
+    @Autowired
+    private BookmarkRepository bookmarkRepository;
 
     @Autowired
     private JwtProvider jwtProvider;
@@ -174,6 +187,55 @@ public class BookTest extends IntegrationTest {
             softAssertions.assertThat(response.jsonPath().getLong("bookId")).isEqualTo(book.getId());
             softAssertions.assertThat(response.jsonPath().getInt("statusId"))
                     .isEqualTo(requestMap.get("statusId"));
+        });
+    }
+
+    @DisplayName("챕터를 조회한다.")
+    @Test
+    void readChapter() {
+        //given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        List<Chapter> chapters = List.of(TestDataFactory.createChapter1(book),
+                TestDataFactory.createChapter2(book));
+        chapterRepository.saveAll(chapters);
+
+        List<Topic> topics = List.of(TestDataFactory.createTopic1(chapters.get(0)),
+                TestDataFactory.createTopic2(chapters.get(0)));
+        topicRepository.saveAll(topics);
+
+        List<Bookmark> bookmarks1 = TestDataFactory.createBookmarks(5, member, topics.get(0));
+        bookmarkRepository.saveAll(bookmarks1);
+        List<Bookmark> bookmarks2 = TestDataFactory.createBookmarks(4, member, topics.get(1));
+        bookmarkRepository.saveAll(bookmarks2);
+
+
+        //when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .queryParam("statusId", 0)
+                .when()
+                .get("/api/books/" + book.getId() + "/chapters")
+                .then().log().all()
+                .extract();
+
+        //then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(response.jsonPath().getString("[0].title"))
+                    .isEqualTo(chapters.get(0).getTitle());
+            softAssertions.assertThat(response.jsonPath().getString("[0].topics[1].recentBookmark.content"))
+                    .isNotNull();
+            softAssertions.assertThat(response.jsonPath().getList("[1].topics")).isEmpty();
         });
     }
 
