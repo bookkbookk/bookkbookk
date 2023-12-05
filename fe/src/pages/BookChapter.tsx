@@ -1,3 +1,4 @@
+import { useGetBookmarks } from "@api/bookmarks/queries";
 import { ChapterListItem, TopicItemInfo } from "@api/chapters/type";
 import { Topic } from "@api/topics/type";
 import BookmarkList from "@components/BookChapter/LeftBox/BookmarkList/BookmarkList";
@@ -32,13 +33,15 @@ export default function BookChapter() {
   }: Location<BookChapterState> = useLocation();
 
   const [currentTopic, setCurrentTopic] = useState<Topic>(topic);
-
   const onTopicChange = (newTopic: Topic) => setCurrentTopic(newTopic);
+
   const handleTopicTitleChange = (newTitle: string) =>
     setCurrentTopic((prev) => ({ ...prev, title: newTitle }));
 
   const [isNewBookmarkOpen, setIsNewBookmarkOpen] = useState(false);
   const toggleNewBookmark = () => setIsNewBookmarkOpen((prev) => !prev);
+
+  const bookmarks = useGetBookmarks({ topicId: currentTopic.topicId });
 
   return (
     <Box sx={{ display: "flex", padding: 4 }}>
@@ -53,7 +56,7 @@ export default function BookChapter() {
           onTopicTitleChange={handleTopicTitleChange}
         />
         <Divider sx={{ width: "100%" }} />
-        <BookmarkListProvider topicId={currentTopic.topicId}>
+        <BookmarkListProvider bookmarks={bookmarks}>
           <BookmarkList />
         </BookmarkListProvider>
         {isNewBookmarkOpen && (

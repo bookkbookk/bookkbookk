@@ -8,8 +8,8 @@ export function BookmarkCommentList({
   isReplying,
   toggleReplying,
 }: {
-  isReplying: boolean;
   bookmarkId: number;
+  isReplying: boolean;
   toggleReplying: () => void;
 }) {
   const comments = useCommentListState();

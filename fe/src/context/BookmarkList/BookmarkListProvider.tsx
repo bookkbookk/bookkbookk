@@ -1,21 +1,18 @@
-import { useGetBookmarks } from "@api/bookmarks/queries";
+import { Bookmark } from "@api/bookmarks/type";
 import { ReactNode, useMemo, useState } from "react";
-import { BookmarkListState } from "../type";
 import {
   BookmarkListActionsContext,
   BookmarkListStateContext,
 } from "./BookmarkListContext";
 
 export function BookmarkListProvider({
-  topicId,
+  bookmarks,
   children,
 }: {
-  topicId: number;
+  bookmarks: Bookmark[];
   children: ReactNode;
 }) {
-  const bookmarks = useGetBookmarks({ topicId });
-  const [bookmarkState, setBookmarkListState] =
-    useState<BookmarkListState>(bookmarks);
+  const [bookmarkState, setBookmarkListState] = useState(bookmarks);
 
   const bookmarkActions = useMemo(
     () => ({

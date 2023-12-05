@@ -1,20 +1,18 @@
-import { useGetComments } from "@api/comments/queries";
+import { Comment } from "@api/comments/type";
 import { ReactNode, useMemo, useState } from "react";
-import { CommentListState } from "../type";
 import {
   CommentListActionsContext,
   CommentListStateContext,
 } from "./CommentListContext";
 
 export function CommentListProvider({
-  bookmarkId,
+  commentList,
   children,
 }: {
-  bookmarkId: number;
+  commentList: Comment[];
   children: ReactNode;
 }) {
-  const commentList = useGetComments({ bookmarkId });
-  const [comments, setComments] = useState<CommentListState>(commentList);
+  const [comments, setComments] = useState(commentList);
 
   const commentsAction = useMemo(
     () => ({
