@@ -45,20 +45,29 @@ export default function Bookmark({
     });
   };
 
+  const cancelEditing = () => {
+    setUpdatedContent(content);
+    toggleEditing();
+  };
+
   // TODO: 북마크 삭제 요청
 
   return (
     <Comment>
       <Comment.Header
         {...{ author, createdTime, isEditing, toggleEditing }}
+        onCancelClick={cancelEditing}
         onCompleteClick={patchBookmark}
       />
       {isVisiblePageField && <BookmarkPageField {...{ isEditing }} />}
-      <Comment.Content
-        isEditing={isEditing}
-        content={updatedContent}
-        onContentChange={onBookmarkContentChange}
-      />
+      {isEditing ? (
+        <Comment.Editor
+          content={updatedContent}
+          onChange={onBookmarkContentChange}
+        />
+      ) : (
+        <Comment.Viewer content={content} />
+      )}
       <Comment.Footer onReplyButtonClick={toggleReplying} />
     </Comment>
   );

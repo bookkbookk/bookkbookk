@@ -10,6 +10,7 @@ import * as S from "./style";
 type Props = Pick<CommentContent, "author" | "createdTime"> & {
   toggleEditing: () => void;
   isEditing: boolean;
+  onCancelClick: () => void;
   onCompleteClick: () => void;
 };
 
@@ -20,6 +21,7 @@ export default function CommentHeader(props: Props) {
     createdTime,
     toggleEditing,
     isEditing,
+    onCancelClick,
     onCompleteClick,
   } = props;
 
@@ -59,13 +61,22 @@ export default function CommentHeader(props: Props) {
             </>
           )}
           {isEditing && (
-            <Button
-              size="small"
-              color="inherit"
-              onClick={onCompleteClick}
-              startIcon={<CheckIcon fontSize="small" />}>
-              완료
-            </Button>
+            <>
+              <Button
+                size="small"
+                color="inherit"
+                onClick={onCancelClick}
+                startIcon={<CheckIcon fontSize="small" />}>
+                취소
+              </Button>
+              <Button
+                size="small"
+                color="inherit"
+                onClick={onCompleteClick}
+                startIcon={<CheckIcon fontSize="small" />}>
+                완료
+              </Button>
+            </>
           )}
         </Stack>
       )}

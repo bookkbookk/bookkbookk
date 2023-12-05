@@ -6,16 +6,28 @@ import { useState } from "react";
 export function BookmarkComment({ comment }: { comment: CommentType }) {
   const { commentId, author, createdTime, content } = comment;
 
+  const [updatedContent, setUpdatedContent] = useState(content);
+  const onCommentContentChange = (content: string) => {
+    setUpdatedContent(content);
+  };
+
   const [isEditing, setIsEditing] = useState(false);
   const toggleEditing = () => setIsEditing((prev) => !prev);
 
-  // TODO: 댓글 수정 요청
   const { onPatchComment } = usePatchComment({
     commentId,
-    onSuccessCallback: toggleEditing,
+    onSuccessCallback: ({ updatedContent }) => {
+      toggleEditing();
+      // TODO: 전역 상태 동기화
+    },
   });
 
   const patchBookmark = () => {
+    if (content === updatedContent) {
+      toggleEditing();
+      return;
+    }
+
     onPatchComment({ content });
   };
   // TODO: 댓글 삭제 요청
@@ -24,9 +36,17 @@ export function BookmarkComment({ comment }: { comment: CommentType }) {
     <Comment>
       <Comment.Header
         {...{ author, createdTime, toggleEditing, isEditing }}
+        onCancelClick={toggleEditing}
         onCompleteClick={patchBookmark}
       />
-      <Comment.Content {...{ content, isEditing }} />
+      {isEditing ? (
+        <Comment.Editor
+          content={updatedContent}
+          onChange={onCommentContentChange}
+        />
+      ) : (
+        <Comment.Viewer content={content} />
+      )}
       <Comment.Footer />
     </Comment>
   );

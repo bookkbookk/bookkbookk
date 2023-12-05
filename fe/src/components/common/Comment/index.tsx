@@ -1,10 +1,12 @@
 import CommentContainer from "./CommentContainer";
-import CommentContent from "./CommentContent";
+import CommentEditor from "./CommentEditor";
 import CommentFooter from "./CommentFooter";
 import CommentHeader from "./CommentHeader";
+import CommentViewer from "./CommentViewer";
 
 export const Comment = Object.assign(CommentContainer, {
   Header: CommentHeader,
-  Content: CommentContent,
+  Viewer: CommentViewer,
+  Editor: CommentEditor,
   Footer: CommentFooter,
 });
