@@ -30,7 +30,7 @@ export default function ReactionMenu({
 
   return (
     <Stack color="inherit">
-      <Tooltip title="리액션을 추가하세요!" placement="top" arrow>
+      <Tooltip title="리액션을 추가해보세요" placement="top" arrow>
         <IconButton
           aria-label="reaction-menu-button"
           id="reaction-menu-button"
