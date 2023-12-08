@@ -1,11 +1,23 @@
-import { useDeleteComment, usePatchComment } from "@api/comments/queries";
-import { Comment as CommentType } from "@api/comments/type";
+import {
+  useCommentReaction,
+  useDeleteComment,
+  useGetReactions,
+  usePatchComment,
+} from "@api/comments/queries";
+import { Comment as CommentType, Reaction } from "@api/comments/type";
 import { Comment } from "@components/common/Comment";
 import { useCommentListActions } from "context/CommentList/useCommentList";
 import { useState } from "react";
+import { useMemberValue } from "store/useMember";
 
 export function BookmarkComment({ comment }: { comment: CommentType }) {
   const { commentId, author, createdTime, content } = comment;
+  const member = useMemberValue();
+
+  const reactions = useGetReactions({ commentId });
+  const { onPostReaction, onDeleteReaction } = useCommentReaction({
+    commentId,
+  });
 
   const [updatedContent, setUpdatedContent] = useState(content);
   const onCommentContentChange = (content: string) => {
@@ -44,6 +56,16 @@ export function BookmarkComment({ comment }: { comment: CommentType }) {
     toggleEditing();
   };
 
+  const onReactionClick = (reactionName: keyof Reaction) => {
+    const isChecked = reactions[reactionName]?.includes(member?.nickname || "");
+
+    if (isChecked) {
+      onDeleteReaction(reactionName);
+    } else {
+      onPostReaction(reactionName);
+    }
+  };
+
   return (
     <Comment>
       <Comment.Header
@@ -60,7 +82,10 @@ export function BookmarkComment({ comment }: { comment: CommentType }) {
       ) : (
         <Comment.ContentViewer content={content} />
       )}
-      <Comment.ActionFooter />
+      <Comment.ActionFooter
+        reactions={reactions}
+        onReactionClick={onReactionClick}
+      />
     </Comment>
   );
 }
