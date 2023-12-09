@@ -1,10 +1,7 @@
 package codesquad.bookkbookk.domain.topic.controller;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.bookkbookk.domain.topic.data.dto.CreateTopicRequest;
 import codesquad.bookkbookk.domain.topic.data.dto.CreateTopicResponse;
-import codesquad.bookkbookk.domain.topic.data.dto.ReadTopicResponse;
 import codesquad.bookkbookk.domain.topic.data.dto.UpdateTopicTitleRequest;
 import codesquad.bookkbookk.domain.topic.service.TopicService;
 
@@ -33,14 +29,6 @@ public class TopicController {
 
         return ResponseEntity.ok()
                 .body(response);
-    }
-
-    @GetMapping("/{chapterId}")
-    public ResponseEntity<List<ReadTopicResponse>> readTopicList(@PathVariable Long chapterId) {
-        List<ReadTopicResponse> responses = topicService.readTopicLIst(chapterId);
-
-        return ResponseEntity.ok()
-                .body(responses);
     }
 
     @PatchMapping("/{topicId}")

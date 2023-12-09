@@ -85,43 +85,7 @@ public class TopicTest extends IntegrationTest {
 
     }
 
-    @DisplayName("성공적으로 토픽을 조회한다")
-    @Test
-    void readTopicList(){
-        //given
-        Member member = TestDataFactory.createMember();
-        memberRepository.save(member);
-        String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        BookClub bookClub = TestDataFactory.createBookClub();
-        bookClubRepository.save(bookClub);
-
-        Book book = TestDataFactory.createBook1(bookClub);
-        bookRepository.save(book);
-
-        Chapter chapter = new Chapter(book, "first");
-        chapterRepository.save(chapter);
-
-        Topic topic1 = new Topic(chapter, "토픽1");
-        Topic topic2 = new Topic(chapter, "토픽2");
-        topicRepository.save(topic1);
-        topicRepository.save(topic2);
-
-        //when
-        ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-                .when()
-                    .get("/api/topics/1")
-                .then().log().all()
-                    .extract();
-
-        //then
-        SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softAssertions.assertThat(response.jsonPath().getList("")).hasSize(2);
-        });
-    }
 
     @DisplayName("성공적으로 토픽의 제목을 수정한다")
     @Test

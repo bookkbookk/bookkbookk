@@ -1,7 +1,10 @@
 package codesquad.bookkbookk.domain.chapter.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +17,8 @@ import codesquad.bookkbookk.domain.chapter.data.dto.CreateChapterResponse;
 import codesquad.bookkbookk.domain.chapter.data.dto.UpdateChapterRequest;
 import codesquad.bookkbookk.domain.chapter.data.dto.UpdateChapterResponse;
 import codesquad.bookkbookk.domain.chapter.service.ChapterService;
+import codesquad.bookkbookk.domain.topic.data.dto.ReadTopicResponse;
+import codesquad.bookkbookk.domain.topic.service.TopicService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class ChapterController {
 
     private final ChapterService chapterService;
+    private final TopicService topicService;
 
     @PostMapping
     public ResponseEntity<CreateChapterResponse> createChapter(@RequestBody CreateChapterRequest request) {
@@ -46,6 +52,14 @@ public class ChapterController {
         chapterService.deleteChapter(chapterId);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{chapterId}/topics")
+    public ResponseEntity<List<ReadTopicResponse>> readTopicList(@PathVariable Long chapterId) {
+        List<ReadTopicResponse> responses = topicService.readTopicLIst(chapterId);
+
+        return ResponseEntity.ok()
+                .body(responses);
     }
 
 }
