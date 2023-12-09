@@ -2,8 +2,10 @@ package codesquad.bookkbookk.bookclub.integration;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Map;
 
+import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
 import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +16,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import codesquad.bookkbookk.IntegrationTest;
+import codesquad.bookkbookk.common.error.exception.BookNotFoundException;
 import codesquad.bookkbookk.common.error.exception.MemberJoinedBookClubException;
+import codesquad.bookkbookk.common.error.exception.MemberNotInBookClubException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
@@ -22,6 +26,7 @@ import codesquad.bookkbookk.domain.bookclub.data.dto.CreateInvitationUrlRequest;
 import codesquad.bookkbookk.domain.bookclub.data.dto.ReadBookClubResponse;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClubInvitationCode;
+import codesquad.bookkbookk.domain.gathering.data.dto.CreateGatheringRequest;
 import codesquad.bookkbookk.domain.gathering.data.entity.Gathering;
 import codesquad.bookkbookk.domain.gathering.repository.GatheringRepository;
 import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
@@ -487,6 +492,105 @@ public class BookClubTest extends IntegrationTest {
             softAssertions.assertThat(response.jsonPath().getList("members").size()).isEqualTo(2);
             softAssertions.assertThat(response.jsonPath().getMap("lastBook")).isNotNull();
             softAssertions.assertThat(response.jsonPath().getString("closedTime")).isNotNull();
+        });
+    }
+
+    @Test
+    @DisplayName("모임을 만는다.")
+    void createGathering() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+        bookClubMemberRepository.save(new BookClubMember(bookClub, member));
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+        CreateGatheringRequest createGatheringRequest =
+                new CreateGatheringRequest(book.getId(), "코드스쿼드", LocalDateTime.of(2023, 10, 20, 12, 30));
+
+        // when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .accept(ContentType.JSON)
+                .contentType(ContentType.JSON)
+                .body(createGatheringRequest)
+                .when()
+                .post("/api/book-clubs/" + bookClub.getId() + "/gatherings")
+                .then().log().all()
+                .extract();
+
+        // then
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("북클럽에 소속되지 않은 멤버가 모임을 만들려하면 예외가 발생한다.")
+    void MemberNotInBookClubCreateGathering() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+        CreateGatheringRequest createGatheringRequest =
+                new CreateGatheringRequest(book.getId(), "코드스쿼드", LocalDateTime.of(2023, 10, 20, 12, 30));
+        MemberNotInBookClubException exception = new MemberNotInBookClubException();
+
+        // when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .accept(ContentType.JSON)
+                .contentType(ContentType.JSON)
+                .body(createGatheringRequest)
+                .when()
+                .post("/api/book-clubs/" + bookClub.getId() + "/gatherings")
+                .then().log().all()
+                .extract();
+
+        // then
+        SoftAssertions.assertSoftly(assertions -> {
+            assertions.assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
+            assertions.assertThat(response.jsonPath().getString("message")).isEqualTo(exception.getMessage());
+        });
+
+    }
+
+    @Test
+    @DisplayName("모임을 만들 때 책을 조회하지 못하면 예외를 던진다.")
+    void createGatheringWithNonSavedBook() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+        bookClubMemberRepository.save(new BookClubMember(bookClub, member));
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+        CreateGatheringRequest createGatheringRequest =
+                new CreateGatheringRequest(1L, "코드스쿼드", LocalDateTime.of(2023, 10, 20, 12, 30));
+        BookNotFoundException exception = new BookNotFoundException();
+
+        // when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .accept(ContentType.JSON)
+                .contentType(ContentType.JSON)
+                .body(createGatheringRequest)
+                .when()
+                .post("/api/book-clubs/" + bookClub.getId() + "/gatherings")
+                .then().log().all()
+                .extract();
+
+        // then
+        SoftAssertions.assertSoftly(assertions -> {
+            assertions.assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
+            assertions.assertThat(response.jsonPath().getString("message")).isEqualTo(exception.getMessage());
         });
     }
 
