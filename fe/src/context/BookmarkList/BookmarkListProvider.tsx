@@ -16,6 +16,9 @@ export function BookmarkListProvider({
 
   const bookmarkActions = useMemo(
     () => ({
+      addBookmark: ({ newBookmark }: { newBookmark: Bookmark }) => {
+        setBookmarkListState((prev) => [...prev, newBookmark]);
+      },
       updateContent: ({
         bookmarkId,
         newContent,

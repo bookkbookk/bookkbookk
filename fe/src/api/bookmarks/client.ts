@@ -16,11 +16,14 @@ export const postBookmark = async ({
   content,
   page,
 }: NewBookmarkBody) => {
-  const { data } = await fetcher.post(BOOK_API_PATH.bookmarks, {
-    topicId,
-    content,
-    page,
-  });
+  const { data } = await fetcher.post<{ newBookmark: Bookmark }>(
+    BOOK_API_PATH.bookmarks,
+    {
+      topicId,
+      content,
+      page,
+    }
+  );
 
   return data;
 };

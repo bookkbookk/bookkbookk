@@ -2,6 +2,7 @@ import { usePostNewBookmark } from "@api/bookmarks/queries";
 import { Comment } from "@components/common/Comment";
 import { Target } from "@components/common/common.style";
 import useAutoScroll from "@hooks/useAutoScroll";
+import { useBookmarkListActions } from "context/BookmarkList/useBookmarkList";
 import { enqueueSnackbar } from "notistack";
 import { useState } from "react";
 
@@ -12,6 +13,8 @@ export default function NewBookmark({
   topicId: number;
   toggleNewBookmark: () => void;
 }) {
+  const { addBookmark } = useBookmarkListActions();
+
   const targetRef = useAutoScroll();
   const [bookmarkPage, setBookmarkPage] = useState("");
   const [bookmarkContent, setBookmarkContent] = useState("");
@@ -25,7 +28,10 @@ export default function NewBookmark({
   };
 
   const { onPostNewBookmark } = usePostNewBookmark({
-    onSuccessCallback: toggleNewBookmark,
+    onSuccessCallback: ({ newBookmark }) => {
+      addBookmark({ newBookmark });
+      toggleNewBookmark();
+    },
   });
 
   const postNewBookmark = () => {
@@ -46,7 +52,6 @@ export default function NewBookmark({
 
   return (
     <>
-      <Target ref={targetRef} />
       <Comment>
         <Comment.PageEditor value={bookmarkPage} onChange={onPageChange} />
         <Comment.ContentEditor onChange={onContentChange} />
@@ -55,6 +60,7 @@ export default function NewBookmark({
           onPostClick={postNewBookmark}
         />
       </Comment>
+      <Target ref={targetRef} />
     </>
   );
 }

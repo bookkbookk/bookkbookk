@@ -1,5 +1,5 @@
+import { useGetComments } from "@api/comments/queries";
 import { Divider, Stack } from "@mui/material";
-import { useCommentListState } from "context/CommentList/useCommentList";
 import NewBookmarkComment from "../NewBookmarkComment";
 import { BookmarkComment } from "./BookmarkComment";
 
@@ -12,7 +12,7 @@ export function BookmarkCommentList({
   isReplying: boolean;
   toggleReplying: () => void;
 }) {
-  const comments = useCommentListState();
+  const comments = useGetComments({ bookmarkId });
   const hasComments = !!comments.length;
 
   return (
@@ -27,7 +27,11 @@ export function BookmarkCommentList({
         {hasComments && (
           <Stack gap={2} width="100%" marginBottom={2}>
             {comments.map((comment) => (
-              <BookmarkComment key={comment.commentId} {...{ comment }} />
+              <BookmarkComment
+                key={comment.content}
+                bookmarkId={bookmarkId}
+                {...{ comment }}
+              />
             ))}
           </Stack>
         )}

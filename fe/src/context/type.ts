@@ -4,6 +4,7 @@ import { Comment } from "@api/comments/type";
 export type BookmarkListState = Bookmark[];
 
 export type BookmarkListAction = {
+  addBookmark: ({ newBookmark }: { newBookmark: Bookmark }) => void;
   updateContent: ({
     bookmarkId,
     newContent,

@@ -16,7 +16,7 @@ import {
   postBookmark,
   postReaction,
 } from "./client";
-import { NewBookmarkBody, PatchBookmarkBody } from "./type";
+import { Bookmark, NewBookmarkBody, PatchBookmarkBody } from "./type";
 
 export const useGetBookmarks = ({ topicId }: { topicId: number }) => {
   const { data: bookmarks } = useSuspenseQuery({
@@ -30,7 +30,7 @@ export const useGetBookmarks = ({ topicId }: { topicId: number }) => {
 export const usePostNewBookmark = ({
   onSuccessCallback,
 }: {
-  onSuccessCallback: () => void;
+  onSuccessCallback: ({ newBookmark }: { newBookmark: Bookmark }) => void;
 }) => {
   const queryClient = useQueryClient();
 
@@ -40,13 +40,13 @@ export const usePostNewBookmark = ({
 
   const onPostNewBookmark = (newBookmarkBody: NewBookmarkBody) => {
     mutate(newBookmarkBody, {
-      onSuccess: () => {
+      onSuccess: ({ newBookmark }) => {
         queryClient.invalidateQueries(
           queryKeys.bookmarks.list({
             topicId: newBookmarkBody.topicId,
           })
         );
-        onSuccessCallback();
+        onSuccessCallback({ newBookmark });
       },
       onError: () => {
         enqueueSnackbar(MESSAGE.NEW_BOOKMARK_ERROR, {

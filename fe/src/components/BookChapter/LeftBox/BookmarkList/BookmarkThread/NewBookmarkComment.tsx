@@ -35,7 +35,6 @@ export default function NewBookmarkComment({
 
   return (
     <>
-      <Target ref={targetRef} />
       <Comment>
         <Comment.ContentEditor onChange={onContentChange} />
         <Comment.ButtonFooter
@@ -43,6 +42,7 @@ export default function NewBookmarkComment({
           onPostClick={postComment}
         />
       </Comment>
+      <Target ref={targetRef} />
     </>
   );
 }

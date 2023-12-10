@@ -58,22 +58,35 @@ export const usePostComment = ({
   return { onPostComment };
 };
 
-export const usePatchComment = ({
+export const useMutateComment = ({
+  bookmarkId,
   commentId,
   onSuccessCallback,
 }: {
+  bookmarkId: number;
   commentId: number;
-  onSuccessCallback: ({ updatedContent }: { updatedContent: string }) => void;
+  onSuccessCallback: () => void;
 }) => {
-  const { mutate } = useMutation({
+  const queryClient = useQueryClient();
+
+  const invalidateCommentListQuery = () => {
+    queryClient.invalidateQueries(queryKeys.comments.list({ bookmarkId }));
+    onSuccessCallback();
+  };
+
+  const { mutate: mutatePatchComment } = useMutation({
     mutationFn: patchComment,
   });
 
+  const { mutate: mutateDeleteComment } = useMutation({
+    mutationFn: deleteComment,
+  });
+
   const onPatchComment = ({ content }: { content: string }) => {
-    mutate(
+    mutatePatchComment(
       { commentId, content },
       {
-        onSuccess: () => onSuccessCallback({ updatedContent: content }),
+        onSuccess: invalidateCommentListQuery,
         onError: () => {
           enqueueSnackbar(MESSAGE.UPDATE_COMMENT_ERROR, {
             variant: "error",
@@ -83,23 +96,9 @@ export const usePatchComment = ({
     );
   };
 
-  return { onPatchComment };
-};
-
-export const useDeleteComment = ({
-  commentId,
-  onSuccessCallback,
-}: {
-  commentId: number;
-  onSuccessCallback: () => void;
-}) => {
-  const { mutate } = useMutation({
-    mutationFn: deleteComment,
-  });
-
   const onDeleteComment = () => {
-    mutate(commentId, {
-      onSuccess: onSuccessCallback,
+    mutateDeleteComment(commentId, {
+      onSuccess: invalidateCommentListQuery,
       onError: () => {
         enqueueSnackbar(MESSAGE.DELETE_COMMENT_ERROR, {
           variant: "error",
@@ -108,7 +107,7 @@ export const useDeleteComment = ({
     });
   };
 
-  return { onDeleteComment };
+  return { onPatchComment, onDeleteComment };
 };
 
 export const useGetReactions = ({ commentId }: { commentId: number }) => {

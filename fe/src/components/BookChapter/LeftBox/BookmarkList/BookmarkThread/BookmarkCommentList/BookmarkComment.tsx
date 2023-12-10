@@ -1,18 +1,31 @@
 import {
   useCommentReaction,
-  useDeleteComment,
   useGetReactions,
-  usePatchComment,
+  useMutateComment,
 } from "@api/comments/queries";
 import { Comment as CommentType, Reaction } from "@api/comments/type";
 import { Comment } from "@components/common/Comment";
-import { useCommentListActions } from "context/CommentList/useCommentList";
 import { useState } from "react";
 import { useMemberValue } from "store/useMember";
 
-export function BookmarkComment({ comment }: { comment: CommentType }) {
+export function BookmarkComment({
+  bookmarkId,
+  comment,
+}: {
+  bookmarkId: number;
+  comment: CommentType;
+}) {
   const { commentId, author, createdTime, content } = comment;
   const member = useMemberValue();
+
+  const [isEditing, setIsEditing] = useState(false);
+  const toggleEditing = () => setIsEditing((prev) => !prev);
+
+  const { onPatchComment, onDeleteComment } = useMutateComment({
+    bookmarkId,
+    commentId,
+    onSuccessCallback: toggleEditing,
+  });
 
   const reactions = useGetReactions({ commentId });
   const { onPostReaction, onDeleteReaction } = useCommentReaction({
@@ -23,24 +36,6 @@ export function BookmarkComment({ comment }: { comment: CommentType }) {
   const onCommentContentChange = (content: string) => {
     setUpdatedContent(content);
   };
-
-  const [isEditing, setIsEditing] = useState(false);
-  const toggleEditing = () => setIsEditing((prev) => !prev);
-
-  const { updateContent, deleteComment } = useCommentListActions();
-
-  const { onPatchComment } = usePatchComment({
-    commentId,
-    onSuccessCallback: ({ updatedContent }) => {
-      toggleEditing();
-      updateContent({ commentId, newContent: updatedContent });
-    },
-  });
-
-  const { onDeleteComment } = useDeleteComment({
-    commentId,
-    onSuccessCallback: () => deleteComment({ commentId }),
-  });
 
   const patchBookmark = () => {
     if (content === updatedContent) {
