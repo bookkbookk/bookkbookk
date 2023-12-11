@@ -12,22 +12,22 @@ import codesquad.bookkbookk.common.error.exception.InvitationUrlNotFoundExceptio
 import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.common.image.S3ImageUploader;
 import codesquad.bookkbookk.domain.auth.service.AuthorizationService;
-import codesquad.bookkbookk.domain.bookclub.data.dto.ReadBookClubDetailResponse;
-import codesquad.bookkbookk.domain.mapping.entity.MemberBook;
-import codesquad.bookkbookk.domain.mapping.repository.MemberBookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateBookClubRequest;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateBookClubResponse;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateInvitationUrlRequest;
 import codesquad.bookkbookk.domain.bookclub.data.dto.InvitationUrlResponse;
 import codesquad.bookkbookk.domain.bookclub.data.dto.JoinBookClubRequest;
 import codesquad.bookkbookk.domain.bookclub.data.dto.JoinBookClubResponse;
-import codesquad.bookkbookk.domain.bookclub.data.dto.ReadBookClubResponse;
+import codesquad.bookkbookk.domain.bookclub.data.dto.ReadBookClubDetailResponse;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClubInvitationCode;
-import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
+import codesquad.bookkbookk.domain.bookclub.data.type.BookClubStatus;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubInvitationCodeRepository;
-import codesquad.bookkbookk.domain.mapping.repository.BookClubMemberRepository;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
+import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
+import codesquad.bookkbookk.domain.mapping.entity.MemberBook;
+import codesquad.bookkbookk.domain.mapping.repository.BookClubMemberRepository;
+import codesquad.bookkbookk.domain.mapping.repository.MemberBookRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
 
@@ -40,6 +40,7 @@ public class BookClubService {
     private static final String DEFAULT_BOOK_CLUB_IMAGE_URL =
             "https://i.namu.wiki/i/ZnPxYijjK2AlXyf1dPZv0fqVvg3kdxahVkONYTCR-jplhh48smoq4UCfSAZIz6_R0lxoBz"
                     + "JuQiIL6kfwtv0taBXNa_-nOxJKx2BX-z3GxPj6vqoc14GZ7nrT_jDXlrOV1xNL9RVYBTN_brsnBuCwOA.webp";
+    private static final String STATUS_ALL = "all";
 
     private final AuthorizationService authorizationService;
 
@@ -78,13 +79,15 @@ public class BookClubService {
         return new CreateBookClubResponse(bookClub.getId(), invitationUrlResponse.getInvitationUrl());
     }
 
-    public List<ReadBookClubResponse> readBookClubs(Long memberId) {
+    public List<ReadBookClubDetailResponse> readBookClubs(Long memberId, String statusName) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
-        List<BookClub> bookClubs = member.getMemberBookClubs().stream()
-                .map(BookClubMember::getBookClub)
+
+        BookClubStatus status = BookClubStatus.of(statusName);
+        List<BookClub> filteredBookClubs = member.getBookClubs().stream()
+                .filter(bookClub -> bookClub.getBookClubStatus().equals(status))
                 .collect(Collectors.toUnmodifiableList());
 
-        return ReadBookClubResponse.from(bookClubs);
+        return status.from(filteredBookClubs);
     }
 
     public InvitationUrlResponse createInvitationUrl(Long memberId, CreateInvitationUrlRequest request) {
