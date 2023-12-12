@@ -106,11 +106,12 @@ public class BookClubTest extends IntegrationTest {
         // when
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
-                .   header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .queryParam("status", "open")
                 .when()
-                    .get("/api/book-clubs")
+                .get("/api/book-clubs")
                 .then().log().all()
-                    .extract();
+                .extract();
 
         // then
         ReadBookClubResponse result = response.jsonPath().getList("", ReadBookClubResponse.class).get(0);
@@ -591,6 +592,126 @@ public class BookClubTest extends IntegrationTest {
         SoftAssertions.assertSoftly(assertions -> {
             assertions.assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
             assertions.assertThat(response.jsonPath().getString("message")).isEqualTo(exception.getMessage());
+        });
+    }
+
+    @DisplayName("멤버의 열린 북클럽들의 정보를 가져온다.")
+    @Test
+    void readMemberOpenBookClub() {
+        //given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        Member anotherMember = TestDataFactory.createAnotherMember();
+        memberRepository.save(anotherMember);
+
+        BookClub bookClub1 = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub1);
+        BookClub bookClub2 = TestDataFactory.createDummyBookClub(2);
+        bookClub2.close();
+        bookClubRepository.save(bookClub2);
+        BookClub bookClub3 = TestDataFactory.createDummyBookClub(3);
+        bookClubRepository.save(bookClub3);
+
+        BookClubMember bookClubMember1 = new BookClubMember(bookClub1, member);
+        bookClubMemberRepository.save(bookClubMember1);
+        BookClubMember bookClubMember2 = new BookClubMember(bookClub2, member);
+        bookClubMemberRepository.save(bookClubMember2);
+        BookClubMember bookClubMember3 = new BookClubMember(bookClub3, member);
+        bookClubMemberRepository.save(bookClubMember3);
+        BookClubMember bookClubMember4 = new BookClubMember(bookClub3, anotherMember);
+        bookClubMemberRepository.save(bookClubMember4);
+
+        Book book1 = TestDataFactory.createBook1(bookClub1);
+        bookRepository.save(book1);
+
+        Gathering gathering = TestDataFactory.createGathering(book1);
+        gatheringRepository.save(gathering);
+
+        bookClub1.updateUpcomingGatheringDate(gathering.getDateTime());
+        bookClubRepository.save(bookClub1);
+
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        //when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .queryParam("status", "open")
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/book-clubs")
+                .then().log().all()
+                .extract();
+
+        //then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(response.jsonPath().getList("[1].members").size()).isEqualTo(2);
+            softAssertions.assertThat(response.jsonPath().getMap("[0].lastBook")).isNotNull();
+            softAssertions.assertThat(response.jsonPath().getString("[0].upcomingGatheringDate")).isNotNull();
+            softAssertions.assertThat(response.jsonPath().getString("[1].upcomingGatheringDate")).isNull();
+        });
+    }
+
+    @DisplayName("멤버의 닫힌 북클럽들의 정보를 가져온다.")
+    @Test
+    void readMemberClosedBookClub() {
+        //given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        Member anotherMember = TestDataFactory.createAnotherMember();
+        memberRepository.save(anotherMember);
+
+        BookClub bookClub1 = TestDataFactory.createBookClub();
+        bookClub1.close();
+        bookClubRepository.save(bookClub1);
+        BookClub bookClub2 = TestDataFactory.createDummyBookClub(2);
+        bookClub2.close();
+        bookClubRepository.save(bookClub2);
+        BookClub bookClub3 = TestDataFactory.createDummyBookClub(3);
+        bookClubRepository.save(bookClub3);
+
+        BookClubMember bookClubMember1 = new BookClubMember(bookClub1, member);
+        bookClubMemberRepository.save(bookClubMember1);
+        BookClubMember bookClubMember2 = new BookClubMember(bookClub2, member);
+        bookClubMemberRepository.save(bookClubMember2);
+        BookClubMember bookClubMember3 = new BookClubMember(bookClub2, anotherMember);
+        bookClubMemberRepository.save(bookClubMember3);
+        BookClubMember bookClubMember4 = new BookClubMember(bookClub3, member);
+        bookClubMemberRepository.save(bookClubMember4);
+
+        Book book1 = TestDataFactory.createBook1(bookClub1);
+        bookRepository.save(book1);
+        Book book2 = TestDataFactory.createBook2(bookClub2);
+        bookRepository.save(book2);
+
+        Gathering gathering = TestDataFactory.createGathering(book1);
+        gatheringRepository.save(gathering);
+
+        bookClub1.updateUpcomingGatheringDate(gathering.getDateTime());
+        bookClubRepository.save(bookClub1);
+
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        //when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .queryParam("status", "closed")
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/book-clubs")
+                .then().log().all()
+                .extract();
+
+        //then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(response.jsonPath().getList("[1].members").size()).isEqualTo(2);
+            softAssertions.assertThat(response.jsonPath().getMap("[0].lastBook")).isNotNull();
+            softAssertions.assertThat(response.jsonPath().getMap("[1].lastBook")).isNotNull();
+            softAssertions.assertThat(response.jsonPath().getString("[0].closedTime")).isNotNull();
+            softAssertions.assertThat(response.jsonPath().getString("[1].closedTime")).isNotNull();
         });
     }
 

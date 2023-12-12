@@ -110,4 +110,12 @@ public class TestDataFactory {
                         .build())
                 .collect(Collectors.toUnmodifiableList());
     }
+
+    public static BookClub createDummyBookClub(int count) {
+        return BookClub.builder()
+                .creatorId(1L)
+                .name("Test Book Club" + count)
+                .profileImgUrl("image.url")
+                .build();
+    }
 }
