@@ -28,7 +28,10 @@ public class OpenBookClubDetailResponse extends ReadBookClubDetailResponse{
     }
 
     public static OpenBookClubDetailResponse from(BookClub bookClub) {
-        Book lastBook = bookClub.getBooks().get(bookClub.getBooks().size() - 1);
+        Book lastBook;
+        if (bookClub.getBooks().isEmpty()) {
+            lastBook = null;
+        } else lastBook = bookClub.getBooks().get(bookClub.getBooks().size() - 1);
         List<Member> members = BookClubMember.toMembers(bookClub.getBookClubMembers());
 
         return OpenBookClubDetailResponse.builder()
