@@ -82,6 +82,12 @@ public class BookClubService {
     public List<ReadBookClubDetailResponse> readBookClubs(Long memberId, String statusName) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
 
+        if (statusName.equals(STATUS_ALL)) {
+            return  member.getBookClubs().stream()
+                    .map(bookClub -> bookClub.getBookClubStatus().from(bookClub))
+                    .collect(Collectors.toUnmodifiableList());
+        }
+
         BookClubStatus status = BookClubStatus.of(statusName);
         List<BookClub> filteredBookClubs = member.getBookClubs().stream()
                 .filter(bookClub -> bookClub.getBookClubStatus().equals(status))
