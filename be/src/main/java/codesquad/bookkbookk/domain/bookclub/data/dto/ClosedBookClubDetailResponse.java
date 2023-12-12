@@ -2,6 +2,7 @@ package codesquad.bookkbookk.domain.bookclub.data.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
@@ -27,7 +28,10 @@ public class ClosedBookClubDetailResponse extends ReadBookClubDetailResponse{
     }
 
     public static ClosedBookClubDetailResponse from(BookClub bookClub) {
-        Book lastBook = bookClub.getBooks().get(bookClub.getBooks().size() - 1);
+        Book lastBook;
+        if (bookClub.getBooks().isEmpty()) {
+            lastBook = null;
+        } else lastBook = bookClub.getBooks().get(bookClub.getBooks().size() - 1);
         List<Member> members = BookClubMember.toMembers(bookClub.getBookClubMembers());
 
         return ClosedBookClubDetailResponse.builder()
@@ -39,6 +43,12 @@ public class ClosedBookClubDetailResponse extends ReadBookClubDetailResponse{
                 .readBookClubMembers(ReadBookClubMember.from(members))
                 .closedTime(bookClub.getClosedTime())
                 .build();
+    }
+
+    public static List<ReadBookClubDetailResponse> from(List<BookClub> bookClubs) {
+        return bookClubs.stream()
+                .map(ClosedBookClubDetailResponse::from)
+                .collect(Collectors.toUnmodifiableList());
     }
 
 }

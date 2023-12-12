@@ -44,6 +44,9 @@ public class ReadBookClubDetailResponse {
         }
 
         protected static ReadBookClubLastBook from(Book book) {
+            if (book == null) {
+                return null;
+            }
             return new ReadBookClubLastBook(book.getTitle(), book.getAuthor());
         }
 

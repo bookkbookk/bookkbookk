@@ -2,6 +2,7 @@ package codesquad.bookkbookk.domain.member.data.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import codesquad.bookkbookk.domain.auth.data.type.LoginType;
+import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
 import codesquad.bookkbookk.domain.mapping.entity.MemberBook;
 
@@ -58,6 +60,12 @@ public class Member {
 
     public void updateProfileImgUrl(String profileImgUrl){
         this.profileImgUrl = profileImgUrl;
+    }
+
+    public List<BookClub> getBookClubs() {
+        return memberBookClubs.stream()
+                .map(BookClubMember::getBookClub)
+                .collect(Collectors.toUnmodifiableList());
     }
 
 }

@@ -24,7 +24,6 @@ import codesquad.bookkbookk.domain.bookclub.data.dto.InvitationUrlResponse;
 import codesquad.bookkbookk.domain.bookclub.data.dto.JoinBookClubRequest;
 import codesquad.bookkbookk.domain.bookclub.data.dto.JoinBookClubResponse;
 import codesquad.bookkbookk.domain.bookclub.data.dto.ReadBookClubDetailResponse;
-import codesquad.bookkbookk.domain.bookclub.data.dto.ReadBookClubResponse;
 import codesquad.bookkbookk.domain.bookclub.service.BookClubService;
 import codesquad.bookkbookk.domain.gathering.data.dto.CreateGatheringRequest;
 import codesquad.bookkbookk.domain.gathering.service.GatheringService;
@@ -50,8 +49,9 @@ public class BookClubController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReadBookClubResponse>> readBookClubs(@MemberId Long memberId) {
-        List<ReadBookClubResponse> response = bookClubService.readBookClubs(memberId);
+    public ResponseEntity<List<ReadBookClubDetailResponse>> readBookClubs(@MemberId Long memberId,
+                                                                          @RequestParam String status) {
+        List<ReadBookClubDetailResponse> response = bookClubService.readBookClubs(memberId, status);
 
         return ResponseEntity.ok()
                 .body(response);
