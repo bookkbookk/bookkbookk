@@ -1,19 +1,13 @@
 import { Member } from "@api/member/type";
+import { BOOK_CLUB_STATUS } from "@components/constants";
 
 export type BookClubCreationInfo = {
   name: string;
   profileImage?: File;
 };
 
-export type BookClubProfile = {
-  id: number;
-  createdId: number;
-  name: string;
-  profileImgUrl: string;
-};
-
 export type BookClubStatus = {
-  status: "open" | "closed";
+  status: keyof typeof BOOK_CLUB_STATUS;
 };
 
 export type NewBookClubInfo = {
@@ -27,9 +21,14 @@ export type EmailSubmitInfo = {
   memberEmails: string[];
 };
 
-export type BookClubDetail = {
+export type BookClubProfile = {
+  id: number;
+  creatorId: number;
   name: string;
   profileImgUrl: string;
+};
+
+export type BookClubDetail = BookClubProfile & {
   members: Member[];
   lastBook: {
     name: string;
@@ -38,12 +37,14 @@ export type BookClubDetail = {
   createdTime: string;
 };
 
-export type ClosedBookClubDetail = BookClubDetail & {
+type ClosedBookClubDetail = BookClubDetail & {
   status: "closed";
   closedTime: string;
 };
 
-export type OpenBookClubDetail = BookClubDetail & {
+type OpenBookClubDetail = BookClubDetail & {
   status: "open";
   upcomingGatheringDate: string;
 };
+
+export type BookClubInfo = OpenBookClubDetail | ClosedBookClubDetail;

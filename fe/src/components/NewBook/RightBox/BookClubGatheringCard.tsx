@@ -1,5 +1,5 @@
-import { GatheringTable } from "@components/BookClub/GatheringAddModal/GatheringInfo/GatheringTable/GatheringTable";
-import { GatheringTableItemCell } from "@components/BookClub/GatheringAddModal/GatheringInfo/GatheringTable/GatheringTableItemCell";
+import { GatheringTable } from "@components/BookClubDetail/GatheringAddModal/GatheringInfo/GatheringTable/GatheringTable";
+import { GatheringTableItemCell } from "@components/BookClubDetail/GatheringAddModal/GatheringInfo/GatheringTable/GatheringTableItemCell";
 import { Card, CardContent } from "@components/common/common.style";
 import { Avatar, TableBody, TableRow, Typography } from "@mui/material";
 import { useBookClubChoiceValue } from "store/newBook/useBookClubChoice";

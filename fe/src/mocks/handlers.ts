@@ -1,3 +1,4 @@
+import { Reaction } from "@api/comments/type";
 import {
   ALADIN_API_PATH,
   AUTH_API_PATH,
@@ -8,13 +9,18 @@ import {
 } from "@api/constants";
 import { rest } from "msw";
 import {
+  ALL_BOOK_CLUB_LIST,
   BOOKMARKS,
+  BOOKMARK_REACTION_RESPONSE,
   BOOK_CLUB_DETAIL_OPEN,
-  BOOK_CLUB_LIST,
   CHAPTER_LIST,
-  COMMENTS,
-  COMMENTS_MAP,
+  CLOSED_BOOK_CLUB_LIST,
+  COMMENTS_BOOKMARK_ID_0,
+  COMMENTS_BOOKMARK_ID_1,
+  COMMENTS_BOOKMARK_ID_2,
+  COMMENT_REACTION_RESPONSE,
   MEMBER_INFO,
+  OPEN_BOOK_CLUB_LIST,
   USER_BOOK_LIST,
 } from "./data";
 import ALADIN_BOOK_SEARCH_EXAMPLE from "./data.json";
@@ -23,6 +29,11 @@ const TOKEN_EXPIRATION = {
   accessToken: false,
   refreshToken: false,
 };
+
+const COMMENTS_MAP = new Map()
+  .set("0", COMMENTS_BOOKMARK_ID_0)
+  .set("1", COMMENTS_BOOKMARK_ID_1)
+  .set("2", COMMENTS_BOOKMARK_ID_2);
 
 // eslint-disable-next-line
 let TOPIC_LIST = [
@@ -203,12 +214,20 @@ export const handlers = [
     return res(ctx.status(200), ctx.json([]));
   }),
 
-  rest.get(
-    `${BOOK_CLUB_API_PATH.bookClubs}?status=open`,
-    async (_, res, ctx) => {
-      return res(ctx.status(200), ctx.json(BOOK_CLUB_LIST));
-    }
-  ),
+  rest.get(`${BOOK_CLUB_API_PATH.bookClubs}`, async (req, res, ctx) => {
+    const search = req.url.search;
+
+    const isOpen = search === "?status=open";
+    const isAll = search === "?status=all";
+
+    const body = isAll
+      ? ALL_BOOK_CLUB_LIST
+      : isOpen
+      ? OPEN_BOOK_CLUB_LIST
+      : CLOSED_BOOK_CLUB_LIST;
+
+    return res(ctx.status(200), ctx.json(body));
+  }),
 
   rest.post(BOOK_API_PATH.books, async (_, res, ctx) => {
     return res(ctx.status(200), ctx.json({ createdBookId: 1 }));
@@ -406,22 +425,35 @@ export const handlers = [
     const { content, page } = await req.json();
 
     BOOKMARKS.push({
-      bookmarkId: 5,
+      bookmarkId: BOOKMARKS.length + 1,
       author: {
         memberId: 1,
         nickname: "뭐당가이름이",
         profileImgUrl: "www.asdjfk.com",
       },
       createdTime: "2023-12-01T12:00:00",
-      reaction: {
-        likeCount: 2,
-      },
       commentCount: 0,
       content,
       page,
     });
 
-    return res(ctx.status(200));
+    return res(
+      ctx.status(200),
+      ctx.json({
+        newBookmark: {
+          bookmarkId: BOOKMARKS.length + 1,
+          author: {
+            memberId: 1,
+            nickname: "뭐당가이름이",
+            profileImgUrl: "www.asdjfk.com",
+          },
+          createdTime: "2023-12-01T12:00:00",
+          commentCount: 0,
+          content,
+          page,
+        },
+      })
+    );
   }),
 
   rest.post(BOOK_API_PATH.comments, async (req, res, ctx) => {
@@ -437,9 +469,6 @@ export const handlers = [
         profileImgUrl: "www.asdjfk.com",
       },
       createdTime: "2023-09-11T14:30:00",
-      reaction: {
-        likeCount: 2,
-      },
       content,
     });
 
@@ -472,7 +501,9 @@ export const handlers = [
     const { commentId } = req.params;
     const { content } = await req.json();
 
-    COMMENTS.forEach((comment) => {
+    const comments = COMMENTS_MAP.get("0");
+
+    const newComments = comments.map((comment) => {
       if (comment.commentId === Number(commentId)) {
         return {
           ...comment,
@@ -483,11 +514,15 @@ export const handlers = [
       return comment;
     });
 
+    COMMENTS_MAP.set("0", newComments);
+
     return res(ctx.status(200));
   }),
 
   rest.delete(`${BOOK_API_PATH.comments}/:commentId`, async (req, res, ctx) => {
     const { commentId } = req.params;
+
+    const COMMENTS = COMMENTS_MAP.get(commentId + "");
 
     COMMENTS.forEach((comment, index) => {
       if (comment.commentId === Number(commentId)) {
@@ -508,6 +543,54 @@ export const handlers = [
           BOOKMARKS.splice(index, 1);
         }
       });
+
+      return res(ctx.status(200));
+    }
+  ),
+
+  rest.get(`${BOOK_API_PATH.bookmarks}/*/reactions`, async (_, res, ctx) => {
+    return res(ctx.status(200), ctx.json(BOOKMARK_REACTION_RESPONSE));
+  }),
+
+  rest.get(`${BOOK_API_PATH.comments}/*/reactions`, async (_, res, ctx) => {
+    return res(ctx.status(200), ctx.json(COMMENT_REACTION_RESPONSE));
+  }),
+
+  rest.post(`${BOOK_API_PATH.bookmarks}/*/reactions`, async (req, res, ctx) => {
+    const { reactionName } = await req.json<{ reactionName: keyof Reaction }>();
+    BOOKMARK_REACTION_RESPONSE[reactionName].push("감귤차먹고아프지마세요");
+
+    return res(ctx.status(200));
+  }),
+
+  rest.delete(
+    `${BOOK_API_PATH.bookmarks}/*/reactions/:reactionName`,
+    async (req, res, ctx) => {
+      const { reactionName } = req.params;
+
+      BOOKMARK_REACTION_RESPONSE[reactionName] = BOOKMARK_REACTION_RESPONSE[
+        reactionName
+      ].filter((nickname) => nickname !== "감귤차먹고아프지마세요");
+
+      return res(ctx.status(200));
+    }
+  ),
+
+  rest.post(`${BOOK_API_PATH.comments}/*/reactions`, async (req, res, ctx) => {
+    const { reactionName } = await req.json<{ reactionName: keyof Reaction }>();
+    COMMENT_REACTION_RESPONSE[reactionName].push("감귤차먹고아프지마세요");
+
+    return res(ctx.status(200));
+  }),
+
+  rest.delete(
+    `${BOOK_API_PATH.comments}/*/reactions/:reactionName`,
+    async (req, res, ctx) => {
+      const { reactionName } = req.params;
+
+      COMMENT_REACTION_RESPONSE[reactionName] = COMMENT_REACTION_RESPONSE[
+        reactionName
+      ].filter((nickname) => nickname !== "감귤차먹고아프지마세요");
 
       return res(ctx.status(200));
     }

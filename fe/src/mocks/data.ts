@@ -14,7 +14,7 @@ export const COMMENT_REACTION_RESPONSE = {
   rocket: ["zoey"],
 };
 
-const COMMENTS_BOOKMARK_ID_3 = [
+export const COMMENTS_BOOKMARK_ID_0 = [
   {
     commentId: 1,
     author: {
@@ -39,7 +39,7 @@ const COMMENTS_BOOKMARK_ID_3 = [
   },
 ];
 
-const COMMENTS_BOOKMARK_ID_4 = [
+export const COMMENTS_BOOKMARK_ID_1 = [
   {
     commentId: 4,
     author: {
@@ -64,18 +64,11 @@ const COMMENTS_BOOKMARK_ID_4 = [
   },
 ];
 
-const COMMENTS_BOOKMARK_ID_5 = [] as any;
-
-export const COMMENTS = [...COMMENTS_BOOKMARK_ID_3, ...COMMENTS_BOOKMARK_ID_4];
-
-export const COMMENTS_MAP = new Map()
-  .set("3", COMMENTS_BOOKMARK_ID_3)
-  .set("4", COMMENTS_BOOKMARK_ID_4)
-  .set("5", COMMENTS_BOOKMARK_ID_5);
+export const COMMENTS_BOOKMARK_ID_2 = [] as any;
 
 export const BOOKMARKS = [
   {
-    bookmarkId: 3,
+    bookmarkId: 0,
     author: {
       memberId: 1,
       nickname: "뭐당가이름이",
@@ -88,7 +81,7 @@ export const BOOKMARKS = [
     page: 24,
   },
   {
-    bookmarkId: 4,
+    bookmarkId: 1,
     author: {
       memberId: 1,
       nickname: "뭐당가이름이",
@@ -413,46 +406,19 @@ export const USER_BOOK_LIST = [
   // },
 ];
 
-export const BOOK_CLUB_LIST = [
-  {
-    id: 1,
-    creatorId: 1,
-    name: "내가만든북클럽",
-    status: "open",
-    profileImgUrl:
-      "https://frtest12.s3.ap-northeast-2.amazonaws.com/profile-image/1",
-    lastBook: {
-      name: "책이름",
-      author: "저자이름",
-    },
-    createdTime: "2023-08-30T10:00:0000",
-    upcomingGatheringDate: "2023-11-11T10:30:0000",
-    members: [
-      {
-        id: 1,
-        nickname: "gamgyul",
-        profileImgUrl: "http://naver.com",
-      },
-      {
-        id: 2,
-        nickname: "nag",
-        profileImgUrl: "http://naver.com",
-      },
-    ],
-  },
+export const CLOSED_BOOK_CLUB_LIST = [
   {
     id: 2,
     creatorId: 1,
     name: "내가만든북클럽2",
     status: "closed",
-    profileImgUrl:
-      "https://frtest12.s3.ap-northeast-2.amazonaws.com/profile-image/2",
+    profileImgUrl: "https://avatars.githubusercontent.com/u/56245755?v=4",
     lastBook: {
       name: "책이름",
       author: "저자이름",
     },
-    createdTime: "2023-08-30",
-    closedTime: "2023-10-15",
+    createdTime: "2023-09-11T14:30:00",
+    closedTime: "2023-12-11T14:30:00",
     members: [
       {
         id: 1,
@@ -466,6 +432,74 @@ export const BOOK_CLUB_LIST = [
       },
     ],
   },
+  {
+    id: 3,
+    creatorId: 1,
+    name: "내가만든북클럽2",
+    status: "closed",
+    profileImgUrl: "https://avatars.githubusercontent.com/u/56245755?v=4",
+    lastBook: {
+      name: "책이름",
+      author: "저자이름",
+    },
+    createdTime: "2023-09-11T14:30:00",
+    closedTime: "2023-12-11T14:30:00",
+    members: [
+      {
+        id: 1,
+        nickname: "gamgyul",
+        profileImgUrl: "https://avatars.githubusercontent.com/u/56245755?v=4",
+      },
+      {
+        id: 2,
+        nickname: "nag",
+        profileImgUrl: "https://avatars.githubusercontent.com/u/56245755?v=4",
+      },
+    ],
+  },
+];
+
+export const OPEN_BOOK_CLUB_LIST = [
+  {
+    id: 1,
+    creatorId: 1,
+    name: "내가만든북클럽",
+    status: "open",
+    profileImgUrl: "https://avatars.githubusercontent.com/u/56245755?v=4",
+    lastBook: {
+      name: "책이름",
+      author: "저자이름",
+    },
+    createdTime: "2023-09-11T14:30:00",
+    upcomingGatheringDate: "2023-09-11T14:30:00",
+    members: [
+      {
+        id: 1,
+        nickname: "gamgyul",
+        profileImgUrl: "http://naver.com",
+      },
+      {
+        id: 2,
+        nickname: "nag",
+        profileImgUrl: "http://naver.com",
+      },
+      {
+        id: 3,
+        nickname: "zoey",
+        profileImgUrl: "http://naver.com",
+      },
+      {
+        id: 4,
+        nickname: "zzzzzoey",
+        profileImgUrl: "http://naver.com",
+      },
+    ],
+  },
+];
+
+export const ALL_BOOK_CLUB_LIST = [
+  ...OPEN_BOOK_CLUB_LIST,
+  ...CLOSED_BOOK_CLUB_LIST,
 ];
 
 export const MEMBER_INFO = {

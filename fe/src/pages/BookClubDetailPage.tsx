@@ -1,7 +1,7 @@
 import { useGetBookClubDetail } from "@api/bookClub/queries";
-import GatheringAddModal from "@components/BookClub/GatheringAddModal/GatheringAddModal";
-import BookClubInfo from "@components/BookClub/LeftBox/BookClubInfo";
-import BookClubMembersCard from "@components/BookClub/RightBox/BookClubMembersCard";
+import GatheringAddModal from "@components/BookClubDetail/GatheringAddModal/GatheringAddModal";
+import BookClubInfo from "@components/BookClubDetail/LeftBox/BookClubInfo";
+import BookClubMembersCard from "@components/BookClubDetail/RightBox/BookClubMembersCard";
 import {
   AddFab,
   BoxContent,
@@ -13,7 +13,7 @@ import { Box, Tooltip } from "@mui/material";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-export default function BookClub() {
+export default function BookClubDetailPage() {
   const { bookClubId } = useParams<{ bookClubId: string }>();
   const { bookClubDetail } = useGetBookClubDetail(Number(bookClubId));
 

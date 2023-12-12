@@ -41,16 +41,19 @@ export const BOOK_CHAPTER_TABS = {
 } as const;
 
 export const BOOK_CLUB_STATUS = {
-  ALL: {
+  all: {
     id: 0,
+    name: "all",
     label: "전체 북클럽",
   },
-  OPEN: {
+  open: {
     id: 1,
+    name: "open",
     label: "열린 북클럽",
   },
-  CLOSE: {
+  closed: {
     id: 2,
+    name: "closed",
     label: "닫힌 북클럽",
   },
 } as const;

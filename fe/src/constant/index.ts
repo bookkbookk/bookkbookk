@@ -39,7 +39,7 @@ export const MESSAGE = {
 
 export const PAGE_TITLE = {
   [ROUTE_PATH.main]: {
-    korean: "북크북크",
+    korean: "메인",
     english: "Main",
   },
   [ROUTE_PATH.library]: {

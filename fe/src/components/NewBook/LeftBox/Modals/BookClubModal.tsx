@@ -17,7 +17,7 @@ export default function BookClubModal({
   handleClose: () => void;
 }) {
   const bookClubChoice = useBookClubChoiceValue();
-  const { data } = useGetBookClubList();
+  const bookClubList = useGetBookClubList();
 
   return (
     <Modal open={open} onClose={handleClose}>
@@ -30,7 +30,7 @@ export default function BookClubModal({
         </ModalHeader>
         <ModalBody>
           <List sx={{ width: "100%", padding: 0 }}>
-            {data?.map((bookClub) => (
+            {bookClubList?.map((bookClub) => (
               <BookClubListItem
                 key={bookClub.id}
                 bookClub={bookClub}

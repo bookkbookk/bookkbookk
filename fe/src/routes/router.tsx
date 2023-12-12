@@ -3,9 +3,9 @@ import { loader as userLoader } from "@api/member/queries";
 import StatusIndicator from "@components/common/StatusIndicator/StatusIndicator";
 import Auth from "@pages/Auth";
 import BookChapter from "@pages/BookChapter";
-import BookClub from "@pages/BookClub";
+import BookClubDetailPage from "@pages/BookClubDetailPage";
 import BookClubJoin from "@pages/BookClubJoin";
-import BookClubList from "@pages/BookClubList";
+import BookClubListPage from "@pages/BookClubListPage";
 import BookDetail from "@pages/BookDetail";
 import Landing from "@pages/Landing";
 import Library from "@pages/Library";
@@ -66,10 +66,10 @@ export const router = createBrowserRouter(
             element={<BookChapter />}
           />
           <Route path={ROUTE_PATH.newBook} element={<NewBook />} />
-          <Route path={ROUTE_PATH.bookClub} element={<BookClubList />} />
+          <Route path={ROUTE_PATH.bookClub} element={<BookClubListPage />} />
           <Route
             path={`${ROUTE_PATH.bookClub}/:bookClubId`}
-            element={<BookClub />}
+            element={<BookClubDetailPage />}
           />
           <Route path={ROUTE_PATH.newBookClub} element={<NewBookClub />} />
           <Route path={ROUTE_PATH.myPage} element={<MyPage />} />

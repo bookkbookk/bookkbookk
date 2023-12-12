@@ -1,7 +1,12 @@
 import { queryKeys } from "@api/queryKeys";
 import { MESSAGE } from "@constant/index";
 import Button from "@mui/material/Button";
-import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { closeSnackbar, enqueueSnackbar } from "notistack";
 import {
   getBookClubBooks,
@@ -37,8 +42,13 @@ export const usePostNewBookClub = ({
   return { onPostNewBookClub };
 };
 
-export const useGetBookClubList = (option?: BookClubStatus) =>
-  useQuery(queryKeys.bookClub.list(option));
+export const useGetBookClubList = (option?: BookClubStatus) => {
+  const { data: bookClubList } = useSuspenseQuery(
+    queryKeys.bookClub.list(option)
+  );
+
+  return bookClubList;
+};
 
 export const useSendEmail = () => {
   const { mutate } = useMutation({ mutationFn: sendEmail });

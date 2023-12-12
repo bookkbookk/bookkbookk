@@ -1,15 +1,14 @@
 import { BookListItem } from "@api/book/type";
 import { fetcher, formDataConfig } from "@api/fetcher";
 import { makeFormData } from "@api/utils";
+import { BOOK_CLUB_STATUS } from "@components/constants";
 import { send } from "@emailjs/browser";
 import { BOOK_CLUB_API_PATH } from "../constants";
 import {
   BookClubCreationInfo,
-  BookClubProfile,
-  ClosedBookClubDetail,
+  BookClubInfo,
   EmailSubmitInfo,
   NewBookClubInfo,
-  OpenBookClubDetail,
 } from "./type";
 const {
   VITE_EMAIL_JS_PUBLIC_KEY,
@@ -29,16 +28,16 @@ export const postNewBookClub = async (bookClubInfo: BookClubCreationInfo) => {
 };
 
 export const getBookClubDetail = async (bookClubId: number) => {
-  const { data } = await fetcher.get<ClosedBookClubDetail | OpenBookClubDetail>(
+  const { data } = await fetcher.get<BookClubInfo>(
     `${BOOK_CLUB_API_PATH.bookClubs}/${bookClubId}`
   );
   return data;
 };
 
 export const getBookClubList = async (option?: {
-  status: "open" | "closed";
+  status: keyof typeof BOOK_CLUB_STATUS;
 }) => {
-  const { data } = await fetcher.get<BookClubProfile[]>(
+  const { data } = await fetcher.get<BookClubInfo[]>(
     BOOK_CLUB_API_PATH.bookClubs,
     {
       params: option,

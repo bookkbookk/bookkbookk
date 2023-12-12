@@ -1,3 +1,4 @@
+import BookClubList from "@components/BookClubList/BookClubList";
 import Tabs from "@components/common/Tabs";
 import { BoxHeader, MainBox } from "@components/common/common.style";
 import { BOOK_CLUB_STATUS, BOOK_CLUB_TAB } from "@components/constants";
@@ -8,9 +9,9 @@ import { useNavigate } from "react-router-dom";
 import { ROUTE_PATH } from "routes/constants";
 import { useIsLoginValue } from "store/useMember";
 
-export default function BookClubList() {
+export default function BookClubListPage() {
   const [activeTabID, setActiveTabID] = useState<number>(
-    BOOK_CLUB_STATUS.ALL.id
+    BOOK_CLUB_STATUS.all.id
   );
   const isLogin = useIsLoginValue();
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ export default function BookClubList() {
           </Button>
         )}
       </BoxHeader>
+      {isLogin && <BookClubList {...{ activeTabID }} />}
     </MainBox>
   );
 }

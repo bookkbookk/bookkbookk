@@ -58,13 +58,13 @@ export default function BookChapter() {
         <Divider sx={{ width: "100%" }} />
         <BookmarkListProvider bookmarks={bookmarks}>
           <BookmarkList />
+          {isNewBookmarkOpen && (
+            <NewBookmark
+              topicId={currentTopic.topicId}
+              toggleNewBookmark={toggleNewBookmark}
+            />
+          )}
         </BookmarkListProvider>
-        {isNewBookmarkOpen && (
-          <NewBookmark
-            topicId={currentTopic.topicId}
-            toggleNewBookmark={toggleNewBookmark}
-          />
-        )}
       </LeftBox>
       <RightBox>
         <BoxContent>

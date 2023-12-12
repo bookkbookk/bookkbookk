@@ -1,6 +1,6 @@
 import { usePostNewBook } from "@api/book/queries";
 import { usePostNewGathering } from "@api/gatherings/queries";
-import GatheringInfo from "@components/BookClub/GatheringAddModal/GatheringInfo/GatheringInfo";
+import GatheringInfo from "@components/BookClubDetail/GatheringAddModal/GatheringInfo/GatheringInfo";
 import Navigation from "@components/common/Navigation";
 import { MESSAGE } from "@constant/index";
 import { Box, Typography } from "@mui/material";
