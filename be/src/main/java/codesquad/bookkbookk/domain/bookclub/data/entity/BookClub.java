@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -37,6 +39,7 @@ public class BookClub {
     private String name;
     @Column(name = "profile_img_url", nullable = false)
     private String profileImgUrl;
+    @Enumerated(value = EnumType.STRING)
     @Column(name = "book_club_status", nullable = false)
     private BookClubStatus bookClubStatus;
     @CreationTimestamp
