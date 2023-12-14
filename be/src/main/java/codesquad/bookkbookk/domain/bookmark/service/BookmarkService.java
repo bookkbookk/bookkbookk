@@ -1,5 +1,7 @@
 package codesquad.bookkbookk.domain.bookmark.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +15,7 @@ import codesquad.bookkbookk.domain.auth.service.AuthorizationService;
 import codesquad.bookkbookk.domain.bookmark.data.dto.CreateBookmarkReactionRequest;
 import codesquad.bookkbookk.domain.bookmark.data.dto.CreateBookmarkRequest;
 import codesquad.bookkbookk.domain.bookmark.data.dto.DeleteBookmarkReactionRequest;
+import codesquad.bookkbookk.domain.bookmark.data.dto.ReadReactionsResponse;
 import codesquad.bookkbookk.domain.bookmark.data.dto.UpdateBookmarkRequest;
 import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
 import codesquad.bookkbookk.domain.bookmark.repository.BookmarkRepository;
@@ -90,6 +93,14 @@ public class BookmarkService {
                 .orElseThrow(BookmarkReactionNotFoundException::new);
         bookmarkReaction.getBookmark().getBookmarkReactions().remove(bookmarkReaction);
         bookmarkReactionRepository.delete(bookmarkReaction);
+    }
+
+    @Transactional(readOnly = true)
+    public ReadReactionsResponse readBookmarkReactions(Long bookmarkId) {
+        Bookmark bookmark = bookmarkRepository.findById(bookmarkId).orElseThrow(BookmarkNotFoundException::new);
+        List<BookmarkReaction> bookmarkReactions = bookmark.getBookmarkReactions();
+
+        return ReadReactionsResponse.from(bookmarkReactions);
     }
 
 }
