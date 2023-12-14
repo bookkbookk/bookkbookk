@@ -18,6 +18,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import codesquad.bookkbookk.domain.bookmark.data.dto.UpdateBookmarkRequest;
+import codesquad.bookkbookk.domain.comment.data.entity.Comment;
 import codesquad.bookkbookk.domain.mapping.entity.BookmarkReaction;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.topic.data.entity.Topic;
@@ -54,6 +55,8 @@ public class Bookmark {
 
     @OneToMany(mappedBy = "bookmark")
     List<BookmarkReaction> bookmarkReactions = new ArrayList<>();
+    @OneToMany(mappedBy = "bookmark")
+    List<Comment> comments = new ArrayList<>();
 
     @Builder
     private Bookmark(Member writer, Topic topic, String title, String content) {
