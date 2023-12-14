@@ -1,7 +1,10 @@
 package codesquad.bookkbookk.domain.bookmark.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +18,8 @@ import codesquad.bookkbookk.domain.bookmark.data.dto.CreateBookmarkRequest;
 import codesquad.bookkbookk.domain.bookmark.data.dto.DeleteBookmarkReactionRequest;
 import codesquad.bookkbookk.domain.bookmark.data.dto.UpdateBookmarkRequest;
 import codesquad.bookkbookk.domain.bookmark.service.BookmarkService;
+import codesquad.bookkbookk.domain.comment.data.dto.ReadCommentResponse;
+import codesquad.bookkbookk.domain.comment.service.CommentService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 public class BookmarkController {
 
     private final BookmarkService bookmarkService;
+    private final CommentService commentService;
 
     @PostMapping
     public ResponseEntity<Void> createBookmark(@MemberId Long memberId,
@@ -62,6 +68,14 @@ public class BookmarkController {
         bookmarkService.deleteBookmarkReaction(memberId, bookmarkId, request);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{bookmarkId}/comments")
+    public ResponseEntity<List<ReadCommentResponse>> readComments(@PathVariable Long bookmarkId) {
+        List<ReadCommentResponse> responses = commentService.readComments(bookmarkId);
+
+        return ResponseEntity.ok()
+                .body(responses);
     }
 
 }

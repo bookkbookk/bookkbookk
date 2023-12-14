@@ -1,5 +1,7 @@
 package codesquad.bookkbookk.domain.comment.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +17,7 @@ import codesquad.bookkbookk.domain.bookmark.repository.BookmarkRepository;
 import codesquad.bookkbookk.domain.comment.data.dto.CreateCommentReactionRequest;
 import codesquad.bookkbookk.domain.comment.data.dto.CreateCommentRequest;
 import codesquad.bookkbookk.domain.comment.data.dto.DeleteCommentReactionRequest;
+import codesquad.bookkbookk.domain.comment.data.dto.ReadCommentResponse;
 import codesquad.bookkbookk.domain.comment.data.dto.UpdateCommentRequest;
 import codesquad.bookkbookk.domain.comment.data.entity.Comment;
 import codesquad.bookkbookk.domain.comment.repository.CommentRepository;
@@ -85,6 +88,13 @@ public class CommentService {
                 .orElseThrow(CommentReactionNotFoundException::new);
         commentReaction.getComment().getCommentReactions().remove(commentReaction);
         commentReactionRepository.delete(commentReaction);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReadCommentResponse> readComments(Long bookmarkId) {
+        Bookmark bookmark = bookmarkRepository.findById(bookmarkId).orElseThrow(BookmarkNotFoundException::new);
+
+        return ReadCommentResponse.from(bookmark.getComments());
     }
 
 }

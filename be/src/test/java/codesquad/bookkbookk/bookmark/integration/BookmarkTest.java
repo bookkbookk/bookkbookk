@@ -27,6 +27,8 @@ import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
 import codesquad.bookkbookk.domain.bookmark.repository.BookmarkRepository;
 import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
 import codesquad.bookkbookk.domain.chapter.repository.ChapterRepository;
+import codesquad.bookkbookk.domain.comment.data.entity.Comment;
+import codesquad.bookkbookk.domain.comment.repository.CommentRepository;
 import codesquad.bookkbookk.domain.mapping.entity.BookmarkReaction;
 import codesquad.bookkbookk.domain.mapping.repository.BookmarkReactionRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
@@ -56,6 +58,8 @@ public class BookmarkTest extends IntegrationTest {
     BookmarkRepository bookmarkRepository;
     @Autowired
     BookmarkReactionRepository bookmarkReactionRepository;
+    @Autowired
+    CommentRepository commentRepository;
     @Autowired
     JwtProvider jwtProvider;
 
@@ -440,6 +444,49 @@ public class BookmarkTest extends IntegrationTest {
         SoftAssertions.assertSoftly(assertions -> {
             assertions.assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
             assertions.assertThat(response.jsonPath().getString("message")).isEqualTo(exception.getMessage());
+        });
+    }
+
+    @Test
+    @DisplayName("북마크의 코멘트들을 가져온다.")
+    void readComments() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = TestDataFactory.createChapter1(book);
+        chapterRepository.save(chapter);
+
+        Topic topic = TestDataFactory.createTopic1(chapter);
+        topicRepository.save(topic);
+
+        Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
+        bookmarkRepository.save(bookmark);
+
+        Comment comment1 = TestDataFactory.createComment(bookmark, member);
+        commentRepository.save(comment1);
+        Comment comment2 = TestDataFactory.createAnotherComment(bookmark, member);
+        commentRepository.save(comment2);
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .when()
+                .get("api/bookmarks/" + bookmark.getId() + "/comments")
+                .then().log().all()
+                .extract();
+
+        // then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(response.jsonPath().getList("$").size()).isEqualTo(2);
         });
     }
 

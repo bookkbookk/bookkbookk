@@ -96,6 +96,10 @@ public class TestDataFactory {
         return new Comment(bookmark, writer, "content");
     }
 
+    public static Comment createAnotherComment(Bookmark bookmark, Member writer) {
+        return new Comment(bookmark, writer, "content 2");
+    }
+
     public static Gathering createGathering(Book book) {
         return new Gathering(book, LocalDateTime.now(), "코드 스쿼드");
     }
