@@ -490,4 +490,60 @@ public class BookmarkTest extends IntegrationTest {
         });
     }
 
+    @Test
+    @DisplayName("북마크의 리액션들을 가져온다.")
+    void readReactions() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        Member anotherMember = TestDataFactory.createAnotherMember();
+        memberRepository.save(anotherMember);
+
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = TestDataFactory.createChapter1(book);
+        chapterRepository.save(chapter);
+
+        Topic topic = TestDataFactory.createTopic1(chapter);
+        topicRepository.save(topic);
+
+        Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
+        bookmarkRepository.save(bookmark);
+
+        BookmarkReaction bookmarkReaction1 = new BookmarkReaction(bookmark, member, Reaction.LIKE);
+        bookmarkReactionRepository.save(bookmarkReaction1);
+        BookmarkReaction bookmarkReaction2 = new BookmarkReaction(bookmark, member, Reaction.CONGRATULATION);
+        bookmarkReactionRepository.save(bookmarkReaction2);
+        BookmarkReaction bookmarkReaction3 = new BookmarkReaction(bookmark, member, Reaction.ROCKET);
+        bookmarkReactionRepository.save(bookmarkReaction3);
+        BookmarkReaction bookmarkReaction4 = new BookmarkReaction(bookmark, anotherMember, Reaction.LIKE);
+        bookmarkReactionRepository.save(bookmarkReaction4);
+        BookmarkReaction bookmarkReaction5 = new BookmarkReaction(bookmark, anotherMember, Reaction.LOVE);
+        bookmarkReactionRepository.save(bookmarkReaction5);
+
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .when()
+                .get("api/bookmarks/" + bookmark.getId() + "/reactions")
+                .then().log().all()
+                .extract();
+
+        // then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(response.jsonPath().getMap("").size()).isEqualTo(4);
+            softAssertions.assertThat(response.jsonPath().getList("like").size()).isEqualTo(2);
+            softAssertions.assertThat(response.jsonPath().getString("love")).isNotNull();
+            softAssertions.assertThat(response.jsonPath().getString("clap")).isNull();
+        });
+    }
+
 }
