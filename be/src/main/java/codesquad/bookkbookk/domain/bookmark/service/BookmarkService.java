@@ -100,7 +100,7 @@ public class BookmarkService {
         Bookmark bookmark = bookmarkRepository.findById(bookmarkId).orElseThrow(BookmarkNotFoundException::new);
         List<BookmarkReaction> bookmarkReactions = bookmark.getBookmarkReactions();
 
-        return ReadReactionsResponse.from(bookmarkReactions);
+        return ReadReactionsResponse.fromBookmarkReactions(bookmarkReactions);
     }
 
 }

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import codesquad.bookkbookk.common.type.Reaction;
 import codesquad.bookkbookk.domain.mapping.entity.BookmarkReaction;
+import codesquad.bookkbookk.domain.mapping.entity.CommentReaction;
 
 import lombok.Getter;
 
@@ -30,11 +31,17 @@ public class ReadReactionsResponse {
     @JsonProperty(value = "rocket")
     private final List<String> rocketReactorNames= new ArrayList<>();
 
-    public static ReadReactionsResponse from(List<BookmarkReaction> bookmarkReactions) {
+    public static ReadReactionsResponse fromBookmarkReactions(List<BookmarkReaction> bookmarkReactions) {
         ReadReactionsResponse response = new ReadReactionsResponse();
 
-        bookmarkReactions.stream()
-                .forEach(response::addName);
+        bookmarkReactions.forEach(response::addName);
+        return response;
+    }
+
+    public static ReadReactionsResponse fromCommentReactions(List<CommentReaction> commentReactions) {
+        ReadReactionsResponse response = new ReadReactionsResponse();
+
+        commentReactions.forEach(response::addName);
         return response;
     }
 
@@ -62,7 +69,28 @@ public class ReadReactionsResponse {
         }
     }
 
+    private void addName(CommentReaction commentReaction) {
+        Reaction reaction = commentReaction.getReaction();
 
-
+        if (reaction.equals(Reaction.LIKE)) {
+            likeReactorNames.add(commentReaction.getReactor().getNickname());
+            return;
+        }
+        if (reaction.equals(Reaction.LOVE)) {
+            loveReactorNames.add(commentReaction.getReactor().getNickname());
+            return;
+        }
+        if (reaction.equals(Reaction.CLAP)) {
+            clapReactorNames.add(commentReaction.getReactor().getNickname());
+            return;
+        }
+        if (reaction.equals(Reaction.CONGRATULATION)) {
+            congratulationReactorNames.add(commentReaction.getReactor().getNickname());
+            return;
+        }
+        if (reaction.equals(Reaction.ROCKET)) {
+            rocketReactorNames.add(commentReaction.getReactor().getNickname());
+        }
+    }
 
 }
