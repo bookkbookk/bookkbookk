@@ -471,4 +471,62 @@ public class CommentTest extends IntegrationTest {
         });
     }
 
+    @Test
+    @DisplayName("코멘트의 리액션들을 가져온다.")
+    void readCommentReactions() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        Member anotherMember = TestDataFactory.createAnotherMember();
+        memberRepository.save(anotherMember);
+
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = TestDataFactory.createChapter1(book);
+        chapterRepository.save(chapter);
+
+        Topic topic = TestDataFactory.createTopic1(chapter);
+        topicRepository.save(topic);
+
+        Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
+        bookmarkRepository.save(bookmark);
+
+        Comment comment = TestDataFactory.createComment(bookmark, member);
+        commentRepository.save(comment);
+
+        CommentReaction commentReaction1 = new CommentReaction(comment, member, Reaction.LIKE);
+        commentReactionRepository.save(commentReaction1);
+        CommentReaction commentReaction2 = new CommentReaction(comment, member, Reaction.CONGRATULATION);
+        commentReactionRepository.save(commentReaction2);
+        CommentReaction commentReaction3 = new CommentReaction(comment, member, Reaction.ROCKET);
+        commentReactionRepository.save(commentReaction3);
+        CommentReaction commentReaction4 = new CommentReaction(comment, member, Reaction.LIKE);
+        commentReactionRepository.save(commentReaction4);
+        CommentReaction commentReaction5 = new CommentReaction(comment, member, Reaction.LOVE);
+        commentReactionRepository.save(commentReaction5);
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .when()
+                .get("api/comments/" + bookmark.getId() + "/reactions")
+                .then().log().all()
+                .extract();
+
+        // then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(response.jsonPath().getMap("").size()).isEqualTo(4);
+            softAssertions.assertThat(response.jsonPath().getList("like").size()).isEqualTo(2);
+            softAssertions.assertThat(response.jsonPath().getString("love")).isNotNull();
+            softAssertions.assertThat(response.jsonPath().getString("clap")).isNull();
+        });
+    }
+
 }
