@@ -12,6 +12,7 @@ import codesquad.bookkbookk.common.error.exception.CommentReactionNotFoundExcept
 import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.common.type.Reaction;
 import codesquad.bookkbookk.domain.auth.service.AuthorizationService;
+import codesquad.bookkbookk.domain.bookmark.data.dto.ReadReactionsResponse;
 import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
 import codesquad.bookkbookk.domain.bookmark.repository.BookmarkRepository;
 import codesquad.bookkbookk.domain.comment.data.dto.CreateCommentReactionRequest;
@@ -95,6 +96,14 @@ public class CommentService {
         Bookmark bookmark = bookmarkRepository.findById(bookmarkId).orElseThrow(BookmarkNotFoundException::new);
 
         return ReadCommentResponse.from(bookmark.getComments());
+    }
+
+    @Transactional(readOnly = true)
+    public ReadReactionsResponse readBookmarkReactions(Long commentId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(BookmarkNotFoundException::new);
+        List<CommentReaction> commentReactions = comment.getCommentReactions();
+
+        return ReadReactionsResponse.fromCommentReactions(commentReactions);
     }
 
 }

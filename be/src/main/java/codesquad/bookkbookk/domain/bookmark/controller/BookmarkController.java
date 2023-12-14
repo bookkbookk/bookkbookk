@@ -16,6 +16,7 @@ import codesquad.bookkbookk.common.resolver.MemberId;
 import codesquad.bookkbookk.domain.bookmark.data.dto.CreateBookmarkReactionRequest;
 import codesquad.bookkbookk.domain.bookmark.data.dto.CreateBookmarkRequest;
 import codesquad.bookkbookk.domain.bookmark.data.dto.DeleteBookmarkReactionRequest;
+import codesquad.bookkbookk.domain.bookmark.data.dto.ReadReactionsResponse;
 import codesquad.bookkbookk.domain.bookmark.data.dto.UpdateBookmarkRequest;
 import codesquad.bookkbookk.domain.bookmark.service.BookmarkService;
 import codesquad.bookkbookk.domain.comment.data.dto.ReadCommentResponse;
@@ -76,6 +77,14 @@ public class BookmarkController {
 
         return ResponseEntity.ok()
                 .body(responses);
+    }
+
+    @GetMapping("/{bookmarkId}/reactions")
+    public ResponseEntity<ReadReactionsResponse> readReactions(@PathVariable Long bookmarkId) {
+        ReadReactionsResponse response = bookmarkService.readBookmarkReactions(bookmarkId);
+
+        return ResponseEntity.ok()
+                .body(response);
     }
 
 }

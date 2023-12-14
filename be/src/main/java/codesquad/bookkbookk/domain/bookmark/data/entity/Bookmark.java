@@ -3,6 +3,7 @@ package codesquad.bookkbookk.domain.bookmark.data.entity;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,7 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import codesquad.bookkbookk.common.type.Reaction;
 import codesquad.bookkbookk.domain.bookmark.data.dto.UpdateBookmarkRequest;
 import codesquad.bookkbookk.domain.comment.data.entity.Comment;
 import codesquad.bookkbookk.domain.mapping.entity.BookmarkReaction;
@@ -69,6 +71,12 @@ public class Bookmark {
     public void updateBookmark(UpdateBookmarkRequest updateBookmarkRequest) {
         this.title = updateBookmarkRequest.getTitle();
         this.content = updateBookmarkRequest.getContent();
+    }
+
+    public List<Reaction> getReactions() {
+        return bookmarkReactions.stream()
+                .map(BookmarkReaction::getReaction)
+                .collect(Collectors.toUnmodifiableList());
     }
 
 }
