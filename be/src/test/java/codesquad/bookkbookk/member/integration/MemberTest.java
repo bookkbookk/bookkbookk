@@ -163,8 +163,12 @@ public class MemberTest extends IntegrationTest {
         // then
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softAssertions.assertThat(((LinkedHashMap) response.jsonPath().getList("books").get(0)).get("title"))
+            softAssertions.assertThat(response.jsonPath().getMap("pagination").get("totalPageCounts"))
+                    .isEqualTo(2);
+            softAssertions.assertThat(((LinkedHashMap<?, ?>) response.jsonPath().getList("books").get(0)).get("title"))
                     .isEqualTo("신데렐라");
+            softAssertions.assertThat(((LinkedHashMap<?, ?>) response.jsonPath().getList("books").get(0)).get("statusId"))
+                    .isEqualTo(1);
         });
     }
 
