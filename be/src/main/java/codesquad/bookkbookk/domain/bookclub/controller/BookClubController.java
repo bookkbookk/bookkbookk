@@ -103,7 +103,7 @@ public class BookClubController {
     }
 
     @PostMapping("/{bookClubId}/gatherings")
-    public ResponseEntity<Void> CreateGathering(@MemberId Long memberId, @PathVariable Long bookClubId,
+    public ResponseEntity<Void> createGathering(@MemberId Long memberId, @PathVariable Long bookClubId,
                                                 @RequestBody CreateGatheringRequest createGatheringRequest) {
         gatheringService.createGathering(memberId, bookClubId, createGatheringRequest);
 
