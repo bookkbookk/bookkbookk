@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import codesquad.bookkbookk.common.error.exception.BookClubNotFoundException;
 import codesquad.bookkbookk.common.error.exception.BookNotFoundException;
+import codesquad.bookkbookk.common.error.exception.GatheringNotFoundException;
 import codesquad.bookkbookk.domain.auth.service.AuthorizationService;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
@@ -15,6 +16,8 @@ import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
 import codesquad.bookkbookk.domain.gathering.data.dto.CreateGatheringRequest;
 import codesquad.bookkbookk.domain.gathering.data.dto.ReadGatheringResponse;
+import codesquad.bookkbookk.domain.gathering.data.dto.UpdateGatheringRequest;
+import codesquad.bookkbookk.domain.gathering.data.dto.UpdateGatheringResponse;
 import codesquad.bookkbookk.domain.gathering.data.entity.Gathering;
 import codesquad.bookkbookk.domain.gathering.repository.GatheringRepository;
 
@@ -50,6 +53,14 @@ public class GatheringService {
                 .collect(Collectors.toUnmodifiableList());
 
         return ReadGatheringResponse.from(gatherings);
+    }
+
+    @Transactional
+    public UpdateGatheringResponse updateGathering(Long gatheringId, UpdateGatheringRequest request) {
+        Gathering gathering = gatheringRepository.findById(gatheringId).orElseThrow(GatheringNotFoundException::new);
+
+        gathering.update(request);
+        return UpdateGatheringResponse.from(gathering);
     }
 
 }
