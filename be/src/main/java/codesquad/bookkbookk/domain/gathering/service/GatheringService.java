@@ -63,4 +63,9 @@ public class GatheringService {
         return UpdateGatheringResponse.from(gathering);
     }
 
+    @Transactional
+    public void deleteGathering(Long gatheringId) {
+        gatheringRepository.deleteById(gatheringId);
+    }
+
 }

@@ -1,6 +1,7 @@
 package codesquad.bookkbookk.domain.gathering.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +28,13 @@ public class GatheringController {
 
         return ResponseEntity.ok()
                 .body(response);
+    }
+
+    @DeleteMapping("/{gatheringId}")
+    public ResponseEntity<Void> deleteGathering(@PathVariable Long gatheringId) {
+        gatheringService.deleteGathering(gatheringId);
+
+        return ResponseEntity.ok().build();
     }
 
 }
