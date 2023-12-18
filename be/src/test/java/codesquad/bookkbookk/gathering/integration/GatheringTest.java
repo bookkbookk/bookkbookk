@@ -86,4 +86,41 @@ public class GatheringTest extends IntegrationTest {
             assertions.assertThat(response.jsonPath().getString("place")).isEqualTo(gathering.getPlace());
         });
     }
+
+    @Test
+    @DisplayName("모임을 삭제한다.")
+    void deleteGathering() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        bookClubMemberRepository.save(new BookClubMember(bookClub, member));
+
+        Gathering gathering = TestDataFactory.createGathering(book);
+        gatheringRepository.save(gathering);
+
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .accept(ContentType.JSON)
+                .contentType(ContentType.JSON)
+                .when()
+                .delete("/api/gatherings/" + gathering.getId())
+                .then().log().all()
+                .extract();
+
+        // then
+        SoftAssertions.assertSoftly(assertions -> {
+            assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        });
+    }
+
 }
