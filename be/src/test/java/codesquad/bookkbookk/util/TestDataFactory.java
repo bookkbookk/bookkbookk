@@ -101,7 +101,8 @@ public class TestDataFactory {
     }
 
     public static Gathering createGathering(Book book) {
-        return new Gathering(book, LocalDateTime.now(), "코드 스쿼드");
+        return new Gathering(book, LocalDateTime.of(2023, 12, 25, 13, 30),
+                "코드 스쿼드");
     }
 
     public static List<Bookmark> createBookmarks(int count, Member writer, Topic topic) {
