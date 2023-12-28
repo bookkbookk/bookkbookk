@@ -1,21 +1,25 @@
 package codesquad.bookkbookk.domain.book.data.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import codesquad.bookkbookk.common.error.exception.MalformedIsbnException;
 import codesquad.bookkbookk.common.type.Status;
 import codesquad.bookkbookk.domain.book.data.dto.UpdateBookStatusRequest;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
+import codesquad.bookkbookk.domain.gathering.data.entity.Gathering;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -51,6 +55,8 @@ public class Book {
     @Column(name = "book_status", nullable = false)
     private Status status;
 
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    private List<Gathering> gatherings = new ArrayList<>();
 
     @Builder
     private Book(String isbn, BookClub bookClub, String title, String cover, String author, String category) {

@@ -26,6 +26,7 @@ import codesquad.bookkbookk.domain.bookclub.data.dto.JoinBookClubResponse;
 import codesquad.bookkbookk.domain.bookclub.data.dto.ReadBookClubDetailResponse;
 import codesquad.bookkbookk.domain.bookclub.service.BookClubService;
 import codesquad.bookkbookk.domain.gathering.data.dto.CreateGatheringRequest;
+import codesquad.bookkbookk.domain.gathering.data.dto.ReadGatheringResponse;
 import codesquad.bookkbookk.domain.gathering.service.GatheringService;
 
 import lombok.RequiredArgsConstructor;
@@ -103,11 +104,19 @@ public class BookClubController {
     }
 
     @PostMapping("/{bookClubId}/gatherings")
-    public ResponseEntity<Void> CreateGathering(@MemberId Long memberId, @PathVariable Long bookClubId,
+    public ResponseEntity<Void> createGathering(@MemberId Long memberId, @PathVariable Long bookClubId,
                                                 @RequestBody CreateGatheringRequest createGatheringRequest) {
         gatheringService.createGathering(memberId, bookClubId, createGatheringRequest);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{bookClubId}/gatherings")
+    public ResponseEntity<List<ReadGatheringResponse>> readGatherings(@PathVariable Long bookClubId) {
+        List<ReadGatheringResponse> responses = gatheringService.readGatherings(bookClubId);
+
+        return ResponseEntity.ok()
+                .body(responses);
     }
 
 }

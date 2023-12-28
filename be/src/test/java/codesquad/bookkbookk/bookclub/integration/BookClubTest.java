@@ -752,4 +752,56 @@ public class BookClubTest extends IntegrationTest {
         });
     }
 
+    @DisplayName("북클럽의 모든 모임 정보들을 조회한다.")
+    @Test
+    void readBookClubGatherings() {
+        //given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember1 = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember1);
+
+        Book book1 = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book1);
+        Book book2 = TestDataFactory.createBook2(bookClub);
+        bookRepository.save(book2);
+        Book book3 = TestDataFactory.createBook2(bookClub);
+        bookRepository.save(book3);
+
+        Gathering gathering1 = TestDataFactory.createGathering(book1);
+        gatheringRepository.save(gathering1);
+        Gathering gathering2 = TestDataFactory.createGathering(book1);
+        gatheringRepository.save(gathering2);
+        Gathering gathering3 = TestDataFactory.createGathering(book1);
+        gatheringRepository.save(gathering3);
+        Gathering gathering4 = TestDataFactory.createGathering(book2);
+        gatheringRepository.save(gathering4);
+        Gathering gathering5 = TestDataFactory.createGathering(book2);
+        gatheringRepository.save(gathering5);
+        Gathering gathering6 = TestDataFactory.createGathering(book3);
+        gatheringRepository.save(gathering6);
+
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        //when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/book-clubs/" + bookClub.getId() + "/gatherings")
+                .then().log().all()
+                .extract();
+
+        //then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(response.jsonPath().getList("").size()).isEqualTo(6);
+        });
+    }
+
 }
