@@ -10,9 +10,9 @@ import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 public interface BookClubRepository extends JpaRepository<BookClub, Long> {
 
     @Query("SELECT bookclub FROM BookClub bookclub " +
-            "JOIN book_club_member book_club_member " +
-            "ON bookclub.id = book_club_member.bookClub.id " +
-            "WHERE book_club_member .member.id = :memberId")
+            "JOIN BookClubMember AS bookClubMember " +
+            "ON bookclub.id = bookClubMember.bookClub.id " +
+            "WHERE bookClubMember.member.id = :memberId")
     List<BookClub> findBookClubsByMemberId(Long memberId);
 
 }
