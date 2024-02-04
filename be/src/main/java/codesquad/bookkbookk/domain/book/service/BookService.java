@@ -39,7 +39,7 @@ public class BookService {
     private final MemberBookRepository memberBookRepository;
 
     public CreateBookResponse createBook(Long memberId, CreateBookRequest request) {
-        authorizationService.authorizeBookClubMembership(memberId, request.getBookClubId());
+        authorizationService.authorizeBookClubMembershipByBookClubId(memberId, request.getBookClubId());
 
         BookClub bookclub = bookClubRepository.findById(request.getBookClubId())
                 .orElseThrow(BookClubNotFoundException::new);
@@ -67,14 +67,17 @@ public class BookService {
         return ReadBookResponse.from(books);
     }
 
-    public ReadBookClubBookResponse readBookClubBooks(Long bookClubId, Pageable pageable) {
-        Slice<Book> books = bookRepository.findBooksByBookClubId(bookClubId, pageable);
+    public ReadBookClubBookResponse readBookClubBooks(Long memberId, Long bookClubId, Pageable pageable) {
+        authorizationService.authorizeBookClubMembershipByBookClubId(memberId, bookClubId);
 
+        Slice<Book> books = bookRepository.findBooksByBookClubId(bookClubId, pageable);
         return ReadBookClubBookResponse.from(books);
     }
 
     @Transactional
-    public UpdateBookStatusResponse updateBookStatus(Long bookId, UpdateBookStatusRequest request) {
+    public UpdateBookStatusResponse updateBookStatus(Long memberId, Long bookId, UpdateBookStatusRequest request) {
+        authorizationService.authorizeBookClubMembershipByBookId(memberId, bookId);
+
         Book book = bookRepository.findById(bookId).orElseThrow(BookNotFoundException::new);
 
         book.updateStatus(request);

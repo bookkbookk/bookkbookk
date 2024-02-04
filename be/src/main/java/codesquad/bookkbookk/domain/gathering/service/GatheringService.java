@@ -35,9 +35,10 @@ public class GatheringService {
 
     @Transactional
     public void createGathering(Long memberId, Long bookClubId, CreateGatheringRequest request) {
+        authorizationService.authorizeBookClubMembershipByBookClubId(memberId, bookClubId);
+
         Book book = bookRepository.findById(request.getBookId()).orElseThrow(BookNotFoundException::new);
         BookClub bookClub = bookClubRepository.findById(bookClubId).orElseThrow(BookClubNotFoundException::new);
-        authorizationService.authorizeBookClubMembership(memberId, bookClub.getId());
 
         Gathering gathering = new Gathering(book, request.getDateTime(), request.getPlace());
         gatheringRepository.save(gathering);
@@ -46,7 +47,9 @@ public class GatheringService {
     }
 
     @Transactional(readOnly = true)
-    public List<ReadGatheringResponse> readGatherings(Long bookClubId) {
+    public List<ReadGatheringResponse> readGatherings(Long memberId, Long bookClubId) {
+        authorizationService.authorizeBookClubMembershipByBookClubId(memberId, bookClubId);
+
         BookClub bookClub = bookClubRepository.findById(bookClubId).orElseThrow(BookClubNotFoundException::new);
         List<Gathering> gatherings = bookClub.getBooks().stream()
                 .flatMap(book -> book.getGatherings().stream())
@@ -56,7 +59,9 @@ public class GatheringService {
     }
 
     @Transactional
-    public UpdateGatheringResponse updateGathering(Long gatheringId, UpdateGatheringRequest request) {
+    public UpdateGatheringResponse updateGathering(Long memberId, Long gatheringId, UpdateGatheringRequest request) {
+        authorizationService.authorizeBookClubMembershipByGatheringId(memberId, gatheringId);
+
         Gathering gathering = gatheringRepository.findById(gatheringId).orElseThrow(GatheringNotFoundException::new);
 
         gathering.update(request);
@@ -64,7 +69,9 @@ public class GatheringService {
     }
 
     @Transactional
-    public void deleteGathering(Long gatheringId) {
+    public void deleteGathering(Long memberId, Long gatheringId) {
+        authorizationService.authorizeBookClubMembershipByGatheringId(memberId, gatheringId);
+
         gatheringRepository.deleteById(gatheringId);
     }
 

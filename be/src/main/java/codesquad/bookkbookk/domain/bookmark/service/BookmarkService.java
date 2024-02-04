@@ -41,6 +41,8 @@ public class BookmarkService {
 
     @Transactional
     public void createBookmark(Long memberId, CreateBookmarkRequest createBookmarkRequest) {
+        authorizationService.authorizeBookClubMembershipByTopicId(memberId, createBookmarkRequest.getTopicId());
+
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         Topic topic = topicRepository.findById(createBookmarkRequest.getTopicId())
                 .orElseThrow(TopicNotFoundException::new);
@@ -72,6 +74,8 @@ public class BookmarkService {
 
     @Transactional
     public void createBookmarkReaction(Long memberId, Long bookmarkId, CreateBookmarkReactionRequest request) {
+        authorizationService.authorizeBookClubMembershipByBookmarkId(memberId, bookmarkId);
+
         Reaction reaction = Reaction.of(request.getReactionName());
         if (bookmarkReactionRepository.existsByBookmarkIdAndReactorIdAndReaction(bookmarkId, memberId, reaction)) {
             throw new BookmarkReactionExistsException();
@@ -96,7 +100,9 @@ public class BookmarkService {
     }
 
     @Transactional(readOnly = true)
-    public ReadReactionsResponse readBookmarkReactions(Long bookmarkId) {
+    public ReadReactionsResponse readBookmarkReactions(Long memberId, Long bookmarkId) {
+        authorizationService.authorizeBookClubMembershipByBookmarkId(memberId, bookmarkId);
+
         Bookmark bookmark = bookmarkRepository.findById(bookmarkId).orElseThrow(BookmarkNotFoundException::new);
         List<BookmarkReaction> bookmarkReactions = bookmark.getBookmarkReactions();
 

@@ -7,9 +7,7 @@ import codesquad.bookkbookk.common.error.exception.MemberIsNotBookmarkWriterExce
 import codesquad.bookkbookk.common.error.exception.MemberIsNotCommentWriterException;
 import codesquad.bookkbookk.common.error.exception.MemberJoinedBookClubException;
 import codesquad.bookkbookk.common.error.exception.MemberNotInBookClubException;
-import codesquad.bookkbookk.domain.bookmark.repository.BookmarkRepository;
-import codesquad.bookkbookk.domain.comment.repository.CommentRepository;
-import codesquad.bookkbookk.domain.mapping.repository.BookClubMemberRepository;
+import codesquad.bookkbookk.domain.auth.repository.AuthorizationRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,34 +15,74 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthorizationService {
 
-    private final BookClubMemberRepository bookClubMemberRepository;
-    private final BookmarkRepository bookmarkRepository;
-    private final CommentRepository commentRepository;
+    private final AuthorizationRepository authorizationRepository;
 
     @Transactional(readOnly = true)
-    public void authorizeBookClubMembership(Long memberId, Long bookClubId) {
-        if (!bookClubMemberRepository.existsByBookClubIdAndMemberId(bookClubId, memberId)) {
+    public void authorizeBookClubMembershipByBookClubId(Long memberId, Long bookClubId) {
+        if (!authorizationRepository.existsBookClubMemberByMemberIdAndBookClubId(memberId, bookClubId)) {
+            throw new MemberNotInBookClubException();
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public void authorizeBookClubMembershipByBookId(Long memberId, Long bookId) {
+        if (!authorizationRepository.existsBookClubMemberByMemberIdAndBookId(memberId, bookId)) {
+            throw new MemberNotInBookClubException();
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public void authorizeBookClubMembershipByGatheringId(Long memberId, Long gatheringId) {
+        if (!authorizationRepository.existsBookClubMemberByMemberIdAndGatheringId(memberId, gatheringId)) {
+            throw new MemberNotInBookClubException();
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public void authorizeBookClubMembershipByChapterId(Long memberId, Long chapterId) {
+        if (!authorizationRepository.existsBookClubMemberByMemberIdAndChapterId(memberId, chapterId)) {
+            throw new MemberNotInBookClubException();
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public void authorizeBookClubMembershipByTopicId(Long memberId, Long topicId) {
+        if (!authorizationRepository.existsBookClubMemberByMemberIdAndTopicId(memberId, topicId)) {
+            throw new MemberNotInBookClubException();
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public void authorizeBookClubMembershipByBookmarkId(Long memberId, Long bookmarkId) {
+        if (!authorizationRepository.existsBookClubMemberByMemberIdAndBookmarkId(memberId, bookmarkId)) {
+            throw new MemberNotInBookClubException();
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public void authorizeBookClubMembershipByCommentId(Long memberId, Long commentId) {
+        if (!authorizationRepository.existsBookClubMemberByMemberIdAndCommentId(memberId, commentId)) {
             throw new MemberNotInBookClubException();
         }
     }
 
     @Transactional(readOnly = true)
     public void authorizeBookClubJoin(Long memberId, Long bookClubId) {
-        if (bookClubMemberRepository.existsByBookClubIdAndMemberId(bookClubId, memberId)) {
+        if (authorizationRepository.existsBookClubMemberByMemberIdAndBookClubId(memberId, bookClubId)) {
             throw new MemberJoinedBookClubException();
         }
     }
 
     @Transactional(readOnly = true)
-    public void authorizeBookmarkWriter(Long memberId, Long bookmarkId) {
-        if (!bookmarkRepository.existsByIdAndWriterId(bookmarkId, memberId)) {
+    public void authorizeBookmarkWriter(Long writerId, Long bookmarkId) {
+        if (!authorizationRepository.existsBookmarkByIdAndWriterId(bookmarkId, writerId)) {
             throw new MemberIsNotBookmarkWriterException();
         }
     }
 
     @Transactional(readOnly = true)
-    public void authorizeCommentWriter(Long memberId, Long bookmarkId) {
-        if (!commentRepository.existsByIdAndWriterId(bookmarkId, memberId)) {
+    public void authorizeCommentWriter(Long writerId, Long commentId) {
+        if (!authorizationRepository.existsCommentByIdAndWriterId(commentId, writerId)) {
             throw new MemberIsNotCommentWriterException();
         }
     }

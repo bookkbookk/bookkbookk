@@ -86,18 +86,21 @@ public class BookClubController {
     }
 
     @GetMapping("/{bookClubId}/books")
-    public ResponseEntity<ReadBookClubBookResponse> readBookClubBooks(@PathVariable Long bookClubId, @RequestParam Integer cursor,
-                                                         @RequestParam Integer size) {
+    public ResponseEntity<ReadBookClubBookResponse> readBookClubBooks(@MemberId Long memberId,
+                                                                      @PathVariable Long bookClubId,
+                                                                      @RequestParam Integer cursor,
+                                                                      @RequestParam Integer size) {
         Pageable pageable = PageRequest.of(cursor, size);
-        ReadBookClubBookResponse response = bookService.readBookClubBooks(bookClubId, pageable);
+        ReadBookClubBookResponse response = bookService.readBookClubBooks(memberId, bookClubId, pageable);
 
         return ResponseEntity.ok()
                 .body(response);
     }
 
     @GetMapping("/{bookClubId}")
-    public ResponseEntity<ReadBookClubDetailResponse> readBookClubDetail(@PathVariable Long bookClubId) {
-        ReadBookClubDetailResponse response = bookClubService.readBookClubDetail(bookClubId);
+    public ResponseEntity<ReadBookClubDetailResponse> readBookClubDetail(@MemberId Long memberId,
+                                                                         @PathVariable Long bookClubId) {
+        ReadBookClubDetailResponse response = bookClubService.readBookClubDetail(memberId, bookClubId);
 
         return ResponseEntity.ok()
                 .body(response);
@@ -112,8 +115,9 @@ public class BookClubController {
     }
 
     @GetMapping("/{bookClubId}/gatherings")
-    public ResponseEntity<List<ReadGatheringResponse>> readGatherings(@PathVariable Long bookClubId) {
-        List<ReadGatheringResponse> responses = gatheringService.readGatherings(bookClubId);
+    public ResponseEntity<List<ReadGatheringResponse>> readGatherings(@MemberId Long memberId,
+                                                                      @PathVariable Long bookClubId) {
+        List<ReadGatheringResponse> responses = gatheringService.readGatherings(memberId, bookClubId);
 
         return ResponseEntity.ok()
                 .body(responses);
