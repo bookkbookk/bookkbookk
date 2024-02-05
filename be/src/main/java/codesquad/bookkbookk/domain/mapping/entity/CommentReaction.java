@@ -18,7 +18,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "comment_reaction")
+@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class CommentReaction {

@@ -67,8 +67,8 @@ public class CommentController {
     }
 
     @GetMapping("/{commentId}/reactions")
-    public ResponseEntity<ReadReactionsResponse> readReactions(@PathVariable Long commentId) {
-        ReadReactionsResponse response = commentService.readBookmarkReactions(commentId);
+    public ResponseEntity<ReadReactionsResponse> readReactions(@MemberId Long memberId, @PathVariable Long commentId) {
+        ReadReactionsResponse response = commentService.readCommentReactions(memberId, commentId);
 
         return ResponseEntity.ok()
                 .body(response);

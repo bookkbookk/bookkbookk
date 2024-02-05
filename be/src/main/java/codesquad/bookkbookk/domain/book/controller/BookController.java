@@ -41,17 +41,18 @@ public class BookController {
     }
 
     @GetMapping("/{bookId}/chapters")
-    public ResponseEntity<List<ReadChapterResponse>> readChapters(@PathVariable Long bookId, @RequestParam int statusId) {
-        List<ReadChapterResponse> response = chapterService.readChapters(bookId, statusId);
+    public ResponseEntity<List<ReadChapterResponse>> readChapters(@MemberId Long memberId, @PathVariable Long bookId,
+                                                                  @RequestParam int statusId) {
+        List<ReadChapterResponse> response = chapterService.readChapters(memberId, bookId, statusId);
 
         return ResponseEntity.ok()
                 .body(response);
     }
 
     @PatchMapping("/{bookId}")
-    public ResponseEntity<UpdateBookStatusResponse> updateBookStatus(@PathVariable Long bookId,
+    public ResponseEntity<UpdateBookStatusResponse> updateBookStatus(@MemberId Long memberId, @PathVariable Long bookId,
                                                                      @RequestBody UpdateBookStatusRequest request) {
-        UpdateBookStatusResponse response = bookService.updateBookStatus(bookId, request);
+        UpdateBookStatusResponse response = bookService.updateBookStatus(memberId, bookId, request);
 
         return ResponseEntity.ok()
                 .body(response);

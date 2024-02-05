@@ -16,6 +16,8 @@ import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
 import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
 import codesquad.bookkbookk.domain.chapter.repository.ChapterRepository;
+import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
+import codesquad.bookkbookk.domain.mapping.repository.BookClubMemberRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
 import codesquad.bookkbookk.domain.topic.data.dto.UpdateTopicTitleRequest;
@@ -46,6 +48,9 @@ public class TopicTest extends IntegrationTest {
     private BookClubRepository bookClubRepository;
 
     @Autowired
+    private BookClubMemberRepository bookClubMemberRepository;
+
+    @Autowired
     private JwtProvider jwtProvider;
 
     @DisplayName("성공적으로 토픽을 생성한다.")
@@ -58,6 +63,9 @@ public class TopicTest extends IntegrationTest {
 
         BookClub bookClub = TestDataFactory.createBookClub();
         bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
 
         Book book = TestDataFactory.createBook1(bookClub);
         bookRepository.save(book);
@@ -97,6 +105,9 @@ public class TopicTest extends IntegrationTest {
 
         BookClub bookClub = TestDataFactory.createBookClub();
         bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
 
         Book book = TestDataFactory.createBook1(bookClub);
         bookRepository.save(book);
@@ -138,6 +149,9 @@ public class TopicTest extends IntegrationTest {
 
         BookClub bookClub = TestDataFactory.createBookClub();
         bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
 
         Book book = TestDataFactory.createBook1(bookClub);
         bookRepository.save(book);

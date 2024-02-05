@@ -97,7 +97,7 @@ public class BookClubService {
     }
 
     public InvitationUrlResponse createInvitationUrl(Long memberId, CreateInvitationUrlRequest request) {
-        authorizationService.authorizeBookClubMembership(memberId, request.getBookClubId());
+        authorizationService.authorizeBookClubMembershipByBookClubId(memberId, request.getBookClubId());
 
         String invitationCode = String.valueOf(UUID.randomUUID());
         BookClubInvitationCode bookClubInvitationCode = new BookClubInvitationCode(request.getBookClubId(),
@@ -108,7 +108,7 @@ public class BookClubService {
     }
 
     public InvitationUrlResponse readInvitationUrl(Long memberId, Long bookClubId) {
-        authorizationService.authorizeBookClubMembership(memberId, bookClubId);
+        authorizationService.authorizeBookClubMembershipByBookClubId(memberId, bookClubId);
 
         BookClubInvitationCode bookClubInvitationCode = bookClubInvitationCodeRepository.findByBookClubId(bookClubId)
                 .orElseThrow(InvitationUrlNotFoundException::new);
@@ -137,7 +137,9 @@ public class BookClubService {
         return JoinBookClubResponse.from(save);
     }
 
-    public ReadBookClubDetailResponse readBookClubDetail(Long bookClubId) {
+    public ReadBookClubDetailResponse readBookClubDetail(Long memberId, Long bookClubId) {
+        authorizationService.authorizeBookClubMembershipByBookClubId(memberId, bookClubId);
+
         BookClub bookClub = bookClubRepository.findById(bookClubId).orElseThrow(BookClubNotFoundException::new);
 
         return bookClub.getBookClubStatus().from(bookClub);

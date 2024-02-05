@@ -15,7 +15,7 @@ import codesquad.bookkbookk.domain.member.data.entity.Member;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "member_book")
+@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberBook {
 

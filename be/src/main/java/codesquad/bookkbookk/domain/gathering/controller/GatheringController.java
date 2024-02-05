@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import codesquad.bookkbookk.common.resolver.MemberId;
 import codesquad.bookkbookk.domain.gathering.data.dto.UpdateGatheringRequest;
 import codesquad.bookkbookk.domain.gathering.data.dto.UpdateGatheringResponse;
 import codesquad.bookkbookk.domain.gathering.service.GatheringService;
@@ -22,17 +23,18 @@ public class GatheringController {
     private final GatheringService gatheringService;
 
     @PatchMapping("/{gatheringId}")
-    public ResponseEntity<UpdateGatheringResponse> updateGathering(@PathVariable Long gatheringId,
+    public ResponseEntity<UpdateGatheringResponse> updateGathering(@MemberId Long memberId,
+                                                                   @PathVariable Long gatheringId,
                                                                    @RequestBody UpdateGatheringRequest request) {
-        UpdateGatheringResponse response = gatheringService.updateGathering(gatheringId, request);
+        UpdateGatheringResponse response = gatheringService.updateGathering(memberId, gatheringId, request);
 
         return ResponseEntity.ok()
                 .body(response);
     }
 
     @DeleteMapping("/{gatheringId}")
-    public ResponseEntity<Void> deleteGathering(@PathVariable Long gatheringId) {
-        gatheringService.deleteGathering(gatheringId);
+    public ResponseEntity<Void> deleteGathering(@MemberId Long memberId, @PathVariable Long gatheringId) {
+        gatheringService.deleteGathering(memberId, gatheringId);
 
         return ResponseEntity.ok().build();
     }

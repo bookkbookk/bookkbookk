@@ -29,7 +29,9 @@ import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
 import codesquad.bookkbookk.domain.chapter.repository.ChapterRepository;
 import codesquad.bookkbookk.domain.comment.data.entity.Comment;
 import codesquad.bookkbookk.domain.comment.repository.CommentRepository;
+import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
 import codesquad.bookkbookk.domain.mapping.entity.BookmarkReaction;
+import codesquad.bookkbookk.domain.mapping.repository.BookClubMemberRepository;
 import codesquad.bookkbookk.domain.mapping.repository.BookmarkReactionRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
@@ -48,6 +50,8 @@ public class BookmarkTest extends IntegrationTest {
     MemberRepository memberRepository;
     @Autowired
     BookClubRepository bookClubRepository;
+    @Autowired
+    BookClubMemberRepository bookClubMemberRepository;
     @Autowired
     BookRepository bookRepository;
     @Autowired
@@ -73,6 +77,9 @@ public class BookmarkTest extends IntegrationTest {
 
         BookClub bookClub = TestDataFactory.createBookClub();
         bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
 
         Book book = TestDataFactory.createBook1(bookClub);
         bookRepository.save(book);
@@ -288,6 +295,9 @@ public class BookmarkTest extends IntegrationTest {
         BookClub bookClub = TestDataFactory.createBookClub();
         bookClubRepository.save(bookClub);
 
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
+
         Book book = TestDataFactory.createBook1(bookClub);
         bookRepository.save(book);
 
@@ -326,6 +336,9 @@ public class BookmarkTest extends IntegrationTest {
 
         BookClub bookClub = TestDataFactory.createBookClub();
         bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
 
         Book book = TestDataFactory.createBook1(bookClub);
         bookRepository.save(book);
@@ -458,6 +471,9 @@ public class BookmarkTest extends IntegrationTest {
         BookClub bookClub = TestDataFactory.createBookClub();
         bookClubRepository.save(bookClub);
 
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
+
         Book book = TestDataFactory.createBook1(bookClub);
         bookRepository.save(book);
 
@@ -503,6 +519,9 @@ public class BookmarkTest extends IntegrationTest {
 
         BookClub bookClub = TestDataFactory.createBookClub();
         bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
 
         Book book = TestDataFactory.createBook1(bookClub);
         bookRepository.save(book);

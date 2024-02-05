@@ -97,6 +97,9 @@ public class BookClubTest extends IntegrationTest {
         BookClub bookClub = TestDataFactory.createBookClub();
         bookClubRepository.save(bookClub);
 
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
+
         Book book1 = TestDataFactory.createBook1(bookClub);
         bookRepository.save(book1);
         Book book2 = TestDataFactory.createBook2(bookClub);
@@ -133,6 +136,9 @@ public class BookClubTest extends IntegrationTest {
 
         BookClub bookClub = TestDataFactory.createBookClub();
         bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
 
         Book book1 = TestDataFactory.createBook1(bookClub);
         bookRepository.save(book1);

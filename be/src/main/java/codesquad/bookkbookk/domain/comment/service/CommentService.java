@@ -42,6 +42,8 @@ public class CommentService {
 
     @Transactional
     public void createComment(Long memberId, CreateCommentRequest createCommentRequest) {
+        authorizationService.authorizeBookClubMembershipByBookmarkId(memberId, createCommentRequest.getBookmarkId());
+
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         Bookmark bookmark = bookmarkRepository.findById(createCommentRequest.getBookmarkId())
                 .orElseThrow(BookmarkNotFoundException::new);
@@ -68,6 +70,8 @@ public class CommentService {
 
     @Transactional
     public void createCommentReaction(Long memberId, Long commentId, CreateCommentReactionRequest request) {
+        authorizationService.authorizeBookClubMembershipByCommentId(memberId, commentId);
+
         Reaction reaction = Reaction.of(request.getReactionName());
         if (commentReactionRepository.existsByCommentIdAndReactorIdAndReaction(commentId, memberId, reaction)) {
             throw new CommentReactionExistsException();
@@ -92,14 +96,18 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
-    public List<ReadCommentResponse> readComments(Long bookmarkId) {
+    public List<ReadCommentResponse> readComments(Long memberId, Long bookmarkId) {
+        authorizationService.authorizeBookClubMembershipByBookmarkId(memberId, bookmarkId);
+
         Bookmark bookmark = bookmarkRepository.findById(bookmarkId).orElseThrow(BookmarkNotFoundException::new);
 
         return ReadCommentResponse.from(bookmark.getComments());
     }
 
     @Transactional(readOnly = true)
-    public ReadReactionsResponse readBookmarkReactions(Long commentId) {
+    public ReadReactionsResponse readCommentReactions(Long memberId, Long commentId) {
+        authorizationService.authorizeBookClubMembershipByCommentId(memberId, commentId);
+
         Comment comment = commentRepository.findById(commentId).orElseThrow(BookmarkNotFoundException::new);
         List<CommentReaction> commentReactions = comment.getCommentReactions();
 
