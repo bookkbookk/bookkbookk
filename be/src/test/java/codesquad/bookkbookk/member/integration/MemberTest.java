@@ -66,7 +66,7 @@ public class MemberTest extends IntegrationTest {
             softAssertions.assertThat(result.getId()).isEqualTo(member.getId());
             softAssertions.assertThat(result.getNickname()).isEqualTo(member.getNickname());
             softAssertions.assertThat(result.getEmail()).isEqualTo(member.getEmail());
-            softAssertions.assertThat(result.getProfileImgUrl()).isEqualTo(member.getProfileImgUrl());
+            softAssertions.assertThat(result.getProfileImgUrl()).isEqualTo(member.getProfileImageUrl());
         });
 
     }

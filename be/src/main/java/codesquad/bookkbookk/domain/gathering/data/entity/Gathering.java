@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,24 +25,27 @@ public class Gathering {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "gathering_id")
     private Long id;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
     private Book book;
-    @Column(name = "date_time")
-    private LocalDateTime dateTime;
+
+    @Column(nullable = false)
+    private LocalDateTime startTime;
+
+    @Column(nullable = false)
     private String place;
 
-    public Gathering(Book book, LocalDateTime dateTime, String place) {
+    public Gathering(Book book, LocalDateTime startTime, String place) {
         this.book = book;
-        this.dateTime = dateTime;
+        this.startTime = startTime;
         this.place = place;
     }
 
     public void update(UpdateGatheringRequest request) {
         if (request.getDateTime() != null) {
-            this.dateTime = request.getDateTime();
+            this.startTime = request.getDateTime();
         }
         if (request.getPlace() != null) {
             this.place = request.getPlace();

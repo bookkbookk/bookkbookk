@@ -36,8 +36,8 @@ public class ClosedBookClubDetailResponse extends ReadBookClubDetailResponse{
 
         return ClosedBookClubDetailResponse.builder()
                 .name(bookClub.getName())
-                .status(bookClub.getBookClubStatus())
-                .profileImgUrl(bookClub.getProfileImgUrl())
+                .status(bookClub.getStatus())
+                .profileImgUrl(bookClub.getProfileImageUrl())
                 .createdTime(bookClub.getCreatedTime())
                 .readBookClubLastBook(ReadBookClubLastBook.from(lastBook))
                 .readBookClubMembers(ReadBookClubMember.from(members))

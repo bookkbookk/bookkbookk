@@ -27,7 +27,7 @@ public class ReadGatheringResponse {
         }
 
         private static ReadGatheringResponse from(Gathering gathering) {
-            return new ReadGatheringResponse(ReadGatheringBook.from(gathering.getBook()), gathering.getDateTime(),
+            return new ReadGatheringResponse(ReadGatheringBook.from(gathering.getBook()), gathering.getStartTime(),
                     gathering.getPlace());
         }
 

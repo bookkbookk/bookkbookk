@@ -15,7 +15,7 @@ public class AuthCode {
     private String authCode;
 
     @Builder
-    private AuthCode(String oAuthCode) {
+    private AuthCode(String authCode) {
         this.authCode = authCode;
     }
 

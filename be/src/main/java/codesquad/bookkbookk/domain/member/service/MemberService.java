@@ -43,7 +43,7 @@ public class MemberService {
             member.updateNickname(nickname);
         }
 
-        return new UpdateProfileResponse(member.getNickname(), member.getProfileImgUrl());
+        return new UpdateProfileResponse(member.getNickname(), member.getProfileImageUrl());
     }
 
 }

@@ -1,5 +1,6 @@
 package codesquad.bookkbookk.domain.mapping.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -30,9 +31,10 @@ public class BookmarkReaction {
     @JoinColumn(name = "bookmark_id")
     private Bookmark bookmark;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "reactor_id")
     private Member reactor;
     @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false)
     private Reaction reaction;
 
     public BookmarkReaction(Bookmark bookmark, Member reactor, Reaction reaction) {

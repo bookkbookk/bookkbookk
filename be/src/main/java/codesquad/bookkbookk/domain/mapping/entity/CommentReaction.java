@@ -26,12 +26,15 @@ public class CommentReaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id")
     private Comment comment;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "reactor_id")
     private Member reactor;
+
     @Enumerated(value = EnumType.STRING)
     private Reaction reaction;
 

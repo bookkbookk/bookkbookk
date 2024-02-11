@@ -29,7 +29,7 @@ public class ReadBookClubResponse {
                 .id(bookClub.getId())
                 .creatorId(bookClub.getCreatorId())
                 .name(bookClub.getName())
-                .profileImgUrl(bookClub.getProfileImgUrl())
+                .profileImgUrl(bookClub.getProfileImageUrl())
                 .build();
     }
 

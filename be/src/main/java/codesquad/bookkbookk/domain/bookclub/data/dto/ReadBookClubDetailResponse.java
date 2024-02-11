@@ -78,7 +78,7 @@ public class ReadBookClubDetailResponse {
             return ReadBookClubMember.builder()
                     .id(member.getId())
                     .nickname(member.getNickname())
-                    .profileImgUrl(member.getProfileImgUrl())
+                    .profileImgUrl(member.getProfileImageUrl())
                     .email(member.getEmail())
                     .build();
         }

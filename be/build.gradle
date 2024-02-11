@@ -51,3 +51,11 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+task copySecrets(type: Copy) {
+	copy {
+		from '../secrets'
+		include "*.yml"
+		into 'src/main/resources'
+	}
+}

@@ -17,10 +17,9 @@ public class BookClubInvitationCode {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "book_club_invitation_code_id")
     private Long id;
 
-    @Column(name = "book_club_id", nullable = false)
+    @Column(nullable = false)
     private Long bookClubId;
 
     @Column(nullable = false)

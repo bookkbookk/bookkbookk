@@ -30,28 +30,33 @@ public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_id")
     private Long id;
-    @Column(unique = true, nullable = false)
+
+    @Column(nullable = false, unique = true)
     private String email;
+
     @Enumerated(EnumType.STRING)
-    @Column(name = "login_type", nullable = false)
+    @Column(nullable = false)
     private LoginType loginType;
-    @Column(unique = true, nullable = false)
+
+    @Column(nullable = false, unique = true)
     private String nickname;
-    @Column(name = "profile_img_url", nullable = false)
-    private String profileImgUrl;
+
+    @Column(nullable = false)
+    private String profileImageUrl;
+
     @OneToMany(mappedBy = "member")
     private List<BookClubMember> memberBookClubs = new ArrayList<>();
+
     @OneToMany(mappedBy = "member")
     private List<MemberBook> memberBooks = new ArrayList<>();
 
     @Builder
-    private Member(String email, LoginType loginType, String nickname, String profileImgUrl) {
+    private Member(String email, LoginType loginType, String nickname, String profileImageUrl) {
         this.email = email;
         this.loginType = loginType;
         this.nickname = nickname;
-        this.profileImgUrl = profileImgUrl;
+        this.profileImageUrl = profileImageUrl;
     }
 
     public void updateNickname(String nickname) {
@@ -59,7 +64,7 @@ public class Member {
     }
 
     public void updateProfileImgUrl(String profileImgUrl){
-        this.profileImgUrl = profileImgUrl;
+        this.profileImageUrl = profileImgUrl;
     }
 
     public List<BookClub> getBookClubs() {

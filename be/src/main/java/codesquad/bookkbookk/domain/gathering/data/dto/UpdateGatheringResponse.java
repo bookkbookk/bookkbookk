@@ -16,7 +16,7 @@ public class UpdateGatheringResponse {
     private final String place;
 
     public static UpdateGatheringResponse from(Gathering gathering) {
-        return new UpdateGatheringResponse(gathering.getId(), gathering.getDateTime(), gathering.getPlace());
+        return new UpdateGatheringResponse(gathering.getId(), gathering.getStartTime(), gathering.getPlace());
     }
 
 }

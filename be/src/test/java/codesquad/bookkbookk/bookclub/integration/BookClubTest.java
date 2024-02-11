@@ -397,7 +397,7 @@ public class BookClubTest extends IntegrationTest {
         Gathering gathering = TestDataFactory.createGathering(book1);
         gatheringRepository.save(gathering);
 
-        bookClub.updateUpcomingGatheringDate(gathering.getDateTime());
+        bookClub.updateUpcomingGatheringDate(gathering.getStartTime());
         bookClubRepository.save(bookClub);
 
         String accessToken = jwtProvider.createAccessToken(another.getId());
@@ -598,7 +598,7 @@ public class BookClubTest extends IntegrationTest {
         Gathering gathering = TestDataFactory.createGathering(book1);
         gatheringRepository.save(gathering);
 
-        bookClub1.updateUpcomingGatheringDate(gathering.getDateTime());
+        bookClub1.updateUpcomingGatheringDate(gathering.getStartTime());
         bookClubRepository.save(bookClub1);
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
@@ -659,7 +659,7 @@ public class BookClubTest extends IntegrationTest {
         Gathering gathering = TestDataFactory.createGathering(book1);
         gatheringRepository.save(gathering);
 
-        bookClub1.updateUpcomingGatheringDate(gathering.getDateTime());
+        bookClub1.updateUpcomingGatheringDate(gathering.getStartTime());
         bookClubRepository.save(bookClub1);
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
@@ -731,7 +731,7 @@ public class BookClubTest extends IntegrationTest {
         Gathering gathering = TestDataFactory.createGathering(book1);
         gatheringRepository.save(gathering);
 
-        bookClub1.updateUpcomingGatheringDate(gathering.getDateTime());
+        bookClub1.updateUpcomingGatheringDate(gathering.getStartTime());
         bookClubRepository.save(bookClub1);
 
         String accessToken = jwtProvider.createAccessToken(member.getId());

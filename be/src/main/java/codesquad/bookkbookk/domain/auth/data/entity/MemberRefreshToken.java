@@ -17,11 +17,10 @@ public class MemberRefreshToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_refresh_token_id")
     private Long id;
-    @Column(name = "member_id")
+    @Column(nullable = false)
     private Long memberId;
-    @Column(name = "refresh_token")
+    @Column(nullable = false)
     private String refreshToken;
 
     public MemberRefreshToken(Long memberId, String refreshToken) {

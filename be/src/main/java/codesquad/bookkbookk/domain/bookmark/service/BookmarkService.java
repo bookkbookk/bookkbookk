@@ -50,7 +50,7 @@ public class BookmarkService {
                 .writer(member)
                 .topic(topic)
                 .title(createBookmarkRequest.getTitle())
-                .content(createBookmarkRequest.getContent())
+                .contents(createBookmarkRequest.getContent())
                 .build();
 
         bookmarkRepository.save(bookmark);

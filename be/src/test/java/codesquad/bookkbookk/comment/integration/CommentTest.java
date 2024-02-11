@@ -155,8 +155,8 @@ public class CommentTest extends IntegrationTest {
         Comment actual = commentRepository.findById(comment.getId()).orElseThrow(CommentNotFoundException::new);
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softAssertions.assertThat(actual.getContent()).isEqualTo("updated content");
-            softAssertions.assertThat(actual.getUpdateAt()).isNotEqualTo(actual.getCreateAt());
+            softAssertions.assertThat(actual.getContents()).isEqualTo("updated content");
+            softAssertions.assertThat(actual.getUpdatedTime()).isNotEqualTo(actual.getCreatedTime());
         });
     }
 
