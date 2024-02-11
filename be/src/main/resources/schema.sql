@@ -17,7 +17,7 @@ CREATE TABLE member_refresh_token
     member_id     BIGINT       NOT NULL,
     refresh_token VARCHAR(255) NOT NULL,
     CONSTRAINT pk_member_refresh_token PRIMARY KEY (id),
-    CONSTRAINT fk_member_refresh_token_member FOREIGN KEY (memberId) REFERENCES member (id)
+    CONSTRAINT fk_member_refresh_token_member FOREIGN KEY (member_id) REFERENCES member (id)
 );
 
 CREATE TABLE book_club
@@ -51,8 +51,8 @@ CREATE TABLE book_club_member
     book_club_id BIGINT NOT NULL,
     member_id    BIGINT NOT NULL,
     CONSTRAINT pk_book_club_member PRIMARY KEY (id),
-    CONSTRAINT fk_book_club_members_book_club FOREIGN KEY (book_club_id) REFERENCES book_club (id),
-    CONSTRAINT fk_book_club_members_member FOREIGN KEY (member_id) REFERENCES member (id)
+    CONSTRAINT fk_book_club_member_book_club FOREIGN KEY (book_club_id) REFERENCES book_club (id),
+    CONSTRAINT fk_book_club_member_member FOREIGN KEY (member_id) REFERENCES member (id)
 );
 
 CREATE TABLE book
