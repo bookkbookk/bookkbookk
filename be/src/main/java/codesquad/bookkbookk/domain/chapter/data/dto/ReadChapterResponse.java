@@ -53,7 +53,7 @@ public class ReadChapterResponse {
         private final String content;
 
         private static ReadChapterBookmarkResponse from(Bookmark bookmark) {
-            return new ReadChapterBookmarkResponse(bookmark.getWriter().getProfileImgUrl(), bookmark.getContent());
+            return new ReadChapterBookmarkResponse(bookmark.getWriter().getProfileImageUrl(), bookmark.getContents());
         }
 
     }

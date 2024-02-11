@@ -22,7 +22,7 @@ public class TestDataFactory {
                 .email("nag@email.com")
                 .loginType(LoginType.GOOGLE)
                 .nickname("nag")
-                .profileImgUrl("profile")
+                .profileImageUrl("profile")
                 .build();
     }
 
@@ -31,7 +31,7 @@ public class TestDataFactory {
                 .email("gamgyul@email.com")
                 .loginType(LoginType.GOOGLE)
                 .nickname("gamgyul")
-                .profileImgUrl("profile")
+                .profileImageUrl("profile")
                 .build();
     }
 
@@ -39,7 +39,7 @@ public class TestDataFactory {
         return BookClub.builder()
                 .creatorId(1L)
                 .name("Test Book Club")
-                .profileImgUrl("image.url")
+                .profileImageUrl("image.url")
                 .build();
     }
 
@@ -88,7 +88,7 @@ public class TestDataFactory {
                 .writer(writer)
                 .topic(topic)
                 .title("title")
-                .content("content")
+                .contents("content")
                 .build();
     }
 
@@ -111,7 +111,7 @@ public class TestDataFactory {
                         .writer(writer)
                         .topic(topic)
                         .title("title" + index)
-                        .content("content" + index)
+                        .contents("content" + index)
                         .build())
                 .collect(Collectors.toUnmodifiableList());
     }
@@ -120,7 +120,7 @@ public class TestDataFactory {
         return BookClub.builder()
                 .creatorId(1L)
                 .name("Test Book Club" + count)
-                .profileImgUrl("image.url")
+                .profileImageUrl("image.url")
                 .build();
     }
 }

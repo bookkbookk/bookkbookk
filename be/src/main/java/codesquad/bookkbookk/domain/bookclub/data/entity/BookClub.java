@@ -31,24 +31,28 @@ public class BookClub {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "book_club_id")
     private Long id;
-    @Column(name = "creator_id", nullable = false)
+
+    @Column(nullable = false)
     private Long creatorId;
-    @Column(unique = true, nullable = false)
-    private String name;
-    @Column(name = "profile_img_url", nullable = false)
-    private String profileImgUrl;
+
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "book_club_status", nullable = false)
-    private BookClubStatus bookClubStatus;
+    @Column(nullable = false)
+    private BookClubStatus status;
+
+    @Column(nullable = false, unique = true)
+    private String name;
+
+    @Column(nullable = false)
+    private String profileImageUrl;
+
     @CreationTimestamp
-    @Column(name = "created_time", nullable = false)
+    @Column(nullable = false)
     private LocalDateTime createdTime;
-    @Column(name = "closed_time")
+
     private LocalDateTime closedTime;
-    @Column(name = "upcoming_gathering_date")
-    private LocalDateTime upcomingGatheringDate;
+
+    private LocalDateTime upcomingGatheringTime;
 
     @OneToMany(mappedBy = "bookClub")
     private List<BookClubMember> bookClubMembers = new ArrayList<>();
@@ -56,22 +60,22 @@ public class BookClub {
     private List<Book> books = new ArrayList<>();
 
     @Builder
-    private BookClub(Long creatorId, String name, String profileImgUrl) {
+    private BookClub(Long creatorId, String name, String profileImageUrl) {
         this.creatorId = creatorId;
         this.name = name;
-        this.profileImgUrl = profileImgUrl;
-        this.bookClubStatus = BookClubStatus.OPEN;
+        this.profileImageUrl = profileImageUrl;
+        this.status = BookClubStatus.OPEN;
     }
 
-    public void updateUpcomingGatheringDate(LocalDateTime gatheringDate) {
-        if (upcomingGatheringDate == null || upcomingGatheringDate.isAfter(gatheringDate)) {
-            upcomingGatheringDate = gatheringDate;
+    public void updateUpcomingGatheringDate(LocalDateTime gatheringTime) {
+        if (upcomingGatheringTime == null || upcomingGatheringTime.isAfter(gatheringTime)) {
+            upcomingGatheringTime = gatheringTime;
         }
     }
 
     public void close() {
-        this.bookClubStatus = BookClubStatus.CLOSED;
-        closedTime = LocalDateTime.now();
+        this.status = BookClubStatus.CLOSED;
+        this.closedTime = LocalDateTime.now();
     }
 
 }

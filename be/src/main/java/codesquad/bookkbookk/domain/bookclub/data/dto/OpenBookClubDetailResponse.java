@@ -36,12 +36,12 @@ public class OpenBookClubDetailResponse extends ReadBookClubDetailResponse{
 
         return OpenBookClubDetailResponse.builder()
                 .name(bookClub.getName())
-                .status(bookClub.getBookClubStatus())
-                .profileImgUrl(bookClub.getProfileImgUrl())
+                .status(bookClub.getStatus())
+                .profileImgUrl(bookClub.getProfileImageUrl())
                 .createdTime(bookClub.getCreatedTime())
                 .readBookClubLastBook(ReadBookClubLastBook.from(lastBook))
                 .readBookClubMembers(ReadBookClubMember.from(members))
-                .upcomingGatheringDate(bookClub.getUpcomingGatheringDate())
+                .upcomingGatheringDate(bookClub.getUpcomingGatheringTime())
                 .build();
     }
 

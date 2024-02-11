@@ -32,28 +32,35 @@ import lombok.NoArgsConstructor;
 public class Book {
 
     private static final List<Long> ISBN_10_VALIDATE_NUMBERS = List.of(10L, 9L, 8L, 7L, 6L, 5L, 4L, 3L, 2L);
+
     private static final List<Long> ISBN_13_VALIDATE_NUMBERS = List.of(1L, 3L, 1L, 3L, 1L, 3L, 1L, 3L, 1L, 3L, 1L, 3L);
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "book_id")
     private Long id;
-    @Column(nullable = false)
-    private String isbn;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_club_id")
     private BookClub bookClub;
+
+    @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false)
+    private Status status;
+
+    @Column(nullable = false)
+    private String isbn;
+
     @Column(nullable = false)
     private String title;
+
     @Column(nullable = false)
     private String cover;
+
     @Column(nullable = false)
     private String author;
+
     @Column(nullable = false)
     private String category;
-    @Enumerated(value = EnumType.STRING)
-    @Column(name = "book_status", nullable = false)
-    private Status status;
 
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     private List<Gathering> gatherings = new ArrayList<>();
@@ -79,8 +86,7 @@ public class Book {
 
         if (impliedISBN.length() == 10) {
             validateISBN(impliedISBN, ISBN_10_VALIDATE_NUMBERS, 11, checkDigit);
-        }
-        else validateISBN(impliedISBN, ISBN_13_VALIDATE_NUMBERS, 10, checkDigit);
+        } else validateISBN(impliedISBN, ISBN_13_VALIDATE_NUMBERS, 10, checkDigit);
 
         // 데이터를 통일하기 위해 x로 끝나는 isbn10인 경우 끝문자를 대문자로 변환
         return impliedISBN.toUpperCase();
@@ -97,7 +103,6 @@ public class Book {
         }
         throw new MalformedIsbnException();
     }
-
 
     private void validateISBN(String isbn, List<Long> validateNumbers, long divisor, long checkDigit) {
         long target = 0;

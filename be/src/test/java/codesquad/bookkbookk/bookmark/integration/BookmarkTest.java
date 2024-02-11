@@ -152,7 +152,7 @@ public class BookmarkTest extends IntegrationTest {
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             softAssertions.assertThat(actual.getTitle()).isEqualTo("updated title");
-            softAssertions.assertThat(actual.getUpdateAt()).isNotEqualTo(actual.getCreateAt());
+            softAssertions.assertThat(actual.getUpdatedTime()).isNotEqualTo(actual.getCreatedTime());
         });
     }
 

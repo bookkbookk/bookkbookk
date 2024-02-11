@@ -36,8 +36,8 @@ public class ReadCommentResponse {
         return ReadCommentResponse.builder()
                 .commentId(comment.getId())
                 .author(ReadCommentAuthor.from(comment.getWriter()))
-                .createdTime(comment.getCreateAt())
-                .content(comment.getContent())
+                .createdTime(comment.getCreatedTime())
+                .content(comment.getContents())
                 .build();
     }
 
@@ -50,7 +50,7 @@ public class ReadCommentResponse {
         private final String profileImgUrl;
 
         public static ReadCommentAuthor from(Member member) {
-            return new ReadCommentAuthor(member.getId(), member.getNickname(), member.getProfileImgUrl());
+            return new ReadCommentAuthor(member.getId(), member.getNickname(), member.getProfileImageUrl());
         }
 
     }

@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,15 +31,17 @@ public class Chapter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "chapter_id")
     private Long id;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
     private Book book;
-    private String title;
-    @Column(name = "chapter_status", nullable = false)
+
     @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false)
     private Status status;
+
+    private String title;
 
     @OneToMany(mappedBy = "chapter")
     private List<Topic> topics = new ArrayList<>();

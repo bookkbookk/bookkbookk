@@ -76,7 +76,7 @@ public class AuthenticationService {
                 .email(loginRequest.getEmail())
                 .loginType(loginRequest.getLoginType())
                 .nickname(loginRequest.getNickname())
-                .profileImgUrl(loginRequest.getProfileImageUrl())
+                .profileImageUrl(loginRequest.getProfileImageUrl())
                 .build();
         return memberRepository.save(member);
     }

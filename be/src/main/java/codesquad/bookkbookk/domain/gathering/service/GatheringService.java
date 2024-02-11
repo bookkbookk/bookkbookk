@@ -43,7 +43,7 @@ public class GatheringService {
         Gathering gathering = new Gathering(book, request.getDateTime(), request.getPlace());
         gatheringRepository.save(gathering);
 
-        bookClub.updateUpcomingGatheringDate(gathering.getDateTime());
+        bookClub.updateUpcomingGatheringDate(gathering.getStartTime());
     }
 
     @Transactional(readOnly = true)

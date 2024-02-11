@@ -62,7 +62,7 @@ public class BookClubService {
         BookClub bookClub = BookClub.builder()
                 .creatorId(memberId)
                 .name(request.getName())
-                .profileImgUrl(profileImgUrl)
+                .profileImageUrl(profileImgUrl)
                 .build();
         bookClubRepository.save(bookClub);
 
@@ -84,13 +84,13 @@ public class BookClubService {
 
         if (statusName.equals(STATUS_ALL)) {
             return  member.getBookClubs().stream()
-                    .map(bookClub -> bookClub.getBookClubStatus().from(bookClub))
+                    .map(bookClub -> bookClub.getStatus().from(bookClub))
                     .collect(Collectors.toUnmodifiableList());
         }
 
         BookClubStatus status = BookClubStatus.of(statusName);
         List<BookClub> filteredBookClubs = member.getBookClubs().stream()
-                .filter(bookClub -> bookClub.getBookClubStatus().equals(status))
+                .filter(bookClub -> bookClub.getStatus().equals(status))
                 .collect(Collectors.toUnmodifiableList());
 
         return status.from(filteredBookClubs);
@@ -142,7 +142,7 @@ public class BookClubService {
 
         BookClub bookClub = bookClubRepository.findById(bookClubId).orElseThrow(BookClubNotFoundException::new);
 
-        return bookClub.getBookClubStatus().from(bookClub);
+        return bookClub.getStatus().from(bookClub);
     }
 
 }

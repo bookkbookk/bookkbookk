@@ -25,7 +25,7 @@ public class MemberResponse {
                 .id(member.getId())
                 .email(member.getEmail())
                 .nickname(member.getNickname())
-                .profileImgUrl(member.getProfileImgUrl())
+                .profileImgUrl(member.getProfileImageUrl())
                 .build();
     }
 
