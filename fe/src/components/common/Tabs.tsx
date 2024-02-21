@@ -1,3 +1,4 @@
+import { BOOK_CHAPTER_IDS } from "@components/constants";
 import { a11yProps } from "@components/utils";
 import { Box, Tabs as MuiTabs, Tab } from "@mui/material";
 import React from "react";
@@ -10,7 +11,10 @@ export default function Tabs({
   tabList,
 }: {
   activeTabID: number;
-  handleChange: (event: React.SyntheticEvent, newValue: number) => void;
+  handleChange: (
+    event: React.SyntheticEvent,
+    newValue: BOOK_CHAPTER_IDS
+  ) => void;
   tabList: TabList;
 }) {
   return (

@@ -2,7 +2,7 @@ import HeaderButtons from "@components/BookChapters/NewBookChapters/HeaderButton
 import NewBookChapters from "@components/BookChapters/NewBookChapters/NewBookChapters";
 import Tabs from "@components/common/Tabs";
 import { BoxHeader, MainBox } from "@components/common/common.style";
-import { BOOK_CHAPTERS_TAB } from "@components/constants";
+import { BOOK_CHAPTERS_TAB, BOOK_CHAPTER_IDS } from "@components/constants";
 import AddIcon from "@mui/icons-material/Add";
 import { Button } from "@mui/material";
 import { useState } from "react";
@@ -15,7 +15,10 @@ export default function BookChapters() {
   const [activeTabID, setActiveTabID] = useState(BOOK_CHAPTERS_TAB[0].id);
   const isLogin = useIsLoginValue();
 
-  const handleChange = (_: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (
+    _: React.SyntheticEvent,
+    newValue: BOOK_CHAPTER_IDS
+  ) => {
     setActiveTabID(newValue);
   };
   const onChangeChapterViewer = () => setIsViewerMode(true);
