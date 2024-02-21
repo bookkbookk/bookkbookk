@@ -66,4 +66,4 @@ jobs:
         --deployment-group-name bookkbookk-dev-deploy \
         --file-exists-behavior OVERWRITE \
         --s3-location bucket=bookkbookk-dev-bucket,bundleType=zip,key=bookkbookk-dev.zip \
-        --region ${{ secrets.AWS_REGION }}
+        --region ${{ secrets.AWS_DEV_REGION }}
