@@ -38,7 +38,9 @@ jobs:
         pwd
     
     - name: Build with Gradle
-      run: ./gradlew clean build
+      run: |
+        pwd
+        ./gradlew clean build
       
 
     - name: Make zip file
