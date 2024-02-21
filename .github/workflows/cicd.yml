@@ -1,0 +1,69 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: Java CI with Gradle & CD with CodeDeploy
+
+on:
+  push:
+    branches: [ "dev-be" ]
+  pull_request:
+    branches: [ "dev-be" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+        token: ${{ secrets.PRIVATE_REPOSITORY_ACCESS }}
+      
+    - name: Set up JDK 11
+      uses: actions/setup-java@v4
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+    
+    - name: Move to be Directory And Grant execute permission for gradlew
+      run: chmod +x ./be/gradlew
+    
+    - name: Build with Gradle
+      run: |
+        cd ./be
+        ./gradlew clean build
+      
+
+    - name: Make zip file
+      run: zip -r bookkbookk-dev.zip ./be/build/libs/*.jar ./appspec.yml ./scripts/*
+      shell: bash
+
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_DEV_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_DEV_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_DEV_REGION }}
+
+    - name: Upload to S3
+      run: aws s3 cp --region ${{ secrets.AWS_DEV_REGION }} ./bookkbookk-dev.zip s3://bookkbookk-dev-bucket/bookkbookk-dev.zip
+
+
+    - name: Deploy with CodeDeploy
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_DEV_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_DEV_SECRET_ACCESS_KEY }}
+      run: |
+        aws deploy create-deployment \
+        --application-name bookkbookk-dev \
+        --deployment-group-name bookkbookk-dev-deploy \
+        --file-exists-behavior OVERWRITE \
+        --s3-location bucket=bookkbookk-dev-bucket,bundleType=zip,key=bookkbookk-dev.zip \
+        --region ${{ secrets.AWS_DEV_REGION }}

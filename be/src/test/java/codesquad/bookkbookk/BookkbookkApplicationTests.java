@@ -1,10 +1,8 @@
 package codesquad.bookkbookk;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class BookkbookkApplicationTests {
+class BookkbookkApplicationTests extends IntegrationTest{
 
     @Test
     void contextLoads() {

@@ -17,9 +17,9 @@ import codesquad.bookkbookk.common.error.exception.ApiException;
 import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
-import codesquad.bookkbookk.domain.book.data.entity.MemberBook;
+import codesquad.bookkbookk.domain.mapping.entity.MemberBook;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
-import codesquad.bookkbookk.domain.book.repository.MemberBookRepository;
+import codesquad.bookkbookk.domain.mapping.repository.MemberBookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
 import codesquad.bookkbookk.domain.member.data.dto.MemberResponse;
@@ -66,7 +66,7 @@ public class MemberTest extends IntegrationTest {
             softAssertions.assertThat(result.getId()).isEqualTo(member.getId());
             softAssertions.assertThat(result.getNickname()).isEqualTo(member.getNickname());
             softAssertions.assertThat(result.getEmail()).isEqualTo(member.getEmail());
-            softAssertions.assertThat(result.getProfileImgUrl()).isEqualTo(member.getProfileImgUrl());
+            softAssertions.assertThat(result.getProfileImgUrl()).isEqualTo(member.getProfileImageUrl());
         });
 
     }
@@ -89,7 +89,7 @@ public class MemberTest extends IntegrationTest {
 
         //then
         SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(response.statusCode()).isEqualTo(exception.getCode());
+            softAssertions.assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
             softAssertions.assertThat(response.jsonPath().getObject("", ApiException.class).getMessage())
                     .isEqualTo(exception.getMessage());
         });
@@ -163,8 +163,12 @@ public class MemberTest extends IntegrationTest {
         // then
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softAssertions.assertThat(((LinkedHashMap) response.jsonPath().getList("books").get(0)).get("title"))
+            softAssertions.assertThat(response.jsonPath().getMap("pagination").get("totalPageCounts"))
+                    .isEqualTo(2);
+            softAssertions.assertThat(((LinkedHashMap<?, ?>) response.jsonPath().getList("books").get(0)).get("title"))
                     .isEqualTo("신데렐라");
+            softAssertions.assertThat(((LinkedHashMap<?, ?>) response.jsonPath().getList("books").get(0)).get("statusId"))
+                    .isEqualTo(1);
         });
     }
 

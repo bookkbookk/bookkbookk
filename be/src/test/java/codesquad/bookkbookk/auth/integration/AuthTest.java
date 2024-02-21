@@ -8,13 +8,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 
 import codesquad.bookkbookk.IntegrationTest;
 import codesquad.bookkbookk.common.error.exception.RefreshTokenNotSavedException;
+import codesquad.bookkbookk.common.jwt.JwtProperties;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.domain.auth.data.entity.MemberRefreshToken;
 import codesquad.bookkbookk.domain.auth.repository.MemberRefreshTokenRepository;
-import codesquad.bookkbookk.domain.auth.service.OAuthService;
+import codesquad.bookkbookk.domain.auth.service.AuthenticationService;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
 import codesquad.bookkbookk.util.TestDataFactory;
@@ -26,13 +28,15 @@ import io.restassured.response.Response;
 public class AuthTest extends IntegrationTest {
 
     @Autowired
-    private OAuthService oAuthService;
+    private AuthenticationService authenticationService;
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
     private MemberRefreshTokenRepository memberRefreshTokenRepository;
     @Autowired
     private JwtProvider jwtProvider;
+    @Autowired
+    private JwtProperties jwtProperties;
 
     @Test
     @DisplayName("refreshToken으로 accessToken 재발급을 한다.")
@@ -40,20 +44,30 @@ public class AuthTest extends IntegrationTest {
         // given
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
+
         String accessToken = jwtProvider.createAccessToken(member.getId());
         String refreshToken = jwtProvider.createRefreshToken();
+
         MemberRefreshToken memberRefreshToken = new MemberRefreshToken(member.getId(), refreshToken);
         memberRefreshTokenRepository.save(memberRefreshToken);
+
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true)
+                .secure(true)
+                .domain("bookkbookk.site")
+                .path("/")
+                .maxAge(jwtProperties.getRefreshTokenExpiration())
+                .build();
         sleep(3000);
 
         // when
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + refreshToken)
+                .header(HttpHeaders.COOKIE, cookie.toString())
                 .when()
-                    .post("/api/auth/reissue")
+                .post("/api/auth/reissue")
                 .then().log().all()
-                    .extract();
+                .extract();
 
         // then
         SoftAssertions.assertSoftly(assertions -> {
@@ -79,17 +93,17 @@ public class AuthTest extends IntegrationTest {
         // when
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .when()
-                    .post("/api/auth/logout")
+                .post("/api/auth/logout")
                 .then().log().all()
-                    .extract();
+                .extract();
 
         // then
         SoftAssertions.assertSoftly(assertions -> {
             assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             assertions.assertThatThrownBy(
-                    () -> oAuthService.reissueAccessToken(refreshToken)
+                    () -> authenticationService.reissueAccessToken(refreshToken)
             ).isInstanceOf(RefreshTokenNotSavedException.class);
         });
     }

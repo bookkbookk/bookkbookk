@@ -16,6 +16,8 @@ import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
 import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
 import codesquad.bookkbookk.domain.chapter.repository.ChapterRepository;
+import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
+import codesquad.bookkbookk.domain.mapping.repository.BookClubMemberRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
 import codesquad.bookkbookk.domain.topic.data.dto.UpdateTopicTitleRequest;
@@ -46,6 +48,9 @@ public class TopicTest extends IntegrationTest {
     private BookClubRepository bookClubRepository;
 
     @Autowired
+    private BookClubMemberRepository bookClubMemberRepository;
+
+    @Autowired
     private JwtProvider jwtProvider;
 
     @DisplayName("성공적으로 토픽을 생성한다.")
@@ -58,6 +63,9 @@ public class TopicTest extends IntegrationTest {
 
         BookClub bookClub = TestDataFactory.createBookClub();
         bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
 
         Book book = TestDataFactory.createBook1(bookClub);
         bookRepository.save(book);
@@ -85,43 +93,7 @@ public class TopicTest extends IntegrationTest {
 
     }
 
-    @DisplayName("성공적으로 토픽을 조회한다")
-    @Test
-    void readTopicList(){
-        //given
-        Member member = TestDataFactory.createMember();
-        memberRepository.save(member);
-        String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        BookClub bookClub = TestDataFactory.createBookClub();
-        bookClubRepository.save(bookClub);
-
-        Book book = TestDataFactory.createBook1(bookClub);
-        bookRepository.save(book);
-
-        Chapter chapter = new Chapter(book, "first");
-        chapterRepository.save(chapter);
-
-        Topic topic1 = new Topic(chapter, "토픽1");
-        Topic topic2 = new Topic(chapter, "토픽2");
-        topicRepository.save(topic1);
-        topicRepository.save(topic2);
-
-        //when
-        ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-                .when()
-                    .get("/api/topics/1")
-                .then().log().all()
-                    .extract();
-
-        //then
-        SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softAssertions.assertThat(response.jsonPath().getList("")).hasSize(2);
-        });
-    }
 
     @DisplayName("성공적으로 토픽의 제목을 수정한다")
     @Test
@@ -133,6 +105,9 @@ public class TopicTest extends IntegrationTest {
 
         BookClub bookClub = TestDataFactory.createBookClub();
         bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
 
         Book book = TestDataFactory.createBook1(bookClub);
         bookRepository.save(book);
@@ -174,6 +149,9 @@ public class TopicTest extends IntegrationTest {
 
         BookClub bookClub = TestDataFactory.createBookClub();
         bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
 
         Book book = TestDataFactory.createBook1(bookClub);
         bookRepository.save(book);

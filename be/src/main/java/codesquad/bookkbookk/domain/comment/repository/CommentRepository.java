@@ -8,4 +8,6 @@ import codesquad.bookkbookk.domain.comment.data.entity.Comment;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
+    boolean existsByIdAndWriterId(Long commentId, Long writerId);
+
 }

@@ -8,12 +8,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import codesquad.bookkbookk.common.error.exception.BookNotFoundException;
 import codesquad.bookkbookk.common.error.exception.ChapterNotFoundException;
+import codesquad.bookkbookk.common.type.Status;
+import codesquad.bookkbookk.domain.auth.service.AuthorizationService;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
 import codesquad.bookkbookk.domain.chapter.data.dto.CreateChapterRequest;
 import codesquad.bookkbookk.domain.chapter.data.dto.CreateChapterResponse;
 import codesquad.bookkbookk.domain.chapter.data.dto.ReadChapterResponse;
-import codesquad.bookkbookk.domain.chapter.data.dto.UpdateChapterTitleRequest;
+import codesquad.bookkbookk.domain.chapter.data.dto.UpdateChapterRequest;
+import codesquad.bookkbookk.domain.chapter.data.dto.UpdateChapterResponse;
 import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
 import codesquad.bookkbookk.domain.chapter.repository.ChapterRepository;
 import codesquad.bookkbookk.domain.topic.data.entity.Topic;
@@ -25,12 +28,18 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ChapterService {
 
+    private static final int ALL_STATUS = 0;
+
+    private final AuthorizationService authorizationService;
+
     private final ChapterRepository chapterRepository;
     private final TopicRepository topicRepository;
     private final BookRepository bookRepository;
 
     @Transactional
-    public CreateChapterResponse createChapter(CreateChapterRequest request) {
+    public CreateChapterResponse createChapter(Long memberId, CreateChapterRequest request) {
+        authorizationService.authorizeBookClubMembershipByBookId(memberId, request.getBookId());
+
         Book book = bookRepository.findById(request.getBookId()).orElseThrow(BookNotFoundException::new);
         List<CreateChapterRequest.ChapterDataDTO> dataList = request.toEntities(book);
 
@@ -50,21 +59,30 @@ public class ChapterService {
     }
 
     @Transactional(readOnly = true)
-    public List<ReadChapterResponse> readChapters(Long bookId) {
-        List<Chapter> chapters = chapterRepository.findAllByBookId(bookId);
+    public List<ReadChapterResponse> readChapters(Long memberId, Long bookId, int chapterStatusId) {
+        authorizationService.authorizeBookClubMembershipByBookId(memberId, bookId);
 
-        return ReadChapterResponse.from(chapters);
+        if (chapterStatusId == ALL_STATUS) {
+            return ReadChapterResponse.from(chapterRepository.findAllByBookId(bookId));
+        }
+        Status chapterStatus = Status.of(chapterStatusId);
+        return ReadChapterResponse.from(chapterRepository.findAllByBookIdAndStatus(bookId, chapterStatus));
     }
 
     @Transactional
-    public void updateChapter(Long chapterId, UpdateChapterTitleRequest updateChapterTitleRequest) {
+    public UpdateChapterResponse updateChapter(Long memberId, Long chapterId, UpdateChapterRequest request) {
+        authorizationService.authorizeBookClubMembershipByChapterId(memberId, chapterId);
+
         Chapter chapter = chapterRepository.findById(chapterId).orElseThrow(ChapterNotFoundException::new);
 
-        chapter.updateTitle(updateChapterTitleRequest);
+        Chapter updated = chapter.update(request);
+        return UpdateChapterResponse.from(updated);
     }
 
     @Transactional
-    public void deleteChapter(Long chapterId) {
+    public void deleteChapter(Long memberId, Long chapterId) {
+        authorizationService.authorizeBookClubMembershipByChapterId(memberId, chapterId);
+
         chapterRepository.deleteById(chapterId);
     }
 

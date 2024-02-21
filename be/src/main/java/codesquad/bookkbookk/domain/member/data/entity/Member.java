@@ -1,6 +1,8 @@
 package codesquad.bookkbookk.domain.member.data.entity;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,9 +13,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import codesquad.bookkbookk.domain.auth.data.dto.LoginRequest;
 import codesquad.bookkbookk.domain.auth.data.type.LoginType;
-import codesquad.bookkbookk.domain.bookclub.data.entity.MemberBookClub;
+import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
+import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
+import codesquad.bookkbookk.domain.mapping.entity.MemberBook;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -27,35 +30,33 @@ public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_id")
     private Long id;
-    @Column(unique = true, nullable = false)
+
+    @Column(nullable = false, unique = true)
     private String email;
+
     @Enumerated(EnumType.STRING)
-    @Column(name = "login_type", nullable = false)
+    @Column(nullable = false)
     private LoginType loginType;
-    @Column(unique = true, nullable = false)
+
+    @Column(nullable = false, unique = true)
     private String nickname;
-    @Column(name = "profile_img_url", nullable = false)
-    private String profileImgUrl;
+
+    @Column(nullable = false)
+    private String profileImageUrl;
+
     @OneToMany(mappedBy = "member")
-    private List<MemberBookClub> memberBookClub;
+    private List<BookClubMember> memberBookClubs = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<MemberBook> memberBooks = new ArrayList<>();
 
     @Builder
-    private Member(String email, LoginType loginType, String nickname, String profileImgUrl) {
+    private Member(String email, LoginType loginType, String nickname, String profileImageUrl) {
         this.email = email;
         this.loginType = loginType;
         this.nickname = nickname;
-        this.profileImgUrl = profileImgUrl;
-    }
-
-    public static Member from(LoginRequest loginRequest) {
-        return Member.builder()
-                .email(loginRequest.getEmail())
-                .loginType(loginRequest.getLoginType())
-                .nickname(loginRequest.getNickname())
-                .profileImgUrl(loginRequest.getProfileImageUrl())
-                .build();
+        this.profileImageUrl = profileImageUrl;
     }
 
     public void updateNickname(String nickname) {
@@ -63,7 +64,13 @@ public class Member {
     }
 
     public void updateProfileImgUrl(String profileImgUrl){
-        this.profileImgUrl = profileImgUrl;
+        this.profileImageUrl = profileImgUrl;
+    }
+
+    public List<BookClub> getBookClubs() {
+        return memberBookClubs.stream()
+                .map(BookClubMember::getBookClub)
+                .collect(Collectors.toUnmodifiableList());
     }
 
 }

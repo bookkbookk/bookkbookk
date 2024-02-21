@@ -8,4 +8,6 @@ import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
 @Repository
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
 
+    boolean existsByIdAndWriterId(Long bookmarkId, Long writerId);
+
 }

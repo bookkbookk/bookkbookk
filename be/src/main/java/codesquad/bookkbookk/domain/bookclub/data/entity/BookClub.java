@@ -1,13 +1,23 @@
 package codesquad.bookkbookk.domain.bookclub.data.entity;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import codesquad.bookkbookk.domain.book.data.entity.Book;
+import codesquad.bookkbookk.domain.bookclub.data.type.BookClubStatus;
+import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -21,23 +31,51 @@ public class BookClub {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "book_club_id")
     private Long id;
-    @Column(name = "creator_id", nullable = false)
+
+    @Column(nullable = false)
     private Long creatorId;
-    @Column(unique = true, nullable = false)
+
+    @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false)
+    private BookClubStatus status;
+
+    @Column(nullable = false, unique = true)
     private String name;
-    @Column(name = "profile_img_url", nullable = false)
-    private String profileImgUrl;
+
+    @Column(nullable = false)
+    private String profileImageUrl;
+
+    @CreationTimestamp
+    @Column(nullable = false)
+    private LocalDateTime createdTime;
+
+    private LocalDateTime closedTime;
+
+    private LocalDateTime upcomingGatheringTime;
+
     @OneToMany(mappedBy = "bookClub")
-    private List<MemberBookClub> memberBookClub;
+    private List<BookClubMember> bookClubMembers = new ArrayList<>();
+    @OneToMany(mappedBy = "bookClub")
+    private List<Book> books = new ArrayList<>();
 
     @Builder
-    private BookClub(Long id, Long creatorId, String name, String profileImgUrl) {
-        this.id = id;
+    private BookClub(Long creatorId, String name, String profileImageUrl) {
         this.creatorId = creatorId;
         this.name = name;
-        this.profileImgUrl = profileImgUrl;
+        this.profileImageUrl = profileImageUrl;
+        this.status = BookClubStatus.OPEN;
+    }
+
+    public void updateUpcomingGatheringDate(LocalDateTime gatheringTime) {
+        if (upcomingGatheringTime == null || upcomingGatheringTime.isAfter(gatheringTime)) {
+            upcomingGatheringTime = gatheringTime;
+        }
+    }
+
+    public void close() {
+        this.status = BookClubStatus.CLOSED;
+        this.closedTime = LocalDateTime.now();
     }
 
 }

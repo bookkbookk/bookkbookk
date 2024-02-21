@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import codesquad.bookkbookk.common.resolver.MemberId;
 import codesquad.bookkbookk.domain.chapter.data.dto.CreateChapterRequest;
 import codesquad.bookkbookk.domain.chapter.data.dto.CreateChapterResponse;
-import codesquad.bookkbookk.domain.chapter.data.dto.ReadChapterResponse;
-import codesquad.bookkbookk.domain.chapter.data.dto.UpdateChapterTitleRequest;
+import codesquad.bookkbookk.domain.chapter.data.dto.UpdateChapterRequest;
+import codesquad.bookkbookk.domain.chapter.data.dto.UpdateChapterResponse;
 import codesquad.bookkbookk.domain.chapter.service.ChapterService;
+import codesquad.bookkbookk.domain.topic.data.dto.ReadTopicResponse;
+import codesquad.bookkbookk.domain.topic.service.TopicService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,36 +29,39 @@ import lombok.RequiredArgsConstructor;
 public class ChapterController {
 
     private final ChapterService chapterService;
+    private final TopicService topicService;
 
     @PostMapping
-    public ResponseEntity<CreateChapterResponse> createChapter(@RequestBody CreateChapterRequest request) {
-        CreateChapterResponse response = chapterService.createChapter(request);
-
-        return ResponseEntity.ok()
-                .body(response);
-    }
-
-    @GetMapping("/{bookId}")
-    public ResponseEntity<List<ReadChapterResponse>> readChapters(@PathVariable Long bookId) {
-        List<ReadChapterResponse> response = chapterService.readChapters(bookId);
+    public ResponseEntity<CreateChapterResponse> createChapter(@MemberId Long memberId,
+                                                               @RequestBody CreateChapterRequest request) {
+        CreateChapterResponse response = chapterService.createChapter(memberId, request);
 
         return ResponseEntity.ok()
                 .body(response);
     }
 
     @PatchMapping("/{chapterId}")
-    public ResponseEntity<Void> updateChapter(@PathVariable Long chapterId,
-                                              @RequestBody UpdateChapterTitleRequest updateChapterTitleRequest) {
-         chapterService.updateChapter(chapterId, updateChapterTitleRequest);
+    public ResponseEntity<UpdateChapterResponse> updateChapter(@MemberId Long memberId, @PathVariable Long chapterId,
+                                                               @RequestBody UpdateChapterRequest request) {
+        UpdateChapterResponse response = chapterService.updateChapter(memberId, chapterId, request);
+
+        return ResponseEntity.ok()
+                .body(response);
+    }
+
+    @DeleteMapping("/{chapterId}")
+    public ResponseEntity<Void> deleteChapter(@MemberId Long memberId, @PathVariable Long chapterId) {
+        chapterService.deleteChapter(memberId, chapterId);
 
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{chapterId}")
-    public ResponseEntity<Void> deleteChapter(@PathVariable Long chapterId) {
-        chapterService.deleteChapter(chapterId);
+    @GetMapping("/{chapterId}/topics")
+    public ResponseEntity<List<ReadTopicResponse>> readTopicList(@MemberId Long memberId, @PathVariable Long chapterId) {
+        List<ReadTopicResponse> responses = topicService.readTopicLIst(memberId, chapterId);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok()
+                .body(responses);
     }
 
 }

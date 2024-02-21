@@ -38,6 +38,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'com.google.guava:guava:32.1.2-jre'
 	testImplementation 'io.rest-assured:rest-assured'
+	runtimeOnly'com.h2database:h2'
 
 	// jwt
 	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.1'
@@ -49,4 +50,16 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+task copySecrets(type: Copy) {
+	copy {
+		from '../secrets'
+		include "*.yml"
+		into 'src/main/resources'
+	}
+}
+
+jar {
+	enabled = false
 }

@@ -1,5 +1,7 @@
 package codesquad.bookkbookk.bookmark.integration;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.util.Map;
 
 import org.assertj.core.api.SoftAssertions;
@@ -12,8 +14,11 @@ import org.springframework.http.HttpStatus;
 
 import codesquad.bookkbookk.IntegrationTest;
 import codesquad.bookkbookk.common.error.exception.BookmarkNotFoundException;
+import codesquad.bookkbookk.common.error.exception.BookmarkReactionExistsException;
+import codesquad.bookkbookk.common.error.exception.BookmarkReactionNotFoundException;
 import codesquad.bookkbookk.common.error.exception.MemberIsNotBookmarkWriterException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
+import codesquad.bookkbookk.common.type.Reaction;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
@@ -22,6 +27,12 @@ import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
 import codesquad.bookkbookk.domain.bookmark.repository.BookmarkRepository;
 import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
 import codesquad.bookkbookk.domain.chapter.repository.ChapterRepository;
+import codesquad.bookkbookk.domain.comment.data.entity.Comment;
+import codesquad.bookkbookk.domain.comment.repository.CommentRepository;
+import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
+import codesquad.bookkbookk.domain.mapping.entity.BookmarkReaction;
+import codesquad.bookkbookk.domain.mapping.repository.BookClubMemberRepository;
+import codesquad.bookkbookk.domain.mapping.repository.BookmarkReactionRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
 import codesquad.bookkbookk.domain.topic.data.entity.Topic;
@@ -40,6 +51,8 @@ public class BookmarkTest extends IntegrationTest {
     @Autowired
     BookClubRepository bookClubRepository;
     @Autowired
+    BookClubMemberRepository bookClubMemberRepository;
+    @Autowired
     BookRepository bookRepository;
     @Autowired
     ChapterRepository chapterRepository;
@@ -47,6 +60,10 @@ public class BookmarkTest extends IntegrationTest {
     TopicRepository topicRepository;
     @Autowired
     BookmarkRepository bookmarkRepository;
+    @Autowired
+    BookmarkReactionRepository bookmarkReactionRepository;
+    @Autowired
+    CommentRepository commentRepository;
     @Autowired
     JwtProvider jwtProvider;
 
@@ -60,6 +77,9 @@ public class BookmarkTest extends IntegrationTest {
 
         BookClub bookClub = TestDataFactory.createBookClub();
         bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
 
         Book book = TestDataFactory.createBook1(bookClub);
         bookRepository.save(book);
@@ -132,7 +152,7 @@ public class BookmarkTest extends IntegrationTest {
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             softAssertions.assertThat(actual.getTitle()).isEqualTo("updated title");
-            softAssertions.assertThat(actual.getUpdateAt()).isNotEqualTo(actual.getCreateAt());
+            softAssertions.assertThat(actual.getUpdatedTime()).isNotEqualTo(actual.getCreatedTime());
         });
     }
 
@@ -177,7 +197,7 @@ public class BookmarkTest extends IntegrationTest {
 
         // then
         SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(response.statusCode()).isEqualTo(exception.getCode());
+            softAssertions.assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
             softAssertions.assertThat(response.jsonPath().getString("message")).isEqualTo(exception.getMessage());
         });
     }
@@ -259,8 +279,290 @@ public class BookmarkTest extends IntegrationTest {
 
         // then
         SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(response.statusCode()).isEqualTo(exception.getCode());
+            softAssertions.assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
             softAssertions.assertThat(response.jsonPath().getString("message")).isEqualTo(exception.getMessage());
         });
     }
+
+    @Test
+    @DisplayName("Bookmark에 리액션을 생성한다.")
+    void createBookmarkReaction() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = TestDataFactory.createChapter1(book);
+        chapterRepository.save(chapter);
+
+        Topic topic = TestDataFactory.createTopic1(chapter);
+        topicRepository.save(topic);
+
+        Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
+        bookmarkRepository.save(bookmark);
+
+        JSONObject requestBody = new JSONObject(Map.of("reactionName", "like"));
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .contentType(ContentType.JSON)
+                .body(requestBody.toString())
+                .when()
+                .post("api/bookmarks/" + bookmark.getId() + "/reactions")
+                .then().log().all()
+                .extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("Member가 같은 Bookmark에 같은 리액션을 반복하여 생성하려 하면 예외가 발생한다.")
+    void createSameBookmarkReaction() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = TestDataFactory.createChapter1(book);
+        chapterRepository.save(chapter);
+
+        Topic topic = TestDataFactory.createTopic1(chapter);
+        topicRepository.save(topic);
+
+        Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
+        bookmarkRepository.save(bookmark);
+
+        BookmarkReaction bookmarkReaction = new BookmarkReaction(bookmark, member, Reaction.LIKE);
+        bookmarkReactionRepository.save(bookmarkReaction);
+
+        JSONObject requestBody = new JSONObject(Map.of("reactionName", "like"));
+        BookmarkReactionExistsException exception = new BookmarkReactionExistsException();
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .contentType(ContentType.JSON)
+                .body(requestBody.toString())
+                .when()
+                .post("api/bookmarks/" + bookmark.getId() + "/reactions")
+                .then().log().all()
+                .extract();
+
+        // then
+        SoftAssertions.assertSoftly(assertions -> {
+            assertions.assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
+            assertions.assertThat(response.jsonPath().getString("message")).isEqualTo(exception.getMessage());
+        });
+    }
+
+    @Test
+    @DisplayName("Bookmark의 reaction을 삭제한다.")
+    void deleteBookmarkReaction() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = TestDataFactory.createChapter1(book);
+        chapterRepository.save(chapter);
+
+        Topic topic = TestDataFactory.createTopic1(chapter);
+        topicRepository.save(topic);
+
+        Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
+        bookmarkRepository.save(bookmark);
+
+        BookmarkReaction bookmarkReaction = new BookmarkReaction(bookmark, member, Reaction.LIKE);
+        bookmarkReactionRepository.save(bookmarkReaction);
+
+        JSONObject requestBody = new JSONObject(Map.of("reactionName", "like"));
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .contentType(ContentType.JSON)
+                .body(requestBody.toString())
+                .when()
+                .delete("api/bookmarks/" + bookmark.getId() + "/reactions")
+                .then().log().all()
+                .extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("Bookmark에 없는 reaction을 삭제하려하면 예외가 발생한다.")
+    void deleteUnsavedBookmarkReaction() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = TestDataFactory.createChapter1(book);
+        chapterRepository.save(chapter);
+
+        Topic topic = TestDataFactory.createTopic1(chapter);
+        topicRepository.save(topic);
+
+        Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
+        bookmarkRepository.save(bookmark);
+
+        BookmarkReactionNotFoundException exception = new BookmarkReactionNotFoundException();
+        JSONObject requestBody = new JSONObject(Map.of("reactionName", "like"));
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .contentType(ContentType.JSON)
+                .body(requestBody.toString())
+                .when()
+                .delete("api/bookmarks/" + bookmark.getId() + "/reactions")
+                .then().log().all()
+                .extract();
+
+        // then
+        SoftAssertions.assertSoftly(assertions -> {
+            assertions.assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
+            assertions.assertThat(response.jsonPath().getString("message")).isEqualTo(exception.getMessage());
+        });
+    }
+
+    @Test
+    @DisplayName("북마크의 코멘트들을 가져온다.")
+    void readComments() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = TestDataFactory.createChapter1(book);
+        chapterRepository.save(chapter);
+
+        Topic topic = TestDataFactory.createTopic1(chapter);
+        topicRepository.save(topic);
+
+        Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
+        bookmarkRepository.save(bookmark);
+
+        Comment comment1 = TestDataFactory.createComment(bookmark, member);
+        commentRepository.save(comment1);
+        Comment comment2 = TestDataFactory.createAnotherComment(bookmark, member);
+        commentRepository.save(comment2);
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .when()
+                .get("api/bookmarks/" + bookmark.getId() + "/comments")
+                .then().log().all()
+                .extract();
+
+        // then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(response.jsonPath().getList("$").size()).isEqualTo(2);
+        });
+    }
+
+    @Test
+    @DisplayName("북마크의 리액션들을 가져온다.")
+    void readReactions() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        Member anotherMember = TestDataFactory.createAnotherMember();
+        memberRepository.save(anotherMember);
+
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub();
+        bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
+
+        Book book = TestDataFactory.createBook1(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = TestDataFactory.createChapter1(book);
+        chapterRepository.save(chapter);
+
+        Topic topic = TestDataFactory.createTopic1(chapter);
+        topicRepository.save(topic);
+
+        Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
+        bookmarkRepository.save(bookmark);
+
+        BookmarkReaction bookmarkReaction1 = new BookmarkReaction(bookmark, member, Reaction.LIKE);
+        bookmarkReactionRepository.save(bookmarkReaction1);
+        BookmarkReaction bookmarkReaction2 = new BookmarkReaction(bookmark, member, Reaction.CONGRATULATION);
+        bookmarkReactionRepository.save(bookmarkReaction2);
+        BookmarkReaction bookmarkReaction3 = new BookmarkReaction(bookmark, member, Reaction.ROCKET);
+        bookmarkReactionRepository.save(bookmarkReaction3);
+        BookmarkReaction bookmarkReaction4 = new BookmarkReaction(bookmark, anotherMember, Reaction.LIKE);
+        bookmarkReactionRepository.save(bookmarkReaction4);
+        BookmarkReaction bookmarkReaction5 = new BookmarkReaction(bookmark, anotherMember, Reaction.LOVE);
+        bookmarkReactionRepository.save(bookmarkReaction5);
+
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .when()
+                .get("api/bookmarks/" + bookmark.getId() + "/reactions")
+                .then().log().all()
+                .extract();
+
+        // then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(response.jsonPath().getMap("").size()).isEqualTo(4);
+            softAssertions.assertThat(response.jsonPath().getList("like").size()).isEqualTo(2);
+            softAssertions.assertThat(response.jsonPath().getString("love")).isNotNull();
+            softAssertions.assertThat(response.jsonPath().getString("clap")).isNull();
+        });
+    }
+
 }

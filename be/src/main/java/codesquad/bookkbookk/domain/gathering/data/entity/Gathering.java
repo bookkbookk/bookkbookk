@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -11,7 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import codesquad.bookkbookk.domain.book.data.entity.Book;
-import codesquad.bookkbookk.domain.gathering.data.dto.CreateGatheringRequest;
+import codesquad.bookkbookk.domain.gathering.data.dto.UpdateGatheringRequest;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,23 +25,31 @@ public class Gathering {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "gathering_id")
     private Long id;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
     private Book book;
-    @Column(name = "date_time")
-    private LocalDateTime dateTime;
+
+    @Column(nullable = false)
+    private LocalDateTime startTime;
+
+    @Column(nullable = false)
     private String place;
 
-    private Gathering(Book book, LocalDateTime dateTime, String place) {
+    public Gathering(Book book, LocalDateTime startTime, String place) {
         this.book = book;
-        this.dateTime = dateTime;
+        this.startTime = startTime;
         this.place = place;
     }
 
-    public static Gathering of(CreateGatheringRequest request, Book book) {
-        return new Gathering(book, request.getDateTime(), request.getPlace());
+    public void update(UpdateGatheringRequest request) {
+        if (request.getDateTime() != null) {
+            this.startTime = request.getDateTime();
+        }
+        if (request.getPlace() != null) {
+            this.place = request.getPlace();
+        }
     }
 
 }

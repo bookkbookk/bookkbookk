@@ -49,6 +49,7 @@ public class ReadBookResponse {
     public static class BookResponse {
 
         private final Long id;
+        private final Integer statusId;
         private final String isbn;
         private final BookClubResponse bookClub;
         private final String title;
@@ -57,9 +58,10 @@ public class ReadBookResponse {
         private final String category;
 
         @Builder
-        private BookResponse(Long id, String isbn, BookClubResponse bookClubResponse, String title,
+        private BookResponse(Long id, Integer statusId, String isbn, BookClubResponse bookClubResponse, String title,
                              String cover, String author, String category) {
             this.id = id;
+            this.statusId = statusId;
             this.isbn = isbn;
             this.bookClub = bookClubResponse;
             this.title = title;
@@ -71,6 +73,7 @@ public class ReadBookResponse {
         private static BookResponse from(Book book) {
             return BookResponse.builder()
                     .id(book.getId())
+                    .statusId(book.getStatus().getId())
                     .isbn(book.getIsbn())
                     .bookClubResponse(BookClubResponse.from(book.getBookClub()))
                     .title(book.getTitle())

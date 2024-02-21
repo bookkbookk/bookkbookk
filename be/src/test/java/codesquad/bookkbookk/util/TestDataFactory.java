@@ -1,11 +1,17 @@
 package codesquad.bookkbookk.util;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import codesquad.bookkbookk.domain.auth.data.type.LoginType;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
 import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
 import codesquad.bookkbookk.domain.comment.data.entity.Comment;
+import codesquad.bookkbookk.domain.gathering.data.entity.Gathering;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.topic.data.entity.Topic;
 
@@ -16,7 +22,7 @@ public class TestDataFactory {
                 .email("nag@email.com")
                 .loginType(LoginType.GOOGLE)
                 .nickname("nag")
-                .profileImgUrl("profile")
+                .profileImageUrl("profile")
                 .build();
     }
 
@@ -25,7 +31,7 @@ public class TestDataFactory {
                 .email("gamgyul@email.com")
                 .loginType(LoginType.GOOGLE)
                 .nickname("gamgyul")
-                .profileImgUrl("profile")
+                .profileImageUrl("profile")
                 .build();
     }
 
@@ -33,7 +39,7 @@ public class TestDataFactory {
         return BookClub.builder()
                 .creatorId(1L)
                 .name("Test Book Club")
-                .profileImgUrl("image.url")
+                .profileImageUrl("image.url")
                 .build();
     }
 
@@ -44,7 +50,7 @@ public class TestDataFactory {
                 .author("감귤")
                 .category("미스테리")
                 .cover("Cinderella")
-                .isbn("1231231231231")
+                .isbn("9791169210607")
                 .build();
 
     }
@@ -82,7 +88,7 @@ public class TestDataFactory {
                 .writer(writer)
                 .topic(topic)
                 .title("title")
-                .content("content")
+                .contents("content")
                 .build();
     }
 
@@ -90,4 +96,31 @@ public class TestDataFactory {
         return new Comment(bookmark, writer, "content");
     }
 
+    public static Comment createAnotherComment(Bookmark bookmark, Member writer) {
+        return new Comment(bookmark, writer, "content 2");
+    }
+
+    public static Gathering createGathering(Book book) {
+        return new Gathering(book, LocalDateTime.of(2023, 12, 25, 13, 30),
+                "코드 스쿼드");
+    }
+
+    public static List<Bookmark> createBookmarks(int count, Member writer, Topic topic) {
+        return IntStream.range(1, count + 1)
+                .mapToObj(index -> Bookmark.builder()
+                        .writer(writer)
+                        .topic(topic)
+                        .title("title" + index)
+                        .contents("content" + index)
+                        .build())
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    public static BookClub createDummyBookClub(int count) {
+        return BookClub.builder()
+                .creatorId(1L)
+                .name("Test Book Club" + count)
+                .profileImageUrl("image.url")
+                .build();
+    }
 }
