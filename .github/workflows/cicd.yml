@@ -35,6 +35,7 @@ jobs:
       run: |
         cd ./be
         chmod +x ./gradlew
+        pwd
     
     - name: Build with Gradle
       run: ./gradlew clean build
