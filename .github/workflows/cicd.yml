@@ -32,14 +32,11 @@ jobs:
         distribution: 'temurin'
     
     - name: Move to be Directory And Grant execute permission for gradlew
-      run: |
-        cd ./be
-        chmod +x ./gradlew
-        pwd
+      run: chmod +x ./be/gradlew
     
     - name: Build with Gradle
       run: |
-        pwd
+        cd ./be
         ./gradlew clean build
       
 
