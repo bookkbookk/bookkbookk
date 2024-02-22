@@ -9,9 +9,9 @@ name: Java CI with Gradle & CD with CodeDeploy
 
 on:
   push:
-    branches: [ "dev-be" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "dev-be" ]
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -38,32 +38,46 @@ jobs:
       run: |
         cd ./be
         ./gradlew clean build
+
+    - name: Install Node.js and Npm
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18.17.1'
+
+    - name: Copy .env
+      run: cp ./secrets/.env ./fe/.env
+
+    - name: Npm Build
+      run: |
+        cd ./fe
+        npm install
+        npm run build
       
 
     - name: Make zip file
-      run: zip -r bookkbookk-dev.zip ./be/build/libs/*.jar ./appspec.yml ./scripts/*
+      run: zip -r bookkbookk-prod.zip ./be/build/libs/*.jar ./appspec.yml ./scripts/* ./fe/dist/*
       shell: bash
 
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_DEV_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_DEV_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_DEV_REGION }}
+        aws-access-key-id: ${{ secrets.AWS_PROD_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_PROD_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_PROD_REGION }}
 
     - name: Upload to S3
-      run: aws s3 cp --region ${{ secrets.AWS_DEV_REGION }} ./bookkbookk-dev.zip s3://bookkbookk-dev-bucket/bookkbookk-dev.zip
+      run: aws s3 cp --region ${{ secrets.AWS_PROD_REGION }} ./bookkbookk-prod.zip s3://bookkbookk-prod-bucket/bookkbookk-prod.zip
 
 
     - name: Deploy with CodeDeploy
       env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_DEV_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_DEV_SECRET_ACCESS_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_PROD_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_PROD_SECRET_ACCESS_KEY }}
       run: |
         aws deploy create-deployment \
-        --application-name bookkbookk-dev \
-        --deployment-group-name bookkbookk-dev-deploy \
+        --application-name bookkbookk-prod \
+        --deployment-group-name bookkbookk-prod-deploy \
         --file-exists-behavior OVERWRITE \
-        --s3-location bucket=bookkbookk-dev-bucket,bundleType=zip,key=bookkbookk-dev.zip \
-        --region ${{ secrets.AWS_DEV_REGION }}
+        --s3-location bucket=bookkbookk-prod-bucket,bundleType=zip,key=bookkbookk-prod.zip \
+        --region ${{ secrets.AWS_PROD_REGION }}
