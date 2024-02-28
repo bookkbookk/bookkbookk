@@ -51,10 +51,10 @@ public class GatheringTest extends IntegrationTest {
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
-        Book book = TestDataFactory.createBook1(bookClub);
+        Book book = TestDataFactory.createBook(bookClub);
         bookRepository.save(book);
 
         bookClubMemberRepository.save(new BookClubMember(bookClub, member));
@@ -94,10 +94,10 @@ public class GatheringTest extends IntegrationTest {
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
-        Book book = TestDataFactory.createBook1(bookClub);
+        Book book = TestDataFactory.createBook(bookClub);
         bookRepository.save(book);
 
         bookClubMemberRepository.save(new BookClubMember(bookClub, member));

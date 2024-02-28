@@ -2,6 +2,7 @@ package codesquad.bookkbookk.comment.integration;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.List;
 import java.util.Map;
 
 import org.assertj.core.api.SoftAssertions;
@@ -75,19 +76,19 @@ public class CommentTest extends IntegrationTest {
         memberRepository.save(member);
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
         BookClubMember bookClubMember = new BookClubMember(bookClub, member);
         bookClubMemberRepository.save(bookClubMember);
 
-        Book book = TestDataFactory.createBook1(bookClub);
+        Book book = TestDataFactory.createBook(bookClub);
         bookRepository.save(book);
 
-        Chapter chapter = TestDataFactory.createChapter1(book);
+        Chapter chapter = TestDataFactory.createChapter(book);
         chapterRepository.save(chapter);
 
-        Topic topic = TestDataFactory.createTopic1(chapter);
+        Topic topic = TestDataFactory.createTopic(chapter);
         topicRepository.save(topic);
 
         Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
@@ -120,16 +121,16 @@ public class CommentTest extends IntegrationTest {
         memberRepository.save(member);
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
-        Book book = TestDataFactory.createBook1(bookClub);
+        Book book = TestDataFactory.createBook(bookClub);
         bookRepository.save(book);
 
-        Chapter chapter = TestDataFactory.createChapter1(book);
+        Chapter chapter = TestDataFactory.createChapter(book);
         chapterRepository.save(chapter);
 
-        Topic topic = TestDataFactory.createTopic1(chapter);
+        Topic topic = TestDataFactory.createTopic(chapter);
         topicRepository.save(topic);
 
         Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
@@ -164,22 +165,22 @@ public class CommentTest extends IntegrationTest {
     @DisplayName("작성자가 아닌 멤버가 코멘트를 수정하려 하면 예외가 발생한다.")
     void NonWriterUpdateComment() {
         // given
-        Member member = TestDataFactory.createMember();
-        memberRepository.save(member);
-        Member another = TestDataFactory.createAnotherMember();
-        memberRepository.save(another);
-        String accessToken = jwtProvider.createAccessToken(another.getId());
+        List<Member> members = TestDataFactory.createMembers(2);
+        memberRepository.saveAll(members);
+        Member member = members.get(0);
+        Member anotherMember = members.get(1);
+        String accessToken = jwtProvider.createAccessToken(anotherMember.getId());
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
-        Book book = TestDataFactory.createBook1(bookClub);
+        Book book = TestDataFactory.createBook(bookClub);
         bookRepository.save(book);
 
-        Chapter chapter = TestDataFactory.createChapter1(book);
+        Chapter chapter = TestDataFactory.createChapter(book);
         chapterRepository.save(chapter);
 
-        Topic topic = TestDataFactory.createTopic1(chapter);
+        Topic topic = TestDataFactory.createTopic(chapter);
         topicRepository.save(topic);
 
         Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
@@ -216,16 +217,16 @@ public class CommentTest extends IntegrationTest {
         memberRepository.save(member);
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
-        Book book = TestDataFactory.createBook1(bookClub);
+        Book book = TestDataFactory.createBook(bookClub);
         bookRepository.save(book);
 
-        Chapter chapter = TestDataFactory.createChapter1(book);
+        Chapter chapter = TestDataFactory.createChapter(book);
         chapterRepository.save(chapter);
 
-        Topic topic = TestDataFactory.createTopic1(chapter);
+        Topic topic = TestDataFactory.createTopic(chapter);
         topicRepository.save(topic);
 
         Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
@@ -255,22 +256,22 @@ public class CommentTest extends IntegrationTest {
     @DisplayName("작성자가 아닌 코멘트를 삭제하려 하면 예외가 발생한다.")
     void NonWriterDeleteComment() {
         // given
-        Member member = TestDataFactory.createMember();
-        memberRepository.save(member);
-        Member anothoer = TestDataFactory.createAnotherMember();
-        memberRepository.save(anothoer);
-        String accessToken = jwtProvider.createAccessToken(anothoer.getId());
+        List<Member> members = TestDataFactory.createMembers(2);
+        memberRepository.saveAll(members);
+        Member member = members.get(0);
+        Member anotherMember = members.get(1);
+        String accessToken = jwtProvider.createAccessToken(anotherMember.getId());
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
-        Book book = TestDataFactory.createBook1(bookClub);
+        Book book = TestDataFactory.createBook(bookClub);
         bookRepository.save(book);
 
-        Chapter chapter = TestDataFactory.createChapter1(book);
+        Chapter chapter = TestDataFactory.createChapter(book);
         chapterRepository.save(chapter);
 
-        Topic topic = TestDataFactory.createTopic1(chapter);
+        Topic topic = TestDataFactory.createTopic(chapter);
         topicRepository.save(topic);
 
         Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
@@ -304,19 +305,19 @@ public class CommentTest extends IntegrationTest {
         memberRepository.save(member);
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
         BookClubMember bookClubMember = new BookClubMember(bookClub, member);
         bookClubMemberRepository.save(bookClubMember);
 
-        Book book = TestDataFactory.createBook1(bookClub);
+        Book book = TestDataFactory.createBook(bookClub);
         bookRepository.save(book);
 
-        Chapter chapter = TestDataFactory.createChapter1(book);
+        Chapter chapter = TestDataFactory.createChapter(book);
         chapterRepository.save(chapter);
 
-        Topic topic = TestDataFactory.createTopic1(chapter);
+        Topic topic = TestDataFactory.createTopic(chapter);
         topicRepository.save(topic);
 
         Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
@@ -349,19 +350,19 @@ public class CommentTest extends IntegrationTest {
         memberRepository.save(member);
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
         BookClubMember bookClubMember = new BookClubMember(bookClub, member);
         bookClubMemberRepository.save(bookClubMember);
 
-        Book book = TestDataFactory.createBook1(bookClub);
+        Book book = TestDataFactory.createBook(bookClub);
         bookRepository.save(book);
 
-        Chapter chapter = TestDataFactory.createChapter1(book);
+        Chapter chapter = TestDataFactory.createChapter(book);
         chapterRepository.save(chapter);
 
-        Topic topic = TestDataFactory.createTopic1(chapter);
+        Topic topic = TestDataFactory.createTopic(chapter);
         topicRepository.save(topic);
 
         Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
@@ -401,16 +402,16 @@ public class CommentTest extends IntegrationTest {
         memberRepository.save(member);
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
-        Book book = TestDataFactory.createBook1(bookClub);
+        Book book = TestDataFactory.createBook(bookClub);
         bookRepository.save(book);
 
-        Chapter chapter = TestDataFactory.createChapter1(book);
+        Chapter chapter = TestDataFactory.createChapter(book);
         chapterRepository.save(chapter);
 
-        Topic topic = TestDataFactory.createTopic1(chapter);
+        Topic topic = TestDataFactory.createTopic(chapter);
         topicRepository.save(topic);
 
         Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
@@ -446,16 +447,16 @@ public class CommentTest extends IntegrationTest {
         memberRepository.save(member);
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
-        Book book = TestDataFactory.createBook1(bookClub);
+        Book book = TestDataFactory.createBook(bookClub);
         bookRepository.save(book);
 
-        Chapter chapter = TestDataFactory.createChapter1(book);
+        Chapter chapter = TestDataFactory.createChapter(book);
         chapterRepository.save(chapter);
 
-        Topic topic = TestDataFactory.createTopic1(chapter);
+        Topic topic = TestDataFactory.createTopic(chapter);
         topicRepository.save(topic);
 
         Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
@@ -490,24 +491,22 @@ public class CommentTest extends IntegrationTest {
         // given
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
-        Member anotherMember = TestDataFactory.createAnotherMember();
-        memberRepository.save(anotherMember);
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
         BookClubMember bookClubMember = new BookClubMember(bookClub, member);
         bookClubMemberRepository.save(bookClubMember);
 
-        Book book = TestDataFactory.createBook1(bookClub);
+        Book book = TestDataFactory.createBook(bookClub);
         bookRepository.save(book);
 
-        Chapter chapter = TestDataFactory.createChapter1(book);
+        Chapter chapter = TestDataFactory.createChapter(book);
         chapterRepository.save(chapter);
 
-        Topic topic = TestDataFactory.createTopic1(chapter);
+        Topic topic = TestDataFactory.createTopic(chapter);
         topicRepository.save(topic);
 
         Bookmark bookmark = TestDataFactory.createBookmark(member, topic);

@@ -70,7 +70,7 @@ public class BookTest extends IntegrationTest {
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
         BookClubMember bookClubMember = new BookClubMember(bookClub, member);
@@ -118,7 +118,7 @@ public class BookTest extends IntegrationTest {
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
@@ -133,6 +133,7 @@ public class BookTest extends IntegrationTest {
                 .build();
 
         MemberNotInBookClubException exception = new MemberNotInBookClubException();
+
         //when
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
@@ -160,13 +161,13 @@ public class BookTest extends IntegrationTest {
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
         BookClubMember bookClubMember = new BookClubMember(bookClub, member);
         bookClubMemberRepository.save(bookClubMember);
 
-        Book book = TestDataFactory.createBook1(bookClub);
+        Book book = TestDataFactory.createBook(bookClub);
         bookRepository.save(book);
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
@@ -201,21 +202,19 @@ public class BookTest extends IntegrationTest {
         memberRepository.save(member);
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
         BookClubMember bookClubMember= new BookClubMember(bookClub, member);
         bookClubMemberRepository.save(bookClubMember);
 
-        Book book = TestDataFactory.createBook1(bookClub);
+        Book book = TestDataFactory.createBook(bookClub);
         bookRepository.save(book);
 
-        List<Chapter> chapters = List.of(TestDataFactory.createChapter1(book),
-                TestDataFactory.createChapter2(book));
+        List<Chapter> chapters = TestDataFactory.createChapters(2, book);
         chapterRepository.saveAll(chapters);
 
-        List<Topic> topics = List.of(TestDataFactory.createTopic1(chapters.get(0)),
-                TestDataFactory.createTopic2(chapters.get(0)));
+        List<Topic> topics = TestDataFactory.createTopics(2, chapters.get(0));
         topicRepository.saveAll(topics);
 
         List<Bookmark> bookmarks1 = TestDataFactory.createBookmarks(5, member, topics.get(0));
