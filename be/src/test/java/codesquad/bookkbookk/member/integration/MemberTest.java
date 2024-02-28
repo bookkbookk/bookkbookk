@@ -3,6 +3,7 @@ package codesquad.bookkbookk.member.integration;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
@@ -17,15 +18,16 @@ import codesquad.bookkbookk.common.error.exception.ApiException;
 import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
-import codesquad.bookkbookk.domain.mapping.entity.MemberBook;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
-import codesquad.bookkbookk.domain.mapping.repository.MemberBookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
+import codesquad.bookkbookk.domain.mapping.entity.MemberBook;
+import codesquad.bookkbookk.domain.mapping.repository.MemberBookRepository;
 import codesquad.bookkbookk.domain.member.data.dto.MemberResponse;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
 import codesquad.bookkbookk.util.TestDataFactory;
+
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -133,18 +135,15 @@ public class MemberTest extends IntegrationTest {
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
-        Book book1 = TestDataFactory.createBook1(bookClub);
-        bookRepository.save(book1);
-        Book book2 = TestDataFactory.createBook2(bookClub);
-        bookRepository.save(book2);
+        List<Book> books = TestDataFactory.createBooks(2, bookClub);
+        bookRepository.saveAll(books);
 
-        MemberBook memberBook1 = new MemberBook(member, book1);
+        MemberBook memberBook1 = new MemberBook(member, books.get(0));
         memberBookRepository.save(memberBook1);
-
-        MemberBook memberBook2 = new MemberBook(member, book2);
+        MemberBook memberBook2 = new MemberBook(member, books.get(1));
         memberBookRepository.save(memberBook2);
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
@@ -166,9 +165,9 @@ public class MemberTest extends IntegrationTest {
             softAssertions.assertThat(response.jsonPath().getMap("pagination").get("totalPageCounts"))
                     .isEqualTo(2);
             softAssertions.assertThat(((LinkedHashMap<?, ?>) response.jsonPath().getList("books").get(0)).get("title"))
-                    .isEqualTo("신데렐라");
+                    .isEqualTo(books.get(0).getTitle());
             softAssertions.assertThat(((LinkedHashMap<?, ?>) response.jsonPath().getList("books").get(0)).get("statusId"))
-                    .isEqualTo(1);
+                    .isEqualTo(books.get(0).getStatus().getId());
         });
     }
 
