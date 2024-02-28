@@ -3,6 +3,7 @@ package codesquad.bookkbookk.bookclub.integration;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 import org.assertj.core.api.Assertions;
@@ -73,13 +74,13 @@ public class BookClubTest extends IntegrationTest {
         //when
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
-                    .multiPart("profileImage", File.createTempFile("create", "jpeg"), MediaType.IMAGE_JPEG_VALUE)
-                    .multiPart("name", "name")
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .multiPart("profileImage", File.createTempFile("create", "jpeg"), MediaType.IMAGE_JPEG_VALUE)
+                .multiPart("name", "name")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .when()
-                    .post("/api/book-clubs")
+                .post("/api/book-clubs")
                 .then().log().all()
-                    .extract();
+                .extract();
 
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -94,16 +95,14 @@ public class BookClubTest extends IntegrationTest {
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
         BookClubMember bookClubMember = new BookClubMember(bookClub, member);
         bookClubMemberRepository.save(bookClubMember);
 
-        Book book1 = TestDataFactory.createBook1(bookClub);
-        bookRepository.save(book1);
-        Book book2 = TestDataFactory.createBook2(bookClub);
-        bookRepository.save(book2);
+        List<Book> books = TestDataFactory.createBooks(2, bookClub);
+        bookRepository.saveAll(books);
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
@@ -123,7 +122,7 @@ public class BookClubTest extends IntegrationTest {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             softAssertions.assertThat(response.jsonPath().getBoolean("hasNext")).isTrue();
             softAssertions.assertThat(response.jsonPath().getString("books[0].author"))
-                    .isEqualTo(book1.getAuthor());
+                    .isEqualTo(books.get(0).getAuthor());
         });
     }
 
@@ -134,16 +133,14 @@ public class BookClubTest extends IntegrationTest {
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
         BookClubMember bookClubMember = new BookClubMember(bookClub, member);
         bookClubMemberRepository.save(bookClubMember);
 
-        Book book1 = TestDataFactory.createBook1(bookClub);
-        bookRepository.save(book1);
-        Book book2 = TestDataFactory.createBook2(bookClub);
-        bookRepository.save(book2);
+        List<Book> books = TestDataFactory.createBooks(2, bookClub);
+        bookRepository.saveAll(books);
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
@@ -163,7 +160,7 @@ public class BookClubTest extends IntegrationTest {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             softAssertions.assertThat(response.jsonPath().getBoolean("hasNext")).isFalse();
             softAssertions.assertThat(response.jsonPath().getString("books[0].category"))
-                    .isEqualTo(book2.getCategory());
+                    .isEqualTo(books.get(1).getCategory());
         });
     }
 
@@ -174,7 +171,7 @@ public class BookClubTest extends IntegrationTest {
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
         BookClubMember bookClubMember = new BookClubMember(bookClub, member);
@@ -182,7 +179,7 @@ public class BookClubTest extends IntegrationTest {
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        CreateInvitationUrlRequest request = new CreateInvitationUrlRequest(1L);
+        CreateInvitationUrlRequest request = new CreateInvitationUrlRequest(bookClub.getId());
 
         //when
         ExtractableResponse<Response> response = RestAssured
@@ -210,13 +207,12 @@ public class BookClubTest extends IntegrationTest {
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
         BookClubMember bookClubMember = new BookClubMember(bookClub, member);
         bookClubMemberRepository.save(bookClubMember);
 
-        CreateInvitationUrlRequest request = new CreateInvitationUrlRequest(1L);
         String invitationCode = "test";
         BookClubInvitationCode bookClubInvitationCode = new BookClubInvitationCode(bookClub.getId(), invitationCode);
         bookClubInvitationCodeRepository.save(bookClubInvitationCode);
@@ -228,7 +224,7 @@ public class BookClubTest extends IntegrationTest {
                 .given().log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .when()
-                .get("/api/book-clubs/invitation/1")
+                .get("/api/book-clubs/invitation/" + bookClub.getId())
                 .then().log().all()
                 .extract();
 
@@ -244,18 +240,17 @@ public class BookClubTest extends IntegrationTest {
     @Test
     void memberJoinBookClub() {
         //given
-        Member member = TestDataFactory.createMember();
-        memberRepository.save(member);
-        Member anotherMember = TestDataFactory.createAnotherMember();
-        memberRepository.save(anotherMember);
+        List<Member> members = TestDataFactory.createMembers(2);
+        memberRepository.saveAll(members);
+        Member member = members.get(0);
+        Member anotherMember = members.get(1);
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
         BookClubMember bookClubMember = new BookClubMember(bookClub, member);
         bookClubMemberRepository.save(bookClubMember);
 
-        CreateInvitationUrlRequest request = new CreateInvitationUrlRequest(bookClub.getId());
         String invitationCode = "test";
         BookClubInvitationCode bookClubInvitationCode = new BookClubInvitationCode(bookClub.getId(), invitationCode);
         bookClubInvitationCodeRepository.save(bookClubInvitationCode);
@@ -288,13 +283,12 @@ public class BookClubTest extends IntegrationTest {
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
         BookClubMember bookClubMember = new BookClubMember(bookClub, member);
         bookClubMemberRepository.save(bookClubMember);
 
-        CreateInvitationUrlRequest request = new CreateInvitationUrlRequest(bookClub.getId());
         String invitationCode = "test";
         BookClubInvitationCode bookClubInvitationCode = new BookClubInvitationCode(bookClub.getId(), invitationCode);
         bookClubInvitationCodeRepository.save(bookClubInvitationCode);
@@ -325,25 +319,22 @@ public class BookClubTest extends IntegrationTest {
     @Test
     void bookClubBooksAddToJoinedMember() {
         //given
-        Member member = TestDataFactory.createMember();
-        memberRepository.save(member);
-        Member another = TestDataFactory.createAnotherMember();
-        memberRepository.save(another);
+        List<Member> members = TestDataFactory.createMembers(2);
+        memberRepository.saveAll(members);
+        Member member = members.get(0);
+        Member anotherMember = members.get(1);
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
-        Book book1 = TestDataFactory.createBook1(bookClub);
-        bookRepository.save(book1);
-        Book book2 = TestDataFactory.createBook2(bookClub);
-        bookRepository.save(book2);
+        List<Book> books = TestDataFactory.createBooks(2, bookClub);
+        bookRepository.saveAll(books);
 
-        CreateInvitationUrlRequest request = new CreateInvitationUrlRequest(bookClub.getId());
         String invitationCode = "test";
         BookClubInvitationCode bookClubInvitationCode = new BookClubInvitationCode(bookClub.getId(), invitationCode);
         bookClubInvitationCodeRepository.save(bookClubInvitationCode);
 
-        String accessToken = jwtProvider.createAccessToken(another.getId());
+        String accessToken = jwtProvider.createAccessToken(anotherMember.getId());
         JSONObject requestBody = new JSONObject(Map.of("invitationCode", invitationCode));
 
         //when
@@ -376,31 +367,29 @@ public class BookClubTest extends IntegrationTest {
     @Test
     void readOpenBookClubDetail() {
         //given
-        Member member = TestDataFactory.createMember();
-        memberRepository.save(member);
-        Member another = TestDataFactory.createAnotherMember();
-        memberRepository.save(another);
+        List<Member> members = TestDataFactory.createMembers(2);
+        memberRepository.saveAll(members);
+        Member member = members.get(0);
+        Member anotherMember = members.get(1);
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
         BookClubMember bookClubMember1 = new BookClubMember(bookClub, member);
         bookClubMemberRepository.save(bookClubMember1);
-        BookClubMember bookClubMember2 = new BookClubMember(bookClub, another);
+        BookClubMember bookClubMember2 = new BookClubMember(bookClub, anotherMember);
         bookClubMemberRepository.save(bookClubMember2);
 
-        Book book1 = TestDataFactory.createBook1(bookClub);
-        bookRepository.save(book1);
-        Book book2 = TestDataFactory.createBook2(bookClub);
-        bookRepository.save(book2);
+        List<Book> books = TestDataFactory.createBooks(2, bookClub);
+        bookRepository.saveAll(books);
 
-        Gathering gathering = TestDataFactory.createGathering(book1);
+        Gathering gathering = TestDataFactory.createGathering(books.get(0));
         gatheringRepository.save(gathering);
 
         bookClub.updateUpcomingGatheringDate(gathering.getStartTime());
         bookClubRepository.save(bookClub);
 
-        String accessToken = jwtProvider.createAccessToken(another.getId());
+        String accessToken = jwtProvider.createAccessToken(anotherMember.getId());
 
         //when
         ExtractableResponse<Response> response = RestAssured
@@ -425,28 +414,26 @@ public class BookClubTest extends IntegrationTest {
     @Test
     void readClosedBookClubDetail() {
         //given
-        Member member = TestDataFactory.createMember();
-        memberRepository.save(member);
-        Member another = TestDataFactory.createAnotherMember();
-        memberRepository.save(another);
+        List<Member> members = TestDataFactory.createMembers(2);
+        memberRepository.saveAll(members);
+        Member member = members.get(0);
+        Member anotherMember = members.get(1);
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
         BookClubMember bookClubMember1 = new BookClubMember(bookClub, member);
         bookClubMemberRepository.save(bookClubMember1);
-        BookClubMember bookClubMember2 = new BookClubMember(bookClub, another);
+        BookClubMember bookClubMember2 = new BookClubMember(bookClub, anotherMember);
         bookClubMemberRepository.save(bookClubMember2);
 
-        Book book1 = TestDataFactory.createBook1(bookClub);
-        bookRepository.save(book1);
-        Book book2 = TestDataFactory.createBook2(bookClub);
-        bookRepository.save(book2);
+        List<Book> books = TestDataFactory.createBooks(2, bookClub);
+        bookRepository.saveAll(books);
 
         bookClub.close();
         bookClubRepository.save(bookClub);
 
-        String accessToken = jwtProvider.createAccessToken(another.getId());
+        String accessToken = jwtProvider.createAccessToken(anotherMember.getId());
 
         //when
         ExtractableResponse<Response> response = RestAssured
@@ -473,11 +460,15 @@ public class BookClubTest extends IntegrationTest {
         // given
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
-        BookClub bookClub = TestDataFactory.createBookClub();
+
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
-        Book book = TestDataFactory.createBook1(bookClub);
-        bookRepository.save(book);
+
         bookClubMemberRepository.save(new BookClubMember(bookClub, member));
+
+        Book book = TestDataFactory.createBook(bookClub);
+        bookRepository.save(book);
+
         String accessToken = jwtProvider.createAccessToken(member.getId());
         CreateGatheringRequest createGatheringRequest =
                 new CreateGatheringRequest(book.getId(), "코드스쿼드", LocalDateTime.of(2023, 10, 20, 12, 30));
@@ -504,10 +495,13 @@ public class BookClubTest extends IntegrationTest {
         // given
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
-        BookClub bookClub = TestDataFactory.createBookClub();
+
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
-        Book book = TestDataFactory.createBook1(bookClub);
+
+        Book book = TestDataFactory.createBook(bookClub);
         bookRepository.save(book);
+
         String accessToken = jwtProvider.createAccessToken(member.getId());
         CreateGatheringRequest createGatheringRequest =
                 new CreateGatheringRequest(book.getId(), "코드스쿼드", LocalDateTime.of(2023, 10, 20, 12, 30));
@@ -539,8 +533,10 @@ public class BookClubTest extends IntegrationTest {
         // given
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
-        BookClub bookClub = TestDataFactory.createBookClub();
+
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
+
         bookClubMemberRepository.save(new BookClubMember(bookClub, member));
         String accessToken = jwtProvider.createAccessToken(member.getId());
         CreateGatheringRequest createGatheringRequest =
@@ -570,36 +566,31 @@ public class BookClubTest extends IntegrationTest {
     @Test
     void readMemberOpenBookClub() {
         //given
-        Member member = TestDataFactory.createMember();
-        memberRepository.save(member);
-        Member anotherMember = TestDataFactory.createAnotherMember();
-        memberRepository.save(anotherMember);
+        List<Member> members = TestDataFactory.createMembers(2);
+        memberRepository.saveAll(members);
+        Member member = members.get(0);
+        Member anotherMember = members.get(1);
 
-        BookClub bookClub1 = TestDataFactory.createBookClub();
-        bookClubRepository.save(bookClub1);
-        BookClub bookClub2 = TestDataFactory.createDummyBookClub(2);
-        bookClub2.close();
-        bookClubRepository.save(bookClub2);
-        BookClub bookClub3 = TestDataFactory.createDummyBookClub(3);
-        bookClubRepository.save(bookClub3);
+        List<BookClub> bookClubs = TestDataFactory.createBookClubs(3, member);
+        bookClubs.get(1).close();
+        bookClubRepository.saveAll(bookClubs);
 
-        BookClubMember bookClubMember1 = new BookClubMember(bookClub1, member);
-        bookClubMemberRepository.save(bookClubMember1);
-        BookClubMember bookClubMember2 = new BookClubMember(bookClub2, member);
-        bookClubMemberRepository.save(bookClubMember2);
-        BookClubMember bookClubMember3 = new BookClubMember(bookClub3, member);
-        bookClubMemberRepository.save(bookClubMember3);
-        BookClubMember bookClubMember4 = new BookClubMember(bookClub3, anotherMember);
-        bookClubMemberRepository.save(bookClubMember4);
+        List<BookClubMember> bookClubMembers = List.of(new BookClubMember(bookClubs.get(0), member),
+                new BookClubMember(bookClubs.get(1), member),
+                new BookClubMember(bookClubs.get(2), member),
+                new BookClubMember(bookClubs.get(2), anotherMember));
+        bookClubMemberRepository.saveAll(bookClubMembers);
 
-        Book book1 = TestDataFactory.createBook1(bookClub1);
-        bookRepository.save(book1);
+        BookClub bookclub = bookClubs.get(0);
 
-        Gathering gathering = TestDataFactory.createGathering(book1);
+        Book book = TestDataFactory.createBook(bookclub);
+        bookRepository.save(book);
+
+        Gathering gathering = TestDataFactory.createGathering(book);
         gatheringRepository.save(gathering);
 
-        bookClub1.updateUpcomingGatheringDate(gathering.getStartTime());
-        bookClubRepository.save(bookClub1);
+        bookclub.updateUpcomingGatheringDate(gathering.getStartTime());
+        bookClubRepository.save(bookclub);
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
@@ -628,39 +619,32 @@ public class BookClubTest extends IntegrationTest {
     @Test
     void readMemberClosedBookClub() {
         //given
-        Member member = TestDataFactory.createMember();
-        memberRepository.save(member);
-        Member anotherMember = TestDataFactory.createAnotherMember();
-        memberRepository.save(anotherMember);
+        List<Member> members = TestDataFactory.createMembers(2);
+        memberRepository.saveAll(members);
+        Member member = members.get(0);
+        Member anotherMember = members.get(1);
 
-        BookClub bookClub1 = TestDataFactory.createBookClub();
-        bookClub1.close();
-        bookClubRepository.save(bookClub1);
-        BookClub bookClub2 = TestDataFactory.createDummyBookClub(2);
-        bookClub2.close();
-        bookClubRepository.save(bookClub2);
-        BookClub bookClub3 = TestDataFactory.createDummyBookClub(3);
-        bookClubRepository.save(bookClub3);
+        List<BookClub> bookClubs = TestDataFactory.createBookClubs(3, member);
+        bookClubs.get(0).close();
+        bookClubs.get(1).close();
+        bookClubRepository.saveAll(bookClubs);
 
-        BookClubMember bookClubMember1 = new BookClubMember(bookClub1, member);
-        bookClubMemberRepository.save(bookClubMember1);
-        BookClubMember bookClubMember2 = new BookClubMember(bookClub2, member);
-        bookClubMemberRepository.save(bookClubMember2);
-        BookClubMember bookClubMember3 = new BookClubMember(bookClub2, anotherMember);
-        bookClubMemberRepository.save(bookClubMember3);
-        BookClubMember bookClubMember4 = new BookClubMember(bookClub3, member);
-        bookClubMemberRepository.save(bookClubMember4);
+        List<BookClubMember> bookClubMembers = List.of(new BookClubMember(bookClubs.get(0), member),
+                new BookClubMember(bookClubs.get(1), member),
+                new BookClubMember(bookClubs.get(1), anotherMember),
+                new BookClubMember(bookClubs.get(2), member));
+        bookClubMemberRepository.saveAll(bookClubMembers);
 
-        Book book1 = TestDataFactory.createBook1(bookClub1);
+        Book book1 = TestDataFactory.createBook(bookClubs.get(0));
         bookRepository.save(book1);
-        Book book2 = TestDataFactory.createBook2(bookClub2);
+        Book book2 = TestDataFactory.createBook(1, bookClubs.get(1));
         bookRepository.save(book2);
 
         Gathering gathering = TestDataFactory.createGathering(book1);
         gatheringRepository.save(gathering);
 
-        bookClub1.updateUpcomingGatheringDate(gathering.getStartTime());
-        bookClubRepository.save(bookClub1);
+        bookClubs.get(0).updateUpcomingGatheringDate(gathering.getStartTime());
+        bookClubRepository.save(bookClubs.get(0));
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
@@ -690,49 +674,35 @@ public class BookClubTest extends IntegrationTest {
     @Test
     void readMemberBookClubs() {
         //given
-        Member member = TestDataFactory.createMember();
-        memberRepository.save(member);
-        Member anotherMember = TestDataFactory.createAnotherMember();
-        memberRepository.save(anotherMember);
+        List<Member> members = TestDataFactory.createMembers(2);
+        memberRepository.saveAll(members);
+        Member member = members.get(0);
+        Member anotherMember = members.get(1);
 
-        BookClub bookClub1 = TestDataFactory.createBookClub();
-        bookClubRepository.save(bookClub1);
-        BookClub bookClub2 = TestDataFactory.createDummyBookClub(2);
-        bookClub2.close();
-        bookClubRepository.save(bookClub2);
-        BookClub bookClub3 = TestDataFactory.createDummyBookClub(3);
-        bookClubRepository.save(bookClub3);
-        BookClub bookClub4 = TestDataFactory.createDummyBookClub(4);
-        bookClubRepository.save(bookClub4);
-        BookClub bookClub5 = TestDataFactory.createDummyBookClub(5);
-        bookClub5.close();
-        bookClubRepository.save(bookClub5);
+        List<BookClub> bookClubs = TestDataFactory.createBookClubs(5, member);
+        bookClubs.get(1).close();
+        bookClubs.get(4).close();
+        bookClubRepository.saveAll(bookClubs);
 
-        BookClubMember bookClubMember1 = new BookClubMember(bookClub1, member);
-        bookClubMemberRepository.save(bookClubMember1);
-        BookClubMember bookClubMember2 = new BookClubMember(bookClub2, member);
-        bookClubMemberRepository.save(bookClubMember2);
-        BookClubMember bookClubMember3 = new BookClubMember(bookClub3, member);
-        bookClubMemberRepository.save(bookClubMember3);
-        BookClubMember bookClubMember4 = new BookClubMember(bookClub3, anotherMember);
-        bookClubMemberRepository.save(bookClubMember4);
-        BookClubMember bookClubMember5 = new BookClubMember(bookClub4, member);
-        bookClubMemberRepository.save(bookClubMember5);
-        BookClubMember bookClubMember6 = new BookClubMember(bookClub4, anotherMember);
-        bookClubMemberRepository.save(bookClubMember6);
-        BookClubMember bookClubMember7 = new BookClubMember(bookClub5, member);
-        bookClubMemberRepository.save(bookClubMember7);
+        List<BookClubMember> bookClubMembers = List.of(new BookClubMember(bookClubs.get(0), member),
+                new BookClubMember(bookClubs.get(1), member),
+                new BookClubMember(bookClubs.get(2), member),
+                new BookClubMember(bookClubs.get(2), anotherMember),
+                new BookClubMember(bookClubs.get(3), member),
+                new BookClubMember(bookClubs.get(3), anotherMember),
+                new BookClubMember(bookClubs.get(4), member));
+        bookClubMemberRepository.saveAll(bookClubMembers);
 
-        Book book1 = TestDataFactory.createBook1(bookClub1);
+        Book book1 = TestDataFactory.createBook(1, bookClubs.get(0));
         bookRepository.save(book1);
-        Book book2 = TestDataFactory.createBook2(bookClub2);
+        Book book2 = TestDataFactory.createBook(2, bookClubs.get(1));
         bookRepository.save(book2);
 
         Gathering gathering = TestDataFactory.createGathering(book1);
         gatheringRepository.save(gathering);
 
-        bookClub1.updateUpcomingGatheringDate(gathering.getStartTime());
-        bookClubRepository.save(bookClub1);
+        bookClubs.get(0).updateUpcomingGatheringDate(gathering.getStartTime());
+        bookClubRepository.save(bookClubs.get(0));
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
@@ -765,31 +735,21 @@ public class BookClubTest extends IntegrationTest {
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
-        BookClubMember bookClubMember1 = new BookClubMember(bookClub, member);
-        bookClubMemberRepository.save(bookClubMember1);
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
 
-        Book book1 = TestDataFactory.createBook1(bookClub);
-        bookRepository.save(book1);
-        Book book2 = TestDataFactory.createBook2(bookClub);
-        bookRepository.save(book2);
-        Book book3 = TestDataFactory.createBook2(bookClub);
-        bookRepository.save(book3);
+        List<Book> books = TestDataFactory.createBooks(3, bookClub);
+        bookRepository.saveAll(books);
 
-        Gathering gathering1 = TestDataFactory.createGathering(book1);
-        gatheringRepository.save(gathering1);
-        Gathering gathering2 = TestDataFactory.createGathering(book1);
-        gatheringRepository.save(gathering2);
-        Gathering gathering3 = TestDataFactory.createGathering(book1);
-        gatheringRepository.save(gathering3);
-        Gathering gathering4 = TestDataFactory.createGathering(book2);
-        gatheringRepository.save(gathering4);
-        Gathering gathering5 = TestDataFactory.createGathering(book2);
-        gatheringRepository.save(gathering5);
-        Gathering gathering6 = TestDataFactory.createGathering(book3);
-        gatheringRepository.save(gathering6);
+        List<Gathering> gatherings1 = TestDataFactory.createGatherings(3, books.get(0));
+        gatheringRepository.saveAll(gatherings1);
+        List<Gathering> gatherings2 = TestDataFactory.createGatherings(2, books.get(1));
+        gatheringRepository.saveAll(gatherings2);
+        List<Gathering> gatherings3 = TestDataFactory.createGatherings(1, books.get(2));
+        gatheringRepository.saveAll(gatherings3);
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
 

@@ -61,13 +61,13 @@ public class TopicTest extends IntegrationTest {
         memberRepository.save(member);
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
         BookClubMember bookClubMember = new BookClubMember(bookClub, member);
         bookClubMemberRepository.save(bookClubMember);
 
-        Book book = TestDataFactory.createBook1(bookClub);
+        Book book = TestDataFactory.createBook(bookClub);
         bookRepository.save(book);
 
         Chapter chapter = new Chapter(book, "first");
@@ -103,13 +103,13 @@ public class TopicTest extends IntegrationTest {
         memberRepository.save(member);
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
         BookClubMember bookClubMember = new BookClubMember(bookClub, member);
         bookClubMemberRepository.save(bookClubMember);
 
-        Book book = TestDataFactory.createBook1(bookClub);
+        Book book = TestDataFactory.createBook(bookClub);
         bookRepository.save(book);
 
         Chapter chapter = new Chapter(book, "first");
@@ -147,13 +147,13 @@ public class TopicTest extends IntegrationTest {
         memberRepository.save(member);
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
         BookClubMember bookClubMember = new BookClubMember(bookClub, member);
         bookClubMemberRepository.save(bookClubMember);
 
-        Book book = TestDataFactory.createBook1(bookClub);
+        Book book = TestDataFactory.createBook(bookClub);
         bookRepository.save(book);
 
         Chapter chapter = new Chapter(book, "first");
