@@ -1,6 +1,6 @@
 package codesquad.bookkbookk.domain.gathering.data.dto;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class UpdateGatheringRequest {
 
-    private LocalDateTime dateTime;
+    private Instant dateTime;
     private String place;
 
 }

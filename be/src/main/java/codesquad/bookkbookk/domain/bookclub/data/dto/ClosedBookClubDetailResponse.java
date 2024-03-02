@@ -1,6 +1,6 @@
 package codesquad.bookkbookk.domain.bookclub.data.dto;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,13 +16,13 @@ import lombok.Getter;
 @Getter
 public class ClosedBookClubDetailResponse extends ReadBookClubDetailResponse{
 
-    private final LocalDateTime closedTime;
+    private final Instant closedTime;
 
     @Builder
     private ClosedBookClubDetailResponse(String name, BookClubStatus status, String profileImgUrl,
-                                         LocalDateTime createdTime, ReadBookClubLastBook readBookClubLastBook,
+                                         Instant createdTime, ReadBookClubLastBook readBookClubLastBook,
                                          List<ReadBookClubMember> readBookClubMembers,
-                                         LocalDateTime closedTime) {
+                                         Instant closedTime) {
         super(name, status, profileImgUrl, createdTime, readBookClubLastBook, readBookClubMembers);
         this.closedTime = closedTime;
     }
