@@ -2,7 +2,7 @@ package codesquad.bookkbookk.bookclub.integration;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -471,7 +471,7 @@ public class BookClubTest extends IntegrationTest {
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
         CreateGatheringRequest createGatheringRequest =
-                new CreateGatheringRequest(book.getId(), "코드스쿼드", LocalDateTime.of(2023, 10, 20, 12, 30));
+                new CreateGatheringRequest(book.getId(), "코드스쿼드", Instant.parse("2023-12-25T13:30:00Z"));
 
         // when
         ExtractableResponse<Response> response = RestAssured
@@ -504,7 +504,7 @@ public class BookClubTest extends IntegrationTest {
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
         CreateGatheringRequest createGatheringRequest =
-                new CreateGatheringRequest(book.getId(), "코드스쿼드", LocalDateTime.of(2023, 10, 20, 12, 30));
+                new CreateGatheringRequest(book.getId(), "코드스쿼드", Instant.parse("2023-12-25T13:30:00Z"));
         MemberNotInBookClubException exception = new MemberNotInBookClubException();
 
         // when
@@ -540,7 +540,7 @@ public class BookClubTest extends IntegrationTest {
         bookClubMemberRepository.save(new BookClubMember(bookClub, member));
         String accessToken = jwtProvider.createAccessToken(member.getId());
         CreateGatheringRequest createGatheringRequest =
-                new CreateGatheringRequest(1L, "코드스쿼드", LocalDateTime.of(2023, 10, 20, 12, 30));
+                new CreateGatheringRequest(1L, "코드스쿼드", Instant.parse("2023-12-25T13:30:00Z"));
         BookNotFoundException exception = new BookNotFoundException();
 
         // when

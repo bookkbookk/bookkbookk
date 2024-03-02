@@ -1,6 +1,6 @@
 package codesquad.bookkbookk.domain.gathering.data.dto;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,6 +14,6 @@ public class CreateGatheringRequest {
 
     private Long bookId;
     private String place;
-    private LocalDateTime dateTime;
+    private Instant dateTime;
 
 }
