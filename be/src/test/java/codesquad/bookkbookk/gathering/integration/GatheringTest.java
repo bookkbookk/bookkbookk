@@ -64,7 +64,7 @@ public class GatheringTest extends IntegrationTest {
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        Map<String, String> request = Map.of("dateTime", "2023-12-30T01:30");
+        Map<String, String> request = Map.of("dateTime", "2023-12-25T13:30:00Z");
         JSONObject requestBody = new JSONObject(request);
 
         // when

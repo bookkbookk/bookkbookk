@@ -1,6 +1,6 @@
 package codesquad.bookkbookk.util;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -141,17 +141,14 @@ public class TestDataFactory {
     }
 
     public static Gathering createGathering(Book book) {
-        return new Gathering(book, LocalDateTime.of(2023, 12, 25, 13, 30),
-                "place");
+        return new Gathering(book, Instant.parse("2023-12-25T13:30:00Z"), "place");
     }
 
     public static List<Gathering> createGatherings(int count, Book book) {
         return IntStream.range(0, count)
-                .mapToObj(number -> new Gathering(book, LocalDateTime.of(2023, 12, 25, 13, 30),
+                .mapToObj(number -> new Gathering(book, Instant.parse("2023-12-25T13:30:00Z"),
                         "place " + number))
                 .collect(Collectors.toUnmodifiableList());
     }
-
-
 
 }
