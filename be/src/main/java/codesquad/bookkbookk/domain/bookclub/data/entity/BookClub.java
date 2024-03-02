@@ -1,6 +1,6 @@
 package codesquad.bookkbookk.domain.bookclub.data.entity;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,12 +47,14 @@ public class BookClub {
     private String profileImageUrl;
 
     @CreationTimestamp
-    @Column(nullable = false)
-    private LocalDateTime createdTime;
+    @Column(columnDefinition = "TIMESTAMP", nullable = false)
+    private Instant createdTime;
 
-    private LocalDateTime closedTime;
+    @Column(columnDefinition = "TIMESTAMP")
+    private Instant closedTime;
 
-    private LocalDateTime upcomingGatheringTime;
+    @Column(columnDefinition = "TIMESTAMP")
+    private Instant upcomingGatheringTime;
 
     @OneToMany(mappedBy = "bookClub")
     private List<BookClubMember> bookClubMembers = new ArrayList<>();
@@ -67,7 +69,7 @@ public class BookClub {
         this.status = BookClubStatus.OPEN;
     }
 
-    public void updateUpcomingGatheringDate(LocalDateTime gatheringTime) {
+    public void updateUpcomingGatheringDate(Instant gatheringTime) {
         if (upcomingGatheringTime == null || upcomingGatheringTime.isAfter(gatheringTime)) {
             upcomingGatheringTime = gatheringTime;
         }
@@ -75,7 +77,7 @@ public class BookClub {
 
     public void close() {
         this.status = BookClubStatus.CLOSED;
-        this.closedTime = LocalDateTime.now();
+        this.closedTime = Instant.now();
     }
 
 }

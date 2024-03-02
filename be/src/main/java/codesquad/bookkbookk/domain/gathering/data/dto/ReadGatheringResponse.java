@@ -1,6 +1,6 @@
 package codesquad.bookkbookk.domain.gathering.data.dto;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class ReadGatheringResponse {
 
         private final ReadGatheringBook book;
-        private final LocalDateTime dateTime;
+        private final Instant dateTime;
         private final String place;
 
         public static List<ReadGatheringResponse> from(List<Gathering> gatherings) {

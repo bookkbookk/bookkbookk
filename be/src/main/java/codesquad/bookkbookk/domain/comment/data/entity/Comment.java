@@ -1,6 +1,6 @@
 package codesquad.bookkbookk.domain.comment.data.entity;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,10 +43,11 @@ public class Comment {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String contents;
     @CreationTimestamp
-    @Column(nullable = false)
-    private LocalDateTime createdTime;
+    @Column(columnDefinition = "TIMESTAMP", nullable = false)
+    private Instant createdTime;
     @UpdateTimestamp
-    private LocalDateTime updatedTime;
+    @Column(columnDefinition = "TIMESTAMP", nullable = false)
+    private Instant updatedTime;
 
     @OneToMany(mappedBy = "comment")
     List<CommentReaction> commentReactions = new ArrayList<>();

@@ -1,6 +1,6 @@
 package codesquad.bookkbookk.domain.bookclub.data.dto;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,12 +17,12 @@ public class ReadBookClubDetailResponse {
     private final String name;
     private final BookClubStatus status;
     private final String profileImgUrl;
-    private final LocalDateTime createdTime;
+    private final Instant createdTime;
     private final ReadBookClubLastBook lastBook;
     private final List<ReadBookClubMember> members;
 
     public ReadBookClubDetailResponse(String name, BookClubStatus status, String profileImgUrl,
-                                      LocalDateTime createdTime, ReadBookClubLastBook readBookClubLastBook,
+                                      Instant createdTime, ReadBookClubLastBook readBookClubLastBook,
                                       List<ReadBookClubMember> members) {
         this.name = name;
         this.status = status;

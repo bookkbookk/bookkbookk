@@ -1,6 +1,6 @@
 package codesquad.bookkbookk.domain.bookmark.data.entity;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,11 +54,12 @@ public class Bookmark {
     private String contents;
 
     @CreationTimestamp
-    @Column(nullable = false)
-    private LocalDateTime createdTime;
+    @Column(columnDefinition = "TIMESTAMP", nullable = false)
+    private Instant createdTime;
 
     @UpdateTimestamp
-    private LocalDateTime updatedTime;
+    @Column(columnDefinition = "TIMESTAMP", nullable = false)
+    private Instant updatedTime;
 
     @OneToMany(mappedBy = "bookmark")
     private List<BookmarkReaction> bookmarkReactions = new ArrayList<>();
