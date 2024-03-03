@@ -55,8 +55,7 @@ jobs:
 
 
       - name: make appspec.yml
-        run: |
-          rename appspec-prod appspec appspec-prod.yml
+        run: mv ./appspec-prod.yml ./appspec.yml
 
       - name: Make zip file
         run: zip -r bookkbookk-prod.zip ./be/build/libs/*.jar ./appspec.yml ./scripts/* ./fe/dist/*
