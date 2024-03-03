@@ -1,6 +1,6 @@
 package codesquad.bookkbookk.domain.comment.data.dto;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,11 +16,11 @@ public class ReadCommentResponse {
 
     private final Long commentId;
     private final ReadCommentAuthor author;
-    private final LocalDateTime createdTime;
+    private final Instant createdTime;
     private final String content;
 
     @Builder
-    private ReadCommentResponse(Long commentId, ReadCommentAuthor author, LocalDateTime createdTime, String content) {
+    private ReadCommentResponse(Long commentId, ReadCommentAuthor author, Instant createdTime, String content) {
         this.commentId = commentId;
         this.author = author;
         this.createdTime = createdTime;

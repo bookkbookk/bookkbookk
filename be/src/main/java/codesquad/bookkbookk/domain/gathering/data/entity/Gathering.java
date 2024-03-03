@@ -1,6 +1,6 @@
 package codesquad.bookkbookk.domain.gathering.data.entity;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,13 +31,13 @@ public class Gathering {
     @JoinColumn(name = "book_id")
     private Book book;
 
-    @Column(nullable = false)
-    private LocalDateTime startTime;
+    @Column(columnDefinition = "TIMESTAMP", nullable = false)
+    private Instant startTime;
 
     @Column(nullable = false)
     private String place;
 
-    public Gathering(Book book, LocalDateTime startTime, String place) {
+    public Gathering(Book book, Instant startTime, String place) {
         this.book = book;
         this.startTime = startTime;
         this.place = place;

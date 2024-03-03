@@ -52,7 +52,7 @@ public class AuthorizationRepositoryTest extends IntegrationTest {
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
         BookClubMember bookClubMember = new BookClubMember(bookClub, member);
@@ -73,7 +73,7 @@ public class AuthorizationRepositoryTest extends IntegrationTest {
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
         // when
@@ -91,19 +91,19 @@ public class AuthorizationRepositoryTest extends IntegrationTest {
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
         BookClubMember bookClubMember = new BookClubMember(bookClub, member);
         bookClubMemberRepository.save(bookClubMember);
 
-        Book book = TestDataFactory.createBook1(bookClub);
+        Book book = TestDataFactory.createBook(bookClub);
         bookRepository.save(book);
 
-        Chapter chapter = TestDataFactory.createChapter1(book);
+        Chapter chapter = TestDataFactory.createChapter(book);
         chapterRepository.save(chapter);
 
-        Topic topic = TestDataFactory.createTopic1(chapter);
+        Topic topic = TestDataFactory.createTopic(chapter);
         topicRepository.save(topic);
 
         // when
