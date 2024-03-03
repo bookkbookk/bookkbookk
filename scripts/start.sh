@@ -13,6 +13,7 @@ echo "$TIME_NOW > $JAR_FILE 파일 복사" >> $DEPLOY_LOG
 cp $PROJECT_ROOT/be/build/libs/*.jar $JAR_FILE
 
 echo "$TIME_NOW > $JAR_FILE 파일 실행" >> $DEPLOY_LOG
+<<<<<<< HEAD
 nohup java -jar -Dspring.profiles.active=prod -Duser.timezone=Asia/Seoul "$JAR_FILE" > "$APP_LOG" 2> "$ERROR_LOG" &
 
 CURRENT_PID=$(pgrep -f $JAR_FILE)
