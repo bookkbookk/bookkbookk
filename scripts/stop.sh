@@ -5,7 +5,7 @@ JAR_FILE="$PROJECT_ROOT/app.jar"
 
 DEPLOY_LOG="$PROJECT_ROOT/deploy.log"
 
-TIME_NOW=$(date +%c)
+TIME_NOW=$(date -d "+9 hours" "+%c")
 
 CURRENT_PID=$(pgrep -f $JAR_FILE)
 

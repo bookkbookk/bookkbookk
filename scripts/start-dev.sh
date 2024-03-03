@@ -7,7 +7,7 @@ APP_LOG="$PROJECT_ROOT/application.log"
 ERROR_LOG="$PROJECT_ROOT/error.log"
 DEPLOY_LOG="$PROJECT_ROOT/deploy.log"
 
-TIME_NOW=$(date +%c)
+TIME_NOW=$(date -d "+9 hours" "+%c")
 
 echo "$TIME_NOW > $JAR_FILE 파일 복사" >> $DEPLOY_LOG
 cp $PROJECT_ROOT/be/build/libs/*.jar $JAR_FILE

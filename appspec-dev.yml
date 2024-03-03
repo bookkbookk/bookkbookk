@@ -18,6 +18,6 @@ hooks:
       timeout: 60
       runas: ubuntu
   ApplicationStart:
-    - location: scripts/start.sh
+    - location: scripts/start-dev.sh
       timeout: 60
       runas: ubuntu
