@@ -1,0 +1,86 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: Java CI with Gradle & CD with CodeDeploy
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+          token: ${{ secrets.PRIVATE_REPOSITORY_ACCESS }}
+
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Move to be Directory And Grant execute permission for gradlew
+        run: chmod +x ./be/gradlew
+
+      - name: Build with Gradle
+        run: |
+          cd ./be
+          ./gradlew clean build
+
+
+      - name: Install Node.js and Npm
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18.17.1'
+
+      - name: Copy .env
+        run: cp ./secrets/.env ./fe/.env
+
+      - name: Npm Build
+        run: |
+          cd ./fe
+          npm install
+          npm run build
+
+
+      - name: make appspec.yml
+        run: rename appspec-prod appspec appspec-prod.yml
+
+      - name: Make zip file
+        run: zip -r bookkbookk-prod.zip ./be/build/libs/*.jar ./appspec.yml ./scripts/* ./fe/dist/*
+        shell: bash
+
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_PROD_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_PROD_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_PROD_REGION }}
+
+      - name: Upload to S3
+        run: aws s3 cp --region ${{ secrets.AWS_PROD_REGION }} ./bookkbookk-prod.zip s3://bookkbookk-prod-bucket/bookkbookk-prod.zip
+
+
+      - name: Deploy with CodeDeploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_PROD_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_PROD_SECRET_ACCESS_KEY }}
+        run: |
+          aws deploy create-deployment \
+          --application-name bookkbookk-prod \
+          --deployment-group-name bookkbookk-prod \
+          --file-exists-behavior OVERWRITE \
+          --s3-location bucket=bookkbookk-prod-bucket,bundleType=zip,key=bookkbookk-prod.zip \
+          --region ${{ secrets.AWS_PROD_REGION }}
