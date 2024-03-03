@@ -74,7 +74,7 @@ public class BookClubService {
         member.getMemberBookClubs().add(bookClubMember);
 
         InvitationUrlResponse invitationUrlResponse = createInvitationUrl(memberId,
-                new CreateInvitationUrlRequest(bookClubMember.getId()));
+                new CreateInvitationUrlRequest(bookClub.getId()));
 
         return new CreateBookClubResponse(bookClub.getId(), invitationUrlResponse.getInvitationUrl());
     }

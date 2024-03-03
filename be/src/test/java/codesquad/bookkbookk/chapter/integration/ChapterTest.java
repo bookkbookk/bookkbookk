@@ -1,5 +1,6 @@
 package codesquad.bookkbookk.chapter.integration;
 
+import java.util.List;
 import java.util.Map;
 
 import org.assertj.core.api.SoftAssertions;
@@ -62,13 +63,13 @@ public class ChapterTest extends IntegrationTest {
         memberRepository.save(member);
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
         BookClubMember bookClubMember = new BookClubMember(bookClub, member);
         bookClubMemberRepository.save(bookClubMember);
 
-        Book book = TestDataFactory.createBook1(bookClub);
+        Book book = TestDataFactory.createBook(bookClub);
         bookRepository.save(book);
 
         JSONObject requestBody = createRequestBody(book.getId());
@@ -101,16 +102,16 @@ public class ChapterTest extends IntegrationTest {
         memberRepository.save(member);
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
         BookClubMember bookClubMember = new BookClubMember(bookClub, member);
         bookClubMemberRepository.save(bookClubMember);
 
-        Book book = TestDataFactory.createBook1(bookClub);
+        Book book = TestDataFactory.createBook(bookClub);
         bookRepository.save(book);
 
-        Chapter chapter = TestDataFactory.createChapter1(book);
+        Chapter chapter = TestDataFactory.createChapter(book);
         chapterRepository.save(chapter);
 
         JSONObject requestBody = new JSONObject(Map.of("title", "update", "statusId", 2));
@@ -142,16 +143,16 @@ public class ChapterTest extends IntegrationTest {
         memberRepository.save(member);
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
         BookClubMember bookClubMember = new BookClubMember(bookClub, member);
         bookClubMemberRepository.save(bookClubMember);
 
-        Book book = TestDataFactory.createBook1(bookClub);
+        Book book = TestDataFactory.createBook(bookClub);
         bookRepository.save(book);
 
-        Chapter chapter = TestDataFactory.createChapter1(book);
+        Chapter chapter = TestDataFactory.createChapter(book);
         chapterRepository.save(chapter);
 
         //when
@@ -180,22 +181,20 @@ public class ChapterTest extends IntegrationTest {
         memberRepository.save(member);
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        BookClub bookClub = TestDataFactory.createBookClub();
+        BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
         BookClubMember bookClubMember = new BookClubMember(bookClub, member);
         bookClubMemberRepository.save(bookClubMember);
 
-        Book book = TestDataFactory.createBook1(bookClub);
+        Book book = TestDataFactory.createBook(bookClub);
         bookRepository.save(book);
 
-        Chapter chapter = new Chapter(book, "first");
+        Chapter chapter = TestDataFactory.createChapter(book);
         chapterRepository.save(chapter);
 
-        Topic topic1 = new Topic(chapter, "토픽1");
-        Topic topic2 = new Topic(chapter, "토픽2");
-        topicRepository.save(topic1);
-        topicRepository.save(topic2);
+        List<Topic> topics = TestDataFactory.createTopics(2, chapter);
+        topicRepository.saveAll(topics);
 
         //when
         ExtractableResponse<Response> response = RestAssured

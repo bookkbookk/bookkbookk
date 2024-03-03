@@ -1,6 +1,6 @@
 package codesquad.bookkbookk.domain.gathering.data.dto;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import codesquad.bookkbookk.domain.gathering.data.entity.Gathering;
 
@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 public class UpdateGatheringResponse {
 
     private final Long gatheringId;
-    private final LocalDateTime dateTime;
+    private final Instant dateTime;
     private final String place;
 
     public static UpdateGatheringResponse from(Gathering gathering) {
