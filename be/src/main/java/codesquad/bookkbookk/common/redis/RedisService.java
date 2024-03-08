@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class RedisService {
 
     private static final String ACCESS_TOKEN_PREFIX = "access_token_blacklist_";
+    private static final String REFRESH_TOKEN_PREFIX = "refresh_token_";
 
     private final RedisTemplate<String, Object> redisTemplate;
     private final JwtProperties jwtProperties;
@@ -33,4 +34,18 @@ public class RedisService {
         return redisTemplate.hasKey(key);
     }
 
+    public void saveRefreshToken(String refreshToken, Long memberId) {
+        String key = REFRESH_TOKEN_PREFIX + refreshToken;
+
+        redisTemplate.opsForValue().set(key, String.valueOf(memberId), jwtProperties.getRefreshTokenExpiration(),
+                TimeUnit.MILLISECONDS);
+    }
+
+    public Long getMemberIdByRefreshToken(String refreshToken) {
+        String key = REFRESH_TOKEN_PREFIX + refreshToken;
+        Object result = redisTemplate.opsForValue().get(key);
+
+        if (result == null) return null;
+        return Long.valueOf((String) result);
+    }
 }
