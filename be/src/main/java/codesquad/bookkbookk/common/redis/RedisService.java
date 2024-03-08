@@ -2,6 +2,7 @@ package codesquad.bookkbookk.common.redis;
 
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,9 +18,13 @@ public class RedisService {
 
     private static final String ACCESS_TOKEN_PREFIX = "access_token_blacklist_";
     private static final String REFRESH_TOKEN_PREFIX = "refresh_token_";
+    private static final String INVITATION_CODE_PREFIX = "invitation_code_";
 
     private final RedisTemplate<String, Object> redisTemplate;
     private final JwtProperties jwtProperties;
+
+    @Value("${invitation.expiration}")
+    private long invitationCodeExpiration;
 
     public void saveAccessToken(String accessToken) {
         String key = ACCESS_TOKEN_PREFIX + accessToken;
@@ -43,6 +48,21 @@ public class RedisService {
 
     public Long getMemberIdByRefreshToken(String refreshToken) {
         String key = REFRESH_TOKEN_PREFIX + refreshToken;
+        Object result = redisTemplate.opsForValue().get(key);
+
+        if (result == null) return null;
+        return Long.valueOf((String) result);
+    }
+
+    public void saveInvitationCode(String invitationCode, Long bookClubId) {
+        String key = INVITATION_CODE_PREFIX + invitationCode;
+
+        redisTemplate.opsForValue().set(key, String.valueOf(bookClubId), invitationCodeExpiration,
+                TimeUnit.MILLISECONDS);
+    }
+
+    public Long getBookClubIdByInvitationCode(String invitatioCode) {
+        String key = INVITATION_CODE_PREFIX + invitatioCode;
         Object result = redisTemplate.opsForValue().get(key);
 
         if (result == null) return null;
