@@ -61,4 +61,37 @@ public class RedisServiceTest extends IntegrationTest {
         assertThat(redisService.isAccessTokenPresent(accessToken)).isFalse();
     }
 
+    @Test
+    @DisplayName("redis에 refreshToken을 저장한다.")
+    void saveRefreshToken() throws InterruptedException {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+
+        String refreshToken = jwtProvider.createRefreshToken();
+
+        // when
+        redisService.saveRefreshToken(refreshToken, member.getId());
+
+        // then
+        assertThat(redisService.getMemberIdByRefreshToken(refreshToken)).isEqualTo(member.getId());
+    }
+
+    @Test
+    @DisplayName("redis에 저장된 refresh toekn이 만료된 뒤 그 refresh token을 redis에 조회하면 존재하지 않는다.")
+    void expireSavedRefreshToken() throws InterruptedException {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+
+        String refreshToken = jwtProvider.createRefreshToken();
+
+        // when
+        redisService.saveRefreshToken(refreshToken, member.getId());
+        Thread.sleep(jwtProperties.getRefreshTokenExpiration() + 1000);
+
+        // then
+        assertThat(redisService.getMemberIdByRefreshToken(refreshToken)).isNull();
+    }
+
 }
