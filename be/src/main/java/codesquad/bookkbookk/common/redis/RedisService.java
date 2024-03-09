@@ -54,6 +54,12 @@ public class RedisService {
         return Long.valueOf((String) result);
     }
 
+    public void deleteRefreshToken(String refreshToken) {
+        String key = REFRESH_TOKEN_PREFIX + refreshToken;
+
+        redisTemplate.delete(key);
+    }
+
     public void saveInvitationCode(String invitationCode, Long bookClubId) {
         String key = INVITATION_CODE_PREFIX + invitationCode;
 
