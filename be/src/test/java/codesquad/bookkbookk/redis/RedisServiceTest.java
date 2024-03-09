@@ -106,6 +106,23 @@ public class RedisServiceTest extends IntegrationTest {
     }
 
     @Test
+    @DisplayName("redis에 저장된 refresh token을 삭제한다.")
+    void deleteRefreshToken() throws InterruptedException {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+
+        String refreshToken = jwtProvider.createRefreshToken();
+        redisService.saveRefreshToken(refreshToken, member.getId());
+
+        // when
+        redisService.deleteRefreshToken(refreshToken);
+
+        // then
+        assertThat(redisService.getMemberIdByRefreshToken(refreshToken)).isNull();
+    }
+
+    @Test
     @DisplayName("redis에 invitation code를 저장한다.")
     void saveInvitationCode() {
         // given
