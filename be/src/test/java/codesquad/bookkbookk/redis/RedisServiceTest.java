@@ -118,10 +118,10 @@ public class RedisServiceTest extends IntegrationTest {
         String invitationCode = String.valueOf(UUID.randomUUID());
 
         // when
-        redisService.saveRefreshToken(invitationCode, bookClub.getId());
+        redisService.saveInvitationCode(invitationCode, bookClub.getId());
 
         // then
-        assertThat(redisService.getMemberIdByRefreshToken(invitationCode)).isEqualTo(bookClub.getId());
+        assertThat(redisService.getBookClubIdByInvitationCode(invitationCode)).isEqualTo(bookClub.getId());
     }
 
     @Test
@@ -137,7 +137,7 @@ public class RedisServiceTest extends IntegrationTest {
         String invitationCode = String.valueOf(UUID.randomUUID());
 
         // when
-        redisService.saveRefreshToken(invitationCode, bookClub.getId());
+        redisService.saveInvitationCode(invitationCode, bookClub.getId());
         Thread.sleep(invitationCodeExpiration + 1000);
 
         // then
