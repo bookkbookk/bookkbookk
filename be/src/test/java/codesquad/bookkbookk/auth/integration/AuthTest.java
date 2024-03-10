@@ -15,7 +15,6 @@ import codesquad.bookkbookk.common.error.exception.RefreshTokenNotSavedException
 import codesquad.bookkbookk.common.jwt.JwtProperties;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.common.redis.RedisService;
-import codesquad.bookkbookk.domain.auth.repository.MemberRefreshTokenRepository;
 import codesquad.bookkbookk.domain.auth.service.AuthenticationService;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
@@ -31,8 +30,6 @@ public class AuthTest extends IntegrationTest {
     private AuthenticationService authenticationService;
     @Autowired
     private MemberRepository memberRepository;
-    @Autowired
-    private MemberRefreshTokenRepository memberRefreshTokenRepository;
     @Autowired
     private JwtProvider jwtProvider;
     @Autowired
@@ -74,6 +71,39 @@ public class AuthTest extends IntegrationTest {
                     .isNotBlank();
             assertions.assertThat(response.jsonPath().getString("accessToken"))
                     .isNotEqualTo(accessToken);
+        });
+    }
+
+    @Test
+    @DisplayName("refresh token이 redis에 없으면 accessToken 재발급이 실패한다.")
+    void reissueAccessTokenWithExpiredRefreshToken() throws InterruptedException {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+
+        String refreshToken = jwtProvider.createRefreshToken();
+
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
+                .domain("localhost")
+                .path("/")
+                .maxAge(jwtProperties.getRefreshTokenExpiration() / 1000)
+                .build();
+
+        RefreshTokenNotSavedException exception = new RefreshTokenNotSavedException();
+
+        // when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.COOKIE, cookie.toString())
+                .when()
+                .post("/api/auth/reissue")
+                .then().log().all()
+                .extract();
+
+        // then
+        SoftAssertions.assertSoftly(assertions -> {
+            assertions.assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
+            assertions.assertThat(response.jsonPath().getString("message")).isEqualTo(exception.getMessage());
         });
     }
 
