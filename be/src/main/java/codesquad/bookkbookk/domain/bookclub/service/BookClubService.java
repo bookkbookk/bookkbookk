@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import codesquad.bookkbookk.common.error.exception.BookClubNotFoundException;
+import codesquad.bookkbookk.common.error.exception.InvitationCodeNotSavedException;
 import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.common.image.S3ImageUploader;
 import codesquad.bookkbookk.common.redis.RedisService;
@@ -108,6 +109,7 @@ public class BookClubService {
     public JoinBookClubResponse joinBookClub(Long memberId, JoinBookClubRequest joinBookClubRequest) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         Long bookClubId = redisService.getBookClubIdByInvitationCode(joinBookClubRequest.getInvitationCode());
+        if (bookClubId == null) throw new InvitationCodeNotSavedException();
         BookClub bookClub = bookClubRepository.findById(bookClubId).orElseThrow(BookClubNotFoundException::new);
 
         authorizationService.authorizeBookClubJoin(memberId, bookClub.getId());
