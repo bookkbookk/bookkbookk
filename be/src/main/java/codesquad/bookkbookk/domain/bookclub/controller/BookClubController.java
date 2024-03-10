@@ -70,7 +70,8 @@ public class BookClubController {
     @GetMapping("/invitation/{bookClubId}")
     public ResponseEntity<InvitationUrlResponse> readInvitationUrl(@MemberId Long memberId,
                                                                    @PathVariable Long bookClubId) {
-        InvitationUrlResponse response = bookClubService.readInvitationUrl(memberId, bookClubId);
+        InvitationUrlResponse response = bookClubService.createInvitationUrl(memberId,
+                new CreateInvitationUrlRequest(bookClubId));
 
         return ResponseEntity.ok()
                 .body(response);
