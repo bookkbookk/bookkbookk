@@ -2,7 +2,6 @@ package codesquad.bookkbookk.common.resolver;
 
 import java.util.Objects;
 
-import javax.persistence.Access;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.core.MethodParameter;
@@ -25,7 +24,7 @@ public class AccessTokenArgumentResolver implements HandlerMethodArgumentResolve
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(Access.class) && parameter.getParameterType().equals(String.class);
+        return parameter.hasParameterAnnotation(AccessToken.class) && parameter.getParameterType().equals(String.class);
     }
 
     @Override
