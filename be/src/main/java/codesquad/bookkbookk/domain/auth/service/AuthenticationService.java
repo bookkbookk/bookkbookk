@@ -15,6 +15,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import codesquad.bookkbookk.common.error.exception.RefreshTokenNotSavedException;
 import codesquad.bookkbookk.common.jwt.Jwt;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
+import codesquad.bookkbookk.common.redis.RedisService;
 import codesquad.bookkbookk.domain.auth.data.dto.AuthCode;
 import codesquad.bookkbookk.domain.auth.data.dto.LoginRequest;
 import codesquad.bookkbookk.domain.auth.data.dto.LoginResponse;
@@ -32,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
+    private final RedisService redisService;
     private final MemberRepository memberRepository;
     private final MemberRefreshTokenRepository memberRefreshTokenRepository;
     private final OAuthProvider oAuthProvider;
@@ -63,8 +65,9 @@ public class AuthenticationService {
     }
 
     @Transactional
-    public void logout(Long memberId) {
-        memberRefreshTokenRepository.deleteByMemberId(memberId);
+    public void logout(String accessToken, String refreshToken) {
+        redisService.saveAccessToken(accessToken);
+        redisService.deleteRefreshToken(refreshToken);
     }
 
     private Member getLoginMember(LoginRequest loginRequest, boolean doesMemberExist) {
