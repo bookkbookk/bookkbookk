@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import codesquad.bookkbookk.common.filter.CorsFilter;
 import codesquad.bookkbookk.common.filter.JwtFilter;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
+import codesquad.bookkbookk.common.redis.RedisService;
 
 @Configuration
 public class FilterConfig {
@@ -24,10 +25,11 @@ public class FilterConfig {
     }
 
     @Bean
-    public FilterRegistrationBean<JwtFilter> jwtFilter(JwtProvider provider, ObjectMapper objectMapper) {
+    public FilterRegistrationBean<JwtFilter> jwtFilter(RedisService redisService, JwtProvider provider,
+                                                       ObjectMapper objectMapper) {
         FilterRegistrationBean<JwtFilter> filterRegistrationBean = new FilterRegistrationBean<>();
 
-        filterRegistrationBean.setFilter(new JwtFilter(provider, objectMapper));
+        filterRegistrationBean.setFilter(new JwtFilter(redisService, provider, objectMapper));
         filterRegistrationBean.setOrder(2);
         return filterRegistrationBean;
     }
