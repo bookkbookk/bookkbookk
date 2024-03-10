@@ -12,7 +12,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import codesquad.bookkbookk.common.error.exception.RefreshTokenNotSavedException;
 import codesquad.bookkbookk.common.jwt.Jwt;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.common.redis.RedisService;
@@ -57,8 +56,7 @@ public class AuthenticationService {
 
     @Transactional(readOnly = true)
     public ReissueResponse reissueAccessToken(String refreshToken) {
-        Long memberId = memberRefreshTokenRepository.findByRefreshToken(refreshToken)
-                .orElseThrow(RefreshTokenNotSavedException::new).getMemberId();
+        Long memberId = redisService.getMemberIdByRefreshToken(refreshToken);
         String accessToken = jwtProvider.createAccessToken(memberId);
 
         return new ReissueResponse(accessToken);
