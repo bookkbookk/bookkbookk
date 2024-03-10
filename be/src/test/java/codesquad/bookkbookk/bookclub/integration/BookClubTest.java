@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 
 import codesquad.bookkbookk.IntegrationTest;
 import codesquad.bookkbookk.common.error.exception.BookNotFoundException;
+import codesquad.bookkbookk.common.error.exception.InvitationCodeNotSavedException;
 import codesquad.bookkbookk.common.error.exception.MemberJoinedBookClubException;
 import codesquad.bookkbookk.common.error.exception.MemberNotInBookClubException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
@@ -309,6 +310,45 @@ public class BookClubTest extends IntegrationTest {
         //then
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+            softAssertions.assertThat(response.jsonPath().getString("message")).isEqualTo(exception.getMessage());
+        });
+    }
+
+    @DisplayName("멤버가 저장되지 않은 invitation code를 사용하여 book club에 가입하려하면 예외가 발생한다.")
+    @Test
+    void memberJoinBookClubWithUnsavedInvitationCode() {
+        //given
+        List<Member> members = TestDataFactory.createMembers(2);
+        memberRepository.saveAll(members);
+        Member member = members.get(0);
+        Member anotherMember = members.get(1);
+
+        BookClub bookClub = TestDataFactory.createBookClub(member);
+        bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
+
+        String invitationCode = "test";
+
+        String accessToken = jwtProvider.createAccessToken(anotherMember.getId());
+        JSONObject requestBody = new JSONObject(Map.of("invitationCode", invitationCode));
+        InvitationCodeNotSavedException exception = new InvitationCodeNotSavedException();
+
+        //when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .contentType(ContentType.JSON)
+                .body(requestBody.toString())
+                .when()
+                .post("/api/book-clubs/join")
+                .then().log().all()
+                .extract();
+
+        //then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
             softAssertions.assertThat(response.jsonPath().getString("message")).isEqualTo(exception.getMessage());
         });
     }
