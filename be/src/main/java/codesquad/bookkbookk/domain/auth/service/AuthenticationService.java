@@ -21,9 +21,7 @@ import codesquad.bookkbookk.domain.auth.data.dto.LoginRequest;
 import codesquad.bookkbookk.domain.auth.data.dto.LoginResponse;
 import codesquad.bookkbookk.domain.auth.data.dto.OAuthTokenResponse;
 import codesquad.bookkbookk.domain.auth.data.dto.ReissueResponse;
-import codesquad.bookkbookk.domain.auth.data.entity.MemberRefreshToken;
 import codesquad.bookkbookk.domain.auth.data.provider.OAuthProvider;
-import codesquad.bookkbookk.domain.auth.repository.MemberRefreshTokenRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
 
@@ -35,7 +33,6 @@ public class AuthenticationService {
 
     private final RedisService redisService;
     private final MemberRepository memberRepository;
-    private final MemberRefreshTokenRepository memberRefreshTokenRepository;
     private final OAuthProvider oAuthProvider;
     private final JwtProvider jwtProvider;
 
@@ -49,8 +46,8 @@ public class AuthenticationService {
         boolean doesMemberExist = memberRepository.existsByEmail(loginRequest.getEmail());
         Member loginMember = getLoginMember(loginRequest, doesMemberExist);
         Jwt jwt = jwtProvider.createJwt(loginMember.getId());
-        MemberRefreshToken memberRefreshToken = new MemberRefreshToken(loginMember.getId(), jwt.getRefreshToken());
-        memberRefreshTokenRepository.save(memberRefreshToken);
+
+        redisService.saveRefreshToken(jwt.getRefreshToken(), loginMember.getId());
 
         return LoginResponse.of(jwt, doesMemberExist);
     }
