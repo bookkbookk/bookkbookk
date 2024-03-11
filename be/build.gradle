@@ -39,6 +39,7 @@ dependencies {
 	testImplementation 'com.google.guava:guava:32.1.2-jre'
 	testImplementation 'io.rest-assured:rest-assured'
 	runtimeOnly'com.h2database:h2'
+	testImplementation 'org.testcontainers:testcontainers:1.19.7'
 
 	// jwt
 	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.1'
