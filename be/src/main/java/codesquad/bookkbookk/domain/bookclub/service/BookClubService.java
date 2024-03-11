@@ -22,7 +22,6 @@ import codesquad.bookkbookk.domain.bookclub.data.dto.JoinBookClubResponse;
 import codesquad.bookkbookk.domain.bookclub.data.dto.ReadBookClubDetailResponse;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.data.type.BookClubStatus;
-import codesquad.bookkbookk.domain.bookclub.repository.BookClubInvitationCodeRepository;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
 import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
 import codesquad.bookkbookk.domain.mapping.entity.MemberBook;
@@ -48,7 +47,6 @@ public class BookClubService {
     private final S3ImageUploader s3ImageUploader;
     private final BookClubRepository bookClubRepository;
     private final BookClubMemberRepository bookClubMemberRepository;
-    private final BookClubInvitationCodeRepository bookClubInvitationCodeRepository;
     private final MemberRepository memberRepository;
     private final MemberBookRepository memberBookRepository;
 

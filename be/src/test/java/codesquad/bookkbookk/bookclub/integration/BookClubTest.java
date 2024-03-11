@@ -27,8 +27,6 @@ import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateInvitationUrlRequest;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
-import codesquad.bookkbookk.domain.bookclub.data.entity.BookClubInvitationCode;
-import codesquad.bookkbookk.domain.bookclub.repository.BookClubInvitationCodeRepository;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
 import codesquad.bookkbookk.domain.gathering.data.dto.CreateGatheringRequest;
 import codesquad.bookkbookk.domain.gathering.data.entity.Gathering;
@@ -56,8 +54,6 @@ public class BookClubTest extends IntegrationTest {
     private MemberRepository memberRepository;
     @Autowired
     private BookRepository bookRepository;
-    @Autowired
-    private BookClubInvitationCodeRepository bookClubInvitationCodeRepository;
     @Autowired
     private GatheringRepository gatheringRepository;
 
@@ -369,8 +365,7 @@ public class BookClubTest extends IntegrationTest {
         bookRepository.saveAll(books);
 
         String invitationCode = "test";
-        BookClubInvitationCode bookClubInvitationCode = new BookClubInvitationCode(bookClub.getId(), invitationCode);
-        bookClubInvitationCodeRepository.save(bookClubInvitationCode);
+        redisService.saveInvitationCode(invitationCode, bookClub.getId());
 
         String accessToken = jwtProvider.createAccessToken(anotherMember.getId());
         JSONObject requestBody = new JSONObject(Map.of("invitationCode", invitationCode));
