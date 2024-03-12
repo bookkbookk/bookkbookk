@@ -5,19 +5,24 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.Date;
 
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.test.context.ActiveProfiles;
 
+import codesquad.bookkbookk.IntegrationTest;
 import codesquad.bookkbookk.common.error.ErrorResponse;
+import codesquad.bookkbookk.common.error.exception.auth.AccessTokenIsInBlackListException;
 import codesquad.bookkbookk.common.error.exception.auth.MalformedTokenException;
 import codesquad.bookkbookk.common.error.exception.auth.NoAuthorizationHeaderException;
 import codesquad.bookkbookk.common.error.exception.auth.TokenNotIncludedException;
+import codesquad.bookkbookk.common.jwt.JwtProvider;
+import codesquad.bookkbookk.common.redis.RedisService;
+import codesquad.bookkbookk.domain.member.data.entity.Member;
+import codesquad.bookkbookk.domain.member.repository.MemberRepository;
+import codesquad.bookkbookk.util.TestDataFactory;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -26,16 +31,16 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 
 @ActiveProfiles(profiles = "test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class FilterTest {
+class FilterTest extends IntegrationTest {
 
-    @LocalServerPort
-    private int port;
+    @Autowired
+    private RedisService redisService;
 
-    @BeforeEach
-    public void setup() {
-        RestAssured.port = port;
-    }
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private JwtProvider jwtProvider;
 
     @Test
     @DisplayName("access token이 필요한 요청에 토큰을 넣지 않으면 예외가 발생한다.")
@@ -47,9 +52,9 @@ class FilterTest {
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                 .when()
-                    .get("api/members")
+                .get("api/members")
                 .then().log().all()
-                    .extract();
+                .extract();
 
         // then
         SoftAssertions.assertSoftly(assertions -> {
@@ -74,11 +79,11 @@ class FilterTest {
         // when
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .when()
-                    .get("api/members")
+                .get("api/members")
                 .then().log().all()
-                    .extract();
+                .extract();
 
         // then
         SoftAssertions.assertSoftly(assertions -> {
@@ -144,4 +149,34 @@ class FilterTest {
                     .isEqualTo(exception.getMessage());
         });
     }
+
+    @Test
+    @DisplayName("black list에 올라간 access token으로 요청을 보내면 예외가 발생한다.")
+    void requestWithBlackListedAccessToken() throws Exception {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+        redisService.saveAccessToken(accessToken);
+
+        AccessTokenIsInBlackListException exception = new AccessTokenIsInBlackListException();
+
+        // when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .when()
+                .get("api/members")
+                .then().log().all()
+                .extract();
+
+        // then
+        SoftAssertions.assertSoftly(assertions -> {
+            assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
+            assertThat(response.jsonPath().getInt("code")).isEqualTo(exception.getCode());
+            assertThat(response.jsonPath().getString("message")).isEqualTo(exception.getMessage());
+        });
+    }
+
 }

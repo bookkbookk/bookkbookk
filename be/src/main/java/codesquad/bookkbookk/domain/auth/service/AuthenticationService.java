@@ -15,14 +15,13 @@ import org.springframework.web.reactive.function.client.WebClient;
 import codesquad.bookkbookk.common.error.exception.RefreshTokenNotSavedException;
 import codesquad.bookkbookk.common.jwt.Jwt;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
+import codesquad.bookkbookk.common.redis.RedisService;
 import codesquad.bookkbookk.domain.auth.data.dto.AuthCode;
 import codesquad.bookkbookk.domain.auth.data.dto.LoginRequest;
 import codesquad.bookkbookk.domain.auth.data.dto.LoginResponse;
 import codesquad.bookkbookk.domain.auth.data.dto.OAuthTokenResponse;
 import codesquad.bookkbookk.domain.auth.data.dto.ReissueResponse;
-import codesquad.bookkbookk.domain.auth.data.entity.MemberRefreshToken;
 import codesquad.bookkbookk.domain.auth.data.provider.OAuthProvider;
-import codesquad.bookkbookk.domain.auth.repository.MemberRefreshTokenRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
 
@@ -32,8 +31,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
+    private final RedisService redisService;
     private final MemberRepository memberRepository;
-    private final MemberRefreshTokenRepository memberRefreshTokenRepository;
     private final OAuthProvider oAuthProvider;
     private final JwtProvider jwtProvider;
 
@@ -47,24 +46,26 @@ public class AuthenticationService {
         boolean doesMemberExist = memberRepository.existsByEmail(loginRequest.getEmail());
         Member loginMember = getLoginMember(loginRequest, doesMemberExist);
         Jwt jwt = jwtProvider.createJwt(loginMember.getId());
-        MemberRefreshToken memberRefreshToken = new MemberRefreshToken(loginMember.getId(), jwt.getRefreshToken());
-        memberRefreshTokenRepository.save(memberRefreshToken);
+
+        redisService.saveRefreshToken(jwt.getRefreshToken(), loginMember.getId());
 
         return LoginResponse.of(jwt, doesMemberExist);
     }
 
     @Transactional(readOnly = true)
     public ReissueResponse reissueAccessToken(String refreshToken) {
-        Long memberId = memberRefreshTokenRepository.findByRefreshToken(refreshToken)
-                .orElseThrow(RefreshTokenNotSavedException::new).getMemberId();
+        Long memberId = redisService.getMemberIdByRefreshToken(refreshToken);
+        if (memberId == null) throw new RefreshTokenNotSavedException();
+
         String accessToken = jwtProvider.createAccessToken(memberId);
 
         return new ReissueResponse(accessToken);
     }
 
     @Transactional
-    public void logout(Long memberId) {
-        memberRefreshTokenRepository.deleteByMemberId(memberId);
+    public void logout(String accessToken, String refreshToken) {
+        redisService.saveAccessToken(accessToken);
+        redisService.deleteRefreshToken(refreshToken);
     }
 
     private Member getLoginMember(LoginRequest loginRequest, boolean doesMemberExist) {

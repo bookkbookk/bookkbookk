@@ -39,6 +39,7 @@ dependencies {
 	testImplementation 'com.google.guava:guava:32.1.2-jre'
 	testImplementation 'io.rest-assured:rest-assured'
 	runtimeOnly'com.h2database:h2'
+	testImplementation 'org.testcontainers:testcontainers:1.19.7'
 
 	// jwt
 	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.1'
@@ -46,6 +47,8 @@ dependencies {
 	// s3
 	implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.566'
 
+	// redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 tasks.named('test') {

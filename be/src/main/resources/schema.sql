@@ -11,15 +11,6 @@ CREATE TABLE member
     CONSTRAINT ck_member_login_type CHECK (login_type IN ('GOOGLE'))
 );
 
-CREATE TABLE member_refresh_token
-(
-    id            BIGINT       NOT NULL AUTO_INCREMENT,
-    member_id     BIGINT       NOT NULL,
-    refresh_token VARCHAR(255) NOT NULL,
-    CONSTRAINT pk_member_refresh_token PRIMARY KEY (id),
-    CONSTRAINT fk_member_refresh_token_member FOREIGN KEY (member_id) REFERENCES member (id)
-);
-
 CREATE TABLE book_club
 (
     id                      BIGINT        NOT NULL AUTO_INCREMENT,
@@ -34,15 +25,6 @@ CREATE TABLE book_club
     CONSTRAINT fk_book_club_member FOREIGN KEY (creator_id) REFERENCES member (id),
     CONSTRAINT uk_book_club_name UNIQUE KEY (name),
     CONSTRAINT ck_book_club_status CHECK (status IN ('OPEN', 'CLOSED'))
-);
-
-CREATE TABLE book_club_invitation_code
-(
-    id              BIGINT       NOT NULL AUTO_INCREMENT,
-    book_club_id    BIGINT       NOT NULL,
-    invitation_code VARCHAR(255) NOT NULL,
-    CONSTRAINT pk_book_club_invitation_code PRIMARY KEY (id),
-    CONSTRAINT fk_book_club_invitation_code_book_club FOREIGN KEY (book_club_id) REFERENCES book_club (id)
 );
 
 CREATE TABLE book_club_member
