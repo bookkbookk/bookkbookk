@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.bookkbookk.common.jwt.JwtProperties;
-import codesquad.bookkbookk.common.resolver.MemberId;
+import codesquad.bookkbookk.common.resolver.AccessToken;
 import codesquad.bookkbookk.common.resolver.RefreshToken;
 import codesquad.bookkbookk.domain.auth.data.dto.AuthCode;
 import codesquad.bookkbookk.domain.auth.data.dto.LoginResponse;
@@ -56,8 +56,8 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> reissueAccessToken(@MemberId Long memberId) {
-        authenticationService.logout(memberId);
+    public ResponseEntity<Void> logout(@AccessToken String accessToken, @RefreshToken String refreshToken) {
+        authenticationService.logout(accessToken, refreshToken);
 
         ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
                 .httpOnly(true)

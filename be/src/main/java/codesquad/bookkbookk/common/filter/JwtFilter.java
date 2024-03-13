@@ -20,6 +20,7 @@ import org.springframework.util.PatternMatchUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import codesquad.bookkbookk.common.error.ErrorResponse;
+import codesquad.bookkbookk.common.error.exception.auth.AccessTokenIsInBlackListException;
 import codesquad.bookkbookk.common.error.exception.auth.AuthException;
 import codesquad.bookkbookk.common.error.exception.auth.BearerPrefixNotIncludedException;
 import codesquad.bookkbookk.common.error.exception.auth.MalformedTokenException;
@@ -27,6 +28,7 @@ import codesquad.bookkbookk.common.error.exception.auth.NoAuthorizationHeaderExc
 import codesquad.bookkbookk.common.error.exception.auth.TokenExpiredException;
 import codesquad.bookkbookk.common.error.exception.auth.TokenNotIncludedException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
+import codesquad.bookkbookk.common.redis.RedisService;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -40,6 +42,7 @@ public class JwtFilter implements Filter {
 
     private final String[] getUrlWhiteList = new String[]{};
     private final String[] postUrlWhiteList = new String[]{"/api/auth/login*"};
+    private final RedisService redisService;
     private final JwtProvider jwtProvider;
     private final ObjectMapper objectMapper;
 
@@ -78,6 +81,11 @@ public class JwtFilter implements Filter {
         }
 
         String accessToken = authorization.substring("Bearer ".length());
+        if (redisService.isAccessTokenPresent(accessToken)) {
+            writeErrorResponse(new AccessTokenIsInBlackListException(), httpServletResponse);
+            return false;
+        }
+
         try {
             jwtProvider.validateToken(accessToken);
         } catch (IllegalArgumentException e) {

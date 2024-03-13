@@ -12,7 +12,16 @@ services:
       MYSQL_PASSWORD: admin
     volumes:
         - ./my.cnf:/etc/mysql/my.cnf
+    restart: always
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
 
+  redis:
+    hostname: redis
+    container_name: redis
+    image: redis:alpine
+    command: redis-server --port 6379
+    restart: always
+    ports:
+      - 6379:6379

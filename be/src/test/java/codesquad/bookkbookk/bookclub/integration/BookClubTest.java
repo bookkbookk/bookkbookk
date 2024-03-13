@@ -18,15 +18,15 @@ import org.springframework.http.MediaType;
 
 import codesquad.bookkbookk.IntegrationTest;
 import codesquad.bookkbookk.common.error.exception.BookNotFoundException;
+import codesquad.bookkbookk.common.error.exception.InvitationCodeNotSavedException;
 import codesquad.bookkbookk.common.error.exception.MemberJoinedBookClubException;
 import codesquad.bookkbookk.common.error.exception.MemberNotInBookClubException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
+import codesquad.bookkbookk.common.redis.RedisService;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateInvitationUrlRequest;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
-import codesquad.bookkbookk.domain.bookclub.data.entity.BookClubInvitationCode;
-import codesquad.bookkbookk.domain.bookclub.repository.BookClubInvitationCodeRepository;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
 import codesquad.bookkbookk.domain.gathering.data.dto.CreateGatheringRequest;
 import codesquad.bookkbookk.domain.gathering.data.entity.Gathering;
@@ -55,12 +55,13 @@ public class BookClubTest extends IntegrationTest {
     @Autowired
     private BookRepository bookRepository;
     @Autowired
-    private BookClubInvitationCodeRepository bookClubInvitationCodeRepository;
-    @Autowired
     private GatheringRepository gatheringRepository;
 
     @Autowired
     private JwtProvider jwtProvider;
+
+    @Autowired
+    private RedisService redisService;
 
     @Test
     @DisplayName("북클럽을 생성한다.")
@@ -213,10 +214,6 @@ public class BookClubTest extends IntegrationTest {
         BookClubMember bookClubMember = new BookClubMember(bookClub, member);
         bookClubMemberRepository.save(bookClubMember);
 
-        String invitationCode = "test";
-        BookClubInvitationCode bookClubInvitationCode = new BookClubInvitationCode(bookClub.getId(), invitationCode);
-        bookClubInvitationCodeRepository.save(bookClubInvitationCode);
-
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
         //when
@@ -232,7 +229,7 @@ public class BookClubTest extends IntegrationTest {
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             softAssertions.assertThat(response.jsonPath().getString("invitationUrl"))
-                    .isEqualTo("https://bookkbookk.site/join/test");
+                    .startsWith("https://bookkbookk.site/join/");
         });
     }
 
@@ -252,8 +249,7 @@ public class BookClubTest extends IntegrationTest {
         bookClubMemberRepository.save(bookClubMember);
 
         String invitationCode = "test";
-        BookClubInvitationCode bookClubInvitationCode = new BookClubInvitationCode(bookClub.getId(), invitationCode);
-        bookClubInvitationCodeRepository.save(bookClubInvitationCode);
+        redisService.saveInvitationCode(invitationCode, bookClub.getId());
 
         String accessToken = jwtProvider.createAccessToken(anotherMember.getId());
         JSONObject requestBody = new JSONObject(Map.of("invitationCode", invitationCode));
@@ -290,8 +286,7 @@ public class BookClubTest extends IntegrationTest {
         bookClubMemberRepository.save(bookClubMember);
 
         String invitationCode = "test";
-        BookClubInvitationCode bookClubInvitationCode = new BookClubInvitationCode(bookClub.getId(), invitationCode);
-        bookClubInvitationCodeRepository.save(bookClubInvitationCode);
+        redisService.saveInvitationCode(invitationCode, bookClub.getId());
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
         JSONObject requestBody = new JSONObject(Map.of("invitationCode", invitationCode));
@@ -315,6 +310,45 @@ public class BookClubTest extends IntegrationTest {
         });
     }
 
+    @DisplayName("멤버가 저장되지 않은 invitation code를 사용하여 book club에 가입하려하면 예외가 발생한다.")
+    @Test
+    void memberJoinBookClubWithUnsavedInvitationCode() {
+        //given
+        List<Member> members = TestDataFactory.createMembers(2);
+        memberRepository.saveAll(members);
+        Member member = members.get(0);
+        Member anotherMember = members.get(1);
+
+        BookClub bookClub = TestDataFactory.createBookClub(member);
+        bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
+
+        String invitationCode = "test";
+
+        String accessToken = jwtProvider.createAccessToken(anotherMember.getId());
+        JSONObject requestBody = new JSONObject(Map.of("invitationCode", invitationCode));
+        InvitationCodeNotSavedException exception = new InvitationCodeNotSavedException();
+
+        //when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .contentType(ContentType.JSON)
+                .body(requestBody.toString())
+                .when()
+                .post("/api/book-clubs/join")
+                .then().log().all()
+                .extract();
+
+        //then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
+            softAssertions.assertThat(response.jsonPath().getString("message")).isEqualTo(exception.getMessage());
+        });
+    }
+
     @DisplayName("멤버가 북클럽에 참여하면 북클럽의 책이 멤버 책에 추가된다.")
     @Test
     void bookClubBooksAddToJoinedMember() {
@@ -331,8 +365,7 @@ public class BookClubTest extends IntegrationTest {
         bookRepository.saveAll(books);
 
         String invitationCode = "test";
-        BookClubInvitationCode bookClubInvitationCode = new BookClubInvitationCode(bookClub.getId(), invitationCode);
-        bookClubInvitationCodeRepository.save(bookClubInvitationCode);
+        redisService.saveInvitationCode(invitationCode, bookClub.getId());
 
         String accessToken = jwtProvider.createAccessToken(anotherMember.getId());
         JSONObject requestBody = new JSONObject(Map.of("invitationCode", invitationCode));
