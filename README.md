@@ -54,6 +54,8 @@ Deploy:
 
 ### 프로젝트 아키텍처
 
+![bookkbookk architecture](https://github.com/bookkbookk/bookkbookk/assets/115922748/3f3989ed-8634-4fd6-a883-ead2351b8eee)
+
 ### 프로젝트 중 했던 고민들
 
 - Backend
