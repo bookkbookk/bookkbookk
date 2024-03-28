@@ -28,7 +28,7 @@ public class ErrorResponse {
     }
 
     public static ErrorResponse from(AuthException exception) {
-        return new ErrorResponse(exception.getCode(), exception.getStatus(), exception.getMessage());
+        return new ErrorResponse(exception.getTokenError().getCode(), exception.getStatus(), exception.getMessage());
     }
 
 }

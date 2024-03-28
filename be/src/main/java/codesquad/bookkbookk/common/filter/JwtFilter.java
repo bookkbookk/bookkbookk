@@ -30,6 +30,7 @@ import codesquad.bookkbookk.common.error.exception.auth.TokenExpiredException;
 import codesquad.bookkbookk.common.error.exception.auth.TokenNotIncludedException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.common.redis.RedisService;
+import codesquad.bookkbookk.common.type.TokenError;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -92,13 +93,13 @@ public class JwtFilter implements Filter {
         try {
             jwtProvider.validateToken(accessToken);
         } catch (IllegalArgumentException e) {
-            writeErrorResponse(new TokenNotIncludedException(4011), httpServletResponse);
+            writeErrorResponse(new TokenNotIncludedException(TokenError.ACCESS_TOKEN), httpServletResponse);
             return false;
         } catch (MalformedJwtException | SecurityException e) {
-            writeErrorResponse(new MalformedTokenException(4011), httpServletResponse);
+            writeErrorResponse(new MalformedTokenException(TokenError.ACCESS_TOKEN), httpServletResponse);
             return false;
         } catch (ExpiredJwtException e) {
-            writeErrorResponse(new TokenExpiredException(4011), httpServletResponse);
+            writeErrorResponse(new TokenExpiredException(TokenError.ACCESS_TOKEN), httpServletResponse);
             return false;
         }
         return true;
@@ -109,7 +110,7 @@ public class JwtFilter implements Filter {
         String refreshToken = null;
 
         if (cookies == null) {
-            writeErrorResponse(new TokenNotIncludedException(4012), httpServletResponse);
+            writeErrorResponse(new TokenNotIncludedException(TokenError.REFRESH_TOKEN), httpServletResponse);
             return false;
         }
         for (Cookie cookie : cookies) {
@@ -121,13 +122,13 @@ public class JwtFilter implements Filter {
         try {
             jwtProvider.validateToken(refreshToken);
         } catch (IllegalArgumentException e) {
-            writeErrorResponse(new TokenNotIncludedException(4012), httpServletResponse);
+            writeErrorResponse(new TokenNotIncludedException(TokenError.REFRESH_TOKEN), httpServletResponse);
             return false;
         } catch (MalformedJwtException | SecurityException e) {
-            writeErrorResponse(new MalformedTokenException(4012), httpServletResponse);
+            writeErrorResponse(new MalformedTokenException(TokenError.REFRESH_TOKEN), httpServletResponse);
             return false;
         } catch (ExpiredJwtException e) {
-            writeErrorResponse(new TokenExpiredException(4012), httpServletResponse);
+            writeErrorResponse(new TokenExpiredException(TokenError.REFRESH_TOKEN), httpServletResponse);
             return false;
         }
         return true;

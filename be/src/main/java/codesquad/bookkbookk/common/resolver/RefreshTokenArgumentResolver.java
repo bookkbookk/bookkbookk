@@ -13,6 +13,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import codesquad.bookkbookk.common.error.exception.auth.TokenNotIncludedException;
+import codesquad.bookkbookk.common.type.TokenError;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,7 @@ public class RefreshTokenArgumentResolver implements HandlerMethodArgumentResolv
                 return cookie.getValue();
             }
         }
-        throw new TokenNotIncludedException(4012);
+        throw new TokenNotIncludedException(TokenError.REFRESH_TOKEN);
     }
 
 }
