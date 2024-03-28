@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.util.PatternMatchUtils;
 
@@ -29,6 +30,7 @@ import codesquad.bookkbookk.common.error.exception.auth.TokenExpiredException;
 import codesquad.bookkbookk.common.error.exception.auth.TokenNotIncludedException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.common.redis.RedisService;
+import codesquad.bookkbookk.common.type.TokenError;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -39,6 +41,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class JwtFilter implements Filter {
+
+    private static final String BEARER_PREFIX = "Bearer ";
 
     private final String[] getUrlWhiteList = new String[]{};
     private final String[] postUrlWhiteList = new String[]{"/api/auth/login*"};
@@ -69,18 +73,18 @@ public class JwtFilter implements Filter {
 
     private boolean validateAccessToken(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
             throws IOException {
-        String authorization = httpServletRequest.getHeader("Authorization");
+        String authorization = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (authorization == null) {
             writeErrorResponse(new NoAuthorizationHeaderException(), httpServletResponse);
             return false;
         }
-        if (!authorization.startsWith("Bearer ")) {
+        if (!authorization.startsWith(BEARER_PREFIX)) {
             writeErrorResponse(new BearerPrefixNotIncludedException(), httpServletResponse);
             return false;
         }
 
-        String accessToken = authorization.substring("Bearer ".length());
+        String accessToken = authorization.substring(BEARER_PREFIX.length());
         if (redisService.isAccessTokenPresent(accessToken)) {
             writeErrorResponse(new AccessTokenIsInBlackListException(), httpServletResponse);
             return false;
@@ -89,13 +93,13 @@ public class JwtFilter implements Filter {
         try {
             jwtProvider.validateToken(accessToken);
         } catch (IllegalArgumentException e) {
-            writeErrorResponse(new TokenNotIncludedException(4011), httpServletResponse);
+            writeErrorResponse(new TokenNotIncludedException(TokenError.ACCESS_TOKEN), httpServletResponse);
             return false;
         } catch (MalformedJwtException | SecurityException e) {
-            writeErrorResponse(new MalformedTokenException(4011), httpServletResponse);
+            writeErrorResponse(new MalformedTokenException(TokenError.ACCESS_TOKEN), httpServletResponse);
             return false;
         } catch (ExpiredJwtException e) {
-            writeErrorResponse(new TokenExpiredException(4011), httpServletResponse);
+            writeErrorResponse(new TokenExpiredException(TokenError.ACCESS_TOKEN), httpServletResponse);
             return false;
         }
         return true;
@@ -106,7 +110,7 @@ public class JwtFilter implements Filter {
         String refreshToken = null;
 
         if (cookies == null) {
-            writeErrorResponse(new TokenNotIncludedException(4012), httpServletResponse);
+            writeErrorResponse(new TokenNotIncludedException(TokenError.REFRESH_TOKEN), httpServletResponse);
             return false;
         }
         for (Cookie cookie : cookies) {
@@ -118,13 +122,13 @@ public class JwtFilter implements Filter {
         try {
             jwtProvider.validateToken(refreshToken);
         } catch (IllegalArgumentException e) {
-            writeErrorResponse(new TokenNotIncludedException(4012), httpServletResponse);
+            writeErrorResponse(new TokenNotIncludedException(TokenError.REFRESH_TOKEN), httpServletResponse);
             return false;
         } catch (MalformedJwtException | SecurityException e) {
-            writeErrorResponse(new MalformedTokenException(4012), httpServletResponse);
+            writeErrorResponse(new MalformedTokenException(TokenError.REFRESH_TOKEN), httpServletResponse);
             return false;
         } catch (ExpiredJwtException e) {
-            writeErrorResponse(new TokenExpiredException(4012), httpServletResponse);
+            writeErrorResponse(new TokenExpiredException(TokenError.REFRESH_TOKEN), httpServletResponse);
             return false;
         }
         return true;
@@ -132,12 +136,14 @@ public class JwtFilter implements Filter {
 
     private boolean checkGetWhiteList(HttpServletRequest httpServletRequest) {
         String url = httpServletRequest.getRequestURI();
-        return httpServletRequest.getMethod().equals("GET") && PatternMatchUtils.simpleMatch(getUrlWhiteList, url);
+        return httpServletRequest.getMethod().equals(HttpMethod.GET.name()) &&
+                PatternMatchUtils.simpleMatch(getUrlWhiteList, url);
     }
 
     private boolean checkLoginWhiteListLogin(HttpServletRequest httpServletRequest) {
         String url = httpServletRequest.getRequestURI();
-        return httpServletRequest.getMethod().equals("POST") && PatternMatchUtils.simpleMatch(postUrlWhiteList, url);
+        return httpServletRequest.getMethod().equals(HttpMethod.POST.name()) &&
+                PatternMatchUtils.simpleMatch(postUrlWhiteList, url);
     }
 
     private void writeErrorResponse(AuthException exception, HttpServletResponse httpServletResponse)

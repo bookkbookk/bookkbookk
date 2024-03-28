@@ -20,6 +20,7 @@ import codesquad.bookkbookk.common.error.exception.auth.NoAuthorizationHeaderExc
 import codesquad.bookkbookk.common.error.exception.auth.TokenNotIncludedException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
 import codesquad.bookkbookk.common.redis.RedisService;
+import codesquad.bookkbookk.common.type.TokenError;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
 import codesquad.bookkbookk.util.TestDataFactory;
@@ -59,7 +60,7 @@ class FilterTest extends IntegrationTest {
         // then
         SoftAssertions.assertSoftly(assertions -> {
             assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
-            assertThat(response.jsonPath().getInt("code")).isEqualTo(exception.getCode());
+            assertThat(response.jsonPath().getInt("code")).isEqualTo(exception.getTokenError().getCode());
             assertThat(response.jsonPath().getObject("", ErrorResponse.class).getMessage())
                     .isEqualTo(exception.getMessage());
         });
@@ -70,7 +71,7 @@ class FilterTest extends IntegrationTest {
     @DisplayName("변형된 access token이 요청에 포함되면 에외가 한다.")
     void requestWithMalformedAccessToken() throws Exception {
         // given
-        MalformedTokenException exception = new MalformedTokenException(4011);
+        MalformedTokenException exception = new MalformedTokenException(TokenError.ACCESS_TOKEN);
         String accessToken = Jwts.builder()
                 .expiration(new Date(System.currentTimeMillis() + 30000))
                 .signWith(Keys.hmacShaKeyFor("thisiskeyfortestbookkbookk1234512356!!".getBytes()))
@@ -88,7 +89,7 @@ class FilterTest extends IntegrationTest {
         // then
         SoftAssertions.assertSoftly(assertions -> {
             assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
-            assertThat(response.jsonPath().getInt("code")).isEqualTo(exception.getCode());
+            assertThat(response.jsonPath().getInt("code")).isEqualTo(exception.getTokenError().getCode());
             assertThat(response.jsonPath().getObject("", ErrorResponse.class).getMessage())
                     .isEqualTo(exception.getMessage());
         });
@@ -98,7 +99,7 @@ class FilterTest extends IntegrationTest {
     @DisplayName("refresh token이 필요한 요청에 토큰을 넣지 않으면 예외가 발생한다.")
     void requestWithMalformedToken() throws Exception {
         // given
-        TokenNotIncludedException exception = new TokenNotIncludedException(4012);
+        TokenNotIncludedException exception = new TokenNotIncludedException(TokenError.REFRESH_TOKEN);
 
         // when
         ExtractableResponse<Response> response = RestAssured
@@ -111,7 +112,7 @@ class FilterTest extends IntegrationTest {
         // then
         SoftAssertions.assertSoftly(assertions -> {
             assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
-            assertThat(response.jsonPath().getInt("code")).isEqualTo(exception.getCode());
+            assertThat(response.jsonPath().getInt("code")).isEqualTo(exception.getTokenError().getCode());
             assertThat(response.jsonPath().getObject("", ErrorResponse.class).getMessage())
                     .isEqualTo(exception.getMessage());
         });
@@ -121,7 +122,7 @@ class FilterTest extends IntegrationTest {
     @DisplayName("변형된 refresh token이 요청에 포함되면 에외가 한다.")
     void requestWithMalformedRefreshToken() throws Exception {
         // given
-        MalformedTokenException exception = new MalformedTokenException(4012);
+        MalformedTokenException exception = new MalformedTokenException(TokenError.REFRESH_TOKEN);
         String token = Jwts.builder()
                 .signWith(Keys.hmacShaKeyFor("thisiskeyfortestbookkbookk1234512356!!".getBytes()))
                 .compact();
@@ -144,7 +145,7 @@ class FilterTest extends IntegrationTest {
         // then
         SoftAssertions.assertSoftly(assertions -> {
             assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
-            assertThat(response.jsonPath().getInt("code")).isEqualTo(exception.getCode());
+            assertThat(response.jsonPath().getInt("code")).isEqualTo(exception.getTokenError().getCode());
             assertThat(response.jsonPath().getObject("", ErrorResponse.class).getMessage())
                     .isEqualTo(exception.getMessage());
         });
@@ -174,7 +175,7 @@ class FilterTest extends IntegrationTest {
         // then
         SoftAssertions.assertSoftly(assertions -> {
             assertThat(response.statusCode()).isEqualTo(exception.getStatus().value());
-            assertThat(response.jsonPath().getInt("code")).isEqualTo(exception.getCode());
+            assertThat(response.jsonPath().getInt("code")).isEqualTo(exception.getTokenError().getCode());
             assertThat(response.jsonPath().getString("message")).isEqualTo(exception.getMessage());
         });
     }
