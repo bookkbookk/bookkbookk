@@ -55,8 +55,8 @@ public class AuthenticationService {
     }
 
     @Transactional(readOnly = true)
-    public ReissueResponse reissueAccessToken(String refreshToken) {
-        Long memberId = redisService.getMemberIdByRefreshToken(refreshToken);
+    public ReissueResponse reissueAccessToken(String uuid) {
+        Long memberId = redisService.getMemberIdByUuid(uuid);
         if (memberId == null) throw new RefreshTokenNotSavedException();
 
         String accessToken = jwtProvider.createAccessToken(memberId);

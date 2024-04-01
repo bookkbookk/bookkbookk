@@ -46,8 +46,8 @@ public class RedisService {
                 TimeUnit.MILLISECONDS);
     }
 
-    public Long getMemberIdByRefreshToken(String refreshToken) {
-        String key = REFRESH_TOKEN_PREFIX + refreshToken;
+    public Long getMemberIdByUuid(String uuid) {
+        String key = REFRESH_TOKEN_PREFIX + uuid;
         Object result = redisTemplate.opsForValue().get(key);
 
         if (result == null) return null;

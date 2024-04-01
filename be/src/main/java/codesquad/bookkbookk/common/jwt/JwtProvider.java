@@ -63,6 +63,15 @@ public class JwtProvider {
                 .get("memberId", Long.class);
     }
 
+    public String extractUuid(String refreshToken) {
+        return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(refreshToken)
+                .getPayload()
+                .get("uuid", String.class);
+    }
+
     public void validateToken(String token) {
         Jwts.parser()
                 .verifyWith(key)
