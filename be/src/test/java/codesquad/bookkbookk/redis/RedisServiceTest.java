@@ -82,10 +82,10 @@ public class RedisServiceTest extends IntegrationTest {
         String refreshToken = jwtProvider.createRefreshToken("uuid");
 
         // when
-        redisService.saveRefreshToken(refreshToken, member.getId());
+        redisService.saveRefreshTokenUuid(refreshToken, member.getId());
 
         // then
-        assertThat(redisService.getMemberIdByRefreshToken(refreshToken)).isEqualTo(member.getId());
+        assertThat(redisService.getMemberIdByUuid(refreshToken)).isEqualTo(member.getId());
     }
 
     @Test
@@ -98,11 +98,11 @@ public class RedisServiceTest extends IntegrationTest {
         String refreshToken = jwtProvider.createRefreshToken("uuid");
 
         // when
-        redisService.saveRefreshToken(refreshToken, member.getId());
+        redisService.saveRefreshTokenUuid(refreshToken, member.getId());
         Thread.sleep(jwtProperties.getRefreshTokenExpiration() + 1000);
 
         // then
-        assertThat(redisService.getMemberIdByRefreshToken(refreshToken)).isNull();
+        assertThat(redisService.getMemberIdByUuid(refreshToken)).isNull();
     }
 
     @Test
@@ -113,13 +113,13 @@ public class RedisServiceTest extends IntegrationTest {
         memberRepository.save(member);
 
         String refreshToken = jwtProvider.createRefreshToken("uuid");
-        redisService.saveRefreshToken(refreshToken, member.getId());
+        redisService.saveRefreshTokenUuid(refreshToken, member.getId());
 
         // when
         redisService.deleteRefreshToken(refreshToken);
 
         // then
-        assertThat(redisService.getMemberIdByRefreshToken(refreshToken)).isNull();
+        assertThat(redisService.getMemberIdByUuid(refreshToken)).isNull();
     }
 
     @Test
