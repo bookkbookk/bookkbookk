@@ -1,6 +1,5 @@
 package codesquad.bookkbookk.common.jwt;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
@@ -28,10 +27,10 @@ public class JwtProvider {
         this.key = Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes());
     }
 
-    public Jwt createJwt(Long memberId) {
+    public Jwt createJwt(Long memberId, String uuid) {
         return Jwt.builder()
                 .accessToken(createAccessToken(memberId))
-                .refreshToken(createRefreshToken())
+                .refreshToken(createRefreshToken(uuid))
                 .build();
     }
 
@@ -42,9 +41,9 @@ public class JwtProvider {
         return createToken(claims, expiration);
     }
 
-    public String createRefreshToken() {
+    public String createRefreshToken(String uuid) {
         Date expiration = new Date(System.currentTimeMillis() + jwtProperties.getRefreshTokenExpiration());
-        Map<String, Object> claims = Collections.emptyMap();
+        Map<String, Object> claims = Map.of("uuid", uuid);
 
         return createToken(claims, expiration);
     }
@@ -62,6 +61,15 @@ public class JwtProvider {
                 .parseSignedClaims(accessToken)
                 .getPayload()
                 .get("memberId", Long.class);
+    }
+
+    public String extractUuid(String refreshToken) {
+        return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(refreshToken)
+                .getPayload()
+                .get("uuid", String.class);
     }
 
     public void validateToken(String token) {
