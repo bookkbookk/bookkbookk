@@ -46,10 +46,10 @@ public class AuthenticationService {
 
         boolean doesMemberExist = memberRepository.existsByEmail(loginRequest.getEmail());
         Member loginMember = getLoginMember(loginRequest, doesMemberExist);
-        UUID refreshTokenUuid = UUID.randomUUID();
-        Jwt jwt = jwtProvider.createJwt(loginMember.getId(), refreshTokenUuid.toString());
+        String refreshTokenUuid = UUID.randomUUID().toString();
+        Jwt jwt = jwtProvider.createJwt(loginMember.getId(), refreshTokenUuid);
 
-        redisService.saveRefreshToken(jwt.getRefreshToken(), loginMember.getId());
+        redisService.saveRefreshTokenUuid(refreshTokenUuid, loginMember.getId());
 
         return LoginResponse.of(jwt, doesMemberExist);
     }

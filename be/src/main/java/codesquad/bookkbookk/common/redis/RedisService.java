@@ -39,8 +39,8 @@ public class RedisService {
         return redisTemplate.hasKey(key);
     }
 
-    public void saveRefreshToken(String refreshToken, Long memberId) {
-        String key = REFRESH_TOKEN_PREFIX + refreshToken;
+    public void saveRefreshTokenUuid(String refreshTokenUuid, Long memberId) {
+        String key = REFRESH_TOKEN_PREFIX + refreshTokenUuid;
 
         redisTemplate.opsForValue().set(key, String.valueOf(memberId), jwtProperties.getRefreshTokenExpiration(),
                 TimeUnit.MILLISECONDS);
