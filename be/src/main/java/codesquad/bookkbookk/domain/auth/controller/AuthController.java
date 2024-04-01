@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.bookkbookk.common.jwt.JwtProperties;
 import codesquad.bookkbookk.common.resolver.AccessToken;
-import codesquad.bookkbookk.common.resolver.RefreshToken;
+import codesquad.bookkbookk.common.resolver.RefreshTokenUuid;
 import codesquad.bookkbookk.domain.auth.data.dto.AuthCode;
 import codesquad.bookkbookk.domain.auth.data.dto.LoginResponse;
 import codesquad.bookkbookk.domain.auth.data.dto.ReissueResponse;
@@ -48,15 +48,15 @@ public class AuthController {
     }
 
     @PostMapping("/reissue")
-    public ResponseEntity<ReissueResponse> reissueAccessToken(@RefreshToken String refreshToken) {
-        ReissueResponse response = authenticationService.reissueAccessToken(refreshToken);
+    public ResponseEntity<ReissueResponse> reissueAccessToken(@RefreshTokenUuid String uuid) {
+        ReissueResponse response = authenticationService.reissueAccessToken(uuid);
 
         return ResponseEntity.ok()
                 .body(response);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(@AccessToken String accessToken, @RefreshToken String refreshToken) {
+    public ResponseEntity<Void> logout(@AccessToken String accessToken, @RefreshTokenUuid String refreshToken) {
         authenticationService.logout(accessToken, refreshToken);
 
         ResponseCookie cookie = ResponseCookie.from("refreshToken", "")

@@ -2,6 +2,8 @@ package codesquad.bookkbookk.auth.integration;
 
 import static java.lang.Thread.*;
 
+import java.util.UUID;
+
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,9 +46,10 @@ public class AuthTest extends IntegrationTest {
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
 
+        String uuid = UUID.randomUUID().toString();
         String accessToken = jwtProvider.createAccessToken(member.getId());
-        String refreshToken = jwtProvider.createRefreshToken();
-        redisService.saveRefreshToken(refreshToken, member.getId());
+        String refreshToken = jwtProvider.createRefreshToken(uuid);
+        redisService.saveRefreshTokenUuid(uuid, member.getId());
 
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                 .domain("localhost")
@@ -81,7 +84,7 @@ public class AuthTest extends IntegrationTest {
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
 
-        String refreshToken = jwtProvider.createRefreshToken();
+        String refreshToken = jwtProvider.createRefreshToken("uuid");
 
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                 .domain("localhost")
@@ -115,8 +118,9 @@ public class AuthTest extends IntegrationTest {
         memberRepository.save(member);
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        String refreshToken = jwtProvider.createRefreshToken();
-        redisService.saveRefreshToken(refreshToken, member.getId());
+        String uuid = UUID.randomUUID().toString();
+        String refreshToken = jwtProvider.createRefreshToken(uuid);
+        redisService.saveRefreshTokenUuid(uuid, member.getId());
 
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                 .domain("localhost")
@@ -137,9 +141,9 @@ public class AuthTest extends IntegrationTest {
         // then
         SoftAssertions.assertSoftly(assertions -> {
             assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            assertions.assertThatThrownBy(() -> authenticationService.reissueAccessToken(refreshToken))
+            assertions.assertThatThrownBy(() -> authenticationService.reissueAccessToken(uuid))
                     .isInstanceOf(RefreshTokenNotSavedException.class);
-            assertions.assertThat(redisService.getMemberIdByRefreshToken(refreshToken)).isNull();
+            assertions.assertThat(redisService.getMemberIdByUuid(uuid)).isNull();
             assertions.assertThat(redisService.isAccessTokenPresent(accessToken)).isTrue();
         });
     }
