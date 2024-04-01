@@ -79,7 +79,7 @@ public class RedisServiceTest extends IntegrationTest {
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
 
-        String refreshToken = jwtProvider.createRefreshToken();
+        String refreshToken = jwtProvider.createRefreshToken("uuid");
 
         // when
         redisService.saveRefreshToken(refreshToken, member.getId());
@@ -95,7 +95,7 @@ public class RedisServiceTest extends IntegrationTest {
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
 
-        String refreshToken = jwtProvider.createRefreshToken();
+        String refreshToken = jwtProvider.createRefreshToken("uuid");
 
         // when
         redisService.saveRefreshToken(refreshToken, member.getId());
@@ -112,7 +112,7 @@ public class RedisServiceTest extends IntegrationTest {
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
 
-        String refreshToken = jwtProvider.createRefreshToken();
+        String refreshToken = jwtProvider.createRefreshToken("uuid");
         redisService.saveRefreshToken(refreshToken, member.getId());
 
         // when

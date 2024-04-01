@@ -3,6 +3,7 @@ package codesquad.bookkbookk.domain.auth.service;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
@@ -45,7 +46,8 @@ public class AuthenticationService {
 
         boolean doesMemberExist = memberRepository.existsByEmail(loginRequest.getEmail());
         Member loginMember = getLoginMember(loginRequest, doesMemberExist);
-        Jwt jwt = jwtProvider.createJwt(loginMember.getId());
+        UUID refreshTokenUuid = UUID.randomUUID();
+        Jwt jwt = jwtProvider.createJwt(loginMember.getId(), refreshTokenUuid.toString());
 
         redisService.saveRefreshToken(jwt.getRefreshToken(), loginMember.getId());
 

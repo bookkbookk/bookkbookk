@@ -45,7 +45,7 @@ public class AuthTest extends IntegrationTest {
         memberRepository.save(member);
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
-        String refreshToken = jwtProvider.createRefreshToken();
+        String refreshToken = jwtProvider.createRefreshToken("uuid");
         redisService.saveRefreshToken(refreshToken, member.getId());
 
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
@@ -81,7 +81,7 @@ public class AuthTest extends IntegrationTest {
         Member member = TestDataFactory.createMember();
         memberRepository.save(member);
 
-        String refreshToken = jwtProvider.createRefreshToken();
+        String refreshToken = jwtProvider.createRefreshToken("uuid");
 
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                 .domain("localhost")
@@ -115,7 +115,7 @@ public class AuthTest extends IntegrationTest {
         memberRepository.save(member);
         String accessToken = jwtProvider.createAccessToken(member.getId());
 
-        String refreshToken = jwtProvider.createRefreshToken();
+        String refreshToken = jwtProvider.createRefreshToken("uuid");
         redisService.saveRefreshToken(refreshToken, member.getId());
 
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
