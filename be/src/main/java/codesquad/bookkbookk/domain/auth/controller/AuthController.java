@@ -1,6 +1,5 @@
 package codesquad.bookkbookk.domain.auth.controller;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +15,7 @@ import codesquad.bookkbookk.common.resolver.RefreshTokenUuid;
 import codesquad.bookkbookk.domain.auth.data.dto.AuthCode;
 import codesquad.bookkbookk.domain.auth.data.dto.LoginResponse;
 import codesquad.bookkbookk.domain.auth.data.dto.ReissueResponse;
+import codesquad.bookkbookk.domain.auth.data.property.CookieProperty;
 import codesquad.bookkbookk.domain.auth.service.AuthenticationService;
 
 import lombok.RequiredArgsConstructor;
@@ -25,20 +25,18 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-
     private final AuthenticationService authenticationService;
     private final JwtProperties jwtProperties;
-
-    @Value("${cookie.domain}")
-    private String cookieDomain;
+    private final CookieProperty cookieProperty;
 
     @PostMapping("/login/{providerName}")
     public ResponseEntity<LoginResponse> login(@RequestBody AuthCode authCode, @PathVariable String providerName) {
         LoginResponse loginResponse = authenticationService.login(authCode, providerName);
         ResponseCookie refreshToken = ResponseCookie.from("refreshToken", loginResponse.getRefreshToken())
                 .httpOnly(true)
+                .secure(cookieProperty.isSecure())
                 .maxAge(jwtProperties.getRefreshTokenExpiration() / 1000)
-                .domain(cookieDomain)
+                .domain(cookieProperty.getDomain())
                 .path("/api")
                 .build();
 
@@ -61,8 +59,9 @@ public class AuthController {
 
         ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
                 .httpOnly(true)
+                .secure(cookieProperty.isSecure())
                 .maxAge(0)
-                .domain(cookieDomain)
+                .domain(cookieProperty.getDomain())
                 .path("/api")
                 .build();
 
