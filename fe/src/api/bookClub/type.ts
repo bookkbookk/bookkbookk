@@ -13,7 +13,7 @@ export type BookClubProfile = {
 };
 
 export type BookClubStatus = {
-  status: "open" | "closed";
+  status: "OPEN" | "CLOSED";
 };
 
 export type NewBookClubInfo = {
@@ -39,11 +39,11 @@ export type BookClubDetail = {
 };
 
 export type ClosedBookClubDetail = BookClubDetail & {
-  status: "closed";
+  status: "CLOSED";
   closedTime: string;
 };
 
 export type OpenBookClubDetail = BookClubDetail & {
-  status: "open";
+  status: "OPEN";
   upcomingGatheringDate: string;
 };
