@@ -16,7 +16,7 @@ export default function BookClubInfo({
 }: {
   bookClubDetail: OpenBookClubDetail | ClosedBookClubDetail;
 }) {
-  const isOpenBookClub = bookClubDetail.status === "open";
+  const isOpenBookClub = bookClubDetail.status === "OPEN";
   const createdTime = formatDate(bookClubDetail.createdTime);
   const closedTime = !isOpenBookClub && formatDate(bookClubDetail.closedTime);
   const subheaderText = `${createdTime} ~ ${closedTime || "진행중"}`;
