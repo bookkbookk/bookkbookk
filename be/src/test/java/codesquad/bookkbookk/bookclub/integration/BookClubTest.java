@@ -743,7 +743,64 @@ public class BookClubTest extends IntegrationTest {
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-                .queryParam("status", "all")
+                .queryParam("status", "ALL")
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/book-clubs")
+                .then().log().all()
+                .extract();
+
+        //then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(response.jsonPath().getList("$").size()).isEqualTo(5);
+            softAssertions.assertThat(response.jsonPath().getMap("[0].lastBook")).isNotNull();
+            softAssertions.assertThat(response.jsonPath().getList("[2].members").size()).isEqualTo(2);
+            softAssertions.assertThat(response.jsonPath().getString("[0].upcomingGatheringDate")).isNotNull();
+            softAssertions.assertThat(response.jsonPath().getString("[4].closedTime")).isNotNull();
+        });
+    }
+
+    @DisplayName("멤버의 모든 북클럽들의 정보를 가져올 때 Requst Param으로 Status를 입력하지 않으면 모든 BookClub에 대한 정보를 가져온다.")
+    @Test
+    void readMemberBookClubsWithoutStatus() {
+        //given
+        List<Member> members = TestDataFactory.createMembers(2);
+        memberRepository.saveAll(members);
+        Member member = members.get(0);
+        Member anotherMember = members.get(1);
+
+        List<BookClub> bookClubs = TestDataFactory.createBookClubs(5, member);
+        bookClubs.get(1).close();
+        bookClubs.get(4).close();
+        bookClubRepository.saveAll(bookClubs);
+
+        List<BookClubMember> bookClubMembers = List.of(new BookClubMember(bookClubs.get(0), member),
+                new BookClubMember(bookClubs.get(1), member),
+                new BookClubMember(bookClubs.get(2), member),
+                new BookClubMember(bookClubs.get(2), anotherMember),
+                new BookClubMember(bookClubs.get(3), member),
+                new BookClubMember(bookClubs.get(3), anotherMember),
+                new BookClubMember(bookClubs.get(4), member));
+        bookClubMemberRepository.saveAll(bookClubMembers);
+
+        Book book1 = TestDataFactory.createBook(1, bookClubs.get(0));
+        bookRepository.save(book1);
+        Book book2 = TestDataFactory.createBook(2, bookClubs.get(1));
+        bookRepository.save(book2);
+
+        Gathering gathering = TestDataFactory.createGathering(book1);
+        gatheringRepository.save(gathering);
+
+        bookClubs.get(0).updateUpcomingGatheringDate(gathering.getStartTime());
+        bookClubRepository.save(bookClubs.get(0));
+
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        //when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .contentType(ContentType.JSON)
                 .when()
                 .get("/api/book-clubs")
