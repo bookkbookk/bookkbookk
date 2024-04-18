@@ -51,7 +51,7 @@ public class BookClubController {
 
     @GetMapping
     public ResponseEntity<List<ReadBookClubDetailResponse>> readBookClubs(@MemberId Long memberId,
-                                                                          @RequestParam String status) {
+            @RequestParam(defaultValue = "ALL") String status) {
         List<ReadBookClubDetailResponse> response = bookClubService.readBookClubs(memberId, status);
 
         return ResponseEntity.ok()
