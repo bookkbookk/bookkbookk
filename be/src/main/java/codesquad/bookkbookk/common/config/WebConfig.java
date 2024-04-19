@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import codesquad.bookkbookk.common.resolver.AccessTokenArgumentResolver;
 import codesquad.bookkbookk.common.resolver.JwtArgumentResolver;
-import codesquad.bookkbookk.common.resolver.RefreshTokenArgumentResolver;
+import codesquad.bookkbookk.common.resolver.RefreshTokenUuidArgumentResolver;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -17,14 +17,14 @@ public class WebConfig implements WebMvcConfigurer {
     @Autowired
     private JwtArgumentResolver jwtArgumentResolver;
     @Autowired
-    private RefreshTokenArgumentResolver refreshTokenArgumentResolver;
+    private RefreshTokenUuidArgumentResolver refreshTokenUuidArgumentResolver;
     @Autowired
     private AccessTokenArgumentResolver accessTokenArgumentResolver;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(jwtArgumentResolver);
-        resolvers.add(refreshTokenArgumentResolver);
+        resolvers.add(refreshTokenUuidArgumentResolver);
         resolvers.add(accessTokenArgumentResolver);
     }
 

@@ -13,17 +13,21 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import codesquad.bookkbookk.common.error.exception.auth.TokenNotIncludedException;
+import codesquad.bookkbookk.common.jwt.JwtProvider;
+import codesquad.bookkbookk.common.type.TokenError;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Component
-public class RefreshTokenArgumentResolver implements HandlerMethodArgumentResolver {
+public class RefreshTokenUuidArgumentResolver implements HandlerMethodArgumentResolver {
+
+    private final JwtProvider jwtProvider;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(RefreshToken.class) && parameter.getParameterType().equals(String.class);
+        return parameter.hasParameterAnnotation(RefreshTokenUuid.class) && parameter.getParameterType().equals(String.class);
     }
 
     @Override
@@ -33,10 +37,10 @@ public class RefreshTokenArgumentResolver implements HandlerMethodArgumentResolv
 
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals("refreshToken")) {
-                return cookie.getValue();
+                return jwtProvider.extractUuid(cookie.getValue());
             }
         }
-        throw new TokenNotIncludedException(4012);
+        throw new TokenNotIncludedException(TokenError.REFRESH_TOKEN);
     }
 
 }
