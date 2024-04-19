@@ -39,7 +39,7 @@ public class BookClubService {
     private static final String DEFAULT_BOOK_CLUB_IMAGE_URL =
             "https://i.namu.wiki/i/ZnPxYijjK2AlXyf1dPZv0fqVvg3kdxahVkONYTCR-jplhh48smoq4UCfSAZIz6_R0lxoBz"
                     + "JuQiIL6kfwtv0taBXNa_-nOxJKx2BX-z3GxPj6vqoc14GZ7nrT_jDXlrOV1xNL9RVYBTN_brsnBuCwOA.webp";
-    private static final String STATUS_ALL = "all";
+    private static final String STATUS_ALL = "ALL";
 
     private final AuthorizationService authorizationService;
     private final RedisService redisService;
