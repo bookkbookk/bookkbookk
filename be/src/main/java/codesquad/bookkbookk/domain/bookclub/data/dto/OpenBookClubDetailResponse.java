@@ -19,11 +19,11 @@ public class OpenBookClubDetailResponse extends ReadBookClubDetailResponse{
     private final Instant upcomingGatheringDate;
 
     @Builder
-    private OpenBookClubDetailResponse(String name, BookClubStatus status, String profileImgUrl,
+    private OpenBookClubDetailResponse(Long id, String name, BookClubStatus status, String profileImgUrl,
                                        Instant createdTime, ReadBookClubDetailResponse.ReadBookClubLastBook readBookClubLastBook,
                                        List<ReadBookClubDetailResponse.ReadBookClubMember> readBookClubMembers,
                                        Instant upcomingGatheringDate) {
-        super(name, status, profileImgUrl, createdTime, readBookClubLastBook, readBookClubMembers);
+        super(id, name, status, profileImgUrl, createdTime, readBookClubLastBook, readBookClubMembers);
         this.upcomingGatheringDate = upcomingGatheringDate;
     }
 
@@ -35,6 +35,7 @@ public class OpenBookClubDetailResponse extends ReadBookClubDetailResponse{
         List<Member> members = BookClubMember.toMembers(bookClub.getBookClubMembers());
 
         return OpenBookClubDetailResponse.builder()
+                .id(bookClub.getId())
                 .name(bookClub.getName())
                 .status(bookClub.getStatus())
                 .profileImgUrl(bookClub.getProfileImageUrl())
