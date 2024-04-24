@@ -14,6 +14,7 @@ import lombok.Getter;
 @Getter
 public class ReadBookClubDetailResponse {
 
+    private final Long id;
     private final String name;
     private final BookClubStatus status;
     private final String profileImgUrl;
@@ -21,9 +22,10 @@ public class ReadBookClubDetailResponse {
     private final ReadBookClubLastBook lastBook;
     private final List<ReadBookClubMember> members;
 
-    public ReadBookClubDetailResponse(String name, BookClubStatus status, String profileImgUrl,
+    public ReadBookClubDetailResponse(Long id, String name, BookClubStatus status, String profileImgUrl,
                                       Instant createdTime, ReadBookClubLastBook readBookClubLastBook,
                                       List<ReadBookClubMember> members) {
+        this.id = id;
         this.name = name;
         this.status = status;
         this.profileImgUrl = profileImgUrl;
