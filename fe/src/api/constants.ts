@@ -30,6 +30,7 @@ export const BOOK_CLUB_API_PATH = {
   bookClubs: "/api/book-clubs",
   join: "/api/book-clubs/join",
   books: (bookClubId: number) => `/api/book-clubs/${bookClubId}/books`,
+  gatherings: (bookClubId: number) => `/api/book-clubs/${bookClubId}/gatherings`
 };
 
 export const MEMBER_API_PATH = {
