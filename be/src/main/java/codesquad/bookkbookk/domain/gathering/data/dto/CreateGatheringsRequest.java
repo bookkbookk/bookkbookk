@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class CreateGatheringRequest {
+public class CreateGatheringsRequest {
 
     private Long bookId;
     private List<CreateGatheringRequestGathering> gatherings;
 
-    public CreateGatheringRequest(Long bookId, List<Map<String, String>> gatherings) {
+    public CreateGatheringsRequest(Long bookId, List<Map<String, String>> gatherings) {
         this.bookId = bookId;
         this.gatherings = gatherings.stream()
                 .map(map -> new CreateGatheringRequestGathering(map.get("place"), (map.get("dateTime"))))

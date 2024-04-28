@@ -15,7 +15,7 @@ import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
-import codesquad.bookkbookk.domain.gathering.data.dto.CreateGatheringRequest;
+import codesquad.bookkbookk.domain.gathering.data.dto.CreateGatheringsRequest;
 import codesquad.bookkbookk.domain.gathering.data.dto.ReadGatheringResponse;
 import codesquad.bookkbookk.domain.gathering.data.dto.UpdateGatheringRequest;
 import codesquad.bookkbookk.domain.gathering.data.dto.UpdateGatheringResponse;
@@ -35,7 +35,7 @@ public class GatheringService {
     private final BookClubRepository bookClubRepository;
 
     @Transactional
-    public void createGathering(Long memberId, Long bookClubId, CreateGatheringRequest request) {
+    public void createGathering(Long memberId, Long bookClubId, CreateGatheringsRequest request) {
         authorizationService.authorizeBookClubMembershipByBookClubId(memberId, bookClubId);
 
         Book book = bookRepository.findById(request.getBookId()).orElseThrow(BookNotFoundException::new);
