@@ -1,5 +1,6 @@
 package codesquad.bookkbookk.domain.gathering.service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,10 +41,13 @@ public class GatheringService {
         Book book = bookRepository.findById(request.getBookId()).orElseThrow(BookNotFoundException::new);
         BookClub bookClub = bookClubRepository.findById(bookClubId).orElseThrow(BookClubNotFoundException::new);
 
-        Gathering gathering = new Gathering(book, request.getDateTime(), request.getPlace());
-        gatheringRepository.save(gathering);
+        List<Gathering> gatherings = request.getGatherings().stream()
+                .map(gathering -> new Gathering(book, gathering.getDateTime(), gathering.getPlace()))
+                .sorted(Comparator.comparing(Gathering::getStartTime))
+                .collect(Collectors.toUnmodifiableList());
+        gatheringRepository.saveAll(gatherings);
 
-        bookClub.updateUpcomingGatheringDate(gathering.getStartTime());
+        bookClub.updateUpcomingGatheringDate(gatherings.get(0).getStartTime());
     }
 
     @Transactional(readOnly = true)
