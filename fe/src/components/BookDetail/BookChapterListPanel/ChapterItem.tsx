@@ -10,6 +10,7 @@ import { TopicItem } from "./TopicItem";
 
 export function ChapterItem({ chapter }: { chapter: ChapterListItem }) {
   const { chapterId, title } = chapter;
+  const chapterPrefix = "chapter_";
   const navigate = useNavigate();
   const {
     state: { book },
@@ -40,7 +41,7 @@ export function ChapterItem({ chapter }: { chapter: ChapterListItem }) {
       </Stack>
       <TreeItem
         sx={{ width: "90%" }}
-        nodeId={chapterId + ""}
+        nodeId={chapterPrefix + chapterId}
         label={<Typography variant="h5">{title}</Typography>}>
         <Stack gap={1} paddingY={1}>
           {chapter.topics.map((topic) => (
