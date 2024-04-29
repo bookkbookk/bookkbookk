@@ -15,6 +15,7 @@ import codesquad.bookkbookk.domain.auth.service.AuthorizationService;
 import codesquad.bookkbookk.domain.bookmark.data.dto.CreateBookmarkReactionRequest;
 import codesquad.bookkbookk.domain.bookmark.data.dto.CreateBookmarkRequest;
 import codesquad.bookkbookk.domain.bookmark.data.dto.DeleteBookmarkReactionRequest;
+import codesquad.bookkbookk.domain.bookmark.data.dto.ReadBookmarkResponse;
 import codesquad.bookkbookk.domain.bookmark.data.dto.ReadReactionsResponse;
 import codesquad.bookkbookk.domain.bookmark.data.dto.UpdateBookmarkRequest;
 import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
@@ -54,6 +55,15 @@ public class BookmarkService {
                 .build();
 
         bookmarkRepository.save(bookmark);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReadBookmarkResponse> readBookmarks(Long memberId, Long topicId) {
+        authorizationService.authorizeBookClubMembershipByTopicId(memberId, topicId);
+
+        List<Bookmark> bookmarks = bookmarkRepository.findAllByTopicId(topicId);
+
+        return ReadBookmarkResponse.from(bookmarks);
     }
 
     @Transactional

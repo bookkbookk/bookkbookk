@@ -1,7 +1,10 @@
 package codesquad.bookkbookk.domain.topic.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.bookkbookk.common.resolver.MemberId;
+import codesquad.bookkbookk.domain.bookmark.data.dto.ReadBookmarkResponse;
+import codesquad.bookkbookk.domain.bookmark.service.BookmarkService;
 import codesquad.bookkbookk.domain.topic.data.dto.CreateTopicRequest;
 import codesquad.bookkbookk.domain.topic.data.dto.CreateTopicResponse;
 import codesquad.bookkbookk.domain.topic.data.dto.UpdateTopicTitleRequest;
@@ -23,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class TopicController {
 
     private final TopicService topicService;
+    private final BookmarkService bookmarkService;
 
     @PostMapping
     public ResponseEntity<CreateTopicResponse> createTopic(@MemberId Long memberId,
@@ -31,6 +37,15 @@ public class TopicController {
 
         return ResponseEntity.ok()
                 .body(response);
+    }
+
+    @GetMapping("/{topicId}/bookmarks")
+    public ResponseEntity<List<ReadBookmarkResponse>> readBookmarks(@MemberId Long memberId,
+                                                                    @PathVariable Long topicId) {
+        List<ReadBookmarkResponse> responses = bookmarkService.readBookmarks(memberId, topicId);
+
+        return ResponseEntity.ok()
+                .body(responses);
     }
 
     @PatchMapping("/{topicId}")
