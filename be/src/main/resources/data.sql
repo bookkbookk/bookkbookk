@@ -17,7 +17,10 @@ VALUES (1, 1);
 INSERT INTO chapter (book_id, status, title)
 VALUES (1, 'BEFORE_READING', '챕터 1'),
        (1, 'BEFORE_READING', '챕터 2'),
-       (1, 'BEFORE_READING', '챕터 3');
+       (1, 'BEFORE_READING', '챕터 3'),
+       (1, 'BEFORE_READING', '챕터 4'),
+       (1, 'BEFORE_READING', '챕터 5'),
+       (1, 'BEFORE_READING', '챕터 6');
 
 INSERT INTO topic (chapter_id, title)
 VALUES (1, '토픽 1'),
@@ -26,5 +29,11 @@ VALUES (1, '토픽 1'),
        (2, '토픽 4'),
        (2, '토픽 5'),
        (3, '토픽 6'),
-       (3, '토픽 7');
+       (3, '토픽 7'),
+       (3, '토픽 8'),
+       (4, '토픽 9'),
+       (4, '토픽 10'),
+       (5, '토픽 11'),
+       (6, '토픽 12'),
+       (6, '토픽 13');
 
