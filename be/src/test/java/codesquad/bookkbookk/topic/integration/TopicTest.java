@@ -130,7 +130,6 @@ public class TopicTest extends IntegrationTest {
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-//                .contentType(ContentType.JSON)
                 .when()
                 .get("/api/topics/" + topic.getId() + "/bookmarks")
                 .then().log().all()
@@ -139,7 +138,11 @@ public class TopicTest extends IntegrationTest {
         //then
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softAssertions.assertThat(response.jsonPath().getLong("createdTopicId")).isNotZero();
+            softAssertions.assertThat(response.jsonPath().getList("").size()).isEqualTo(5);
+            softAssertions.assertThat(response.jsonPath().getString("[1].author.nickname"))
+                    .isEqualTo("nickname");
+            softAssertions.assertThat(response.jsonPath().getLong("[3].bookmarkId"))
+                    .isEqualTo(4);
         });
 
     }
