@@ -53,8 +53,12 @@ public class Chapter {
     }
 
     public Chapter update(UpdateChapterRequest request) {
-        this.title = request.getTitle();
-        this.status = Status.of(request.getStatusId());
+        if (request.getTitle() != null) {
+            this.title = request.getTitle();
+        }
+        if (request.getStatusId() != null) {
+            this.status = Status.of(request.getStatusId());
+        }
 
         return this;
     }
