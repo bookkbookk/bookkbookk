@@ -1,3 +1,4 @@
+import { Reaction } from "@api/comments/type";
 import { MESSAGE } from "@constant/index";
 import {
   useMutation,
@@ -8,9 +9,12 @@ import { enqueueSnackbar } from "notistack";
 import { queryKeys } from "./../queryKeys";
 import {
   deleteBookmark,
+  deleteReaction,
   getBookmarks,
+  getReactions,
   patchBookmark,
   postBookmark,
+  postReaction,
 } from "./client";
 import { NewBookmarkBody, PatchBookmarkBody } from "./type";
 
@@ -113,4 +117,70 @@ export const useDeleteBookmark = ({
   };
 
   return { onDeleteBookmark };
+};
+
+export const useGetReactions = ({ bookmarkId }: { bookmarkId: number }) => {
+  const { data: reactions } = useSuspenseQuery({
+    ...queryKeys.bookmarks.reactions({ bookmarkId }),
+    queryFn: () => getReactions(bookmarkId),
+    initialData: {
+      like: [],
+      love: [],
+      clap: [],
+      congratulation: [],
+      rocket: [],
+    } as Reaction,
+  });
+
+  return reactions;
+};
+
+export const useBookmarkReaction = ({ bookmarkId }: { bookmarkId: number }) => {
+  const queryClient = useQueryClient();
+
+  const { mutate: mutatePostReaction } = useMutation({
+    mutationFn: postReaction,
+  });
+
+  const { mutate: mutateDeleteReaction } = useMutation({
+    mutationFn: deleteReaction,
+  });
+
+  const onPostReaction = (reactionName: keyof Reaction) => {
+    mutatePostReaction(
+      { bookmarkId, reactionName },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries(
+            queryKeys.bookmarks.reactions({ bookmarkId })
+          );
+        },
+        onError: () => {
+          enqueueSnackbar(MESSAGE.POST_REACTION_ERROR, {
+            variant: "error",
+          });
+        },
+      }
+    );
+  };
+
+  const onDeleteReaction = (reactionName: keyof Reaction) => {
+    mutateDeleteReaction(
+      { bookmarkId, reactionName },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries(
+            queryKeys.bookmarks.reactions({ bookmarkId })
+          );
+        },
+        onError: () => {
+          enqueueSnackbar(MESSAGE.DELETE_REACTION_ERROR, {
+            variant: "error",
+          });
+        },
+      }
+    );
+  };
+
+  return { onPostReaction, onDeleteReaction };
 };

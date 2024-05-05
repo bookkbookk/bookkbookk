@@ -1,19 +1,35 @@
 import { BookChapterStatus } from "@api/chapters/type";
 import { BOOK_CHAPTER_STATUS } from "@components/constants";
-import { Chip } from "@mui/material";
+import { Chip, Tooltip } from "@mui/material";
 
 export default function StatusChip({
   statusId,
+  onClick,
 }: {
   statusId: BookChapterStatus["id"];
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
 }) {
   return (
-    <Chip
-      label={STATUS_CHIP_LABEL[statusId]}
-      size="small"
-      color={STATUS_CHIP_COLOR[statusId]}
-      sx={{ fontWeight: 700, minWidth: "4rem" }}
-    />
+    <>
+      {onClick ? (
+        <Tooltip title="독서 상태를 변경하세요" placement="top" arrow>
+          <Chip
+            onClick={onClick}
+            label={STATUS_CHIP_LABEL[statusId]}
+            size="small"
+            color={STATUS_CHIP_COLOR[statusId]}
+            sx={{ fontWeight: 700, minWidth: "4rem" }}
+          />
+        </Tooltip>
+      ) : (
+        <Chip
+          label={STATUS_CHIP_LABEL[statusId]}
+          size="small"
+          color={STATUS_CHIP_COLOR[statusId]}
+          sx={{ fontWeight: 700, minWidth: "4rem" }}
+        />
+      )}
+    </>
   );
 }
 

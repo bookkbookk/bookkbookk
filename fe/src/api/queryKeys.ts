@@ -37,7 +37,6 @@ export const queryKeys = createQueryKeyStore({
       queryKey: ["getChapters", { bookId }],
     }),
   },
-
   topics: {
     list: ({ chapterId }: { chapterId: number }) => ({
       queryKey: ["getTopics", { chapterId }],
@@ -48,11 +47,17 @@ export const queryKeys = createQueryKeyStore({
     list: ({ topicId }: { topicId: number }) => ({
       queryKey: ["getBookmarks", { topicId }],
     }),
+    reactions: ({ bookmarkId }: { bookmarkId: number }) => ({
+      queryKey: ["getReactions", { bookmarkId }],
+    }),
   },
 
   comments: {
     list: ({ bookmarkId }: { bookmarkId: number }) => ({
       queryKey: ["getComments", { bookmarkId }],
+    }),
+    reactions: ({ commentId }: { commentId: number }) => ({
+      queryKey: ["getReactions", { commentId }],
     }),
   },
 
