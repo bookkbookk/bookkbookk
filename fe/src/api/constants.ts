@@ -7,6 +7,8 @@ const GOOGLE_AUTH_PATH_VARIABLE = {
   client_id: VITE_OAUTH_GOOGLE_CLIENT_ID,
   redirect_uri: `${VITE_APP_API_URL}/auth/google`,
   // redirect_uri: `http://localhost:5173/auth/google`,
+  redirect_uri: `${VITE_APP_API_URL}/auth/google`,
+  // redirect_uri: `http://localhost:5173/auth/google`,
   response_type: "code",
   scope:
     "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
@@ -17,6 +19,7 @@ export const GOOGLE_OAUTH_PATH = `${GOOGLE_AUTHORIZE_URI}?${stringify(
 )}`;
 
 export const ERROR_CODE = {
+  EXPIRED_ACCESS_TOKEN: 4011,
   EXPIRED_ACCESS_TOKEN: 4011,
 };
 
@@ -30,11 +33,11 @@ export const BOOK_CLUB_API_PATH = {
   bookClubs: "/api/book-clubs",
   join: "/api/book-clubs/join",
   books: (bookClubId: number) => `/api/book-clubs/${bookClubId}/books`,
-  gatherings: (bookClubId: number) => `/api/book-clubs/${bookClubId}/gatherings`
 };
 
 export const MEMBER_API_PATH = {
   member: "/api/members",
+  books: "/api/members/books",
   books: "/api/members/books",
 };
 
@@ -47,6 +50,7 @@ export const BOOK_API_PATH = {
   chapters: "/api/chapters",
   topics: "/api/topics",
   bookmarks: "/api/bookmarks",
+  comments: "/api/comments",
 };
 
 export const GATHERING_API_PATH = {

@@ -1,5 +1,5 @@
 import { fetcher } from "@api/fetcher";
-import { BOOK_CLUB_API_PATH} from "../constants";
+import { GATHERING_API_PATH } from "../constants";
 import { NewBookClubGathering } from "./type";
 
 export const postNewGathering = async ({
@@ -10,7 +10,7 @@ export const postNewGathering = async ({
   gatheringInfo: NewBookClubGathering;
 }) => {
   const { data } = await fetcher.post(
-    `${BOOK_CLUB_API_PATH.gatherings(bookClubId)}`,
+    `${GATHERING_API_PATH.gatherings}/${bookClubId}`,
     gatheringInfo
   );
 
