@@ -2,7 +2,7 @@ import { BookChapterStatusID } from "@api/book/type";
 import { usePatchChapter } from "@api/chapters/queries";
 import StatusChip from "@components/common/StatusChip";
 import { BOOK_CHAPTERS_STATUS_LIST } from "@components/constants";
-import { Menu, MenuItem } from "@mui/material";
+import { Button, Menu, MenuItem, Tooltip } from "@mui/material";
 import React, { useState } from "react";
 
 export default function ChapterStatusMenu({
@@ -38,7 +38,18 @@ export default function ChapterStatusMenu({
 
   return (
     <>
-      <StatusChip statusId={chapterStatus} onClick={handleClick} />
+      <Tooltip title="챕터 상태를 변경하세요" placement="top" arrow>
+        <Button
+          aria-label="more"
+          id="chapter-status-menu-button"
+          aria-controls={isOpen ? "chapter-status-menu" : undefined}
+          aria-expanded={isOpen ? "true" : undefined}
+          aria-haspopup="true"
+          sx={{ "&:hover": { backgroundColor: "transparent" } }}
+          onClick={handleClick}>
+          <StatusChip statusId={chapterStatus} />
+        </Button>
+      </Tooltip>
       <Menu
         id="chapter-status-menu"
         MenuListProps={{

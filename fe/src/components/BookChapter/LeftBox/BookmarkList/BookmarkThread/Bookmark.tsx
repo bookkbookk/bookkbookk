@@ -1,15 +1,8 @@
-import {
-  useBookmarkReaction,
-  useDeleteBookmark,
-  useGetReactions,
-  usePatchBookmark,
-} from "@api/bookmarks/queries";
+import { useDeleteBookmark, usePatchBookmark } from "@api/bookmarks/queries";
 import { Bookmark as BookmarkType } from "@api/bookmarks/type";
-import { Reaction } from "@api/comments/type";
 import { Comment } from "@components/common/Comment";
 import { useBookmarkListActions } from "context/BookmarkList/useBookmarkList";
 import { useState } from "react";
-import { useMemberValue } from "store/useMember";
 
 export default function Bookmark({
   bookmark: { author, createdTime, content, page, bookmarkId },
@@ -18,8 +11,21 @@ export default function Bookmark({
   bookmark: BookmarkType;
   toggleReplying: () => void;
 }) {
-  const reactions = useGetReactions({ bookmarkId });
-  const member = useMemberValue();
+  const [updatedContent, setUpdatedContent] = useState(content);
+  const onBookmarkContentChange = (content: string) => {
+    setUpdatedContent(content);
+  };
+
+  const [updatedPage, setUpdatedPage] = useState(page + "");
+  const onBookmarkPageChange = (updatedPage: string) => {
+    setUpdatedPage(updatedPage);
+  };
+
+  const [isEditing, setIsEditing] = useState(false);
+  const toggleEditing = () => setIsEditing((prev) => !prev);
+
+  const { updatePage, updateContent, deleteBookmark } =
+    useBookmarkListActions();
 
   const { onPatchBookmark } = usePatchBookmark({
     bookmarkId,
@@ -38,25 +44,6 @@ export default function Bookmark({
       deleteBookmark({ bookmarkId });
     },
   });
-  const { onPostReaction, onDeleteReaction } = useBookmarkReaction({
-    bookmarkId,
-  });
-
-  const [updatedContent, setUpdatedContent] = useState(content);
-  const onBookmarkContentChange = (content: string) => {
-    setUpdatedContent(content);
-  };
-
-  const [updatedPage, setUpdatedPage] = useState(page + "");
-  const onBookmarkPageChange = (updatedPage: string) => {
-    setUpdatedPage(updatedPage);
-  };
-
-  const [isEditing, setIsEditing] = useState(false);
-  const toggleEditing = () => setIsEditing((prev) => !prev);
-
-  const { updatePage, updateContent, deleteBookmark } =
-    useBookmarkListActions();
 
   const patchBookmark = () => {
     const pageNum = Number(updatedPage);
@@ -78,15 +65,7 @@ export default function Bookmark({
     toggleEditing();
   };
 
-  const onReactionClick = (reactionName: keyof Reaction) => {
-    const isChecked = reactions[reactionName]?.includes(member?.nickname || "");
-
-    if (isChecked) {
-      onDeleteReaction(reactionName);
-    } else {
-      onPostReaction(reactionName);
-    }
-  };
+  // TODO: 북마크 삭제 요청
 
   return (
     <Comment>
@@ -111,11 +90,7 @@ export default function Bookmark({
       ) : (
         <Comment.ContentViewer content={content} />
       )}
-      <Comment.ActionFooter
-        reactions={reactions}
-        onReplyButtonClick={toggleReplying}
-        onReactionClick={onReactionClick}
-      />
+      <Comment.ActionFooter onReplyButtonClick={toggleReplying} />
     </Comment>
   );
 }

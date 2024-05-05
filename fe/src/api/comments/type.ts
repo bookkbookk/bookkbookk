@@ -14,6 +14,7 @@ export type CommentContent = {
   };
   createdTime: string;
   content: string;
+  reaction: Partial<Reaction>;
 };
 
 export type Comment = {

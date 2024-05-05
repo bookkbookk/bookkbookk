@@ -8,14 +8,11 @@ import { enqueueSnackbar } from "notistack";
 import { queryKeys } from "./../queryKeys";
 import {
   deleteComment,
-  deleteReaction,
   getComments,
-  getReactions,
   patchComment,
   postComment,
-  postReaction,
 } from "./client";
-import { NewCommentBody, Reaction } from "./type";
+import { NewCommentBody } from "./type";
 
 export const useGetComments = ({ bookmarkId }: { bookmarkId: number }) => {
   const { data: bookmarks } = useSuspenseQuery({
@@ -109,63 +106,4 @@ export const useDeleteComment = ({
   };
 
   return { onDeleteComment };
-};
-
-export const useGetReactions = ({ commentId }: { commentId: number }) => {
-  const { data: reactions } = useSuspenseQuery({
-    ...queryKeys.comments.reactions({ commentId }),
-    queryFn: () => getReactions(commentId),
-  });
-
-  return reactions;
-};
-
-export const useCommentReaction = ({ commentId }: { commentId: number }) => {
-  const queryClient = useQueryClient();
-
-  const { mutate: mutatePostReaction } = useMutation({
-    mutationFn: postReaction,
-  });
-
-  const { mutate: mutateDeleteReaction } = useMutation({
-    mutationFn: deleteReaction,
-  });
-
-  const onDeleteReaction = (reactionName: keyof Reaction) => {
-    mutateDeleteReaction(
-      { commentId, reactionName },
-      {
-        onSuccess: () => {
-          queryClient.invalidateQueries(
-            queryKeys.comments.reactions({ commentId })
-          );
-        },
-        onError: () => {
-          enqueueSnackbar(MESSAGE.DELETE_REACTION_ERROR, {
-            variant: "error",
-          });
-        },
-      }
-    );
-  };
-
-  const onPostReaction = (reactionName: keyof Reaction) => {
-    mutatePostReaction(
-      { commentId, reactionName },
-      {
-        onSuccess: () => {
-          queryClient.invalidateQueries(
-            queryKeys.comments.reactions({ commentId })
-          );
-        },
-        onError: () => {
-          enqueueSnackbar(MESSAGE.POST_REACTION_ERROR, {
-            variant: "error",
-          });
-        },
-      }
-    );
-  };
-
-  return { onPostReaction, onDeleteReaction };
 };

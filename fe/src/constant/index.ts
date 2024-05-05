@@ -33,8 +33,6 @@ export const MESSAGE = {
   UPDATE_COMMENT_ERROR: `댓글 수정에 실패했어요. \n 나중에 다시 시도해주세요.`,
   DELETE_BOOKMARK_ERROR: `북마크 삭제에 실패했어요. \n 나중에 다시 시도해주세요.`,
   DELETE_COMMENT_ERROR: `댓글 삭제에 실패했어요. \n 나중에 다시 시도해주세요.`,
-  POST_REACTION_ERROR: `리액션 추가에 실패했어요. \n 나중에 다시 시도해주세요.`,
-  DELETE_REACTION_ERROR: `리액션 삭제에 실패했어요. \n 나중에 다시 시도해주세요.`,
 };
 
 export const PAGE_TITLE = {

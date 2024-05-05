@@ -1,5 +1,3 @@
-import { Reaction } from "@api/comments/type";
-
 export const NEW_BOOK_CLUB_FUNNEL = {
   profile: "프로필" as const,
   member: "멤버 초대" as const,
@@ -65,32 +63,29 @@ export const TOTAL_TAB = {
 };
 
 export const REACTIONS = {
-  like: {
+  LIKE: {
     id: 1,
     unicode: "1F44D",
   },
-  love: {
+  LOVE: {
     id: 2,
     unicode: "1F495",
   },
-  clap: {
+  CLAP: {
     id: 3,
     unicode: "1F44F",
   },
-  congratulation: {
+  CONGRATULATION: {
     id: 4,
     unicode: "1F389",
   },
-  rocket: {
+  ROCKET: {
     id: 5,
     unicode: "1F680",
   },
 } as const;
 
-export const REACTION_LIST = Object.entries(REACTIONS) as [
-  keyof Reaction,
-  { id: number; unicode: string }
-][];
+export const REACTION_LIST = Object.values(REACTIONS);
 
 /* TODO: DB에 기본 책장으로 추가 요청 */
 // export const DEFAULT_TABS = [
