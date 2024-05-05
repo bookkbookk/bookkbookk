@@ -16,7 +16,7 @@ export default function BookClubInfo({
 }: {
   bookClubDetail: OpenBookClubDetail | ClosedBookClubDetail;
 }) {
-  const isOpenBookClub = bookClubDetail.status === "OPEN";
+  const isOpenBookClub = bookClubDetail.status === "open";
   const createdTime = formatDate(bookClubDetail.createdTime);
   const closedTime = !isOpenBookClub && formatDate(bookClubDetail.closedTime);
   const subheaderText = `${createdTime} ~ ${closedTime || "진행중"}`;
@@ -56,7 +56,6 @@ export default function BookClubInfo({
         }
         subheader={
           <>
-          {bookClubDetail.lastBook && (
             <Stack gap={1} display="flex" flexDirection="row">
               <Typography variant="body2" sx={{ fontWeight: 700 }}>
                 {lastBookTitle}
@@ -65,7 +64,6 @@ export default function BookClubInfo({
                 {`${bookClubDetail.lastBook.name} (${bookClubDetail.lastBook.author})`}
               </Typography>
             </Stack>
-          )}
             {isOpenBookClub && (
               <Stack gap={1} display="flex" flexDirection="row">
                 <Typography variant="body2" sx={{ fontWeight: 700 }}>

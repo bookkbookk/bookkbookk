@@ -1,3 +1,4 @@
+import { useGetBookmarks } from "@api/bookmarks/queries";
 import { ChapterListItem, TopicItemInfo } from "@api/chapters/type";
 import { Topic } from "@api/topics/type";
 import BookmarkList from "@components/BookChapter/LeftBox/BookmarkList/BookmarkList";
@@ -6,8 +7,15 @@ import NewBookmark from "@components/BookChapter/LeftBox/NewBookmark";
 import TopicTitle from "@components/BookChapter/LeftBox/TopicTitle/TopicTitle";
 import TopicListCard from "@components/BookChapter/RightBox/TopicListCard";
 import ChapterBookCard from "@components/BookDetail/ChapterBookCard";
-import { BoxContent, LeftBox, RightBox } from "@components/common/common.style";
-import { Box, Divider } from "@mui/material";
+import {
+  AddFab,
+  BoxContent,
+  LeftBox,
+  RightBox,
+} from "@components/common/common.style";
+import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
+import { Box, Divider, Tooltip } from "@mui/material";
+import { BookmarkListProvider } from "context/BookmarkList/BookmarkListProvider";
 import { useState } from "react";
 import { Location, useLocation } from "react-router-dom";
 
@@ -26,8 +34,14 @@ export default function BookChapter() {
 
   const [currentTopic, setCurrentTopic] = useState<Topic>(topic);
   const onTopicChange = (newTopic: Topic) => setCurrentTopic(newTopic);
+
   const handleTopicTitleChange = (newTitle: string) =>
     setCurrentTopic((prev) => ({ ...prev, title: newTitle }));
+
+  const [isNewBookmarkOpen, setIsNewBookmarkOpen] = useState(false);
+  const toggleNewBookmark = () => setIsNewBookmarkOpen((prev) => !prev);
+
+  const bookmarks = useGetBookmarks({ topicId: currentTopic.topicId });
 
   return (
     <Box sx={{ display: "flex", padding: 4 }}>
@@ -42,8 +56,15 @@ export default function BookChapter() {
           onTopicTitleChange={handleTopicTitleChange}
         />
         <Divider sx={{ width: "100%" }} />
-        <BookmarkList topicId={currentTopic.topicId} />
-        <NewBookmark topicId={currentTopic.topicId} />
+        <BookmarkListProvider bookmarks={bookmarks}>
+          <BookmarkList />
+        </BookmarkListProvider>
+        {isNewBookmarkOpen && (
+          <NewBookmark
+            topicId={currentTopic.topicId}
+            toggleNewBookmark={toggleNewBookmark}
+          />
+        )}
       </LeftBox>
       <RightBox>
         <BoxContent>
@@ -55,6 +76,11 @@ export default function BookChapter() {
           />
         </BoxContent>
       </RightBox>
+      <Tooltip title="새로운 북마크를 추가해보세요">
+        <AddFab color="primary" aria-label="add" onClick={toggleNewBookmark}>
+          <BookmarkAddIcon />
+        </AddFab>
+      </Tooltip>
     </Box>
   );
 }

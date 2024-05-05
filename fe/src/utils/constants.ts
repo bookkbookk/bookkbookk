@@ -13,3 +13,5 @@ export const timeUnits = [
   { unit: "주 전", threshold: monthInMs, divisor: weekInMs },
   { unit: "개월 전", threshold: yearInMs, divisor: monthInMs },
 ];
+
+export const numberRegex = new RegExp(/^[0-9]+$/);

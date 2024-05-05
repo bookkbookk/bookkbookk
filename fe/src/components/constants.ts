@@ -38,9 +38,6 @@ export const BOOK_CHAPTER_TABS = {
   ...BOOK_CHAPTER_STATUS,
 } as const;
 
-export type BOOK_CHAPTER_IDS =
-  (typeof BOOK_CHAPTER_TABS)[keyof typeof BOOK_CHAPTER_TABS]["id"];
-
 export const BOOK_CLUB_STATUS = {
   ALL: {
     id: 0,
