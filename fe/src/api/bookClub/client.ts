@@ -36,7 +36,7 @@ export const getBookClubDetail = async (bookClubId: number) => {
 };
 
 export const getBookClubList = async (option?: {
-  status: "open" | "closed";
+  status: "OPEN" | "CLOSED";
 }) => {
   const { data } = await fetcher.get<BookClubProfile[]>(
     BOOK_CLUB_API_PATH.bookClubs,

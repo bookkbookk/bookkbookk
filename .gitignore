@@ -21,4 +21,7 @@ rad.json
 #Test results file
 TestResults.xml
 # .idea
-*.idea
+.idea
+
+## DS.Store
+.DS_Store
