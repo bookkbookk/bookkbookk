@@ -1,9 +1,18 @@
-import { reissueAccessToken } from "@api/auth/utils";
 import axios from "axios";
 import { ACCESS_TOKEN_KEY } from "constant/index";
 import { ERROR_CODE } from "./constants";
 
 const { VITE_APP_API_URL } = import.meta.env;
+
+const tokenStorage = {
+  [ACCESS_TOKEN_KEY]: "",
+};
+
+export const setAccessToken = (accessToken: string) => {
+  tokenStorage[ACCESS_TOKEN_KEY] = accessToken;
+};
+
+export const getAccessToken = () => tokenStorage[ACCESS_TOKEN_KEY];
 
 const tokenStorage = {
   [ACCESS_TOKEN_KEY]: "",
@@ -30,6 +39,8 @@ export const formDataConfig = {
 
 fetcher.interceptors.request.use(
   (config) => {
+    const accessToken = tokenStorage[ACCESS_TOKEN_KEY];
+
     const accessToken = tokenStorage[ACCESS_TOKEN_KEY];
 
     if (accessToken) {

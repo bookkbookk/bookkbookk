@@ -1,0 +1,68 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.16'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'codesquad'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '11'
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// web
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	// data
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// test
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'com.google.guava:guava:32.1.2-jre'
+	testImplementation 'io.rest-assured:rest-assured'
+	runtimeOnly'com.h2database:h2'
+	testImplementation 'org.testcontainers:testcontainers:1.19.7'
+
+	// jwt
+	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.1'
+
+	// s3
+	implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.566'
+
+	// redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+task copySecrets(type: Copy) {
+	copy {
+		from '../secrets'
+		include "*.yml"
+		into 'src/main/resources'
+	}
+}
+
+jar {
+	enabled = false
+}

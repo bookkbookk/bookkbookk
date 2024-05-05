@@ -13,7 +13,39 @@ export type BookClubProfile = {
 };
 
 export type BookClubStatus = {
-  status: "open" | "closed";
+  status: "OPEN" | "CLOSED";
+};
+
+export type NewBookClubInfo = {
+  bookClubId: number;
+  invitationUrl: string;
+};
+
+export type EmailSubmitInfo = {
+  bookClubName: string;
+  invitationUrl: string;
+  memberEmails: string[];
+};
+
+export type BookClubDetail = {
+  name: string;
+  profileImgUrl: string;
+  members: Member[];
+  lastBook: {
+    name: string;
+    author: string;
+  };
+  createdTime: string;
+};
+
+export type ClosedBookClubDetail = BookClubDetail & {
+  status: "CLOSED";
+  closedTime: string;
+};
+
+export type OpenBookClubDetail = BookClubDetail & {
+  status: "OPEN";
+  upcomingGatheringDate: string;
 };
 
 export type NewBookClubInfo = {

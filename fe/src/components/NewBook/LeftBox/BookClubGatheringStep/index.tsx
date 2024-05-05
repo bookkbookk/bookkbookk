@@ -51,7 +51,6 @@ export default function BookClubGatheringStep({
           isChapterAddMode: true,
         },
       });
-
       setBookClubChoice(null);
       setBookChoice(null);
       setGatheringInfo({ type: "RESET" });

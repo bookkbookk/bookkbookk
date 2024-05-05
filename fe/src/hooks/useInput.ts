@@ -21,7 +21,6 @@ export default function useInput({
 
       if (!isValid) {
         setError(new Error(message));
-
         return false;
       }
 
