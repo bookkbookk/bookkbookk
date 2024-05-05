@@ -1,11 +1,3 @@
-export type Reaction = {
-  like: string[];
-  love: string[];
-  clap: string[];
-  congratulation: string[];
-  rocket: string[];
-};
-
 export type CommentContent = {
   author: {
     memberId: number;
@@ -14,14 +6,11 @@ export type CommentContent = {
   };
   createdTime: string;
   content: string;
-  reaction: Partial<Reaction>;
+  reaction: {
+    likeCount?: number;
+  };
 };
 
 export type Comment = {
   commentId: number;
 } & CommentContent;
-
-export type NewCommentBody = {
-  bookmarkId: number;
-  content: string;
-};

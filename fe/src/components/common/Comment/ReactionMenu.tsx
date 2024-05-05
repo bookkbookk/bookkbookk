@@ -25,7 +25,7 @@ export default function ReactionMenu() {
           aria-haspopup="true"
           color="inherit"
           onClick={handleClick}>
-          <AddReactionIcon fontSize="small" />
+          <AddReactionIcon />
         </IconButton>
       </Tooltip>
       <Menu
@@ -34,12 +34,12 @@ export default function ReactionMenu() {
           "aria-labelledby": "reaction-menu-button",
         }}
         anchorOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-        transformOrigin={{
           vertical: "bottom",
           horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
         }}
         anchorEl={anchorEl}
         open={isOpen}

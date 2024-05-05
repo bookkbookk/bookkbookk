@@ -1,4 +1,3 @@
-import { darkDefaultTheme, lightDefaultTheme, Theme } from "@blocknote/react";
 import { alpha } from "@mui/material/styles";
 import { THEME_MODE, ThemeMode } from "store/useTheme";
 
@@ -137,26 +136,3 @@ export const getPalette = (mode: ThemeMode) => ({
   mode,
   ...(mode === THEME_MODE.dark ? dark : light),
 });
-
-export const editorTheme = {
-  light: {
-    ...lightDefaultTheme,
-    colors: {
-      ...lightDefaultTheme.colors,
-      editor: {
-        background: light.background.paper,
-        text: light.text.primary,
-      },
-    },
-  } satisfies Theme,
-  dark: {
-    ...darkDefaultTheme,
-    colors: {
-      ...darkDefaultTheme.colors,
-      editor: {
-        background: dark.background.paper,
-        text: dark.text.primary,
-      },
-    },
-  } satisfies Theme,
-};
