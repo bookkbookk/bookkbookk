@@ -23,9 +23,7 @@ export const CommentHeader = styled("div")(({ theme }) => ({
 
 export const CommentBody = styled("div")(({ theme }) => ({
   width: "100%",
-  paddingTop: theme.spacing(2),
-  paddingLeft: theme.spacing(2),
-  paddingRight: theme.spacing(2),
+  padding: theme.spacing(2, 3),
   borderBottomLeftRadius: theme.spacing(2),
   borderBottomRightRadius: theme.spacing(2),
   color: theme.palette.text.primary,
