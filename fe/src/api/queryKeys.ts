@@ -9,6 +9,7 @@ import { getMember, getMemberBookList } from "./member/client";
 export const queryKeys = createQueryKeyStore({
   members: {
     info: () => ({
+    info: () => ({
       queryKey: ["getMember"],
       queryFn: getMember,
     }),
@@ -16,7 +17,12 @@ export const queryKeys = createQueryKeyStore({
       queryKey: ["getBookList", { page, size }],
       queryFn: () => getMemberBookList({ page, size }),
     }),
+    books: ({ page, size }: { page: number; size: number }) => ({
+      queryKey: ["getBookList", { page, size }],
+      queryFn: () => getMemberBookList({ page, size }),
+    }),
   },
+
 
   auth: {
     login: ({ provider, authCode }: OAuthLoginParams) => ({
@@ -25,10 +31,17 @@ export const queryKeys = createQueryKeyStore({
     }),
   },
 
+
   books: {
     search: (searchWord: string) => ({
       queryKey: ["getBookSearchResult", searchWord],
       queryFn: () => getBookSearchResult(searchWord),
+    }),
+  },
+
+  chapters: {
+    list: ({ bookId }: { bookId: number }) => ({
+      queryKey: ["getChapters", { bookId }],
     }),
   },
 
@@ -48,18 +61,35 @@ export const queryKeys = createQueryKeyStore({
     list: ({ topicId }: { topicId: number }) => ({
       queryKey: ["getBookmarks", { topicId }],
     }),
+    reactions: ({ bookmarkId }: { bookmarkId: number }) => ({
+      queryKey: ["getReactions", { bookmarkId }],
+    }),
   },
 
   comments: {
     list: ({ bookmarkId }: { bookmarkId: number }) => ({
       queryKey: ["getComments", { bookmarkId }],
     }),
+    reactions: ({ commentId }: { commentId: number }) => ({
+      queryKey: ["getReactions", { commentId }],
+    }),
   },
+
 
   bookClub: {
     list: (option?: BookClubStatus) => ({
       queryKey: ["getBookClubList", option],
       queryFn: () => getBookClubList(option),
+    }),
+    join: (verificationCode?: string) => ({
+      queryKey: ["postJoinBookClub", verificationCode],
+    }),
+    detail: (bookClubId: number) => ({
+      queryKey: ["getBookClubDetail", bookClubId],
+      queryFn: () => getBookClubDetail(bookClubId),
+    }),
+    books: ({ bookClubId }: { bookClubId: number }) => ({
+      queryKey: ["getBookList", bookClubId],
     }),
     join: (verificationCode?: string) => ({
       queryKey: ["postJoinBookClub", verificationCode],
