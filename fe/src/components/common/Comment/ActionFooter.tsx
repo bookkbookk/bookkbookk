@@ -13,6 +13,10 @@ export default function ActionFooter({
   onReplyButtonClick?: () => void;
   onReactionClick: (reactionName: keyof Reaction) => void;
 }) {
+  const isReactionsEmpty = Object.values(reactions).every(
+    (reaction) => !reaction.length
+  );
+
   return (
     <Stack
       display="flex"
@@ -21,7 +25,12 @@ export default function ActionFooter({
       padding={1}>
       <Stack display="flex" flexDirection="row" gap={1}>
         <ReactionMenu reactions={reactions} onReactionClick={onReactionClick} />
-        <ReactionList reactions={reactions} onReactionClick={onReactionClick} />
+        {!isReactionsEmpty && (
+          <ReactionList
+            reactions={reactions}
+            onReactionClick={onReactionClick}
+          />
+        )}
       </Stack>
       {onReplyButtonClick && (
         <Button

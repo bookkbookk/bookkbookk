@@ -1,3 +1,4 @@
+import { Reaction } from "@api/comments/type";
 import { BOOK_API_PATH } from "@api/constants";
 import { fetcher } from "@api/fetcher";
 import { Bookmark, NewBookmarkBody } from "./type";
@@ -46,6 +47,45 @@ export const patchBookmark = async ({
 export const deleteBookmark = async (bookmarkId: number) => {
   const { data } = await fetcher.delete(
     `${BOOK_API_PATH.bookmarks}/${bookmarkId}`
+  );
+
+  return data;
+};
+
+export const getReactions = async (bookmarkId: number) => {
+  const { data } = await fetcher.get<Partial<Reaction>>(
+    `${BOOK_API_PATH.bookmarks}/${bookmarkId}/reactions`
+  );
+
+  return data;
+};
+
+export const postReaction = async ({
+  bookmarkId,
+  reactionName,
+}: {
+  bookmarkId: number;
+  reactionName: keyof Reaction;
+}) => {
+  const { data } = await fetcher.post(
+    `${BOOK_API_PATH.bookmarks}/${bookmarkId}/reactions`,
+    {
+      reactionName,
+    }
+  );
+
+  return data;
+};
+
+export const deleteReaction = async ({
+  bookmarkId,
+  reactionName,
+}: {
+  bookmarkId: number;
+  reactionName: keyof Reaction;
+}) => {
+  const { data } = await fetcher.delete(
+    `${BOOK_API_PATH.bookmarks}/${bookmarkId}/reactions/${reactionName}`
   );
 
   return data;

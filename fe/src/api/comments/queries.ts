@@ -115,6 +115,13 @@ export const useGetReactions = ({ commentId }: { commentId: number }) => {
   const { data: reactions } = useSuspenseQuery({
     ...queryKeys.comments.reactions({ commentId }),
     queryFn: () => getReactions(commentId),
+    initialData: {
+      like: [],
+      love: [],
+      clap: [],
+      congratulation: [],
+      rocket: [],
+    } as Reaction,
   });
 
   return reactions;

@@ -73,15 +73,6 @@ export const COMMENTS_MAP = new Map()
   .set("4", COMMENTS_BOOKMARK_ID_4)
   .set("5", COMMENTS_BOOKMARK_ID_5);
 
-const COMMENTS_BOOKMARK_ID_5 = [] as any;
-
-export const COMMENTS = [...COMMENTS_BOOKMARK_ID_3, ...COMMENTS_BOOKMARK_ID_4];
-
-export const COMMENTS_MAP = new Map()
-  .set("3", COMMENTS_BOOKMARK_ID_3)
-  .set("4", COMMENTS_BOOKMARK_ID_4)
-  .set("5", COMMENTS_BOOKMARK_ID_5);
-
 export const BOOKMARKS = [
   {
     bookmarkId: 3,

@@ -123,6 +123,13 @@ export const useGetReactions = ({ bookmarkId }: { bookmarkId: number }) => {
   const { data: reactions } = useSuspenseQuery({
     ...queryKeys.bookmarks.reactions({ bookmarkId }),
     queryFn: () => getReactions(bookmarkId),
+    initialData: {
+      like: [],
+      love: [],
+      clap: [],
+      congratulation: [],
+      rocket: [],
+    } as Reaction,
   });
 
   return reactions;
