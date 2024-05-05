@@ -1,4 +1,6 @@
 import { CommentContent } from "@api/comments/type";
+import CheckIcon from "@mui/icons-material/Check";
+import ClearIcon from "@mui/icons-material/Clear";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModeRoundedIcon from "@mui/icons-material/ModeRounded";
 import { Avatar, Button, Stack, Typography } from "@mui/material";
@@ -6,13 +8,24 @@ import { convertPastTimestamp } from "@utils/index";
 import { useMemberValue } from "store/useMember";
 import * as S from "./style";
 
-export default function CommentHeader(
-  props: Pick<CommentContent, "author" | "createdTime">
-) {
+type Props = Pick<CommentContent, "author" | "createdTime"> & {
+  toggleEditing: () => void;
+  isEditing: boolean;
+  onCancelClick: () => void;
+  onDeleteClick: () => void;
+  onCompleteClick: () => void;
+};
+
+export default function CommentHeader(props: Props) {
   const member = useMemberValue();
   const {
     author: { memberId, profileImgUrl, nickname },
     createdTime,
+    toggleEditing,
+    isEditing,
+    onCancelClick,
+    onDeleteClick,
+    onCompleteClick,
   } = props;
 
   const isAuthor = member?.id === memberId;
@@ -33,18 +46,42 @@ export default function CommentHeader(
       </Stack>
       {isAuthor && (
         <Stack display="flex" flexDirection="row">
-          <Button
-            size="small"
-            color="inherit"
-            startIcon={<ModeRoundedIcon fontSize="small" />}>
-            편집
-          </Button>
-          <Button
-            size="small"
-            color="inherit"
-            startIcon={<DeleteIcon fontSize="small" />}>
-            삭제
-          </Button>
+          {!isEditing && (
+            <>
+              <Button
+                size="small"
+                color="inherit"
+                onClick={toggleEditing}
+                startIcon={<ModeRoundedIcon fontSize="small" />}>
+                편집
+              </Button>
+              <Button
+                size="small"
+                color="inherit"
+                onClick={onDeleteClick}
+                startIcon={<DeleteIcon fontSize="small" />}>
+                삭제
+              </Button>
+            </>
+          )}
+          {isEditing && (
+            <>
+              <Button
+                size="small"
+                color="inherit"
+                onClick={onCancelClick}
+                startIcon={<ClearIcon fontSize="small" />}>
+                취소
+              </Button>
+              <Button
+                size="small"
+                color="inherit"
+                onClick={onCompleteClick}
+                startIcon={<CheckIcon fontSize="small" />}>
+                완료
+              </Button>
+            </>
+          )}
         </Stack>
       )}
     </S.CommentHeader>
