@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class UpdateBookmarkRequest {
 
-    private String title;
+    private Integer page;
     private String content;
 
 }

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class CreateBookmarkRequest {
 
     private Long topicId;
-    private String title;
+    private Integer page;
     private String content;
 
 }

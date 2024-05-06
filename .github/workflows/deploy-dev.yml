@@ -7,9 +7,9 @@
 
 name: Java CI with Gradle & CD with CodeDeploy
 
-on:
-  pull_request:
-    branches: [ "dev-be" ]
+#on:
+#  pull_request:
+#    branches: [ "dev-be" ]
 
 jobs:
   build:

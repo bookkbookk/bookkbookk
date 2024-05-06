@@ -110,7 +110,7 @@ CREATE TABLE bookmark
     id           BIGINT       NOT NULL AUTO_INCREMENT,
     topic_id     BIGINT       NOT NULL,
     writer_id    BIGINT       NOT NULL,
-    title        VARCHAR(255) NOT NULL,
+    page         INT          NOT NULL,
     contents     TEXT         NOT NULL,
     created_time TIMESTAMP    NOT NULL,
     updated_time TIMESTAMP    NULL,
