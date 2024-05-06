@@ -2,7 +2,6 @@ package codesquad.bookkbookk.bookclub.integration;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +27,6 @@ import codesquad.bookkbookk.domain.book.repository.BookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateInvitationUrlRequest;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
-import codesquad.bookkbookk.domain.gathering.data.dto.CreateGatheringRequest;
 import codesquad.bookkbookk.domain.gathering.data.entity.Gathering;
 import codesquad.bookkbookk.domain.gathering.repository.GatheringRepository;
 import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
@@ -488,7 +486,7 @@ public class BookClubTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("모임을 만는다.")
+    @DisplayName("모임들을 만는다.")
     void createGathering() {
         // given
         Member member = TestDataFactory.createMember();
@@ -503,8 +501,8 @@ public class BookClubTest extends IntegrationTest {
         bookRepository.save(book);
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
-        CreateGatheringRequest createGatheringRequest =
-                new CreateGatheringRequest(book.getId(), "코드스쿼드", Instant.parse("2023-12-25T13:30:00Z"));
+        Map<String, Object> requestBody = Map.of("bookId", book.getId(),
+                "gatherings", TestDataFactory.createGatheringRequestGatherings());
 
         // when
         ExtractableResponse<Response> response = RestAssured
@@ -512,7 +510,7 @@ public class BookClubTest extends IntegrationTest {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .accept(ContentType.JSON)
                 .contentType(ContentType.JSON)
-                .body(createGatheringRequest)
+                .body(requestBody)
                 .when()
                 .post("/api/book-clubs/" + bookClub.getId() + "/gatherings")
                 .then().log().all()
@@ -536,8 +534,8 @@ public class BookClubTest extends IntegrationTest {
         bookRepository.save(book);
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
-        CreateGatheringRequest createGatheringRequest =
-                new CreateGatheringRequest(book.getId(), "코드스쿼드", Instant.parse("2023-12-25T13:30:00Z"));
+        Map<String, Object> requestBody = Map.of("bookId", book.getId(),
+                "gatherings", List.of(Map.of("place", "codesquad", "dateTime", "2023-12-25T13:30:00Z")));
         MemberNotInBookClubException exception = new MemberNotInBookClubException();
 
         // when
@@ -546,7 +544,7 @@ public class BookClubTest extends IntegrationTest {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .accept(ContentType.JSON)
                 .contentType(ContentType.JSON)
-                .body(createGatheringRequest)
+                .body(requestBody)
                 .when()
                 .post("/api/book-clubs/" + bookClub.getId() + "/gatherings")
                 .then().log().all()
@@ -572,8 +570,8 @@ public class BookClubTest extends IntegrationTest {
 
         bookClubMemberRepository.save(new BookClubMember(bookClub, member));
         String accessToken = jwtProvider.createAccessToken(member.getId());
-        CreateGatheringRequest createGatheringRequest =
-                new CreateGatheringRequest(1L, "코드스쿼드", Instant.parse("2023-12-25T13:30:00Z"));
+        Map<String, Object> requestBody = Map.of("bookId", 1L,
+                "gatherings", List.of(Map.of("place", "codesquad", "dateTime", "2023-12-25T13:30:00Z")));
         BookNotFoundException exception = new BookNotFoundException();
 
         // when
@@ -582,7 +580,7 @@ public class BookClubTest extends IntegrationTest {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .accept(ContentType.JSON)
                 .contentType(ContentType.JSON)
-                .body(createGatheringRequest)
+                .body(requestBody)
                 .when()
                 .post("/api/book-clubs/" + bookClub.getId() + "/gatherings")
                 .then().log().all()

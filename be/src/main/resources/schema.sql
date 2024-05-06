@@ -1,3 +1,16 @@
+DROP TABLE IF EXISTS comment_reaction;
+DROP TABLE IF EXISTS comment;
+DROP TABLE IF EXISTS bookmark_reaction;
+DROP TABLE IF EXISTS bookmark;
+DROP TABLE IF EXISTS topic;
+DROP TABLE IF EXISTS chapter;
+DROP TABLE IF EXISTS gathering;
+DROP TABLE IF EXISTS member_book;
+DROP TABLE IF EXISTS book;
+DROP TABLE IF EXISTS book_club_member;
+DROP TABLE IF EXISTS book_club;
+DROP TABLE IF EXISTS member;
+
 CREATE TABLE member
 (
     id                BIGINT        NOT NULL AUTO_INCREMENT,

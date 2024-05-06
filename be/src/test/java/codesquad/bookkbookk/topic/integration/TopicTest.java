@@ -1,5 +1,7 @@
 package codesquad.bookkbookk.topic.integration;
 
+import java.util.List;
+
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +16,8 @@ import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
+import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
+import codesquad.bookkbookk.domain.bookmark.repository.BookmarkRepository;
 import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
 import codesquad.bookkbookk.domain.chapter.repository.ChapterRepository;
 import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
@@ -49,6 +53,9 @@ public class TopicTest extends IntegrationTest {
 
     @Autowired
     private BookClubMemberRepository bookClubMemberRepository;
+
+    @Autowired
+    private BookmarkRepository bookmarkRepository;
 
     @Autowired
     private JwtProvider jwtProvider;
@@ -89,6 +96,53 @@ public class TopicTest extends IntegrationTest {
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             softAssertions.assertThat(response.jsonPath().getLong("createdTopicId")).isNotZero();
+        });
+
+    }
+
+    @DisplayName("토픽의 북마크들을 조회한다.")
+    @Test
+    void readBookmarks(){
+        //given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub(member);
+        bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
+
+        Book book = TestDataFactory.createBook(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = new Chapter(book, "first");
+        chapterRepository.save(chapter);
+
+        Topic topic = new Topic(chapter, "topic");
+        topicRepository.save(topic);
+
+        List<Bookmark> bookmarks = TestDataFactory.createBookmarks(5, member, topic);
+        bookmarkRepository.saveAll(bookmarks);
+
+        //when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .when()
+                .get("/api/topics/" + topic.getId() + "/bookmarks")
+                .then().log().all()
+                .extract();
+
+        //then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(response.jsonPath().getList("").size()).isEqualTo(5);
+            softAssertions.assertThat(response.jsonPath().getString("[1].author.nickname"))
+                    .isEqualTo("nickname");
+            softAssertions.assertThat(response.jsonPath().getLong("[3].bookmarkId"))
+                    .isEqualTo(4);
         });
 
     }

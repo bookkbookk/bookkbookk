@@ -2,6 +2,7 @@ package codesquad.bookkbookk.util;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -149,6 +150,18 @@ public class TestDataFactory {
                 .mapToObj(number -> new Gathering(book, Instant.parse("2023-12-25T13:30:00Z"),
                         "place " + number))
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    public static List<Map<String, String>> createGatheringRequestGatherings() {
+        return List.of(
+                Map.of("place", "장소 1", "dateTime", "2023-12-27T13:30:00Z"),
+                Map.of("place", "장소 2", "dateTime", "2023-12-26T13:30:00Z"),
+                Map.of("place", "장소 3", "dateTime", "2023-12-25T13:30:00Z"),
+                Map.of("place", "장소 4", "dateTime", "2023-12-24T13:30:00Z"),
+                Map.of("place", "장소 5", "dateTime", "2023-12-23T13:30:00Z"),
+                Map.of("place", "장소 6", "dateTime", "2023-12-22T13:30:00Z"),
+                Map.of("place", "장소 7", "dateTime", "2023-12-21T13:30:00Z")
+        );
     }
 
 }
