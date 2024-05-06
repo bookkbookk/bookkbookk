@@ -13,10 +13,11 @@ export function TopicItem({
   onClick: (topic: Pick<TopicItemInfo, "topicId" | "title">) => void;
 }) {
   const { topicId, title, recentBookmark } = topic;
+  const topicPrefix = "topic_";
 
   return (
     <TreeItem
-      nodeId={topicId + ""}
+      nodeId={topicPrefix + topicId}
       icon={<LabelImportantIcon />}
       onClick={() => onClick({ topicId, title })}
       label={
