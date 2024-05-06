@@ -48,7 +48,7 @@ public class Bookmark {
     private Topic topic;
 
     @Column(nullable = false)
-    private String title;
+    private Integer page;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String contents;
@@ -67,15 +67,15 @@ public class Bookmark {
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    private Bookmark(Member writer, Topic topic, String title, String contents) {
+    private Bookmark(Member writer, Topic topic, Integer page, String contents) {
         this.writer = writer;
         this.topic = topic;
-        this.title = title;
+        this.page = page;
         this.contents = contents;
     }
 
     public void updateBookmark(UpdateBookmarkRequest updateBookmarkRequest) {
-        this.title = updateBookmarkRequest.getTitle();
+        this.page = updateBookmarkRequest.getPage();
         this.contents = updateBookmarkRequest.getContent();
     }
 
