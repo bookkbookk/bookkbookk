@@ -92,7 +92,7 @@ public class BookmarkTest extends IntegrationTest {
         topicRepository.save(topic);
 
         JSONObject requestBody = new JSONObject(Map.of("topicId", topic.getId(),
-                "title", "title",
+                "page", "12",
                 "content", "content"));
 
         // when
@@ -134,7 +134,7 @@ public class BookmarkTest extends IntegrationTest {
         Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
         bookmarkRepository.save(bookmark);
 
-        JSONObject requestBody = new JSONObject(Map.of("title", "updated title",
+        JSONObject requestBody = new JSONObject(Map.of("page", "123",
                 "content", "updated content"));
         Thread.sleep(1000);
 
@@ -152,7 +152,7 @@ public class BookmarkTest extends IntegrationTest {
         Bookmark actual = bookmarkRepository.findById(bookmark.getId()).orElseThrow(BookmarkNotFoundException::new);
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softAssertions.assertThat(actual.getTitle()).isEqualTo("updated title");
+            softAssertions.assertThat(actual.getPage()).isEqualTo(123);
             softAssertions.assertThat(actual.getUpdatedTime()).isNotEqualTo(actual.getCreatedTime());
         });
     }

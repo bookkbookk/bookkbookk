@@ -115,7 +115,7 @@ public class TestDataFactory {
         return Bookmark.builder()
                 .writer(writer)
                 .topic(topic)
-                .title("title")
+                .page(1)
                 .contents("contents")
                 .build();
     }
@@ -125,7 +125,7 @@ public class TestDataFactory {
                 .mapToObj(number -> Bookmark.builder()
                         .writer(writer)
                         .topic(topic)
-                        .title("title " + number)
+                        .page(number)
                         .contents("contents " + number)
                         .build())
                 .collect(Collectors.toUnmodifiableList());
