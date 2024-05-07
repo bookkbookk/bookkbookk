@@ -17,6 +17,9 @@ export const NEW_GATHERING_FUNNEL = {
   checkInfo: "모임 생성" as const,
 };
 
+export type BOOK_CHAPTER_IDS =
+  (typeof BOOK_CHAPTER_TABS)[keyof typeof BOOK_CHAPTER_TABS]["id"];
+
 export const BOOK_CHAPTER_STATUS = {
   BEFORE_READING: {
     id: 1,
