@@ -148,7 +148,6 @@ public class JwtFilter implements Filter {
 
     private void writeErrorResponse(AuthException exception, HttpServletResponse httpServletResponse)
             throws IOException {
-        httpServletResponse.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
         httpServletResponse.setCharacterEncoding(StandardCharsets.UTF_8.name());
         ErrorResponse errorResponse = ErrorResponse.from(exception);
