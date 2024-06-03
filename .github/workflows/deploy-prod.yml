@@ -79,8 +79,8 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_PROD_SECRET_ACCESS_KEY }}
         run: |
           aws deploy create-deployment \
-          --application-name bookkbookk-prod \
-          --deployment-group-name bookkbookk-prod \
+          --application-name bookkbookk-prod-app \
+          --deployment-group-name bookkbookk-prod-release-group \
           --file-exists-behavior OVERWRITE \
           --s3-location bucket=bookkbookk-prod-bucket,bundleType=zip,key=bookkbookk-prod.zip \
           --region ${{ secrets.AWS_PROD_REGION }}
