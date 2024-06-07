@@ -205,7 +205,7 @@ public class BookTest extends IntegrationTest {
         BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
-        BookClubMember bookClubMember= new BookClubMember(bookClub, member);
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
         bookClubMemberRepository.save(bookClubMember);
 
         Book book = TestDataFactory.createBook(bookClub);
@@ -221,7 +221,6 @@ public class BookTest extends IntegrationTest {
         bookmarkRepository.saveAll(bookmarks1);
         List<Bookmark> bookmarks2 = TestDataFactory.createBookmarks(4, member, topics.get(1));
         bookmarkRepository.saveAll(bookmarks2);
-
 
         //when
         ExtractableResponse<Response> response = RestAssured
@@ -255,7 +254,7 @@ public class BookTest extends IntegrationTest {
         BookClub bookClub = TestDataFactory.createBookClub(member);
         bookClubRepository.save(bookClub);
 
-        BookClubMember bookClubMember= new BookClubMember(bookClub, member);
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
         bookClubMemberRepository.save(bookClubMember);
 
         Book book = TestDataFactory.createBook(bookClub);
@@ -270,20 +269,72 @@ public class BookTest extends IntegrationTest {
         List<Bookmark> bookmarks = TestDataFactory.createBookmarks(20, member, topic);
         bookmarkRepository.saveAll(bookmarks);
 
+        int startPage = 3;
+        int endPage = 17;
+
         //when
-        ExtractableResponse<Response> response = RestAssured
+        Response response = RestAssured
                 .given().log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-                .queryParam("startPage", 3)
-                .queryParam("endPage", 17)
+                .queryParam("startPage", startPage)
+                .queryParam("endPage", endPage)
                 .when()
                 .get("/api/books/" + book.getId() + "/bookmarks")
                 .then().log().all()
-                .extract();
+                .extract().response();
 
         //then
-//        SoftAssertions.assertSoftly(softAssertions -> {
-//        });
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.jsonPath().getList("").size()).isEqualTo(endPage - startPage + 1);
+            softAssertions.assertThat(response.jsonPath().getInt("[0].page")).isEqualTo(startPage);
+            softAssertions.assertThat(response.jsonPath().getInt("[" + (endPage - startPage) + "].page")).isEqualTo(endPage);
+        });
+    }
+
+    @DisplayName("책의 페이지로 북마크를 조회할 때 startPage가 endPage보다 크면 빈 리스트를 보낸다.")
+    @Test
+    void readBookmarksWithRevertedPages() {
+        //given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub(member);
+        bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
+
+        Book book = TestDataFactory.createBook(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = TestDataFactory.createChapter(book);
+        chapterRepository.save(chapter);
+
+        Topic topic = TestDataFactory.createTopic(chapter);
+        topicRepository.save(topic);
+
+        List<Bookmark> bookmarks = TestDataFactory.createBookmarks(20, member, topic);
+        bookmarkRepository.saveAll(bookmarks);
+
+        int startPage = 17;
+        int endPage = 3;
+
+        //when
+        Response response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .queryParam("startPage", startPage)
+                .queryParam("endPage", endPage)
+                .when()
+                .get("/api/books/" + book.getId() + "/bookmarks")
+                .then().log().all()
+                .extract().response();
+
+        //then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.jsonPath().getList("").size()).isEqualTo(0);
+        });
     }
 
 }
