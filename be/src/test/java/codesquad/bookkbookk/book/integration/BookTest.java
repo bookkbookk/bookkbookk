@@ -244,4 +244,46 @@ public class BookTest extends IntegrationTest {
         });
     }
 
+    @DisplayName("책의 페이지로 북마크를 조회한다.")
+    @Test
+    void readBookmarksWithPages() {
+        //given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+
+        BookClub bookClub = TestDataFactory.createBookClub(member);
+        bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember= new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
+
+        Book book = TestDataFactory.createBook(bookClub);
+        bookRepository.save(book);
+
+        Chapter chapter = TestDataFactory.createChapter(book);
+        chapterRepository.save(chapter);
+
+        Topic topic = TestDataFactory.createTopic(chapter);
+        topicRepository.save(topic);
+
+        List<Bookmark> bookmarks = TestDataFactory.createBookmarks(20, member, topic);
+        bookmarkRepository.saveAll(bookmarks);
+
+        //when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .queryParam("startPage", 3)
+                .queryParam("endPage", 17)
+                .when()
+                .get("/api/books/" + book.getId() + "/bookmarks")
+                .then().log().all()
+                .extract();
+
+        //then
+//        SoftAssertions.assertSoftly(softAssertions -> {
+//        });
+    }
+
 }
