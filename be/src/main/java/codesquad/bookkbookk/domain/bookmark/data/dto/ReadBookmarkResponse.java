@@ -16,13 +16,15 @@ public class ReadBookmarkResponse {
 
     private final Long bookmarkId;
     private final ReadBookmarkResponseWriter author;
+    private final Integer page;
     private final Instant createdTime;
     private final String content;
 
     @Builder
-    private ReadBookmarkResponse(Long bookmarkId, ReadBookmarkResponseWriter author, Instant createdTime, String content) {
+    private ReadBookmarkResponse(Long bookmarkId, ReadBookmarkResponseWriter author, Integer page, Instant createdTime, String content) {
         this.bookmarkId = bookmarkId;
         this.author = author;
+        this.page = page;
         this.createdTime = createdTime;
         this.content = content;
     }
@@ -39,6 +41,7 @@ public class ReadBookmarkResponse {
         return ReadBookmarkResponse.builder()
                 .bookmarkId(bookmark.getId())
                 .author(new ReadBookmarkResponseWriter(writer.getId(), writer.getNickname(), writer.getProfileImageUrl()))
+                .page(bookmark.getPage())
                 .createdTime(bookmark.getCreatedTime())
                 .content(bookmark.getContents())
                 .build();
