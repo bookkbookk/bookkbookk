@@ -66,6 +66,15 @@ public class BookmarkService {
         return ReadBookmarkResponse.from(bookmarks);
     }
 
+    @Transactional(readOnly = true)
+    public List<ReadBookmarkResponse> readBookmarks(Long memberId, Long bookId, Integer startPage, Integer endPage) {
+        authorizationService.authorizeBookClubMembershipByBookId(memberId, bookId);
+
+        List<Bookmark> bookmarks = bookmarkRepository.findAllByPages(startPage, endPage);
+
+        return ReadBookmarkResponse.from(bookmarks);
+    }
+
     @Transactional
     public void updateBookmark(Long memberId, Long bookmarkId, UpdateBookmarkRequest updateBookmarkRequest) {
         authorizationService.authorizeBookmarkWriter(memberId, bookmarkId);
