@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.16'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
 
 group = 'codesquad'
@@ -12,6 +13,7 @@ java {
 }
 
 configurations {
+	asciidoctorExt
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
@@ -49,10 +51,24 @@ dependencies {
 
 	// redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	// REST Docs
+	asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-restassured'
+}
+
+ext {
+	snippetsDir = file('build/generated-snippets')
+}
+
+tasks.register('deleteSnippets', Delete) {
+	delete snippetsDir
 }
 
 tasks.named('test') {
+	dependsOn tasks.named('deleteSnippets')
 	useJUnitPlatform()
+	outputs.dir snippetsDir
 }
 
 task copySecrets(type: Copy) {
@@ -61,6 +77,12 @@ task copySecrets(type: Copy) {
 		include "*.yml"
 		into 'src/main/resources'
 	}
+}
+
+asciidoctor {
+	inputs.dir snippetsDir
+	configurations 'asciidoctorExt'
+	dependsOn test
 }
 
 jar {
