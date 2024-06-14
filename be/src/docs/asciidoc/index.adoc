@@ -1,0 +1,108 @@
+= 부크부크 API 문서
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+
+== 인증 API (/auth)
+=== 로그 아웃
+operation::auth-documentation-test/logout[]
+=== 액세스 토큰 재발급
+operation::auth-documentation-test/reissue-access-token[]
+
+== 멤버 API (/members)
+=== 멤버 조회
+operation::member-documentation-test/read-member[]
+=== 멤버 수정
+operation::member-documentation-test/update-member[]
+=== 멤버 책들 조회
+operation::member-documentation-test/read-member-books[]
+
+== 북클럽 API (/book-clubs)
+=== 북클럽 생성
+operation::book-club-documentation-test/create-book-club[]
+=== 멤버의 북클럽들 조회
+operation::book-club-documentation-test/read-member-book-clubs[]
+=== 열린 북클럽 상세 조회
+operation::book-club-documentation-test/read-open-book-club-detail[]
+=== 닫힌 북클럽 상세 조회
+operation::book-club-documentation-test/read-closed-book-club-detail[]
+=== 북클럽 책들 조회
+operation::book-club-documentation-test/read-book-club-books[]
+=== 북클럽 초대 URL 생성
+operation::book-club-documentation-test/create-invitation-url[]
+=== 북클럽 초대 URL 조회
+operation::book-club-documentation-test/read-book-club-invitation-url[]
+=== 북클럽 참여
+operation::book-club-documentation-test/join-book-club[]
+=== 북클럽 모임들 생성
+operation::book-club-documentation-test/create-gatherings[]
+=== 북클럽의 모임들 조회
+operation::book-club-documentation-test/read-book-club-gatherings[]
+
+== 책 API (/books)
+=== 책 추가하기
+operation::book-documentation-test/create-book[]
+=== 책 상태 변경
+operation::book-documentation-test/update-book-status[]
+=== 책의 챕터들 조회
+operation::book-documentation-test/read-chapters-with-book-id[]
+=== 책의 페이지로 북마크들 검색
+operation::book-documentation-test/read-bookmarks-with-pages
+
+== 모임 API (/gatherins)
+=== 모임 수정
+operation::gathering-documentation-test/update-gathering[]
+=== 모임 삭제
+operation::gathering-documentation-test/delete-gathering[]
+
+== 챕터 API (/chapters)
+=== 챕터 생성
+operation::chapter-documentation-test/create-chapter[]
+=== 챕터 수정
+operation::chapter-documentation-test/update-chapter[]
+=== 챕터 삭제
+operation::chapter-documentation-test/delete-chapter[]
+=== 챕터의 토픽들 조회
+operation::chapter-documentation-test/read-chapter-topics[]
+
+== 토픽 API (/topics)
+=== 토픽 생성
+operation::topic-documentation-test/create-topic[]
+=== 토픽 수정
+operation::topic-documentation-test/update-topic[]
+=== 토픽 삭제
+operation::topic-documentation-test/delete-topic[]
+=== 토픽의 북마크들 조회
+operation::topic-documentation-test/read-topic-bookmarks[]
+
+== 북마크 API (/bookmarks)
+=== 북마크 생성
+operation::bookmark-documentation-test/create-bookmark[]
+=== 북마크 수정
+operation::bookmark-documentation-test/update-bookmark[]
+=== 북마크 삭제
+operation::bookmark-documentation-test/delete-bookmark[]
+=== 북마크 리액션 생성
+operation::bookmark-documentation-test/create-bookmark-reaction[]
+=== 북마크 리액션 삭제
+operation::bookmark-documentation-test/delete-bookmark-reaction[]
+=== 북마크 리액션들 조회
+operation::bookmark-documentation-test/read-bookmark-reactions[]
+=== 북마크의 코멘트들 조회
+operation::bookmark-documentation-test/read-bookmark-comments[]
+
+== 코멘트 API (/comments)
+=== 코멘트 생성
+operation::comment-documentation-test/create-comment[]
+=== 코멘트 수정
+operation::comment-documentation-test/update-comment[]
+=== 코멘트 삭제
+operation::comment-documentation-test/delete-comment[]
+=== 코멘트 리액션 생성
+operation::comment-documentation-test/create-comment-reaction[]
+=== 코멘트 리액션들 조회
+operation::comment-documentation-test/read-comment-reactions[]
+=== 코멘트 리액션 삭제
+operation::comment-documentation-test/delete-comment-reaction[]
