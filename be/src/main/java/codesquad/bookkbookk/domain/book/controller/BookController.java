@@ -1,5 +1,6 @@
 package codesquad.bookkbookk.domain.book.controller;
 
+import java.time.Instant;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -57,6 +58,17 @@ public class BookController {
                                                                     @RequestParam Integer startPage,
                                                                     @RequestParam Integer endPage) {
         List<ReadBookmarkResponse> response = bookmarkService.readBookmarks(memberId, bookId, startPage, endPage);
+
+        return ResponseEntity.ok()
+                .body(response);
+    }
+
+    @GetMapping("/{bookId}/bookmarks/time")
+    public ResponseEntity<List<ReadBookmarkResponse>> readBookmarksWithUpdatedTime(@MemberId Long memberId,
+                                                                                   @PathVariable Long bookId,
+                                                                                   @RequestParam Instant startTime,
+                                                                                   @RequestParam Instant endTime) {
+        List<ReadBookmarkResponse> response = bookmarkService.readBookmarksWithUpdatedTime(memberId, bookId, startTime, endTime);
 
         return ResponseEntity.ok()
                 .body(response);

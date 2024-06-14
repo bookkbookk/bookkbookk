@@ -1,5 +1,6 @@
 package codesquad.bookkbookk.domain.bookmark.repository;
 
+import java.time.Instant;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,5 +23,12 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
             "AND b.page <= :endPage " +
             "ORDER BY b.page ASC")
     List<Bookmark> findAllByPages(@Param("startPage") Integer startPage, @Param("endPage") Integer endPage);
+
+    @Query("SELECT b " +
+            "FROM Bookmark b " +
+            "WHERE b.updatedTime >= :startTime " +
+            "AND b.updatedTime <= :endTime " +
+            "ORDER BY b.page ASC")
+    List<Bookmark> findAllByUpdatedTime(@Param("startTime") Instant startTime, @Param("endTime") Instant endTime);
 
 }

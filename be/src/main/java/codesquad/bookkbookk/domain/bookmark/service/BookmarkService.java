@@ -1,5 +1,6 @@
 package codesquad.bookkbookk.domain.bookmark.service;
 
+import java.time.Instant;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -71,6 +72,16 @@ public class BookmarkService {
         authorizationService.authorizeBookClubMembershipByBookId(memberId, bookId);
 
         List<Bookmark> bookmarks = bookmarkRepository.findAllByPages(startPage, endPage);
+
+        return ReadBookmarkResponse.from(bookmarks);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReadBookmarkResponse> readBookmarksWithUpdatedTime(Long memberId, Long bookId, Instant startTime,
+                                                                   Instant endTime) {
+        authorizationService.authorizeBookClubMembershipByBookId(memberId, bookId);
+
+        List<Bookmark> bookmarks = bookmarkRepository.findAllByUpdatedTime(startTime, endTime);
 
         return ReadBookmarkResponse.from(bookmarks);
     }
