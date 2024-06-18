@@ -49,7 +49,9 @@ operation::book-documentation-test/update-book-status[]
 === 책의 챕터들 조회
 operation::book-documentation-test/read-chapters-with-book-id[]
 === 책의 페이지로 북마크들 검색
-operation::book-documentation-test/read-bookmarks-with-pages
+operation::book-documentation-test/read-bookmarks-with-pages[]
+=== 북마크의 수정 시간으로 책의 북마크들 검색
+operation::book-documentation-test/read-bookmarks-with-updated-time[]
 
 == 모임 API (/gatherins)
 === 모임 수정
