@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
 
 @Repository
-public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
+public interface BookmarkRepository extends JpaRepository<Bookmark, Long>, BookmarkCustomRepository {
 
     boolean existsByIdAndWriterId(Long bookmarkId, Long writerId);
 
