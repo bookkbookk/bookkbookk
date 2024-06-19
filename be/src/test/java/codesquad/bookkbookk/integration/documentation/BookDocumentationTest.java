@@ -330,7 +330,7 @@ public class BookDocumentationTest extends IntegrationTest {
         });
     }
 
-    @DisplayName("북마크 수정 시간으로 책의 북마크들을 조회한다.")
+    @DisplayName("책의 북마크들을 필터링해서 조회한다.")
     @Test
     void readBookmarksWithUpdatedTime() throws IOException {
         // given
@@ -347,13 +347,17 @@ public class BookDocumentationTest extends IntegrationTest {
                 .pathParam("bookId",1L)
                 .queryParam("startTime", startTime.toString())
                 .queryParam("endTime", endTime.toString())
+                .queryParam("startPage", 50)
+                .queryParam("endPage",190)
                 .filter(document("{class-name}/{method-name}",
                         pathParameters(
                                 parameterWithName("bookId").description("검색할 책 아이디")
                         ),
                         requestParameters(
                                 parameterWithName("startTime").description("검색 시작 시간"),
-                                parameterWithName("endTime").description("검색 마지막 시간")
+                                parameterWithName("endTime").description("검색 마지막 시간"),
+                                parameterWithName("startPage").description("검색 시작 페이지"),
+                                parameterWithName("endPage").description("검색 마지막 페이지")
                         ),
                         responseFields(
                                 fieldWithPath("[].bookmarkId").type(JsonFieldType.NUMBER).description("북마크 아이디"),
@@ -369,17 +373,18 @@ public class BookDocumentationTest extends IntegrationTest {
                                 fieldWithPath("[].content").type(JsonFieldType.STRING).description("북마크 내용")
                         )))
                 .when()
-                .get("/api/books/{bookId}/bookmarks/time")
+                .get("/api/books/{bookId}/bookmarks")
                 .then().log().all()
                 .extract().response();
 
         //then
         SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(response.jsonPath().getList("").size()).isEqualTo(15);
+            softAssertions.assertThat(response.jsonPath().getList("").size()).isEqualTo(13);
             softAssertions.assertThat(response.jsonPath().getString("[0].updatedTime"))
-                    .isEqualTo("2024-02-03T00:00:00Z");
-            softAssertions.assertThat(response.jsonPath().getString("[14].updatedTime"))
                     .isEqualTo("2024-02-17T00:00:00Z");
+            softAssertions.assertThat(response.jsonPath().getString("[12].updatedTime"))
+                    .isEqualTo("2024-02-05T00:00:00Z");
+            softAssertions.assertThat(response.jsonPath().getInt("[12].page")).isEqualTo(50);
         });
     }
 
