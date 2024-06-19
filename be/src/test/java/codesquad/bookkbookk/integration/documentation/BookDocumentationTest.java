@@ -332,7 +332,7 @@ public class BookDocumentationTest extends IntegrationTest {
 
     @DisplayName("책의 북마크들을 필터링해서 조회한다.")
     @Test
-    void readBookmarksWithUpdatedTime() throws IOException {
+    void readBookmarksWithFilter() throws IOException {
         // given
         String sql = new String(Files.readAllBytes(Paths.get("src/test/resources/sql/readBookmarksWithUpdatedTime.sql")));
         jdbcTemplate.execute(sql);
