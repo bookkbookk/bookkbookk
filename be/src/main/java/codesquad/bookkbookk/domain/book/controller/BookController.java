@@ -19,6 +19,7 @@ import codesquad.bookkbookk.domain.book.data.dto.CreateBookResponse;
 import codesquad.bookkbookk.domain.book.data.dto.UpdateBookStatusRequest;
 import codesquad.bookkbookk.domain.book.data.dto.UpdateBookStatusResponse;
 import codesquad.bookkbookk.domain.book.service.BookService;
+import codesquad.bookkbookk.domain.bookmark.data.dto.BookmarkFilter;
 import codesquad.bookkbookk.domain.bookmark.data.dto.ReadBookmarkResponse;
 import codesquad.bookkbookk.domain.bookmark.service.BookmarkService;
 import codesquad.bookkbookk.domain.chapter.data.dto.ReadChapterResponse;
@@ -54,21 +55,19 @@ public class BookController {
     }
 
     @GetMapping("/{bookId}/bookmarks")
-    public ResponseEntity<List<ReadBookmarkResponse>> readBookmarks(@MemberId Long memberId, @PathVariable Long bookId,
-                                                                    @RequestParam Integer startPage,
-                                                                    @RequestParam Integer endPage) {
-        List<ReadBookmarkResponse> response = bookmarkService.readBookmarks(memberId, bookId, startPage, endPage);
-
-        return ResponseEntity.ok()
-                .body(response);
-    }
-
-    @GetMapping("/{bookId}/bookmarks/time")
     public ResponseEntity<List<ReadBookmarkResponse>> readBookmarksWithUpdatedTime(@MemberId Long memberId,
                                                                                    @PathVariable Long bookId,
-                                                                                   @RequestParam Instant startTime,
-                                                                                   @RequestParam Instant endTime) {
-        List<ReadBookmarkResponse> response = bookmarkService.readBookmarksWithUpdatedTime(memberId, bookId, startTime, endTime);
+                                                                                   @RequestParam(required = false) Integer startPage,
+                                                                                   @RequestParam(required = false) Integer endPage,
+                                                                                   @RequestParam(required = false) Instant startTime,
+                                                                                   @RequestParam(required = false) Instant endTime) {
+        BookmarkFilter bookmarkFilter = BookmarkFilter.builder()
+                .startPage(startPage)
+                .endPage(endPage)
+                .startTime(startTime)
+                .endTime(endTime)
+                .build();
+        List<ReadBookmarkResponse> response = bookmarkService.readBookmarksWithFilter(memberId, bookId, bookmarkFilter);
 
         return ResponseEntity.ok()
                 .body(response);

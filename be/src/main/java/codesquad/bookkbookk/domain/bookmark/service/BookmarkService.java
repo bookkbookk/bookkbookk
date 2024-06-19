@@ -1,6 +1,5 @@
 package codesquad.bookkbookk.domain.bookmark.service;
 
-import java.time.Instant;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -13,6 +12,7 @@ import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.common.error.exception.TopicNotFoundException;
 import codesquad.bookkbookk.common.type.Reaction;
 import codesquad.bookkbookk.domain.auth.service.AuthorizationService;
+import codesquad.bookkbookk.domain.bookmark.data.dto.BookmarkFilter;
 import codesquad.bookkbookk.domain.bookmark.data.dto.CreateBookmarkReactionRequest;
 import codesquad.bookkbookk.domain.bookmark.data.dto.CreateBookmarkRequest;
 import codesquad.bookkbookk.domain.bookmark.data.dto.DeleteBookmarkReactionRequest;
@@ -68,20 +68,10 @@ public class BookmarkService {
     }
 
     @Transactional(readOnly = true)
-    public List<ReadBookmarkResponse> readBookmarks(Long memberId, Long bookId, Integer startPage, Integer endPage) {
+    public List<ReadBookmarkResponse> readBookmarksWithFilter(Long memberId, Long bookId, BookmarkFilter bookmarkFilter) {
         authorizationService.authorizeBookClubMembershipByBookId(memberId, bookId);
 
-        List<Bookmark> bookmarks = bookmarkRepository.findAllByPages(startPage, endPage);
-
-        return ReadBookmarkResponse.from(bookmarks);
-    }
-
-    @Transactional(readOnly = true)
-    public List<ReadBookmarkResponse> readBookmarksWithUpdatedTime(Long memberId, Long bookId, Instant startTime,
-                                                                   Instant endTime) {
-        authorizationService.authorizeBookClubMembershipByBookId(memberId, bookId);
-
-        List<Bookmark> bookmarks = bookmarkRepository.findAllByUpdatedTime(startTime, endTime);
+        List<Bookmark> bookmarks = bookmarkRepository.findAllByFilter(bookId, bookmarkFilter);
 
         return ReadBookmarkResponse.from(bookmarks);
     }
