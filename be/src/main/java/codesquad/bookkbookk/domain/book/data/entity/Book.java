@@ -45,6 +45,9 @@ public class Book {
     @JoinColumn(name = "book_club_id")
     private BookClub bookClub;
 
+    @Column(name = "book_club_id", nullable = false, insertable = false, updatable = false)
+    private Long bookClubId;
+
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
     private Status status;
@@ -74,6 +77,7 @@ public class Book {
     private Book(String isbn, BookClub bookClub, String title, String cover, String author, String category) {
         this.isbn = validateAndFormatISBN(isbn);
         this.bookClub = bookClub;
+        if (bookClub != null) this.bookClubId = bookClub.getId();
         this.title = title;
         this.cover = cover;
         this.author = author;

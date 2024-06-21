@@ -1,5 +1,6 @@
 package codesquad.bookkbookk.domain.mapping.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -28,13 +29,21 @@ public class MemberBook {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @Column(name = "member_id", nullable = false, insertable = false, updatable = false)
+    private Long memberId;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "book_id")
     private Book book;
 
+    @Column(name = "book_id", nullable = false, insertable = false, updatable = false)
+    private Long bookId;
+
     public MemberBook(Member member, Book book) {
         this.member = member;
+        if (member != null) this.memberId = member.getId();
         this.book = book;
+        if (book != null) this.bookId = book.getId();
     }
 
 }

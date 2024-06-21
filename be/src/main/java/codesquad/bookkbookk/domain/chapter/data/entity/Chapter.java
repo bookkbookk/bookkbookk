@@ -38,6 +38,9 @@ public class Chapter {
     @JoinColumn(name = "book_id")
     private Book book;
 
+    @Column(name = "book_id", nullable = false, insertable = false, updatable = false)
+    private Long bookId;
+
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
     private Status status;
@@ -49,6 +52,7 @@ public class Chapter {
 
     public Chapter(Book book, String title) {
         this.book = book;
+        if (book != null) this.bookId = book.getId();
         this.title = title;
         this.status = Status.BEFORE_READING;
     }

@@ -32,9 +32,15 @@ public class BookmarkReaction {
     @JoinColumn(name = "bookmark_id")
     private Bookmark bookmark;
 
+    @Column(name = "bookmark_id", nullable = false, insertable = false, updatable = false)
+    private Long bookmarkId;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reactor_id")
     private Member reactor;
+
+    @Column(name = "reactor_id", nullable = false, insertable = false, updatable = false)
+    private Long reactorId;
 
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
@@ -42,7 +48,9 @@ public class BookmarkReaction {
 
     public BookmarkReaction(Bookmark bookmark, Member reactor, Reaction reaction) {
         this.bookmark = bookmark;
+        if (bookmark != null) this.bookmarkId = bookmark.getId();
         this.reactor = reactor;
+        if (reactor != null) this.reactorId = reactor.getId();
         this.reaction = reaction;
     }
 

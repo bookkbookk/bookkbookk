@@ -42,9 +42,15 @@ public class Bookmark {
     @JoinColumn(name = "writer_id")
     private Member writer;
 
+    @Column(name = "writer_id", nullable = false, insertable = false, updatable = false)
+    private Long writerId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "topic_id")
     private Topic topic;
+
+    @Column(name = "topic_id", nullable = false, insertable = false, updatable = false)
+    private Long topicId;
 
     @Column(nullable = false)
     private Integer page;
@@ -69,7 +75,9 @@ public class Bookmark {
     @Builder
     private Bookmark(Member writer, Topic topic, Integer page, String contents) {
         this.writer = writer;
+        if (writer != null) this.writerId = writer.getId();
         this.topic = topic;
+        if (topic != null) this.topicId = topic.getId();
         this.page = page;
         this.contents = contents;
     }

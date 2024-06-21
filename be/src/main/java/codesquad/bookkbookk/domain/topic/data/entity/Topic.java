@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -33,6 +34,9 @@ public class Topic {
     @JoinColumn(name = "chapter_id")
     private Chapter chapter;
 
+    @Column(name = "chapter_id", nullable = false, insertable = false, updatable = false)
+    private Long chapterId;
+
     private String title;
 
     @OneToMany(mappedBy = "topic", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -40,6 +44,7 @@ public class Topic {
 
     public Topic(Chapter chapter, String title) {
         this.chapter = chapter;
+        if (chapter != null) this.chapterId = chapter.getId();
         this.title = title;
     }
 

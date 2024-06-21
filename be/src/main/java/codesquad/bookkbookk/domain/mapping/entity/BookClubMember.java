@@ -3,6 +3,7 @@ package codesquad.bookkbookk.domain.mapping.entity;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -31,13 +32,21 @@ public class BookClubMember {
     @JoinColumn(name = "book_club_id")
     private BookClub bookClub;
 
+    @Column(name = "book_club_id", nullable = false, insertable = false, updatable = false)
+    private Long bookClubId;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @Column(name = "member_id", nullable = false, insertable = false, updatable = false)
+    private Long memberId;
+
     public BookClubMember(BookClub bookClub, Member member) {
         this.bookClub = bookClub;
+        if (bookClub != null) this.bookClubId = getBookClubId();
         this.member = member;
+        if (member != null) this.memberId = member.getId();
     }
 
     public static List<Member> toMembers(List<BookClubMember> bookClubMembers) {

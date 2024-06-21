@@ -40,9 +40,15 @@ public class Comment {
     @JoinColumn(name = "bookmark_id")
     private Bookmark bookmark;
 
+    @Column(name = "bookmark_id", nullable = false, insertable = false, updatable = false)
+    private Long bookmarkId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "writer_id")
     private Member writer;
+
+    @Column(name = "writer_id", nullable = false, insertable = false, updatable = false)
+    private Long writerId;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String contents;
@@ -60,7 +66,9 @@ public class Comment {
 
     public Comment(Bookmark bookmark, Member writer, String contents) {
         this.bookmark = bookmark;
+        if (bookmark != null) this.bookmarkId = bookmark.getId();
         this.writer = writer;
+        if (writer != null) this.writerId = writer.getId();
         this.contents = contents;
     }
 
