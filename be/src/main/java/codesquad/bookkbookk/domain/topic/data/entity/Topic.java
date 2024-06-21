@@ -3,6 +3,7 @@ package codesquad.bookkbookk.domain.topic.data.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -34,12 +35,16 @@ public class Topic {
 
     private String title;
 
-    @OneToMany(mappedBy = "topic")
+    @OneToMany(mappedBy = "topic", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Bookmark> bookmarks = new ArrayList<>();
 
     public Topic(Chapter chapter, String title) {
         this.chapter = chapter;
         this.title = title;
+    }
+
+    public boolean addBookmark(Bookmark bookmark) {
+        return this.bookmarks.add(bookmark);
     }
 
     public void updateTitle(String title){

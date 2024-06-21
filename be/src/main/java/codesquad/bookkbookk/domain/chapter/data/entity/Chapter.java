@@ -3,6 +3,7 @@ package codesquad.bookkbookk.domain.chapter.data.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -43,13 +44,17 @@ public class Chapter {
 
     private String title;
 
-    @OneToMany(mappedBy = "chapter")
+    @OneToMany(mappedBy = "chapter", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Topic> topics = new ArrayList<>();
 
     public Chapter(Book book, String title) {
         this.book = book;
         this.title = title;
         this.status = Status.BEFORE_READING;
+    }
+
+    public boolean addTopic(Topic topic) {
+        return this.topics.add(topic);
     }
 
     public Chapter update(UpdateChapterRequest request) {

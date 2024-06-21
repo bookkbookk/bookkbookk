@@ -3,8 +3,8 @@ package codesquad.bookkbookk.domain.bookmark.data.entity;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,7 +18,6 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import codesquad.bookkbookk.common.type.Reaction;
 import codesquad.bookkbookk.domain.bookmark.data.dto.UpdateBookmarkRequest;
 import codesquad.bookkbookk.domain.comment.data.entity.Comment;
 import codesquad.bookkbookk.domain.mapping.entity.BookmarkReaction;
@@ -61,9 +60,10 @@ public class Bookmark {
     @Column(columnDefinition = "TIMESTAMP", nullable = false)
     private Instant updatedTime;
 
-    @OneToMany(mappedBy = "bookmark")
+    @OneToMany(mappedBy = "bookmark", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BookmarkReaction> bookmarkReactions = new ArrayList<>();
-    @OneToMany(mappedBy = "bookmark")
+
+    @OneToMany(mappedBy = "bookmark", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
@@ -74,15 +74,17 @@ public class Bookmark {
         this.contents = contents;
     }
 
+    public boolean addComment(Comment comment) {
+        return this.comments.add(comment);
+    }
+
+    public boolean addReaction(BookmarkReaction bookmarkReaction) {
+        return this.bookmarkReactions.add(bookmarkReaction);
+    }
+
     public void updateBookmark(UpdateBookmarkRequest updateBookmarkRequest) {
         this.page = updateBookmarkRequest.getPage();
         this.contents = updateBookmarkRequest.getContent();
-    }
-
-    public List<Reaction> getReactions() {
-        return bookmarkReactions.stream()
-                .map(BookmarkReaction::getReaction)
-                .collect(Collectors.toUnmodifiableList());
     }
 
 }

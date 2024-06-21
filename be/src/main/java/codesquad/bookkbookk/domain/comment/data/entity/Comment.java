@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -34,28 +35,37 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bookmark_id")
     private Bookmark bookmark;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "writer_id")
     private Member writer;
+
     @Column(columnDefinition = "TEXT", nullable = false)
     private String contents;
+
     @CreationTimestamp
     @Column(columnDefinition = "TIMESTAMP", nullable = false)
     private Instant createdTime;
     @UpdateTimestamp
+
     @Column(columnDefinition = "TIMESTAMP", nullable = false)
     private Instant updatedTime;
 
-    @OneToMany(mappedBy = "comment")
+    @OneToMany(mappedBy = "comment", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     List<CommentReaction> commentReactions = new ArrayList<>();
 
     public Comment(Bookmark bookmark, Member writer, String contents) {
         this.bookmark = bookmark;
         this.writer = writer;
         this.contents = contents;
+    }
+
+    public boolean addReaction(CommentReaction commentReaction) {
+        return this.commentReactions.add(commentReaction);
     }
 
     public void updateComment(UpdateCommentRequest updateCommentRequest) {

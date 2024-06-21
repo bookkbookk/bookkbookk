@@ -27,12 +27,15 @@ public class BookmarkReaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "bookmark_id")
     private Bookmark bookmark;
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reactor_id")
     private Member reactor;
+
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
     private Reaction reaction;

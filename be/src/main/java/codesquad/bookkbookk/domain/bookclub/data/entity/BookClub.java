@@ -4,10 +4,12 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -56,9 +58,10 @@ public class BookClub {
     @Column(columnDefinition = "TIMESTAMP")
     private Instant upcomingGatheringTime;
 
-    @OneToMany(mappedBy = "bookClub")
+    @OneToMany(mappedBy = "bookClub", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BookClubMember> bookClubMembers = new ArrayList<>();
-    @OneToMany(mappedBy = "bookClub")
+
+    @OneToMany(mappedBy = "bookClub", fetch = FetchType.LAZY)
     private List<Book> books = new ArrayList<>();
 
     @Builder
@@ -67,6 +70,14 @@ public class BookClub {
         this.name = name;
         this.profileImageUrl = profileImageUrl;
         this.status = BookClubStatus.OPEN;
+    }
+
+    public boolean addMember(BookClubMember bookClubMember) {
+        return this.bookClubMembers.add(bookClubMember);
+    }
+
+    public boolean addBook(Book book) {
+        return this.books.add(book);
     }
 
     public void updateUpcomingGatheringDate(Instant gatheringTime) {
