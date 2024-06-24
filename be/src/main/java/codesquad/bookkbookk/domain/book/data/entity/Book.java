@@ -22,6 +22,7 @@ import codesquad.bookkbookk.domain.book.data.dto.UpdateBookStatusRequest;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
 import codesquad.bookkbookk.domain.gathering.data.entity.Gathering;
+import codesquad.bookkbookk.domain.mapping.entity.MemberBook;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -72,6 +73,9 @@ public class Book {
 
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Chapter> chapters = new ArrayList<>();
+
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberBook> bookMembers = new ArrayList<>();
 
     @Builder
     private Book(String isbn, BookClub bookClub, String title, String cover, String author, String category) {
