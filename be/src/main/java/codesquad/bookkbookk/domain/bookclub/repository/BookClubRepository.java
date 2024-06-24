@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 
-public interface BookClubRepository extends JpaRepository<BookClub, Long> {
+public interface BookClubRepository extends JpaRepository<BookClub, Long>, BookClubCustomRepository {
 
     @Query("SELECT bookclub FROM BookClub bookclub " +
             "JOIN BookClubMember AS bookClubMember " +

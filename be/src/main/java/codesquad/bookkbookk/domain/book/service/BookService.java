@@ -62,7 +62,7 @@ public class BookService {
     }
 
     public ReadBookResponse readBooks(Long memberId, Pageable pageable) {
-        Page<Book> books = bookRepository.findBooksByMemberId(memberId, pageable);
+        Page<Book> books = bookRepository.findPageByMemberId(memberId, pageable);
 
         return ReadBookResponse.from(books);
     }
@@ -70,7 +70,7 @@ public class BookService {
     public ReadBookClubBookResponse readBookClubBooks(Long memberId, Long bookClubId, Pageable pageable) {
         authorizationService.authorizeBookClubMembershipByBookClubId(memberId, bookClubId);
 
-        Slice<Book> books = bookRepository.findBooksByBookClubId(bookClubId, pageable);
+        Slice<Book> books = bookRepository.findSliceByBookClubId(bookClubId, pageable);
         return ReadBookClubBookResponse.from(books);
     }
 

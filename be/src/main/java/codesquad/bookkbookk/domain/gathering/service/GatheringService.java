@@ -54,12 +54,7 @@ public class GatheringService {
     public List<ReadGatheringResponse> readGatherings(Long memberId, Long bookClubId) {
         authorizationService.authorizeBookClubMembershipByBookClubId(memberId, bookClubId);
 
-        BookClub bookClub = bookClubRepository.findById(bookClubId).orElseThrow(BookClubNotFoundException::new);
-        List<Gathering> gatherings = bookClub.getBooks().stream()
-                .flatMap(book -> book.getGatherings().stream())
-                .collect(Collectors.toUnmodifiableList());
-
-        return ReadGatheringResponse.from(gatherings);
+        return ReadGatheringResponse.from(gatheringRepository.findAllByBookClubId(bookClubId));
     }
 
     @Transactional

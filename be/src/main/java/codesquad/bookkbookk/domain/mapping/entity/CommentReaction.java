@@ -28,6 +28,7 @@ public class CommentReaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // TODO: BookmarkReaction과 마찬가지로 fetch 전략 생각해볼것
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "comment_id")
     private Comment comment;

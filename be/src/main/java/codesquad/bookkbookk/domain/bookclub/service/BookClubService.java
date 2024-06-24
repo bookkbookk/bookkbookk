@@ -79,20 +79,16 @@ public class BookClubService {
     }
 
     public List<ReadBookClubDetailResponse> readBookClubs(Long memberId, String statusName) {
-        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
-
+        BookClubStatus status;
         if (statusName.equals(STATUS_ALL)) {
-            return  member.getBookClubs().stream()
-                    .map(bookClub -> bookClub.getStatus().from(bookClub))
-                    .collect(Collectors.toUnmodifiableList());
+            status = null;
+        } else {
+            status = BookClubStatus.of(statusName);
         }
 
-        BookClubStatus status = BookClubStatus.of(statusName);
-        List<BookClub> filteredBookClubs = member.getBookClubs().stream()
-                .filter(bookClub -> bookClub.getStatus().equals(status))
+        return bookClubRepository.findAllByMemberIdAndStatus(memberId, status).stream()
+                .map(bookClub -> bookClub.getStatus().from(bookClub))
                 .collect(Collectors.toUnmodifiableList());
-
-        return status.from(filteredBookClubs);
     }
 
     public InvitationUrlResponse createInvitationUrl(Long memberId, CreateInvitationUrlRequest request) {
@@ -126,7 +122,7 @@ public class BookClubService {
     public ReadBookClubDetailResponse readBookClubDetail(Long memberId, Long bookClubId) {
         authorizationService.authorizeBookClubMembershipByBookClubId(memberId, bookClubId);
 
-        BookClub bookClub = bookClubRepository.findById(bookClubId).orElseThrow(BookClubNotFoundException::new);
+        BookClub bookClub = bookClubRepository.findDetailById(bookClubId).orElseThrow(BookClubNotFoundException::new);
 
         return bookClub.getStatus().from(bookClub);
     }
