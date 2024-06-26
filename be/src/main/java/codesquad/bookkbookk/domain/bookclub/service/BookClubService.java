@@ -113,10 +113,7 @@ public class BookClubService {
         authorizationService.authorizeBookClubJoin(memberId, bookClub.getId());
 
         bookClub.addMember(new BookClubMember(bookClub, member));
-        bookClubRepository.save(bookClub);
-
         bookClub.getBooks().forEach(member::addBook);
-        memberRepository.save(member);
 
         return JoinBookClubResponse.from(bookClub);
     }

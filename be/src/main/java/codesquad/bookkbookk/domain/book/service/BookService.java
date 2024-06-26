@@ -57,7 +57,6 @@ public class BookService {
         member.addBook(book);
 
         bookRepository.save(book);
-        memberRepository.save(member);
 
         return new CreateBookResponse(book.getId());
     }
