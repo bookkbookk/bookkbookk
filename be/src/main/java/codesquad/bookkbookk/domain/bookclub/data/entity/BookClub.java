@@ -33,6 +33,7 @@ public class BookClub {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "book_club_id", nullable = false)
     private Long id;
 
     @Column(nullable = false)
