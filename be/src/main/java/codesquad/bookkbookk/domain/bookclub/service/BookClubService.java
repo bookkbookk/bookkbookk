@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import codesquad.bookkbookk.common.error.exception.BookClubNotFoundException;
@@ -50,6 +51,7 @@ public class BookClubService {
     private final MemberRepository memberRepository;
     private final MemberBookRepository memberBookRepository;
 
+    @Transactional
     public CreateBookClubResponse createBookClub(Long memberId, CreateBookClubRequest request) {
         String profileImgUrl = DEFAULT_BOOK_CLUB_IMAGE_URL;
 
@@ -78,6 +80,7 @@ public class BookClubService {
         return new CreateBookClubResponse(bookClub.getId(), invitationUrlResponse.getInvitationUrl());
     }
 
+    @Transactional(readOnly = true)
     public List<ReadBookClubDetailResponse> readBookClubs(Long memberId, String statusName) {
         BookClubStatus status;
         if (statusName.equals(STATUS_ALL)) {
@@ -91,6 +94,7 @@ public class BookClubService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
+    @Transactional
     public InvitationUrlResponse createInvitationUrl(Long memberId, CreateInvitationUrlRequest request) {
         authorizationService.authorizeBookClubMembershipByBookClubId(memberId, request.getBookClubId());
 
@@ -100,25 +104,28 @@ public class BookClubService {
         return new InvitationUrlResponse(invitationCode);
     }
 
+    @Transactional
     public JoinBookClubResponse joinBookClub(Long memberId, JoinBookClubRequest joinBookClubRequest) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         Long bookClubId = redisService.getBookClubIdByInvitationCode(joinBookClubRequest.getInvitationCode());
         if (bookClubId == null) throw new InvitationCodeNotSavedException();
-        BookClub bookClub = bookClubRepository.findById(bookClubId).orElseThrow(BookClubNotFoundException::new);
+        BookClub bookClub = bookClubRepository.findByIdWithBooks(bookClubId).orElseThrow(BookClubNotFoundException::new);
 
         authorizationService.authorizeBookClubJoin(memberId, bookClub.getId());
 
-        BookClubMember save = bookClubMemberRepository.save(new BookClubMember(bookClub, member));
+        bookClub.addMember(new BookClubMember(bookClub, member));
+        bookClubRepository.save(bookClub);
 
         bookClub.getBooks().forEach(book -> {
             MemberBook memberBook = new MemberBook(member, book);
-            memberBookRepository.save(memberBook);
-            member.getMemberBooks().add(memberBook);
+            member.addBook(memberBook);
         });
+        memberRepository.save(member);
 
-        return JoinBookClubResponse.from(save);
+        return JoinBookClubResponse.from(bookClub);
     }
 
+    @Transactional(readOnly = true)
     public ReadBookClubDetailResponse readBookClubDetail(Long memberId, Long bookClubId) {
         authorizationService.authorizeBookClubMembershipByBookClubId(memberId, bookClubId);
 

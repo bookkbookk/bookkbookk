@@ -12,5 +12,7 @@ public interface BookClubCustomRepository {
 
     Optional<BookClub> findDetailById(Long bookClubId);
 
+    Optional<BookClub> findByIdWithBooks(Long bookClubId);
+
 }
 

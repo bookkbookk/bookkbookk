@@ -50,6 +50,15 @@ public class BookClubCustomRepositoryImpl implements BookClubCustomRepository {
         return optional;
     }
 
+    @Override
+    public Optional<BookClub> findByIdWithBooks(Long bookClubId) {
+        return Optional.ofNullable(jpaQueryFactory
+                .selectFrom(bookClub)
+                .leftJoin(bookClub.books).fetchJoin()
+                .where(bookClub.id.eq(bookClubId))
+                .fetchOne());
+    }
+
     private BooleanExpression createBookClubStatusCondition(BookClubStatus bookClubStatus) {
         if (bookClubStatus == null) {
             return null;
