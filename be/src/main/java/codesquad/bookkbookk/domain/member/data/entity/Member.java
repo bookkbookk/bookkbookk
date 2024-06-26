@@ -86,8 +86,8 @@ public class Member {
         return this.memberBookClubs.add(bookClubMember);
     }
 
-    public boolean addBook(MemberBook memberBook) {
-        return this.memberBooks.add(memberBook);
+    public boolean addBook(Book book) {
+        return this.memberBooks.add(new MemberBook(this, book));
     }
     public boolean addBooks(List<MemberBook> memberBooks) {
         return this.memberBooks.addAll(memberBooks);
