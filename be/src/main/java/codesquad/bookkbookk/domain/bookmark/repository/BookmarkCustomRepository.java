@@ -9,4 +9,6 @@ public interface BookmarkCustomRepository {
 
     List<Bookmark> findAllByFilter(Long bookId, BookmarkFilter bookmarkFilter);
 
+    List<Bookmark> findAllByTopicId(Long topicId);
+
 }

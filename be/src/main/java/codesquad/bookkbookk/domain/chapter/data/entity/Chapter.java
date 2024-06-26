@@ -3,6 +3,7 @@ package codesquad.bookkbookk.domain.chapter.data.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -31,11 +32,15 @@ public class Chapter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "chapter_id", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "book_id", nullable = false)
     private Book book;
+
+    @Column(name = "book_id", nullable = false, insertable = false, updatable = false)
+    private Long bookId;
 
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
@@ -43,13 +48,18 @@ public class Chapter {
 
     private String title;
 
-    @OneToMany(mappedBy = "chapter")
+    @OneToMany(mappedBy = "chapter", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Topic> topics = new ArrayList<>();
 
     public Chapter(Book book, String title) {
         this.book = book;
+        if (book != null) this.bookId = book.getId();
         this.title = title;
         this.status = Status.BEFORE_READING;
+    }
+
+    public boolean addTopic(Topic topic) {
+        return this.topics.add(topic);
     }
 
     public Chapter update(UpdateChapterRequest request) {

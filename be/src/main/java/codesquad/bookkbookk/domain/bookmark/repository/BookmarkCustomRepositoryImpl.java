@@ -29,13 +29,23 @@ public class BookmarkCustomRepositoryImpl implements BookmarkCustomRepository {
     public List<Bookmark> findAllByFilter(Long bookId, BookmarkFilter bookmarkFilter) {
         return jpaQueryFactory
                 .selectFrom(bookmark)
-                .innerJoin(bookmark.writer, member)
-                .fetchJoin()
+                .innerJoin(bookmark.writer, member).fetchJoin()
                 .innerJoin(bookmark.topic, topic)
                 .innerJoin(topic.chapter, chapter)
                 .innerJoin(chapter.book, book)
-                .where(book.id.eq(bookId), createPageCondition(bookmarkFilter), createTimeCondition(bookmarkFilter))
+                .where(book.id.eq(bookId),
+                        createPageCondition(bookmarkFilter),
+                        createTimeCondition(bookmarkFilter))
                 .orderBy(createOrder(bookmarkFilter))
+                .fetch();
+    }
+
+    @Override
+    public List<Bookmark> findAllByTopicId(Long topicId) {
+        return jpaQueryFactory
+                .selectFrom(bookmark)
+                .innerJoin(bookmark.writer, member).fetchJoin()
+                .where(bookmark.topic.id.eq(topicId))
                 .fetch();
     }
 

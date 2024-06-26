@@ -123,10 +123,7 @@ public class BookmarkService {
     public ReadReactionsResponse readBookmarkReactions(Long memberId, Long bookmarkId) {
         authorizationService.authorizeBookClubMembershipByBookmarkId(memberId, bookmarkId);
 
-        Bookmark bookmark = bookmarkRepository.findById(bookmarkId).orElseThrow(BookmarkNotFoundException::new);
-        List<BookmarkReaction> bookmarkReactions = bookmark.getBookmarkReactions();
-
-        return ReadReactionsResponse.fromBookmarkReactions(bookmarkReactions);
+        return ReadReactionsResponse.fromBookmarkReactions(bookmarkReactionRepository.findAllByBookmarkId(bookmarkId));
     }
 
 }

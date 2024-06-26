@@ -40,6 +40,7 @@ public class TopicService {
         return new CreateTopicResponse(topic.getId());
     }
 
+    @Transactional(readOnly = true)
     public List<ReadTopicResponse> readTopicLIst(Long memberId, Long chapterId) {
         authorizationService.authorizeBookClubMembershipByChapterId(memberId, chapterId);
 
@@ -48,7 +49,7 @@ public class TopicService {
         return ReadTopicResponse.from(topicList);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public void updateTitle(Long memberId, Long topicId, UpdateTopicTitleRequest request) {
         authorizationService.authorizeBookClubMembershipByTopicId(memberId, topicId);
 

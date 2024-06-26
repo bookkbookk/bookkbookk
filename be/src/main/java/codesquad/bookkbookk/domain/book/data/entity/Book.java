@@ -3,6 +3,7 @@ package codesquad.bookkbookk.domain.book.data.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -19,7 +20,9 @@ import codesquad.bookkbookk.common.error.exception.MalformedIsbnException;
 import codesquad.bookkbookk.common.type.Status;
 import codesquad.bookkbookk.domain.book.data.dto.UpdateBookStatusRequest;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
+import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
 import codesquad.bookkbookk.domain.gathering.data.entity.Gathering;
+import codesquad.bookkbookk.domain.mapping.entity.MemberBook;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -37,11 +40,15 @@ public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "book_id", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_club_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "book_club_id", nullable = false)
     private BookClub bookClub;
+
+    @Column(name = "book_club_id", nullable = false, insertable = false, updatable = false)
+    private Long bookClubId;
 
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
@@ -62,18 +69,37 @@ public class Book {
     @Column(nullable = false)
     private String category;
 
-    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Gathering> gatherings = new ArrayList<>();
+
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Chapter> chapters = new ArrayList<>();
+
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberBook> bookMembers = new ArrayList<>();
 
     @Builder
     private Book(String isbn, BookClub bookClub, String title, String cover, String author, String category) {
         this.isbn = validateAndFormatISBN(isbn);
         this.bookClub = bookClub;
+        if (bookClub != null) this.bookClubId = bookClub.getId();
         this.title = title;
         this.cover = cover;
         this.author = author;
         this.category = category;
         this.status = Status.BEFORE_READING;
+    }
+
+    public boolean addGathering(Gathering gathering) {
+        return this.getGatherings().add(gathering);
+    }
+
+    public boolean addChapter(Chapter chapter) {
+        return this.getChapters().add(chapter);
+    }
+
+    public boolean addMember(MemberBook bookMember) {
+        return this.getBookMembers().add(bookMember);
     }
 
     private String validateAndFormatISBN(String isbn) {
