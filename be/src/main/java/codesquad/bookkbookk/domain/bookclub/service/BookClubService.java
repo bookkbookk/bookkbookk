@@ -25,7 +25,6 @@ import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.data.type.BookClubStatus;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
 import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
-import codesquad.bookkbookk.domain.mapping.entity.MemberBook;
 import codesquad.bookkbookk.domain.mapping.repository.BookClubMemberRepository;
 import codesquad.bookkbookk.domain.mapping.repository.MemberBookRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
@@ -116,10 +115,7 @@ public class BookClubService {
         bookClub.addMember(new BookClubMember(bookClub, member));
         bookClubRepository.save(bookClub);
 
-        bookClub.getBooks().forEach(book -> {
-            MemberBook memberBook = new MemberBook(member, book);
-            member.addBook(memberBook);
-        });
+        bookClub.getBooks().forEach(member::addBook);
         memberRepository.save(member);
 
         return JoinBookClubResponse.from(bookClub);
