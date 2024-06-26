@@ -28,15 +28,15 @@ public class BookmarkReaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bookmark_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "bookmark_id", nullable = false)
     private Bookmark bookmark;
 
     @Column(name = "bookmark_id", nullable = false, insertable = false, updatable = false)
     private Long bookmarkId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reactor_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "reactor_id", nullable = false)
     private Member reactor;
 
     @Column(name = "reactor_id", nullable = false, insertable = false, updatable = false)

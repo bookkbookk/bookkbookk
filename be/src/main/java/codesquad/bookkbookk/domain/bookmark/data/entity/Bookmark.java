@@ -38,15 +38,15 @@ public class Bookmark {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "writer_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "writer_id", nullable = false)
     private Member writer;
 
     @Column(name = "writer_id", nullable = false, insertable = false, updatable = false)
     private Long writerId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "topic_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "topic_id", nullable = false)
     private Topic topic;
 
     @Column(name = "topic_id", nullable = false, insertable = false, updatable = false)

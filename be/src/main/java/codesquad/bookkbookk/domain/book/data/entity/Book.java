@@ -42,8 +42,8 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_club_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "book_club_id", nullable = false)
     private BookClub bookClub;
 
     @Column(name = "book_club_id", nullable = false, insertable = false, updatable = false)
@@ -88,12 +88,17 @@ public class Book {
         this.category = category;
         this.status = Status.BEFORE_READING;
     }
+
     public boolean addGathering(Gathering gathering) {
         return this.getGatherings().add(gathering);
     }
 
     public boolean addChapter(Chapter chapter) {
         return this.getChapters().add(chapter);
+    }
+
+    public boolean addMember(MemberBook bookMember) {
+        return this.getBookMembers().add(bookMember);
     }
 
     private String validateAndFormatISBN(String isbn) {

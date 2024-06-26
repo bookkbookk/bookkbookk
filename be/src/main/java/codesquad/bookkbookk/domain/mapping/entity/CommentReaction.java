@@ -28,15 +28,15 @@ public class CommentReaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comment_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "comment_id", nullable = false)
     private Comment comment;
 
     @Column(name = "comment_id", nullable = false, insertable = false, updatable = false)
     private Long commentId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reactor_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "reactor_id", nullable = false)
     private Member reactor;
 
     @Column(name = "reactor_id", nullable = false, insertable = false, updatable = false)

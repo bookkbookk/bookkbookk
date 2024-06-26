@@ -30,8 +30,8 @@ public class Topic {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chapter_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "chapter_id", nullable = false)
     private Chapter chapter;
 
     @Column(name = "chapter_id", nullable = false, insertable = false, updatable = false)

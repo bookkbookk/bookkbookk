@@ -36,8 +36,8 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bookmark_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "bookmark_id", nullable = false)
     private Bookmark bookmark;
 
     @Column(name = "bookmark_id", nullable = false, insertable = false, updatable = false)

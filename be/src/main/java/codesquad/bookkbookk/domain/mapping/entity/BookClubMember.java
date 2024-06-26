@@ -28,15 +28,15 @@ public class BookClubMember {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_club_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "book_club_id", nullable = false)
     private BookClub bookClub;
 
     @Column(name = "book_club_id", nullable = false, insertable = false, updatable = false)
     private Long bookClubId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @Column(name = "member_id", nullable = false, insertable = false, updatable = false)
