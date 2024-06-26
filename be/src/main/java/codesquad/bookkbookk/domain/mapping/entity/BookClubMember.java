@@ -28,14 +28,14 @@ public class BookClubMember {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_club_id")
     private BookClub bookClub;
 
     @Column(name = "book_club_id", nullable = false, insertable = false, updatable = false)
     private Long bookClubId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 

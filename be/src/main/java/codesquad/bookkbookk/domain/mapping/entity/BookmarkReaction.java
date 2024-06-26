@@ -28,15 +28,14 @@ public class BookmarkReaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // TODO: Bookmark의 Reaction읽을 때 자동으로 가져온다. 생각하십시오.
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bookmark_id")
     private Bookmark bookmark;
 
     @Column(name = "bookmark_id", nullable = false, insertable = false, updatable = false)
     private Long bookmarkId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reactor_id")
     private Member reactor;
 
