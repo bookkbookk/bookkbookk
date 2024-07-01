@@ -159,6 +159,7 @@ public class TopicDocumentationTest extends IntegrationTest {
                                         type(JsonFieldType.STRING).description("북마크 작성자 프로필 이미지 URL"),
                                 fieldWithPath("[].page").type(JsonFieldType.NUMBER).description("북마크 페이지"),
                                 fieldWithPath("[].createdTime").type(JsonFieldType.STRING).description("북마크 생성 시간"),
+                                fieldWithPath("[].updatedTime").type(JsonFieldType.STRING).description("북마크 수정 시간"),
                                 fieldWithPath("[].content").type(JsonFieldType.STRING).description("북마크 내용")
                         )))
                 .when()

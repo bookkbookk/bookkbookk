@@ -26,20 +26,32 @@ public class BookmarkReaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "bookmark_reaction_id", nullable = false)
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bookmark_id")
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "bookmark_id", nullable = false)
     private Bookmark bookmark;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reactor_id")
+
+    @Column(name = "bookmark_id", nullable = false, insertable = false, updatable = false)
+    private Long bookmarkId;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "reactor_id", nullable = false)
     private Member reactor;
+
+    @Column(name = "reactor_id", nullable = false, insertable = false, updatable = false)
+    private Long reactorId;
+
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
     private Reaction reaction;
 
     public BookmarkReaction(Bookmark bookmark, Member reactor, Reaction reaction) {
         this.bookmark = bookmark;
+        if (bookmark != null) this.bookmarkId = bookmark.getId();
         this.reactor = reactor;
+        if (reactor != null) this.reactorId = reactor.getId();
         this.reaction = reaction;
     }
 

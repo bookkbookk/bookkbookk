@@ -25,11 +25,15 @@ public class Gathering {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "gathering_id", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "book_id", nullable = false)
     private Book book;
+
+    @Column(name = "book_id", nullable = false, insertable = false, updatable = false)
+    private Long bookId;
 
     @Column(columnDefinition = "TIMESTAMP", nullable = false)
     private Instant startTime;
@@ -39,6 +43,7 @@ public class Gathering {
 
     public Gathering(Book book, Instant startTime, String place) {
         this.book = book;
+        if (book != null) this.bookId = book.getId();
         this.startTime = startTime;
         this.place = place;
     }

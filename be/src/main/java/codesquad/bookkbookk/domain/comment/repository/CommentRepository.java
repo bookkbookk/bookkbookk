@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import codesquad.bookkbookk.domain.comment.data.entity.Comment;
 
 @Repository
-public interface CommentRepository extends JpaRepository<Comment, Long> {
+public interface CommentRepository extends JpaRepository<Comment, Long>, CommentCustomRepository {
 
     boolean existsByIdAndWriterId(Long commentId, Long writerId);
 

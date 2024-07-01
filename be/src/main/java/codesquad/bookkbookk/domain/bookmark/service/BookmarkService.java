@@ -12,6 +12,7 @@ import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.common.error.exception.TopicNotFoundException;
 import codesquad.bookkbookk.common.type.Reaction;
 import codesquad.bookkbookk.domain.auth.service.AuthorizationService;
+import codesquad.bookkbookk.domain.bookmark.data.dto.BookmarkFilter;
 import codesquad.bookkbookk.domain.bookmark.data.dto.CreateBookmarkReactionRequest;
 import codesquad.bookkbookk.domain.bookmark.data.dto.CreateBookmarkRequest;
 import codesquad.bookkbookk.domain.bookmark.data.dto.DeleteBookmarkReactionRequest;
@@ -67,10 +68,10 @@ public class BookmarkService {
     }
 
     @Transactional(readOnly = true)
-    public List<ReadBookmarkResponse> readBookmarks(Long memberId, Long bookId, Integer startPage, Integer endPage) {
+    public List<ReadBookmarkResponse> readBookmarksWithFilter(Long memberId, Long bookId, BookmarkFilter bookmarkFilter) {
         authorizationService.authorizeBookClubMembershipByBookId(memberId, bookId);
 
-        List<Bookmark> bookmarks = bookmarkRepository.findAllByPages(startPage, endPage);
+        List<Bookmark> bookmarks = bookmarkRepository.findAllByFilter(bookId, bookmarkFilter);
 
         return ReadBookmarkResponse.from(bookmarks);
     }
@@ -122,10 +123,7 @@ public class BookmarkService {
     public ReadReactionsResponse readBookmarkReactions(Long memberId, Long bookmarkId) {
         authorizationService.authorizeBookClubMembershipByBookmarkId(memberId, bookmarkId);
 
-        Bookmark bookmark = bookmarkRepository.findById(bookmarkId).orElseThrow(BookmarkNotFoundException::new);
-        List<BookmarkReaction> bookmarkReactions = bookmark.getBookmarkReactions();
-
-        return ReadReactionsResponse.fromBookmarkReactions(bookmarkReactions);
+        return ReadReactionsResponse.fromBookmarkReactions(bookmarkReactionRepository.findAllByBookmarkId(bookmarkId));
     }
 
 }

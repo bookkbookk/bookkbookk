@@ -62,10 +62,13 @@ public class ChapterService {
     public List<ReadChapterResponse> readChapters(Long memberId, Long bookId, int chapterStatusId) {
         authorizationService.authorizeBookClubMembershipByBookId(memberId, bookId);
 
+        Status chapterStatus;
         if (chapterStatusId == ALL_STATUS) {
-            return ReadChapterResponse.from(chapterRepository.findAllByBookId(bookId));
+            chapterStatus = null;
+        } else {
+            chapterStatus = Status.of(chapterStatusId);
         }
-        Status chapterStatus = Status.of(chapterStatusId);
+
         return ReadChapterResponse.from(chapterRepository.findAllByBookIdAndStatus(bookId, chapterStatus));
     }
 

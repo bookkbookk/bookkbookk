@@ -1,5 +1,9 @@
 package codesquad.bookkbookk.integration.scenario;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.Instant;
 import java.util.List;
 
 import org.assertj.core.api.SoftAssertions;
@@ -7,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import codesquad.bookkbookk.common.error.exception.ApiException;
 import codesquad.bookkbookk.common.error.exception.MemberNotInBookClubException;
@@ -59,6 +64,9 @@ public class BookTest extends IntegrationTest {
 
     @Autowired
     private JwtProvider jwtProvider;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Test
     @DisplayName("책 추가 권한이 없는 멤버가 책을 추가했을 때 에러가 발생한다.")
@@ -146,6 +154,64 @@ public class BookTest extends IntegrationTest {
         //then
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.jsonPath().getList("").size()).isEqualTo(0);
+        });
+    }
+
+    @DisplayName("책의 북마크 필터링 조건에서 시간 정보가 없으면 페이지로만 필터링한다.")
+    @Test
+    void readBookmarksWithOnlyPageFilter() throws IOException {
+        // given
+        String sql = new String(Files.readAllBytes(Paths.get("src/test/resources/sql/readBookmarksWithUpdatedTime.sql")));
+        jdbcTemplate.execute(sql);
+        String accessToken = jwtProvider.createAccessToken(1L);
+
+        //when
+        Response response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .pathParam("bookId",1L)
+                .queryParam("startPage", 32)
+                .queryParam("endPage",95)
+                .when()
+                .get("/api/books/{bookId}/bookmarks")
+                .then().log().all()
+                .extract().response();
+
+        //then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.jsonPath().getList("").size()).isEqualTo(6);
+            softAssertions.assertThat(response.jsonPath().getInt("[0].page")).isEqualTo(40);
+            softAssertions.assertThat(response.jsonPath().getInt("[5].page")).isEqualTo(90);
+        });
+    }
+
+    @DisplayName("책의 북마크 필터링 조건에서 endPage랑 endTime이 없이 필터링한다.")
+    @Test
+    void readBookmarksWithFilter() throws IOException {
+        // given
+        String sql = new String(Files.readAllBytes(Paths.get("src/test/resources/sql/readBookmarksWithUpdatedTime.sql")));
+        jdbcTemplate.execute(sql);
+        String accessToken = jwtProvider.createAccessToken(1L);
+        Instant startTime = Instant.parse("2024-02-12T12:32:30Z");
+
+        //when
+        Response response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .pathParam("bookId",1L)
+                .queryParam("startPage", 90)
+                .queryParam("startTime", startTime.toString())
+                .when()
+                .get("/api/books/{bookId}/bookmarks")
+                .then().log().all()
+                .extract().response();
+
+        //then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.jsonPath().getList("").size()).isEqualTo(8);
+            softAssertions.assertThat(response.jsonPath().getString("[0].updatedTime"))
+                    .isEqualTo("2024-02-20T00:00:00Z");
+            softAssertions.assertThat(response.jsonPath().getInt("[7].page")).isEqualTo(130);
         });
     }
 

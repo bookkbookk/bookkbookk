@@ -4,6 +4,10 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.*;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 import codesquad.bookkbookk.common.error.exception.BookNotFoundException;
@@ -67,6 +72,9 @@ public class BookDocumentationTest extends IntegrationTest {
 
     @Autowired
     private JwtProvider jwtProvider;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Test
     @DisplayName("책을 성공적으로 생성한다.")
@@ -252,7 +260,7 @@ public class BookDocumentationTest extends IntegrationTest {
         });
     }
 
-    @DisplayName("책의 페이지로 북마크를 조회한다.")
+    @DisplayName("페이지로 책의 북마크들을 조회한다.")
     @Test
     void readBookmarksWithPages() {
         //given
@@ -306,6 +314,7 @@ public class BookDocumentationTest extends IntegrationTest {
                                         .description("글쓴이 프로필 이미지 URL"),
                                 fieldWithPath("[].page").type(JsonFieldType.NUMBER).description("북마크 페이지"),
                                 fieldWithPath("[].createdTime").type(JsonFieldType.STRING).description("북마크 생성 시간"),
+                                fieldWithPath("[].updatedTime").type(JsonFieldType.STRING).description("북마크 수정 시간"),
                                 fieldWithPath("[].content").type(JsonFieldType.STRING).description("북마크 내용")
                         )))
                 .when()
@@ -318,6 +327,64 @@ public class BookDocumentationTest extends IntegrationTest {
             softAssertions.assertThat(response.jsonPath().getList("").size()).isEqualTo(endPage - startPage + 1);
             softAssertions.assertThat(response.jsonPath().getInt("[0].page")).isEqualTo(startPage);
             softAssertions.assertThat(response.jsonPath().getInt("[" + (endPage - startPage) + "].page")).isEqualTo(endPage);
+        });
+    }
+
+    @DisplayName("책의 북마크들을 필터링해서 조회한다.")
+    @Test
+    void readBookmarksWithFilter() throws IOException {
+        // given
+        String sql = new String(Files.readAllBytes(Paths.get("src/test/resources/sql/readBookmarksWithUpdatedTime.sql")));
+        jdbcTemplate.execute(sql);
+        String accessToken = jwtProvider.createAccessToken(1L);
+        Instant startTime = Instant.parse("2024-02-03T00:00:00Z");
+        Instant endTime = Instant.parse("2024-02-17T12:00:00Z");
+
+        //when
+        Response response = RestAssured
+                .given(this.spec).log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .pathParam("bookId",1L)
+                .queryParam("startTime", startTime.toString())
+                .queryParam("endTime", endTime.toString())
+                .queryParam("startPage", 50)
+                .queryParam("endPage",190)
+                .filter(document("{class-name}/{method-name}",
+                        pathParameters(
+                                parameterWithName("bookId").description("검색할 책 아이디")
+                        ),
+                        requestParameters(
+                                parameterWithName("startTime").description("검색 시작 시간"),
+                                parameterWithName("endTime").description("검색 마지막 시간"),
+                                parameterWithName("startPage").description("검색 시작 페이지"),
+                                parameterWithName("endPage").description("검색 마지막 페이지")
+                        ),
+                        responseFields(
+                                fieldWithPath("[].bookmarkId").type(JsonFieldType.NUMBER).description("북마크 아이디"),
+                                fieldWithPath("[].author").type(JsonFieldType.OBJECT).description("북마크 글쓴이 정보"),
+                                fieldWithPath("[].author.memberId").type(JsonFieldType.NUMBER)
+                                        .description("글쓴이 멤버 아이디"),
+                                fieldWithPath("[].author.nickname").type(JsonFieldType.STRING).description("글쓴이 닉네임"),
+                                fieldWithPath("[].author.profileImageUrl").type(JsonFieldType.STRING)
+                                        .description("글쓴이 프로필 이미지 URL"),
+                                fieldWithPath("[].page").type(JsonFieldType.NUMBER).description("북마크 페이지"),
+                                fieldWithPath("[].createdTime").type(JsonFieldType.STRING).description("북마크 생성 시간"),
+                                fieldWithPath("[].updatedTime").type(JsonFieldType.STRING).description("북마크 수정 시간"),
+                                fieldWithPath("[].content").type(JsonFieldType.STRING).description("북마크 내용")
+                        )))
+                .when()
+                .get("/api/books/{bookId}/bookmarks")
+                .then().log().all()
+                .extract().response();
+
+        //then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.jsonPath().getList("").size()).isEqualTo(13);
+            softAssertions.assertThat(response.jsonPath().getString("[0].updatedTime"))
+                    .isEqualTo("2024-02-17T00:00:00Z");
+            softAssertions.assertThat(response.jsonPath().getString("[12].updatedTime"))
+                    .isEqualTo("2024-02-05T00:00:00Z");
+            softAssertions.assertThat(response.jsonPath().getInt("[12].page")).isEqualTo(50);
         });
     }
 

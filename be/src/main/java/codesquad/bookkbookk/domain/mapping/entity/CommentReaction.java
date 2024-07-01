@@ -1,5 +1,6 @@
 package codesquad.bookkbookk.domain.mapping.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -25,22 +26,31 @@ public class CommentReaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "comment_reaction_id", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comment_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "comment_id", nullable = false)
     private Comment comment;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reactor_id")
+    @Column(name = "comment_id", nullable = false, insertable = false, updatable = false)
+    private Long commentId;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "reactor_id", nullable = false)
     private Member reactor;
+
+    @Column(name = "reactor_id", nullable = false, insertable = false, updatable = false)
+    private Long reactorId;
 
     @Enumerated(value = EnumType.STRING)
     private Reaction reaction;
 
     public CommentReaction(Comment comment, Member reactor, Reaction reaction) {
         this.comment = comment;
+        if (comment != null) this.commentId = comment.getId();
         this.reactor = reactor;
+        if (reactor != null) this.reactorId = reactor.getId();
         this.reaction = reaction;
     }
 

@@ -99,19 +99,14 @@ public class CommentService {
     public List<ReadCommentResponse> readComments(Long memberId, Long bookmarkId) {
         authorizationService.authorizeBookClubMembershipByBookmarkId(memberId, bookmarkId);
 
-        Bookmark bookmark = bookmarkRepository.findById(bookmarkId).orElseThrow(BookmarkNotFoundException::new);
-
-        return ReadCommentResponse.from(bookmark.getComments());
+        return ReadCommentResponse.from(commentRepository.findAllByBookmarkId(bookmarkId));
     }
 
     @Transactional(readOnly = true)
     public ReadReactionsResponse readCommentReactions(Long memberId, Long commentId) {
         authorizationService.authorizeBookClubMembershipByCommentId(memberId, commentId);
 
-        Comment comment = commentRepository.findById(commentId).orElseThrow(BookmarkNotFoundException::new);
-        List<CommentReaction> commentReactions = comment.getCommentReactions();
-
-        return ReadReactionsResponse.fromCommentReactions(commentReactions);
+        return ReadReactionsResponse.fromCommentReactions(commentReactionRepository.findAllByCommentId(commentId));
     }
 
 }

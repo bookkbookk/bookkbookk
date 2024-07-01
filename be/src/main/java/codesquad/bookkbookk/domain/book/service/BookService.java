@@ -20,7 +20,6 @@ import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
-import codesquad.bookkbookk.domain.mapping.entity.MemberBook;
 import codesquad.bookkbookk.domain.mapping.repository.MemberBookRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
@@ -38,11 +37,13 @@ public class BookService {
     private final MemberRepository memberRepository;
     private final MemberBookRepository memberBookRepository;
 
+    @Transactional
     public CreateBookResponse createBook(Long memberId, CreateBookRequest request) {
         authorizationService.authorizeBookClubMembershipByBookClubId(memberId, request.getBookClubId());
 
         BookClub bookclub = bookClubRepository.findById(request.getBookClubId())
                 .orElseThrow(BookClubNotFoundException::new);
+
         Book book = Book.builder()
                 .isbn(request.getIsbn())
                 .bookClub(bookclub)
@@ -52,25 +53,26 @@ public class BookService {
                 .category(request.getCategory())
                 .build();
 
-        bookRepository.save(book);
-
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
-        MemberBook memberBook = new MemberBook(member, book);
-        memberBookRepository.save(memberBook);
+        member.addBook(book);
+
+        bookRepository.save(book);
 
         return new CreateBookResponse(book.getId());
     }
 
+    @Transactional(readOnly = true)
     public ReadBookResponse readBooks(Long memberId, Pageable pageable) {
-        Page<Book> books = bookRepository.findBooksByMemberId(memberId, pageable);
+        Page<Book> books = bookRepository.findPageByMemberId(memberId, pageable);
 
         return ReadBookResponse.from(books);
     }
 
+    @Transactional(readOnly = true)
     public ReadBookClubBookResponse readBookClubBooks(Long memberId, Long bookClubId, Pageable pageable) {
         authorizationService.authorizeBookClubMembershipByBookClubId(memberId, bookClubId);
 
-        Slice<Book> books = bookRepository.findBooksByBookClubId(bookClubId, pageable);
+        Slice<Book> books = bookRepository.findSliceByBookClubId(bookClubId, pageable);
         return ReadBookClubBookResponse.from(books);
     }
 
