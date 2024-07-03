@@ -19,12 +19,14 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 
-public class AuthTest extends IntegrationTest {
+public class AuthNTest extends IntegrationTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
     @Autowired
     private JwtProvider jwtProvider;
+
     @Autowired
     private JwtProperties jwtProperties;
 
