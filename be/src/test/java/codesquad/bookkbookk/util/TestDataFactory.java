@@ -57,13 +57,13 @@ public class TestDataFactory {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public static List<BookClubMember> createBookClubMemberS(List<BookClub> bookClubs, Member member) {
+    public static List<BookClubMember> createBookClubMembers(List<BookClub> bookClubs, Member member) {
         return bookClubs.stream()
                 .map(bookClub -> new BookClubMember(bookClub, member))
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public static List<BookClubMember> createBookClubMemberS(BookClub bookClub, List<Member> members) {
+    public static List<BookClubMember> createBookClubMembers(BookClub bookClub, List<Member> members) {
         return members.stream()
                 .map(member -> new BookClubMember(bookClub, member))
                 .collect(Collectors.toUnmodifiableList());
