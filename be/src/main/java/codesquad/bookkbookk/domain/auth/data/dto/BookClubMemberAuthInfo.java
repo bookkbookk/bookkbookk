@@ -7,9 +7,9 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public class BookClubMemberAuthInfo {
 
-    private final Long bookClubMemberId;
     private final Long bookClubId;
     private final Long memberId;
+    private final Long entityId;
 
 
 }
