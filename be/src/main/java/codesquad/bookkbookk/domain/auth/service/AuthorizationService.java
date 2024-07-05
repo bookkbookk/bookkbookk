@@ -6,15 +6,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codesquad.bookkbookk.common.error.exception.BookClubAuthorizationFailedException;
-import codesquad.bookkbookk.common.error.exception.BookClubNotFoundException;
+import codesquad.bookkbookk.common.error.exception.EntityNotFountException;
 import codesquad.bookkbookk.common.error.exception.MemberIsNotBookmarkWriterException;
 import codesquad.bookkbookk.common.error.exception.MemberIsNotCommentWriterException;
 import codesquad.bookkbookk.common.error.exception.MemberJoinedBookClubException;
-import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.common.error.exception.MemberNotInBookClubException;
 import codesquad.bookkbookk.domain.auth.data.dto.BookClubMemberAuthInfo;
 import codesquad.bookkbookk.domain.auth.repository.AuthorizationJdbcRepository;
 import codesquad.bookkbookk.domain.auth.repository.AuthorizationRepository;
+import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
+import codesquad.bookkbookk.domain.comment.data.entity.Comment;
+import codesquad.bookkbookk.domain.member.data.entity.Member;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,24 +31,25 @@ public class AuthorizationService {
     @Transactional(readOnly = true)
     public void authorizeBookClubMembershipByBookClubId(Long bookClubId, Long memberId) {
         List<BookClubMemberAuthInfo> authInfos = authorizationJdbcRepository
-                .findBookClubMemberAuthsByMemberIdAndBookClubId(bookClubId, memberId);
+                .findBookClubMemberAuthsByBookClubIdAndMemberId(bookClubId, memberId);
 
-        validateAuthInfos(authInfos, bookClubId, memberId);
+        validateAuthInfos(authInfos, bookClubId, memberId, BookClub.class);
     }
 
-    private void validateAuthInfos(List<BookClubMemberAuthInfo> authInfos, Long bookClubId, Long memberId) {
+    private void validateAuthInfos(List<BookClubMemberAuthInfo> authInfos, Long entityId, Long memberId, Class<?> entity) {
+
         int infoSize = authInfos.size();
 
         if (infoSize == 3) return;
         if (infoSize == 2) throw new MemberNotInBookClubException();
         if (infoSize == 1) {
-            Long authBookClubId = authInfos.get(0).getBookClubId();
+            Long authEntityId = authInfos.get(0).getEntityId();
             Long authMemberId = authInfos.get(0).getMemberId();
 
-            if (authBookClubId == null) throw new BookClubNotFoundException();
-            if (authMemberId == null) throw new MemberNotFoundException();
-            if (authBookClubId.equals(bookClubId)) throw new MemberNotFoundException();
-            if (authMemberId.equals(memberId)) throw new BookClubNotFoundException();
+            if (authEntityId == null) throw new EntityNotFountException(entity);
+            if (authMemberId == null) throw new EntityNotFountException(Member.class);
+            if (authEntityId.equals(entityId)) throw new EntityNotFountException(Member.class);
+            if (authMemberId.equals(memberId)) throw new EntityNotFountException(entity);
         }
         throw new BookClubAuthorizationFailedException();
     }
@@ -87,11 +90,13 @@ public class AuthorizationService {
     }
 
     @Transactional(readOnly = true)
-    public void authorizeBookClubMembershipByCommentId(Long memberId, Long commentId) {
-        if (!authorizationRepository.existsBookClubMemberByMemberIdAndCommentId(memberId, commentId)) {
-            throw new MemberNotInBookClubException();
-        }
+    public void authorizeBookClubMembershipByCommentId(Long commentId, Long memberId) {
+        List<BookClubMemberAuthInfo> authInfos = authorizationJdbcRepository
+                .findBookClubMemberAuthsByCommentIdAndMemberId(commentId, memberId);
+
+        validateAuthInfos(authInfos, commentId, memberId, Comment.class);
     }
+
 
     @Transactional(readOnly = true)
     public void authorizeBookClubJoin(Long memberId, Long bookClubId) {
