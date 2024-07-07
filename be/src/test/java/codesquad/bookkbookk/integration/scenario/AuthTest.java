@@ -8,8 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import codesquad.bookkbookk.common.error.exception.BookClubNotFoundException;
-import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
+import codesquad.bookkbookk.common.error.exception.EntityNotFountException;
 import codesquad.bookkbookk.common.error.exception.MemberNotInBookClubException;
 import codesquad.bookkbookk.domain.auth.service.AuthorizationService;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
@@ -19,6 +18,7 @@ import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
 import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
 import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
 import codesquad.bookkbookk.domain.comment.data.entity.Comment;
+import codesquad.bookkbookk.domain.gathering.data.entity.Gathering;
 import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
 import codesquad.bookkbookk.domain.mapping.repository.BookClubMemberRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
@@ -89,7 +89,7 @@ public class AuthTest extends IntegrationTest {
         // when & then
         assertThatThrownBy(
                 () -> authorizationService.authorizeBookClubMembershipByBookClubId(1L, member.getId())
-        ).isInstanceOf(BookClubNotFoundException.class);
+        ).isInstanceOf(EntityNotFountException.class);
     }
 
     @Test
@@ -105,7 +105,7 @@ public class AuthTest extends IntegrationTest {
         // when & then
         assertThatThrownBy(
                 () -> authorizationService.authorizeBookClubMembershipByBookClubId(bookClub.getId(), member.getId() + 1)
-        ).isInstanceOf(MemberNotFoundException.class);
+        ).isInstanceOf(EntityNotFountException.class);
     }
 
     @Test
@@ -144,6 +144,254 @@ public class AuthTest extends IntegrationTest {
         assertThatCode(
                 () -> authorizationService.authorizeBookClubMembershipByBookClubId(bookClub.getId(), members.get(2).getId())
         ).doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("Book Id와 Member Id로 Book Club 접근을 인가한다.")
+    void authorizeBookClubMembershipByBookIdAndMemberId() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+
+        BookClub bookClub = TestDataFactory.createBookClub(member);
+        bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
+
+        Book book = TestDataFactory.createBook(bookClub);
+        bookRepository.save(book);
+
+        // when & then
+        assertThatCode(
+                () -> authorizationService.authorizeBookClubMembershipByBookId(book.getId(), member.getId())
+        ).doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("Book Id와 Member Id로 Book Club 인가가 실패한다.")
+    void denyBookClubAuthorizationByBookIdAndMemberId() {
+        // given
+        List<Member> members = TestDataFactory.createMembers(2);
+        memberRepository.saveAll(members);
+
+        BookClub bookClub = TestDataFactory.createBookClub(members.get(0));
+        bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, members.get(0));
+        bookClubMemberRepository.save(bookClubMember);
+
+        Book book = TestDataFactory.createBook(bookClub);
+        bookRepository.save(book);
+
+        // when & then
+        assertThatThrownBy(
+                () -> authorizationService.authorizeBookClubMembershipByBookId(book.getId(), members.get(1).getId())
+        ).isInstanceOf(MemberNotInBookClubException.class);
+    }
+
+    @Test
+    @DisplayName("Gathering Id와 Member Id로 Book Club 접근을 인가한다.")
+    void authorizeBookClubMembershipByGatheringIdAndMemberId() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+
+        BookClub bookClub = TestDataFactory.createBookClub(member);
+        bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
+
+        Book book = TestDataFactory.createBook(bookClub);
+        Gathering gathering = TestDataFactory.createGathering(book);
+        book.addGathering(gathering);
+        bookRepository.save(book);
+
+        // when & then
+        assertThatCode(
+                () -> authorizationService.authorizeBookClubMembershipByGatheringId(gathering.getId(), member.getId())
+        ).doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("Gathering Id와 Member Id로 Book Club 인가가 실패한다.")
+    void denyBookClubAuthorizationByGatheringIdAndMemberId() {
+        // given
+        List<Member> members = TestDataFactory.createMembers(2);
+        memberRepository.saveAll(members);
+
+        BookClub bookClub = TestDataFactory.createBookClub(members.get(0));
+        bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, members.get(0));
+        bookClubMemberRepository.save(bookClubMember);
+
+        Book book = TestDataFactory.createBook(bookClub);
+        Gathering gathering = TestDataFactory.createGathering(book);
+        book.addGathering(gathering);
+        bookRepository.save(book);
+
+        // when & then
+        assertThatThrownBy(
+                () -> authorizationService.authorizeBookClubMembershipByGatheringId(gathering.getId(), members.get(1).getId())
+        ).isInstanceOf(MemberNotInBookClubException.class);
+    }
+
+    @Test
+    @DisplayName("Chapter Id와 Member Id로 Book Club 접근을 인가한다.")
+    void authorizeBookClubMembershipByChapterIdAndMemberId() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+
+        BookClub bookClub = TestDataFactory.createBookClub(member);
+        bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
+
+        Book book = TestDataFactory.createBook(bookClub);
+        Chapter chapter = TestDataFactory.createChapter(book);
+        book.addChapter(chapter);
+        bookRepository.save(book);
+
+        // when & then
+        assertThatCode(
+                () -> authorizationService.authorizeBookClubMembershipByChapterId(chapter.getId(), member.getId())
+        ).doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("Chapter Id와 Member Id로 Book Club 인가가 실패한다.")
+    void denyBookClubAuthorizationByChapterIdAndMemberId() {
+        // given
+        List<Member> members = TestDataFactory.createMembers(2);
+        memberRepository.saveAll(members);
+
+        BookClub bookClub = TestDataFactory.createBookClub(members.get(0));
+        bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, members.get(0));
+        bookClubMemberRepository.save(bookClubMember);
+
+        Book book = TestDataFactory.createBook(bookClub);
+        Chapter chapter = TestDataFactory.createChapter(book);
+        book.addChapter(chapter);
+        bookRepository.save(book);
+
+        // when & then
+        assertThatThrownBy(
+                () -> authorizationService.authorizeBookClubMembershipByChapterId(chapter.getId(), members.get(1).getId())
+        ).isInstanceOf(MemberNotInBookClubException.class);
+    }
+
+    @Test
+    @DisplayName("Topic Id와 Member Id로 Book Club 접근을 인가한다.")
+    void authorizeBookClubMembershipByTopicIdAndMemberId() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+
+        BookClub bookClub = TestDataFactory.createBookClub(member);
+        bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
+
+        Book book = TestDataFactory.createBook(bookClub);
+        Chapter chapter = TestDataFactory.createChapter(book);
+        book.addChapter(chapter);
+        Topic topic = TestDataFactory.createTopic(chapter);
+        chapter.addTopic(topic);
+        bookRepository.save(book);
+
+        // when & then
+        assertThatCode(
+                () -> authorizationService.authorizeBookClubMembershipByTopicId(topic.getId(), member.getId())
+        ).doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("Topic Id와 Member Id로 Book Club 인가가 실패한다.")
+    void denyBookClubAuthorizationByTopicIdAndMemberId() {
+        // given
+        List<Member> members = TestDataFactory.createMembers(2);
+        memberRepository.saveAll(members);
+
+        BookClub bookClub = TestDataFactory.createBookClub(members.get(0));
+        bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, members.get(0));
+        bookClubMemberRepository.save(bookClubMember);
+
+        Book book = TestDataFactory.createBook(bookClub);
+        Chapter chapter = TestDataFactory.createChapter(book);
+        book.addChapter(chapter);
+        Topic topic = TestDataFactory.createTopic(chapter);
+        chapter.addTopic(topic);
+        bookRepository.save(book);
+
+        // when & then
+        assertThatThrownBy(
+                () -> authorizationService.authorizeBookClubMembershipByTopicId(topic.getId(), members.get(1).getId())
+        ).isInstanceOf(MemberNotInBookClubException.class);
+    }
+
+    @Test
+    @DisplayName("Bookmark Id와 Member Id로 Book Club 접근을 인가한다.")
+    void authorizeBookClubMembershipByBookmarkIdAndMemberId() {
+        // given
+        Member member = TestDataFactory.createMember();
+        memberRepository.save(member);
+
+        BookClub bookClub = TestDataFactory.createBookClub(member);
+        bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, member);
+        bookClubMemberRepository.save(bookClubMember);
+
+        Book book = TestDataFactory.createBook(bookClub);
+        Chapter chapter = TestDataFactory.createChapter(book);
+        book.addChapter(chapter);
+        Topic topic = TestDataFactory.createTopic(chapter);
+        chapter.addTopic(topic);
+        Bookmark bookmark = TestDataFactory.createBookmark(member, topic);
+        topic.addBookmark(bookmark);
+        bookRepository.save(book);
+
+        // when & then
+        assertThatCode(
+                () -> authorizationService.authorizeBookClubMembershipByBookmarkId(bookmark.getId(), member.getId())
+        ).doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("Bookmark Id와 Member Id로 Book Club 인가가 실패한다.")
+    void denyBookClubAuthorizationByBookmarkIdAndMemberId() {
+        // given
+        List<Member> members = TestDataFactory.createMembers(2);
+        memberRepository.saveAll(members);
+
+        BookClub bookClub = TestDataFactory.createBookClub(members.get(0));
+        bookClubRepository.save(bookClub);
+
+        BookClubMember bookClubMember = new BookClubMember(bookClub, members.get(0));
+        bookClubMemberRepository.save(bookClubMember);
+
+        Book book = TestDataFactory.createBook(bookClub);
+        Chapter chapter = TestDataFactory.createChapter(book);
+        book.addChapter(chapter);
+        Topic topic = TestDataFactory.createTopic(chapter);
+        chapter.addTopic(topic);
+        Bookmark bookmark = TestDataFactory.createBookmark(members.get(0), topic);
+        topic.addBookmark(bookmark);
+        bookRepository.save(book);
+
+        // when & then
+        assertThatThrownBy(
+                () -> authorizationService.authorizeBookClubMembershipByBookmarkId(bookmark.getId(), members.get(1).getId())
+        ).isInstanceOf(MemberNotInBookClubException.class);
     }
 
     @Test
