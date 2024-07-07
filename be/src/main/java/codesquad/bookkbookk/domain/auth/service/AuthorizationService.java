@@ -14,9 +14,14 @@ import codesquad.bookkbookk.common.error.exception.MemberNotInBookClubException;
 import codesquad.bookkbookk.domain.auth.data.dto.BookClubMemberAuthInfo;
 import codesquad.bookkbookk.domain.auth.repository.AuthorizationJdbcRepository;
 import codesquad.bookkbookk.domain.auth.repository.AuthorizationRepository;
+import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
+import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
+import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
 import codesquad.bookkbookk.domain.comment.data.entity.Comment;
+import codesquad.bookkbookk.domain.gathering.data.entity.Gathering;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
+import codesquad.bookkbookk.domain.topic.data.entity.Topic;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,57 +41,44 @@ public class AuthorizationService {
         validateAuthInfos(authInfos, bookClubId, memberId, BookClub.class);
     }
 
-    private void validateAuthInfos(List<BookClubMemberAuthInfo> authInfos, Long entityId, Long memberId, Class<?> entity) {
+    @Transactional(readOnly = true)
+    public void authorizeBookClubMembershipByBookId(Long bookId, Long memberId) {
+        List<BookClubMemberAuthInfo> authInfos = authorizationJdbcRepository
+                .findBookClubMemberAuthsByBookIdAndMemberId(bookId, memberId);
 
-        int infoSize = authInfos.size();
-
-        if (infoSize == 3) return;
-        if (infoSize == 2) throw new MemberNotInBookClubException();
-        if (infoSize == 1) {
-            Long authEntityId = authInfos.get(0).getEntityId();
-            Long authMemberId = authInfos.get(0).getMemberId();
-
-            if (authEntityId == null) throw new EntityNotFountException(entity);
-            if (authMemberId == null) throw new EntityNotFountException(Member.class);
-            if (authEntityId.equals(entityId)) throw new EntityNotFountException(Member.class);
-            if (authMemberId.equals(memberId)) throw new EntityNotFountException(entity);
-        }
-        throw new BookClubAuthorizationFailedException();
+        validateAuthInfos(authInfos, bookId, memberId, Book.class);
     }
 
     @Transactional(readOnly = true)
-    public void authorizeBookClubMembershipByBookId(Long memberId, Long bookId) {
-        if (!authorizationRepository.existsBookClubMemberByMemberIdAndBookId(memberId, bookId)) {
-            throw new MemberNotInBookClubException();
-        }
+    public void authorizeBookClubMembershipByGatheringId(Long gatheringId, Long memberId) {
+        List<BookClubMemberAuthInfo> authInfos = authorizationJdbcRepository
+                .findBookClubMemberAuthsByGatheringIdAndMemberId(gatheringId, memberId);
+
+        validateAuthInfos(authInfos, gatheringId, memberId, Gathering.class);
     }
 
     @Transactional(readOnly = true)
-    public void authorizeBookClubMembershipByGatheringId(Long memberId, Long gatheringId) {
-        if (!authorizationRepository.existsBookClubMemberByMemberIdAndGatheringId(memberId, gatheringId)) {
-            throw new MemberNotInBookClubException();
-        }
+    public void authorizeBookClubMembershipByChapterId(Long chapterId, Long memberId) {
+        List<BookClubMemberAuthInfo> authInfos = authorizationJdbcRepository
+                .findBookClubMemberAuthsByChapterIdAndMemberId(chapterId, memberId);
+
+        validateAuthInfos(authInfos, chapterId, memberId, Chapter.class);
     }
 
     @Transactional(readOnly = true)
-    public void authorizeBookClubMembershipByChapterId(Long memberId, Long chapterId) {
-        if (!authorizationRepository.existsBookClubMemberByMemberIdAndChapterId(memberId, chapterId)) {
-            throw new MemberNotInBookClubException();
-        }
+    public void authorizeBookClubMembershipByTopicId(Long topicId, Long memberId) {
+        List<BookClubMemberAuthInfo> authInfos = authorizationJdbcRepository
+                .findBookClubMemberAuthsByTopicIdAndMemberId(topicId, memberId);
+
+        validateAuthInfos(authInfos, topicId, memberId, Topic.class);
     }
 
     @Transactional(readOnly = true)
-    public void authorizeBookClubMembershipByTopicId(Long memberId, Long topicId) {
-        if (!authorizationRepository.existsBookClubMemberByMemberIdAndTopicId(memberId, topicId)) {
-            throw new MemberNotInBookClubException();
-        }
-    }
+    public void authorizeBookClubMembershipByBookmarkId(Long bookmarkId, Long memberId) {
+        List<BookClubMemberAuthInfo> authInfos = authorizationJdbcRepository
+                .findBookClubMemberAuthsByBookmarkIdAndMemberId(bookmarkId, memberId);
 
-    @Transactional(readOnly = true)
-    public void authorizeBookClubMembershipByBookmarkId(Long memberId, Long bookmarkId) {
-        if (!authorizationRepository.existsBookClubMemberByMemberIdAndBookmarkId(memberId, bookmarkId)) {
-            throw new MemberNotInBookClubException();
-        }
+        validateAuthInfos(authInfos, bookmarkId, memberId, Bookmark.class);
     }
 
     @Transactional(readOnly = true)
@@ -117,6 +109,24 @@ public class AuthorizationService {
         if (!authorizationRepository.existsCommentByIdAndWriterId(commentId, writerId)) {
             throw new MemberIsNotCommentWriterException();
         }
+    }
+
+    private void validateAuthInfos(List<BookClubMemberAuthInfo> authInfos, Long entityId, Long memberId, Class<?> entity) {
+
+        int infoSize = authInfos.size();
+
+        if (infoSize == 3) return;
+        if (infoSize == 2) throw new MemberNotInBookClubException();
+        if (infoSize == 1) {
+            Long authEntityId = authInfos.get(0).getEntityId();
+            Long authMemberId = authInfos.get(0).getMemberId();
+
+            if (authEntityId == null) throw new EntityNotFountException(entity);
+            if (authMemberId == null) throw new EntityNotFountException(Member.class);
+            if (authEntityId.equals(entityId)) throw new EntityNotFountException(Member.class);
+            if (authMemberId.equals(memberId)) throw new EntityNotFountException(entity);
+        }
+        throw new BookClubAuthorizationFailedException();
     }
 
 }
