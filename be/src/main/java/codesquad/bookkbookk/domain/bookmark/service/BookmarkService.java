@@ -43,7 +43,7 @@ public class BookmarkService {
 
     @Transactional
     public void createBookmark(Long memberId, CreateBookmarkRequest createBookmarkRequest) {
-        authorizationService.authorizeBookClubMembershipByTopicId(memberId, createBookmarkRequest.getTopicId());
+        authorizationService.authorizeBookClubMembershipByTopicId(createBookmarkRequest.getTopicId(), memberId);
 
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         Topic topic = topicRepository.findById(createBookmarkRequest.getTopicId())
@@ -60,7 +60,7 @@ public class BookmarkService {
 
     @Transactional(readOnly = true)
     public List<ReadBookmarkResponse> readBookmarks(Long memberId, Long topicId) {
-        authorizationService.authorizeBookClubMembershipByTopicId(memberId, topicId);
+        authorizationService.authorizeBookClubMembershipByTopicId(topicId, memberId);
 
         List<Bookmark> bookmarks = bookmarkRepository.findAllByTopicId(topicId);
 
@@ -69,7 +69,7 @@ public class BookmarkService {
 
     @Transactional(readOnly = true)
     public List<ReadBookmarkResponse> readBookmarksWithFilter(Long memberId, Long bookId, BookmarkFilter bookmarkFilter) {
-        authorizationService.authorizeBookClubMembershipByBookId(memberId, bookId);
+        authorizationService.authorizeBookClubMembershipByBookId(bookId, memberId);
 
         List<Bookmark> bookmarks = bookmarkRepository.findAllByFilter(bookId, bookmarkFilter);
 
@@ -94,7 +94,7 @@ public class BookmarkService {
 
     @Transactional
     public void createBookmarkReaction(Long memberId, Long bookmarkId, CreateBookmarkReactionRequest request) {
-        authorizationService.authorizeBookClubMembershipByBookmarkId(memberId, bookmarkId);
+        authorizationService.authorizeBookClubMembershipByBookmarkId(bookmarkId, memberId);
 
         Reaction reaction = Reaction.of(request.getReactionName());
         if (bookmarkReactionRepository.existsByBookmarkIdAndReactorIdAndReaction(bookmarkId, memberId, reaction)) {
@@ -121,7 +121,7 @@ public class BookmarkService {
 
     @Transactional(readOnly = true)
     public ReadReactionsResponse readBookmarkReactions(Long memberId, Long bookmarkId) {
-        authorizationService.authorizeBookClubMembershipByBookmarkId(memberId, bookmarkId);
+        authorizationService.authorizeBookClubMembershipByBookmarkId(bookmarkId, memberId);
 
         return ReadReactionsResponse.fromBookmarkReactions(bookmarkReactionRepository.findAllByBookmarkId(bookmarkId));
     }

@@ -30,7 +30,6 @@ import lombok.RequiredArgsConstructor;
 public class AuthorizationService {
 
     private final AuthorizationRepository authorizationRepository;
-
     private final AuthorizationJdbcRepository authorizationJdbcRepository;
 
     @Transactional(readOnly = true)
