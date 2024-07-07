@@ -11,17 +11,10 @@ import codesquad.bookkbookk.common.error.exception.MemberIsNotBookmarkWriterExce
 import codesquad.bookkbookk.common.error.exception.MemberIsNotCommentWriterException;
 import codesquad.bookkbookk.common.error.exception.MemberJoinedBookClubException;
 import codesquad.bookkbookk.common.error.exception.MemberNotInBookClubException;
+import codesquad.bookkbookk.common.type.EntityType;
 import codesquad.bookkbookk.domain.auth.data.dto.BookClubMemberAuthInfo;
 import codesquad.bookkbookk.domain.auth.repository.AuthorizationJdbcRepository;
 import codesquad.bookkbookk.domain.auth.repository.AuthorizationRepository;
-import codesquad.bookkbookk.domain.book.data.entity.Book;
-import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
-import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
-import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
-import codesquad.bookkbookk.domain.comment.data.entity.Comment;
-import codesquad.bookkbookk.domain.gathering.data.entity.Gathering;
-import codesquad.bookkbookk.domain.member.data.entity.Member;
-import codesquad.bookkbookk.domain.topic.data.entity.Topic;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,7 +30,7 @@ public class AuthorizationService {
         List<BookClubMemberAuthInfo> authInfos = authorizationJdbcRepository
                 .findBookClubMemberAuthsByBookClubIdAndMemberId(bookClubId, memberId);
 
-        validateAuthInfos(authInfos, bookClubId, memberId, BookClub.class);
+        validateAuthInfos(authInfos, bookClubId, memberId, EntityType.BOOK_CLUB);
     }
 
     @Transactional(readOnly = true)
@@ -45,7 +38,7 @@ public class AuthorizationService {
         List<BookClubMemberAuthInfo> authInfos = authorizationJdbcRepository
                 .findBookClubMemberAuthsByBookIdAndMemberId(bookId, memberId);
 
-        validateAuthInfos(authInfos, bookId, memberId, Book.class);
+        validateAuthInfos(authInfos, bookId, memberId, EntityType.BOOK);
     }
 
     @Transactional(readOnly = true)
@@ -53,7 +46,7 @@ public class AuthorizationService {
         List<BookClubMemberAuthInfo> authInfos = authorizationJdbcRepository
                 .findBookClubMemberAuthsByGatheringIdAndMemberId(gatheringId, memberId);
 
-        validateAuthInfos(authInfos, gatheringId, memberId, Gathering.class);
+        validateAuthInfos(authInfos, gatheringId, memberId, EntityType.GATHERING);
     }
 
     @Transactional(readOnly = true)
@@ -61,7 +54,7 @@ public class AuthorizationService {
         List<BookClubMemberAuthInfo> authInfos = authorizationJdbcRepository
                 .findBookClubMemberAuthsByChapterIdAndMemberId(chapterId, memberId);
 
-        validateAuthInfos(authInfos, chapterId, memberId, Chapter.class);
+        validateAuthInfos(authInfos, chapterId, memberId, EntityType.CHAPTER);
     }
 
     @Transactional(readOnly = true)
@@ -69,7 +62,7 @@ public class AuthorizationService {
         List<BookClubMemberAuthInfo> authInfos = authorizationJdbcRepository
                 .findBookClubMemberAuthsByTopicIdAndMemberId(topicId, memberId);
 
-        validateAuthInfos(authInfos, topicId, memberId, Topic.class);
+        validateAuthInfos(authInfos, topicId, memberId, EntityType.TOPIC);
     }
 
     @Transactional(readOnly = true)
@@ -77,7 +70,7 @@ public class AuthorizationService {
         List<BookClubMemberAuthInfo> authInfos = authorizationJdbcRepository
                 .findBookClubMemberAuthsByBookmarkIdAndMemberId(bookmarkId, memberId);
 
-        validateAuthInfos(authInfos, bookmarkId, memberId, Bookmark.class);
+        validateAuthInfos(authInfos, bookmarkId, memberId, EntityType.BOOKMARK);
     }
 
     @Transactional(readOnly = true)
@@ -85,7 +78,7 @@ public class AuthorizationService {
         List<BookClubMemberAuthInfo> authInfos = authorizationJdbcRepository
                 .findBookClubMemberAuthsByCommentIdAndMemberId(commentId, memberId);
 
-        validateAuthInfos(authInfos, commentId, memberId, Comment.class);
+        validateAuthInfos(authInfos, commentId, memberId, EntityType.COMMENT);
     }
 
 
@@ -110,7 +103,7 @@ public class AuthorizationService {
         }
     }
 
-    private void validateAuthInfos(List<BookClubMemberAuthInfo> authInfos, Long entityId, Long memberId, Class<?> entity) {
+    private void validateAuthInfos(List<BookClubMemberAuthInfo> authInfos, Long entityId, Long memberId, EntityType type) {
 
         int infoSize = authInfos.size();
 
@@ -120,10 +113,10 @@ public class AuthorizationService {
             Long authEntityId = authInfos.get(0).getEntityId();
             Long authMemberId = authInfos.get(0).getMemberId();
 
-            if (authEntityId == null) throw new EntityNotFountException(entity);
-            if (authMemberId == null) throw new EntityNotFountException(Member.class);
-            if (authEntityId.equals(entityId)) throw new EntityNotFountException(Member.class);
-            if (authMemberId.equals(memberId)) throw new EntityNotFountException(entity);
+            if (authEntityId == null) throw new EntityNotFountException(type);
+            if (authMemberId == null) throw new EntityNotFountException(EntityType.MEMBER);
+            if (authEntityId.equals(entityId)) throw new EntityNotFountException(EntityType.MEMBER);
+            if (authMemberId.equals(memberId)) throw new EntityNotFountException(type);
         }
         throw new BookClubAuthorizationFailedException();
     }

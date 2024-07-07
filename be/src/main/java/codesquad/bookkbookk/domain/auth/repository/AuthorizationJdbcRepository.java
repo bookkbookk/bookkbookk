@@ -10,14 +10,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import codesquad.bookkbookk.common.type.EntityType;
 import codesquad.bookkbookk.domain.auth.data.dto.BookClubMemberAuthInfo;
-import codesquad.bookkbookk.domain.book.data.entity.Book;
-import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
-import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
-import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
-import codesquad.bookkbookk.domain.comment.data.entity.Comment;
-import codesquad.bookkbookk.domain.gathering.data.entity.Gathering;
-import codesquad.bookkbookk.domain.topic.data.entity.Topic;
 
 import lombok.RequiredArgsConstructor;
 
@@ -51,7 +45,7 @@ public class AuthorizationJdbcRepository {
 
         Map<String, Long> paramSource = Map.of("bookClubId", bookClubId, "memberId", memberId);
 
-        return jdbcTemplate.query(nativeQuery, paramSource, createAuthRowMapper(BookClub.class));
+        return jdbcTemplate.query(nativeQuery, paramSource, createAuthRowMapper(EntityType.BOOK_CLUB));
     }
 
     public List<BookClubMemberAuthInfo> findBookClubMemberAuthsByBookIdAndMemberId(Long bookId, Long memberId) {
@@ -81,7 +75,7 @@ public class AuthorizationJdbcRepository {
 
         Map<String, Long> paramSource = Map.of("bookId", bookId, "memberId", memberId);
 
-        return jdbcTemplate.query(nativeQuery, paramSource, createAuthRowMapper(Book.class));
+        return jdbcTemplate.query(nativeQuery, paramSource, createAuthRowMapper(EntityType.BOOK));
     }
 
     public List<BookClubMemberAuthInfo> findBookClubMemberAuthsByGatheringIdAndMemberId(Long gatheringId, Long memberId) {
@@ -114,7 +108,7 @@ public class AuthorizationJdbcRepository {
 
         Map<String, Long> paramSource = Map.of("gatheringId", gatheringId, "memberId", memberId);
 
-        return jdbcTemplate.query(nativeQuery, paramSource, createAuthRowMapper(Gathering.class));
+        return jdbcTemplate.query(nativeQuery, paramSource, createAuthRowMapper(EntityType.GATHERING));
     }
 
     public List<BookClubMemberAuthInfo> findBookClubMemberAuthsByChapterIdAndMemberId(Long chapterId, Long memberId) {
@@ -147,7 +141,7 @@ public class AuthorizationJdbcRepository {
 
         Map<String, Long> paramSource = Map.of("chapterId", chapterId, "memberId", memberId);
 
-        return jdbcTemplate.query(nativeQuery, paramSource, createAuthRowMapper(Chapter.class));
+        return jdbcTemplate.query(nativeQuery, paramSource, createAuthRowMapper(EntityType.CHAPTER));
     }
 
     public List<BookClubMemberAuthInfo> findBookClubMemberAuthsByTopicIdAndMemberId(Long topicId, Long memberId) {
@@ -183,7 +177,7 @@ public class AuthorizationJdbcRepository {
 
         Map<String, Long> paramSource = Map.of("topicId", topicId, "memberId", memberId);
 
-        return jdbcTemplate.query(nativeQuery, paramSource, createAuthRowMapper(Topic.class));
+        return jdbcTemplate.query(nativeQuery, paramSource, createAuthRowMapper(EntityType.TOPIC));
     }
 
     public List<BookClubMemberAuthInfo> findBookClubMemberAuthsByBookmarkIdAndMemberId(Long bookmarkId, Long memberId) {
@@ -222,7 +216,7 @@ public class AuthorizationJdbcRepository {
 
         Map<String, Long> paramSource = Map.of("bookmarkId", bookmarkId, "memberId", memberId);
 
-        return jdbcTemplate.query(nativeQuery, paramSource, createAuthRowMapper(Bookmark.class));
+        return jdbcTemplate.query(nativeQuery, paramSource, createAuthRowMapper(EntityType.BOOKMARK));
     }
 
     public List<BookClubMemberAuthInfo> findBookClubMemberAuthsByCommentIdAndMemberId(Long commentId, Long memberId) {
@@ -264,14 +258,14 @@ public class AuthorizationJdbcRepository {
 
         Map<String, Long> paramSource = Map.of("commentId", commentId, "memberId", memberId);
 
-        return jdbcTemplate.query(nativeQuery, paramSource, createAuthRowMapper(Comment.class));
+        return jdbcTemplate.query(nativeQuery, paramSource, createAuthRowMapper(EntityType.COMMENT));
     }
 
-    private RowMapper<BookClubMemberAuthInfo> createAuthRowMapper(Class<?> entity) {
+    private RowMapper<BookClubMemberAuthInfo> createAuthRowMapper(EntityType type) {
         return (resultSet, rowNum) -> {
             Long bookClubId = getLongOrNull(resultSet, "book_club_id");
             Long memberId = getLongOrNull(resultSet, "member_id");
-            Long entityId = getEntityIdOrNull(resultSet, entity);
+            Long entityId = getEntityIdOrNull(resultSet, type);
 
             return new BookClubMemberAuthInfo(bookClubId, memberId, entityId);
         };
@@ -286,37 +280,18 @@ public class AuthorizationJdbcRepository {
         return l;
     }
 
-    private Long getEntityIdOrNull(ResultSet resultSet, Class<?> entity) throws SQLException {
+    private Long getEntityIdOrNull(ResultSet resultSet, EntityType type) throws SQLException {
         ResultSetMetaData metaData = resultSet.getMetaData();
-        String className = entity.getSimpleName();
-        String columnName = convertClassNameToColumnName(className);
+        String idColumnName = type.getIdColumnName();
 
         for (int i = 1; i <= metaData.getColumnCount(); i++) {
             String metaColumnName = metaData.getColumnName(i);
 
-            if (metaColumnName.equals(columnName) || metaColumnName.equals(columnName.toLowerCase())) {
-                return getLongOrNull(resultSet, columnName);
+            if (metaColumnName.equals(idColumnName) || metaColumnName.equals(idColumnName.toLowerCase())) {
+                return getLongOrNull(resultSet, idColumnName);
             }
         }
         return null;
-    }
-
-    private String convertClassNameToColumnName(String className) {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append(Character.toUpperCase(className.charAt(0)));
-        for (int i = 1; i < className.length(); i++) {
-            char c = className.charAt(i);
-
-            if (Character.isUpperCase(c)) {
-                sb.append('_');
-                sb.append(c);
-            } else {
-                sb.append(Character.toUpperCase(c));
-            }
-        }
-        sb.append("_ID");
-        return sb.toString();
     }
 
 }
