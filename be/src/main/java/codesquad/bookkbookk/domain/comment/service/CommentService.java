@@ -42,7 +42,7 @@ public class CommentService {
 
     @Transactional
     public void createComment(Long memberId, CreateCommentRequest createCommentRequest) {
-        authorizationService.authorizeBookClubMembershipByBookmarkId(memberId, createCommentRequest.getBookmarkId());
+        authorizationService.authorizeBookClubMembershipByBookmarkId(createCommentRequest.getBookmarkId(), memberId);
 
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         Bookmark bookmark = bookmarkRepository.findById(createCommentRequest.getBookmarkId())
@@ -70,7 +70,7 @@ public class CommentService {
 
     @Transactional
     public void createCommentReaction(Long memberId, Long commentId, CreateCommentReactionRequest request) {
-        authorizationService.authorizeBookClubMembershipByCommentId(memberId, commentId);
+        authorizationService.authorizeBookClubMembershipByCommentId(commentId, memberId);
 
         Reaction reaction = Reaction.of(request.getReactionName());
         if (commentReactionRepository.existsByCommentIdAndReactorIdAndReaction(commentId, memberId, reaction)) {
@@ -97,14 +97,14 @@ public class CommentService {
 
     @Transactional(readOnly = true)
     public List<ReadCommentResponse> readComments(Long memberId, Long bookmarkId) {
-        authorizationService.authorizeBookClubMembershipByBookmarkId(memberId, bookmarkId);
+        authorizationService.authorizeBookClubMembershipByBookmarkId(bookmarkId, memberId);
 
         return ReadCommentResponse.from(commentRepository.findAllByBookmarkId(bookmarkId));
     }
 
     @Transactional(readOnly = true)
     public ReadReactionsResponse readCommentReactions(Long memberId, Long commentId) {
-        authorizationService.authorizeBookClubMembershipByCommentId(memberId, commentId);
+        authorizationService.authorizeBookClubMembershipByCommentId(commentId, memberId);
 
         return ReadReactionsResponse.fromCommentReactions(commentReactionRepository.findAllByCommentId(commentId));
     }

@@ -5,6 +5,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.*;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,21 +25,17 @@ import io.restassured.specification.RequestSpecification;
 @ExtendWith(RestDocumentationExtension.class)
 public class IntegrationTest {
 
+    protected RequestSpecification spec;
     @LocalServerPort
     private int port;
 
     @Autowired
     private DatabaseCleaner databaseCleaner;
-
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
-    protected RequestSpecification spec;
-
     @BeforeEach
     public void setUp(RestDocumentationContextProvider restDocumentation) {
-        this.databaseCleaner.execute();
-        this.redisTemplate.getConnectionFactory().getConnection().flushAll();
         RestAssured.port = port;
         this.spec = new RequestSpecBuilder()
                 .addFilter(documentationConfiguration(restDocumentation)
@@ -52,6 +49,12 @@ public class IntegrationTest {
                                 prettyPrint())
                         .withResponseDefaults(prettyPrint()))
                 .build();
+    }
+
+    @AfterEach
+    public void cleanUp() {
+        this.databaseCleaner.execute();
+        this.redisTemplate.getConnectionFactory().getConnection().flushAll();
     }
 
 }

@@ -1,8 +1,6 @@
 package codesquad.bookkbookk.integration.scenario;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.Instant;
 import java.util.List;
 
@@ -11,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import codesquad.bookkbookk.common.error.exception.ApiException;
 import codesquad.bookkbookk.common.error.exception.MemberNotInBookClubException;
@@ -64,9 +62,6 @@ public class BookTest extends IntegrationTest {
 
     @Autowired
     private JwtProvider jwtProvider;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @Test
     @DisplayName("책 추가 권한이 없는 멤버가 책을 추가했을 때 에러가 발생한다.")
@@ -157,12 +152,11 @@ public class BookTest extends IntegrationTest {
         });
     }
 
+    @Sql("classpath:sql/readBookmarksWithUpdatedTime.sql")
     @DisplayName("책의 북마크 필터링 조건에서 시간 정보가 없으면 페이지로만 필터링한다.")
     @Test
     void readBookmarksWithOnlyPageFilter() throws IOException {
         // given
-        String sql = new String(Files.readAllBytes(Paths.get("src/test/resources/sql/readBookmarksWithUpdatedTime.sql")));
-        jdbcTemplate.execute(sql);
         String accessToken = jwtProvider.createAccessToken(1L);
 
         //when
@@ -185,12 +179,11 @@ public class BookTest extends IntegrationTest {
         });
     }
 
+    @Sql("classpath:sql/readBookmarksWithUpdatedTime.sql")
     @DisplayName("책의 북마크 필터링 조건에서 endPage랑 endTime이 없이 필터링한다.")
     @Test
-    void readBookmarksWithFilter() throws IOException {
+    void readBookmarksWithFilter() {
         // given
-        String sql = new String(Files.readAllBytes(Paths.get("src/test/resources/sql/readBookmarksWithUpdatedTime.sql")));
-        jdbcTemplate.execute(sql);
         String accessToken = jwtProvider.createAccessToken(1L);
         Instant startTime = Instant.parse("2024-02-12T12:32:30Z");
 

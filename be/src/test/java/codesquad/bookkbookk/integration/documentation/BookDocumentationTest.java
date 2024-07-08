@@ -4,9 +4,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.*;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.context.jdbc.Sql;
 
 import codesquad.bookkbookk.common.error.exception.BookNotFoundException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
@@ -330,12 +328,11 @@ public class BookDocumentationTest extends IntegrationTest {
         });
     }
 
+    @Sql("classpath:sql/readBookmarksWithUpdatedTime.sql")
     @DisplayName("책의 북마크들을 필터링해서 조회한다.")
     @Test
-    void readBookmarksWithFilter() throws IOException {
+    void readBookmarksWithFilter() {
         // given
-        String sql = new String(Files.readAllBytes(Paths.get("src/test/resources/sql/readBookmarksWithUpdatedTime.sql")));
-        jdbcTemplate.execute(sql);
         String accessToken = jwtProvider.createAccessToken(1L);
         Instant startTime = Instant.parse("2024-02-03T00:00:00Z");
         Instant endTime = Instant.parse("2024-02-17T12:00:00Z");
@@ -344,11 +341,11 @@ public class BookDocumentationTest extends IntegrationTest {
         Response response = RestAssured
                 .given(this.spec).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-                .pathParam("bookId",1L)
+                .pathParam("bookId", 1L)
                 .queryParam("startTime", startTime.toString())
                 .queryParam("endTime", endTime.toString())
                 .queryParam("startPage", 50)
-                .queryParam("endPage",190)
+                .queryParam("endPage", 190)
                 .filter(document("{class-name}/{method-name}",
                         pathParameters(
                                 parameterWithName("bookId").description("검색할 책 아이디")

@@ -45,7 +45,7 @@ public class BookClubMember {
 
     public BookClubMember(BookClub bookClub, Member member) {
         this.bookClub = bookClub;
-        if (bookClub != null) this.bookClubId = getBookClubId();
+        if (bookClub != null) this.bookClubId = bookClub.getId();
         this.member = member;
         if (member != null) this.memberId = member.getId();
     }
