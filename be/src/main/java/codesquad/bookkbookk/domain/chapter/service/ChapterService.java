@@ -38,7 +38,7 @@ public class ChapterService {
 
     @Transactional
     public CreateChapterResponse createChapter(Long memberId, CreateChapterRequest request) {
-        authorizationService.authorizeBookClubMembershipByBookId(memberId, request.getBookId());
+        authorizationService.authorizeBookClubMembershipByBookId(request.getBookId(), memberId);
 
         Book book = bookRepository.findById(request.getBookId()).orElseThrow(BookNotFoundException::new);
         List<CreateChapterRequest.ChapterDataDTO> dataList = request.toEntities(book);
@@ -60,7 +60,7 @@ public class ChapterService {
 
     @Transactional(readOnly = true)
     public List<ReadChapterResponse> readChapters(Long memberId, Long bookId, int chapterStatusId) {
-        authorizationService.authorizeBookClubMembershipByBookId(memberId, bookId);
+        authorizationService.authorizeBookClubMembershipByBookId(bookId, memberId);
 
         Status chapterStatus;
         if (chapterStatusId == ALL_STATUS) {
@@ -74,7 +74,7 @@ public class ChapterService {
 
     @Transactional
     public UpdateChapterResponse updateChapter(Long memberId, Long chapterId, UpdateChapterRequest request) {
-        authorizationService.authorizeBookClubMembershipByChapterId(memberId, chapterId);
+        authorizationService.authorizeBookClubMembershipByChapterId(chapterId, memberId);
 
         Chapter chapter = chapterRepository.findById(chapterId).orElseThrow(ChapterNotFoundException::new);
 
@@ -84,7 +84,7 @@ public class ChapterService {
 
     @Transactional
     public void deleteChapter(Long memberId, Long chapterId) {
-        authorizationService.authorizeBookClubMembershipByChapterId(memberId, chapterId);
+        authorizationService.authorizeBookClubMembershipByChapterId(chapterId, memberId);
 
         chapterRepository.deleteById(chapterId);
     }

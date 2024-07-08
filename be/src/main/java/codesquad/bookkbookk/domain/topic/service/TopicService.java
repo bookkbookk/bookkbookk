@@ -30,7 +30,7 @@ public class TopicService {
 
     @Transactional
     public CreateTopicResponse createTopic(Long memberId, CreateTopicRequest request) {
-        authorizationService.authorizeBookClubMembershipByChapterId(memberId, request.getChapterId());
+        authorizationService.authorizeBookClubMembershipByChapterId(request.getChapterId(), memberId);
 
         Chapter chapter = chapterRepository.findById(request.getChapterId())
                 .orElseThrow(ChapterNotFoundException::new);
@@ -42,7 +42,7 @@ public class TopicService {
 
     @Transactional(readOnly = true)
     public List<ReadTopicResponse> readTopicLIst(Long memberId, Long chapterId) {
-        authorizationService.authorizeBookClubMembershipByChapterId(memberId, chapterId);
+        authorizationService.authorizeBookClubMembershipByChapterId(chapterId, memberId);
 
         List<Topic> topicList = topicRepository.findByChapterId(chapterId);
 
@@ -51,7 +51,7 @@ public class TopicService {
 
     @Transactional
     public void updateTitle(Long memberId, Long topicId, UpdateTopicTitleRequest request) {
-        authorizationService.authorizeBookClubMembershipByTopicId(memberId, topicId);
+        authorizationService.authorizeBookClubMembershipByTopicId(topicId, memberId);
 
         Topic topic = topicRepository.findById(topicId).orElseThrow(TopicNotFoundException::new);
 
@@ -59,7 +59,7 @@ public class TopicService {
     }
 
     public void deleteTopic(Long memberId, Long topicId) {
-        authorizationService.authorizeBookClubMembershipByTopicId(memberId, topicId);
+        authorizationService.authorizeBookClubMembershipByTopicId(topicId, memberId);
 
         topicRepository.deleteById(topicId);
     }

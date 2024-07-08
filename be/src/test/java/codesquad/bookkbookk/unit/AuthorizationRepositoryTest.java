@@ -6,44 +6,44 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import codesquad.bookkbookk.util.IntegrationTest;
 import codesquad.bookkbookk.domain.auth.repository.AuthorizationRepository;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
-import codesquad.bookkbookk.domain.bookmark.repository.BookmarkRepository;
 import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
 import codesquad.bookkbookk.domain.chapter.repository.ChapterRepository;
-import codesquad.bookkbookk.domain.comment.repository.CommentRepository;
 import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
 import codesquad.bookkbookk.domain.mapping.repository.BookClubMemberRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
 import codesquad.bookkbookk.domain.topic.data.entity.Topic;
 import codesquad.bookkbookk.domain.topic.repository.TopicRepository;
+import codesquad.bookkbookk.util.IntegrationTest;
 import codesquad.bookkbookk.util.TestDataFactory;
 
 public class AuthorizationRepositoryTest extends IntegrationTest {
 
     @Autowired
     private AuthorizationRepository authorizationRepository;
+
     @Autowired
     private MemberRepository memberRepository;
+
     @Autowired
     private BookClubRepository bookClubRepository;
+
     @Autowired
     private BookClubMemberRepository bookClubMemberRepository;
+
     @Autowired
     private BookRepository bookRepository;
+
     @Autowired
     private ChapterRepository chapterRepository;
+
     @Autowired
     private TopicRepository topicRepository;
-    @Autowired
-    private BookmarkRepository bookmarkRepository;
-    @Autowired
-    private CommentRepository commentRepository;
 
     @Test
     @DisplayName("북클럽 멤버가 저장되었을 떄 멤버의 아이디와 북클럽 아이디로 조회에 성공한다.")

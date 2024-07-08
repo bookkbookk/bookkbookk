@@ -13,6 +13,7 @@ import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
 import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
 import codesquad.bookkbookk.domain.comment.data.entity.Comment;
 import codesquad.bookkbookk.domain.gathering.data.entity.Gathering;
+import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.topic.data.entity.Topic;
 
@@ -53,6 +54,18 @@ public class TestDataFactory {
                         .name("name " + number)
                         .profileImageUrl("image.url " + number)
                         .build())
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    public static List<BookClubMember> createBookClubMembers(List<BookClub> bookClubs, Member member) {
+        return bookClubs.stream()
+                .map(bookClub -> new BookClubMember(bookClub, member))
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    public static List<BookClubMember> createBookClubMembers(BookClub bookClub, List<Member> members) {
+        return members.stream()
+                .map(member -> new BookClubMember(bookClub, member))
                 .collect(Collectors.toUnmodifiableList());
     }
 

@@ -36,7 +36,7 @@ public class GatheringService {
 
     @Transactional
     public void createGathering(Long memberId, Long bookClubId, CreateGatheringsRequest request) {
-        authorizationService.authorizeBookClubMembershipByBookClubId(memberId, bookClubId);
+        authorizationService.authorizeBookClubMembershipByBookClubId(bookClubId, memberId);
 
         Book book = bookRepository.findById(request.getBookId()).orElseThrow(BookNotFoundException::new);
         BookClub bookClub = bookClubRepository.findById(bookClubId).orElseThrow(BookClubNotFoundException::new);
@@ -52,14 +52,14 @@ public class GatheringService {
 
     @Transactional(readOnly = true)
     public List<ReadGatheringResponse> readGatherings(Long memberId, Long bookClubId) {
-        authorizationService.authorizeBookClubMembershipByBookClubId(memberId, bookClubId);
+        authorizationService.authorizeBookClubMembershipByBookClubId(bookClubId, memberId);
 
         return ReadGatheringResponse.from(gatheringRepository.findAllByBookClubId(bookClubId));
     }
 
     @Transactional
     public UpdateGatheringResponse updateGathering(Long memberId, Long gatheringId, UpdateGatheringRequest request) {
-        authorizationService.authorizeBookClubMembershipByGatheringId(memberId, gatheringId);
+        authorizationService.authorizeBookClubMembershipByGatheringId(gatheringId, memberId);
 
         Gathering gathering = gatheringRepository.findById(gatheringId).orElseThrow(GatheringNotFoundException::new);
 
@@ -69,7 +69,7 @@ public class GatheringService {
 
     @Transactional
     public void deleteGathering(Long memberId, Long gatheringId) {
-        authorizationService.authorizeBookClubMembershipByGatheringId(memberId, gatheringId);
+        authorizationService.authorizeBookClubMembershipByGatheringId(gatheringId, memberId);
 
         gatheringRepository.deleteById(gatheringId);
     }
