@@ -75,17 +75,8 @@ public class AuthenticationService {
             return memberRepository.findByEmail(loginRequest.getEmail())
                     .orElseThrow(RuntimeException::new);
         }
-        Member member = createMemberFromRequest(loginRequest);
+        Member member = loginRequest.toMember();
         return memberRepository.save(member);
-    }
-
-    private Member createMemberFromRequest(LoginRequest loginRequest) {
-        return Member.builder()
-                .email(loginRequest.getEmail())
-                .loginType(loginRequest.getLoginType())
-                .nickname(loginRequest.getNickname())
-                .profileImageUrl(loginRequest.getProfileImageUrl())
-                .build();
     }
 
     private String requestOAuthToken(OAuthProvider.Property oAuthProperty, String oAuthCode) {

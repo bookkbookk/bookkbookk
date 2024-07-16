@@ -26,7 +26,6 @@ import codesquad.bookkbookk.domain.bookclub.data.type.BookClubStatus;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
 import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
 import codesquad.bookkbookk.domain.mapping.repository.BookClubMemberRepository;
-import codesquad.bookkbookk.domain.mapping.repository.MemberBookRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
 
@@ -48,7 +47,6 @@ public class BookClubService {
     private final BookClubRepository bookClubRepository;
     private final BookClubMemberRepository bookClubMemberRepository;
     private final MemberRepository memberRepository;
-    private final MemberBookRepository memberBookRepository;
 
     @Transactional
     public CreateBookClubResponse createBookClub(Long memberId, CreateBookClubRequest request) {
@@ -59,16 +57,11 @@ public class BookClubService {
             profileImgUrl = s3ImageUploader.upload(profileImgFile).toString();
         }
 
-        BookClub bookClub = BookClub.builder()
-                .creatorId(memberId)
-                .name(request.getName())
-                .profileImageUrl(profileImgUrl)
-                .build();
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+        BookClub bookClub = request.toBookClub(member, profileImgUrl);
         bookClubRepository.save(bookClub);
 
-        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         BookClubMember bookClubMember = new BookClubMember(bookClub, member);
-
         bookClubMemberRepository.save(bookClubMember);
         bookClub.getBookClubMembers().add(bookClubMember);
         member.getMemberBookClubs().add(bookClubMember);
