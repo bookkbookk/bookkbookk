@@ -35,16 +35,13 @@ public class GatheringService {
     private final BookClubRepository bookClubRepository;
 
     @Transactional
-    public void createGathering(Long memberId, Long bookClubId, CreateGatheringsRequest request) {
+    public void createGatherings(Long memberId, Long bookClubId, CreateGatheringsRequest request) {
         authorizationService.authorizeBookClubMembershipByBookClubId(bookClubId, memberId);
 
         Book book = bookRepository.findById(request.getBookId()).orElseThrow(BookNotFoundException::new);
         BookClub bookClub = bookClubRepository.findById(bookClubId).orElseThrow(BookClubNotFoundException::new);
 
-        List<Gathering> gatherings = request.getGatherings().stream()
-                .map(gathering -> new Gathering(book, gathering.getDateTime(), gathering.getPlace()))
-                .sorted(Comparator.comparing(Gathering::getStartTime))
-                .collect(Collectors.toUnmodifiableList());
+        List<Gathering> gatherings = createGatheringsFromRequest(request, book);
         gatheringRepository.saveAll(gatherings);
 
         bookClub.updateUpcomingGatheringDate(gatherings.get(0).getStartTime());
@@ -72,6 +69,13 @@ public class GatheringService {
         authorizationService.authorizeBookClubMembershipByGatheringId(gatheringId, memberId);
 
         gatheringRepository.deleteById(gatheringId);
+    }
+
+    private List<Gathering> createGatheringsFromRequest(CreateGatheringsRequest request, Book book) {
+        return  request.getGatherings().stream()
+                .map(gathering -> new Gathering(book, gathering.getDateTime(), gathering.getPlace()))
+                .sorted(Comparator.comparing(Gathering::getStartTime))
+                .collect(Collectors.toUnmodifiableList());
     }
 
 }

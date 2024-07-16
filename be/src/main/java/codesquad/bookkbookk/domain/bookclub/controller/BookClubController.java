@@ -108,9 +108,9 @@ public class BookClubController {
     }
 
     @PostMapping("/{bookClubId}/gatherings")
-    public ResponseEntity<Void> createGathering(@MemberId Long memberId, @PathVariable Long bookClubId,
-                                                @RequestBody CreateGatheringsRequest createGatheringsRequest) {
-        gatheringService.createGathering(memberId, bookClubId, createGatheringsRequest);
+    public ResponseEntity<Void> createGatherings(@MemberId Long memberId, @PathVariable Long bookClubId,
+                                                 @RequestBody CreateGatheringsRequest createGatheringsRequest) {
+        gatheringService.createGatherings(memberId, bookClubId, createGatheringsRequest);
 
         return ResponseEntity.ok().build();
     }

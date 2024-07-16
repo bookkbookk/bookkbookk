@@ -44,14 +44,7 @@ public class BookService {
         BookClub bookclub = bookClubRepository.findById(request.getBookClubId())
                 .orElseThrow(BookClubNotFoundException::new);
 
-        Book book = Book.builder()
-                .isbn(request.getIsbn())
-                .bookClub(bookclub)
-                .title(request.getTitle())
-                .cover(request.getCover())
-                .author(request.getAuthor())
-                .category(request.getCategory())
-                .build();
+        Book book = createBookFromRequest(request, bookclub);
 
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         member.addBook(book);
@@ -84,6 +77,17 @@ public class BookService {
 
         book.updateStatus(request);
         return UpdateBookStatusResponse.from(book);
+    }
+
+    private Book createBookFromRequest(CreateBookRequest request, BookClub bookClub) {
+        return Book.builder()
+                .isbn(request.getIsbn())
+                .bookClub(bookClub)
+                .title(request.getTitle())
+                .cover(request.getCover())
+                .author(request.getAuthor())
+                .category(request.getCategory())
+                .build();
     }
 
 }
