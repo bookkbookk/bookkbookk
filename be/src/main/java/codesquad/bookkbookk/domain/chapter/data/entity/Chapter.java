@@ -62,6 +62,10 @@ public class Chapter {
         return this.topics.add(topic);
     }
 
+    public boolean addTopics(List<Topic> topics) {
+        return this.topics.addAll(topics);
+    }
+
     public Chapter update(UpdateChapterRequest request) {
         if (request.getTitle() != null) {
             this.title = request.getTitle();
