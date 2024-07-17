@@ -11,8 +11,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class CreateChapterRequest {
 
     private Long bookId;
@@ -33,29 +33,17 @@ public class CreateChapterRequest {
 
     }
 
-    @Getter
-    public static class ChapterDataDTO {
-
-        private Chapter chapter;
-        private List<Topic> topicList;
-
-        public ChapterDataDTO(Chapter chapter, List<Topic> topicList) {
-            this.chapter = chapter;
-            this.topicList = topicList;
-        }
-
-    }
-
-    public List<ChapterDataDTO> toEntities(Book book) {
+    public List<Chapter> toChaptersAndTopics(Book book) {
         return chapters.stream()
-                .map(chapterRequest -> {
-                    Chapter chapter = new Chapter(book, chapterRequest.title);
+                .map(requestChapter -> {
+                    Chapter chapter = new Chapter(book, requestChapter.title);
 
-                    List<Topic> topicList = chapterRequest.topics.stream()
-                            .map(topicRequest -> new Topic(chapter, topicRequest.title))
+                    List<Topic> topics = requestChapter.topics.stream()
+                            .map(requestTopic -> new Topic(chapter, requestTopic.title))
                             .collect(Collectors.toUnmodifiableList());
+                    chapter.addTopics(topics);
 
-                    return new ChapterDataDTO(chapter, topicList);
+                    return chapter;
                 })
                 .collect(Collectors.toUnmodifiableList());
     }

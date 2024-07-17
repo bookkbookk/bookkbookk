@@ -20,7 +20,6 @@ import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
-import codesquad.bookkbookk.domain.mapping.repository.MemberBookRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
 
@@ -35,7 +34,6 @@ public class BookService {
     private final BookRepository bookRepository;
     private final BookClubRepository bookClubRepository;
     private final MemberRepository memberRepository;
-    private final MemberBookRepository memberBookRepository;
 
     @Transactional
     public CreateBookResponse createBook(Long memberId, CreateBookRequest request) {
@@ -44,14 +42,7 @@ public class BookService {
         BookClub bookclub = bookClubRepository.findById(request.getBookClubId())
                 .orElseThrow(BookClubNotFoundException::new);
 
-        Book book = Book.builder()
-                .isbn(request.getIsbn())
-                .bookClub(bookclub)
-                .title(request.getTitle())
-                .cover(request.getCover())
-                .author(request.getAuthor())
-                .category(request.getCategory())
-                .build();
+        Book book = request.toBook(bookclub);
 
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         member.addBook(book);

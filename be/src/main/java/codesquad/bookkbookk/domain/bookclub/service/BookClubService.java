@@ -2,7 +2,6 @@ package codesquad.bookkbookk.domain.bookclub.service;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +25,6 @@ import codesquad.bookkbookk.domain.bookclub.data.type.BookClubStatus;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
 import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
 import codesquad.bookkbookk.domain.mapping.repository.BookClubMemberRepository;
-import codesquad.bookkbookk.domain.mapping.repository.MemberBookRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
 
@@ -48,7 +46,6 @@ public class BookClubService {
     private final BookClubRepository bookClubRepository;
     private final BookClubMemberRepository bookClubMemberRepository;
     private final MemberRepository memberRepository;
-    private final MemberBookRepository memberBookRepository;
 
     @Transactional
     public CreateBookClubResponse createBookClub(Long memberId, CreateBookClubRequest request) {
@@ -59,16 +56,11 @@ public class BookClubService {
             profileImgUrl = s3ImageUploader.upload(profileImgFile).toString();
         }
 
-        BookClub bookClub = BookClub.builder()
-                .creatorId(memberId)
-                .name(request.getName())
-                .profileImageUrl(profileImgUrl)
-                .build();
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+        BookClub bookClub = request.toBookClub(member, profileImgUrl);
         bookClubRepository.save(bookClub);
 
-        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         BookClubMember bookClubMember = new BookClubMember(bookClub, member);
-
         bookClubMemberRepository.save(bookClubMember);
         bookClub.getBookClubMembers().add(bookClubMember);
         member.getMemberBookClubs().add(bookClubMember);
@@ -81,16 +73,11 @@ public class BookClubService {
 
     @Transactional(readOnly = true)
     public List<ReadBookClubDetailResponse> readBookClubs(Long memberId, String statusName) {
-        BookClubStatus status;
-        if (statusName.equals(STATUS_ALL)) {
-            status = null;
-        } else {
-            status = BookClubStatus.of(statusName);
-        }
+        BookClubStatus status = getBookClubStatusOf(statusName);
 
-        return bookClubRepository.findAllByMemberIdAndStatus(memberId, status).stream()
-                .map(bookClub -> bookClub.getStatus().from(bookClub))
-                .collect(Collectors.toUnmodifiableList());
+        List<BookClub> bookClubs = bookClubRepository.findAllByMemberIdAndStatus(memberId, status);
+
+        return ReadBookClubDetailResponse.from(bookClubs);
     }
 
     @Transactional
@@ -124,7 +111,14 @@ public class BookClubService {
 
         BookClub bookClub = bookClubRepository.findDetailById(bookClubId).orElseThrow(BookClubNotFoundException::new);
 
-        return bookClub.getStatus().from(bookClub);
+        return ReadBookClubDetailResponse.from(bookClub);
+    }
+
+    private BookClubStatus getBookClubStatusOf(String statusName) {
+        if (statusName.equals(STATUS_ALL)) {
+            return null;
+        }
+        return BookClubStatus.of(statusName);
     }
 
 }

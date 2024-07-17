@@ -48,14 +48,18 @@ public class BookmarkService {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         Topic topic = topicRepository.findById(createBookmarkRequest.getTopicId())
                 .orElseThrow(TopicNotFoundException::new);
-        Bookmark bookmark = Bookmark.builder()
-                .writer(member)
-                .topic(topic)
-                .page(createBookmarkRequest.getPage())
-                .contents(createBookmarkRequest.getContent())
-                .build();
+        Bookmark bookmark = createBookmarkFromRequest(createBookmarkRequest, member, topic);
 
         bookmarkRepository.save(bookmark);
+    }
+
+    private Bookmark createBookmarkFromRequest(CreateBookmarkRequest request, Member member, Topic topic) {
+        return Bookmark.builder()
+                .writer(member)
+                .topic(topic)
+                .page(request.getPage())
+                .contents(request.getContent())
+                .build();
     }
 
     @Transactional(readOnly = true)

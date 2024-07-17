@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 public enum Status {
 
+    ALL(0, ""),
     BEFORE_READING(1, "독서 전"),
     READING(2, "독서 중"),
     AFTER_READING(3, "독서 완료");

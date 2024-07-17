@@ -3,6 +3,7 @@ package codesquad.bookkbookk.domain.auth.data.dto;
 import java.util.Map;
 
 import codesquad.bookkbookk.domain.auth.data.type.LoginType;
+import codesquad.bookkbookk.domain.member.data.entity.Member;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -27,6 +28,15 @@ public class LoginRequest {
         LoginType loginType = LoginType.getLoginTypeOf(providerName);
 
         return loginType.of(userInfos);
+    }
+
+    public Member toMember() {
+        return Member.builder()
+                .email(email)
+                .loginType(loginType)
+                .nickname(nickname)
+                .profileImageUrl(profileImageUrl)
+                .build();
     }
 
 }
