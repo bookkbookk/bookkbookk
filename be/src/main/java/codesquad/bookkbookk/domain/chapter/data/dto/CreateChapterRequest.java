@@ -12,12 +12,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class CreateChapterRequest {
 
-    @Getter
     private Long bookId;
     private List<ChapterRequest> chapters;
 
+    @Getter
     private static class ChapterRequest {
 
         private String title;
@@ -25,6 +26,7 @@ public class CreateChapterRequest {
 
     }
 
+    @Getter
     private static class TopicRequest {
 
         private String title;
