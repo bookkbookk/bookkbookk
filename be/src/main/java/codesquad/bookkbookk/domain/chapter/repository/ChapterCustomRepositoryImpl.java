@@ -37,7 +37,7 @@ public class ChapterCustomRepositoryImpl implements ChapterCustomRepository {
     }
 
     private BooleanExpression createChapterStatusCondition(Status status) {
-        if (status == null) {
+        if (status == Status.ALL) {
             return null;
         }
         return chapter.status.eq(status);

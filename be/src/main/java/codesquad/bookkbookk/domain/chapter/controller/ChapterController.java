@@ -34,7 +34,7 @@ public class ChapterController {
     @PostMapping
     public ResponseEntity<CreateChapterResponse> createChapter(@MemberId Long memberId,
                                                                @RequestBody CreateChapterRequest request) {
-        CreateChapterResponse response = chapterService.createChapter(memberId, request);
+        CreateChapterResponse response = chapterService.createChaptersAndTopics(memberId, request);
 
         return ResponseEntity.ok()
                 .body(response);

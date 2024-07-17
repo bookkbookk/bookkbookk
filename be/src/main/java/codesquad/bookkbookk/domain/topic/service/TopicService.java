@@ -35,7 +35,7 @@ public class TopicService {
         Chapter chapter = chapterRepository.findById(request.getChapterId())
                 .orElseThrow(ChapterNotFoundException::new);
 
-        Topic topic = new Topic(chapter, request.getTitle());
+        Topic topic = request.toTopic(chapter);
         topicRepository.save(topic);
         return new CreateTopicResponse(topic.getId());
     }

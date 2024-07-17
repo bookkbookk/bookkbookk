@@ -1,8 +1,6 @@
 package codesquad.bookkbookk.domain.gathering.service;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,16 +33,13 @@ public class GatheringService {
     private final BookClubRepository bookClubRepository;
 
     @Transactional
-    public void createGathering(Long memberId, Long bookClubId, CreateGatheringsRequest request) {
+    public void createGatherings(Long memberId, Long bookClubId, CreateGatheringsRequest request) {
         authorizationService.authorizeBookClubMembershipByBookClubId(bookClubId, memberId);
 
         Book book = bookRepository.findById(request.getBookId()).orElseThrow(BookNotFoundException::new);
         BookClub bookClub = bookClubRepository.findById(bookClubId).orElseThrow(BookClubNotFoundException::new);
 
-        List<Gathering> gatherings = request.getGatherings().stream()
-                .map(gathering -> new Gathering(book, gathering.getDateTime(), gathering.getPlace()))
-                .sorted(Comparator.comparing(Gathering::getStartTime))
-                .collect(Collectors.toUnmodifiableList());
+        List<Gathering> gatherings = request.toGatherings(book);
         gatheringRepository.saveAll(gatherings);
 
         bookClub.updateUpcomingGatheringDate(gatherings.get(0).getStartTime());

@@ -75,12 +75,7 @@ public class AuthenticationService {
             return memberRepository.findByEmail(loginRequest.getEmail())
                     .orElseThrow(RuntimeException::new);
         }
-        Member member = Member.builder()
-                .email(loginRequest.getEmail())
-                .loginType(loginRequest.getLoginType())
-                .nickname(loginRequest.getNickname())
-                .profileImageUrl(loginRequest.getProfileImageUrl())
-                .build();
+        Member member = loginRequest.toMember();
         return memberRepository.save(member);
     }
 
