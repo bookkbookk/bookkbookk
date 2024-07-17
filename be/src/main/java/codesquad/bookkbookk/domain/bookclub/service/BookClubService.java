@@ -116,7 +116,7 @@ public class BookClubService {
 
         BookClub bookClub = bookClubRepository.findDetailById(bookClubId).orElseThrow(BookClubNotFoundException::new);
 
-        return bookClub.getStatus().from(bookClub);
+        return ReadBookClubDetailResponse.from(bookClub);
     }
 
 }
