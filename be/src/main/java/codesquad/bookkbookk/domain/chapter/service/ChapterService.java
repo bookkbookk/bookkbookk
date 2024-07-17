@@ -25,8 +25,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ChapterService {
 
-    private static final int ALL_STATUS = 0;
-
     private final AuthorizationService authorizationService;
 
     private final ChapterRepository chapterRepository;
@@ -48,12 +46,7 @@ public class ChapterService {
     public List<ReadChapterResponse> readChapters(Long memberId, Long bookId, int chapterStatusId) {
         authorizationService.authorizeBookClubMembershipByBookId(bookId, memberId);
 
-        Status chapterStatus;
-        if (chapterStatusId == ALL_STATUS) {
-            chapterStatus = null;
-        } else {
-            chapterStatus = Status.of(chapterStatusId);
-        }
+        Status chapterStatus = Status.of(chapterStatusId);
 
         return ReadChapterResponse.from(chapterRepository.findAllByBookIdAndStatus(bookId, chapterStatus));
     }

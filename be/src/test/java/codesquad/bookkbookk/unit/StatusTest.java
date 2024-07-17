@@ -27,7 +27,7 @@ public class StatusTest {
     @DisplayName("아이디에 해당하는 Status가 없으면 예외가 발생한다.")
     void getStatusWithInvalidId() {
         // given
-        int id = 0;
+        int id = -1;
 
         // when & then
         assertThatThrownBy(() -> Status.of(id)).isInstanceOf(StatusNotFoundException.class);
