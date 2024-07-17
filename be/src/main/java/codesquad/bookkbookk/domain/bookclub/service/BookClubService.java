@@ -2,7 +2,6 @@ package codesquad.bookkbookk.domain.bookclub.service;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -81,9 +80,9 @@ public class BookClubService {
             status = BookClubStatus.of(statusName);
         }
 
-        return bookClubRepository.findAllByMemberIdAndStatus(memberId, status).stream()
-                .map(bookClub -> bookClub.getStatus().from(bookClub))
-                .collect(Collectors.toUnmodifiableList());
+        List<BookClub> bookClubs = bookClubRepository.findAllByMemberIdAndStatus(memberId, status);
+
+        return ReadBookClubDetailResponse.from(bookClubs);
     }
 
     @Transactional

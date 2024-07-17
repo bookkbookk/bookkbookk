@@ -1,37 +1,26 @@
 package codesquad.bookkbookk.domain.bookclub.data.dto;
 
-import java.time.Instant;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import codesquad.bookkbookk.domain.book.data.entity.Book;
-import codesquad.bookkbookk.domain.bookclub.data.type.BookClubStatus;
+import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 
 import lombok.Builder;
 import lombok.Getter;
 
-@Getter
-public class ReadBookClubDetailResponse {
+public abstract class ReadBookClubDetailResponse {
 
-    private final Long id;
-    private final String name;
-    private final BookClubStatus status;
-    private final String profileImgUrl;
-    private final Instant createdTime;
-    private final ReadBookClubLastBook lastBook;
-    private final List<ReadBookClubMember> members;
+    public static List<ReadBookClubDetailResponse> from(List<BookClub> bookClubs) {
+        return bookClubs.stream()
+                .map(ReadBookClubDetailResponse::from)
+                .collect(Collectors.toUnmodifiableList());
+    }
 
-    public ReadBookClubDetailResponse(Long id, String name, BookClubStatus status, String profileImgUrl,
-                                      Instant createdTime, ReadBookClubLastBook readBookClubLastBook,
-                                      List<ReadBookClubMember> members) {
-        this.id = id;
-        this.name = name;
-        this.status = status;
-        this.profileImgUrl = profileImgUrl;
-        this.createdTime = createdTime;
-        this.lastBook = readBookClubLastBook;
-        this.members = members;
+    public static ReadBookClubDetailResponse from(BookClub bookClub) {
+        return bookClub.getStatus().from(bookClub);
     }
 
     @Getter
@@ -45,11 +34,11 @@ public class ReadBookClubDetailResponse {
             this.author = author;
         }
 
-        protected static ReadBookClubLastBook from(Book book) {
-            if (book == null) {
-                return null;
-            }
-            return new ReadBookClubLastBook(book.getTitle(), book.getAuthor());
+        protected static ReadBookClubLastBook from(List<Book> books) {
+            return books.stream()
+                    .max(Comparator.comparingLong(Book::getId))
+                    .map(book -> new ReadBookClubLastBook(book.getTitle(), book.getAuthor()))
+                    .orElse(null);
         }
 
     }
