@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.data.type.BookClubStatus;
-import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -44,7 +43,7 @@ public class OpenBookClubDetailResponse extends ReadBookClubDetailResponse{
                 .profileImgUrl(bookClub.getProfileImageUrl())
                 .createdTime(bookClub.getCreatedTime())
                 .lastBook(ReadBookClubLastBook.from(bookClub.getBooks()))
-                .members(ReadBookClubMember.from(BookClubMember.toMembers(bookClub.getBookClubMembers())))
+                .members(ReadBookClubMember.from(bookClub.getMembers()))
                 .upcomingGatheringDate(bookClub.getUpcomingGatheringTime())
                 .build();
     }
