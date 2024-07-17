@@ -73,12 +73,7 @@ public class BookClubService {
 
     @Transactional(readOnly = true)
     public List<ReadBookClubDetailResponse> readBookClubs(Long memberId, String statusName) {
-        BookClubStatus status;
-        if (statusName.equals(STATUS_ALL)) {
-            status = null;
-        } else {
-            status = BookClubStatus.of(statusName);
-        }
+        BookClubStatus status = getBookClubStatusOf(statusName);
 
         List<BookClub> bookClubs = bookClubRepository.findAllByMemberIdAndStatus(memberId, status);
 
@@ -117,6 +112,13 @@ public class BookClubService {
         BookClub bookClub = bookClubRepository.findDetailById(bookClubId).orElseThrow(BookClubNotFoundException::new);
 
         return ReadBookClubDetailResponse.from(bookClub);
+    }
+
+    private BookClubStatus getBookClubStatusOf(String statusName) {
+        if (statusName.equals(STATUS_ALL)) {
+            return null;
+        }
+        return BookClubStatus.of(statusName);
     }
 
 }

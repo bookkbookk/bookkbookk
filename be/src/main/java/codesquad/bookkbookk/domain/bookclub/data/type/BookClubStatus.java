@@ -12,7 +12,7 @@ public enum BookClubStatus {
 
     OPEN {
         @Override
-        public OpenBookClubDetailResponse from(BookClub bookClub) {
+        public ReadBookClubDetailResponse from(BookClub bookClub) {
             return OpenBookClubDetailResponse.from(bookClub);
         }
 
@@ -23,7 +23,7 @@ public enum BookClubStatus {
     },
     CLOSED {
         @Override
-        public ClosedBookClubDetailResponse from(BookClub bookClub) {
+        public ReadBookClubDetailResponse from(BookClub bookClub) {
             return ClosedBookClubDetailResponse.from(bookClub);
         }
 
