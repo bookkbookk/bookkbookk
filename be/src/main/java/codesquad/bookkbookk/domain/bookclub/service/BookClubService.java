@@ -2,7 +2,6 @@ package codesquad.bookkbookk.domain.bookclub.service;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,16 +73,11 @@ public class BookClubService {
 
     @Transactional(readOnly = true)
     public List<ReadBookClubDetailResponse> readBookClubs(Long memberId, String statusName) {
-        BookClubStatus status;
-        if (statusName.equals(STATUS_ALL)) {
-            status = null;
-        } else {
-            status = BookClubStatus.of(statusName);
-        }
+        BookClubStatus status = getBookClubStatusOf(statusName);
 
-        return bookClubRepository.findAllByMemberIdAndStatus(memberId, status).stream()
-                .map(bookClub -> bookClub.getStatus().from(bookClub))
-                .collect(Collectors.toUnmodifiableList());
+        List<BookClub> bookClubs = bookClubRepository.findAllByMemberIdAndStatus(memberId, status);
+
+        return ReadBookClubDetailResponse.from(bookClubs);
     }
 
     @Transactional
@@ -117,7 +111,14 @@ public class BookClubService {
 
         BookClub bookClub = bookClubRepository.findDetailById(bookClubId).orElseThrow(BookClubNotFoundException::new);
 
-        return bookClub.getStatus().from(bookClub);
+        return ReadBookClubDetailResponse.from(bookClub);
+    }
+
+    private BookClubStatus getBookClubStatusOf(String statusName) {
+        if (statusName.equals(STATUS_ALL)) {
+            return null;
+        }
+        return BookClubStatus.of(statusName);
     }
 
 }

@@ -3,6 +3,7 @@ package codesquad.bookkbookk.domain.bookclub.data.entity;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -20,6 +21,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.bookclub.data.type.BookClubStatus;
 import codesquad.bookkbookk.domain.mapping.entity.BookClubMember;
+import codesquad.bookkbookk.domain.member.data.entity.Member;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -85,6 +87,12 @@ public class BookClub {
         if (upcomingGatheringTime == null || upcomingGatheringTime.isAfter(gatheringTime)) {
             upcomingGatheringTime = gatheringTime;
         }
+    }
+
+    public List<Member> getMembers() {
+        return bookClubMembers.stream()
+                .map(BookClubMember::getMember)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     public void close() {
