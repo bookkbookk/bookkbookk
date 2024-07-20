@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import codesquad.bookkbookk.common.error.exception.TopicIdExistsException;
 import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
 import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
 
@@ -47,6 +48,15 @@ public class Topic {
         this.chapter = chapter;
         if (chapter != null) this.chapterId = chapter.getId();
         this.title = title;
+    }
+
+    public void setId(Long id) {
+        if (this.id != null) throw new TopicIdExistsException();
+        this.id = id;
+    }
+
+    public void updateChapterId() {
+        if (chapter != null) chapterId = chapter.getId();
     }
 
     public boolean addBookmark(Bookmark bookmark) {
