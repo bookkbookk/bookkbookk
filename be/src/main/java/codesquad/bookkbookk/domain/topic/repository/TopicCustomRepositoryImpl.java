@@ -1,7 +1,13 @@
 package codesquad.bookkbookk.domain.topic.repository;
 
+import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -44,18 +50,69 @@ public class TopicCustomRepositoryImpl implements TopicCustomRepository{
     }
 
     private void setTopicIds(List<Topic> topics) {
-        Long startId = namedParameterJdbcTemplate.getJdbcTemplate().queryForObject(
+        Long lastId = namedParameterJdbcTemplate.getJdbcTemplate().queryForObject(
                 "SELECT LAST_INSERT_ID()", (rs, rowNum) -> rs.getLong("LAST_INSERT_ID()")
         );
 
-        if (startId == null) {
+        if (lastId == null) {
             throw new LastInsertIdDoesNotExistException();
         }
 
-        for (int i = 0; i < topics.size(); i++) {
-            topics.get(i).setId(startId + i);
+        if (savedInBatch()) {
+            setIdsUsingFrontId(topics, lastId);
+        }
+        else {
+            setIdsInUsingEndId(topics, lastId);
         }
 
+    }
+
+    private boolean savedInBatch() {
+        DataSource dataSource = namedParameterJdbcTemplate.getJdbcTemplate().getDataSource();
+        String datasourceUrl = null;
+        try {
+            datasourceUrl = dataSource.getConnection().getMetaData().getURL();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        Map<String, String> properties = extractPropertiesFromDatasource(datasourceUrl);
+
+        return properties.getOrDefault("rewriteBatchedStatements", "").equals("true");
+    }
+
+    private Map<String, String> extractPropertiesFromDatasource(String datasourceUrl) {
+        Map<String, String> properties = new HashMap<>();
+
+        int paramsIndex = datasourceUrl.indexOf('?');
+        if (paramsIndex == -1) {
+            return Collections.emptyMap();
+        }
+
+        String paramsString = datasourceUrl.substring(paramsIndex + 1);
+        String[] params = paramsString.split("&");
+
+        for (String param : params) {
+            String[] keyValue = param.split("=", 2);
+            if (keyValue.length == 2) {
+                properties.put(keyValue[0], keyValue[1]);
+            } else {
+                properties.put(keyValue[0], "");
+            }
+        }
+
+        return properties;
+    }
+
+    private void setIdsUsingFrontId(List<Topic> topics, Long lastId) {
+        for (int i = 0; i < topics.size(); i++) {
+            topics.get(i).setId(lastId + i);
+        }
+    }
+
+    private void setIdsInUsingEndId(List<Topic> topics, Long lastId) {
+        for (int i = 0; i < topics.size(); i++) {
+            topics.get(i).setId(lastId - (topics.size() - 1 - i));
+        }
     }
 
 }
