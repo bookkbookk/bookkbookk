@@ -8,5 +8,7 @@ import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
 public interface ChapterCustomRepository {
 
     List<Chapter> findAllByBookIdAndStatus(Long bookId, Status status);
+    List<Chapter> saveAllInBatch(List<Chapter> chapters);
+
 
 }

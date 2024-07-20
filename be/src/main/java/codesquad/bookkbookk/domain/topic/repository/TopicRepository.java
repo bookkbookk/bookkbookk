@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import codesquad.bookkbookk.domain.topic.data.entity.Topic;
 
-public interface TopicRepository extends JpaRepository<Topic, Long> {
+public interface TopicRepository extends JpaRepository<Topic, Long>, TopicCustomRepository {
 
     List<Topic> findByChapterId(Long chapterId);
 

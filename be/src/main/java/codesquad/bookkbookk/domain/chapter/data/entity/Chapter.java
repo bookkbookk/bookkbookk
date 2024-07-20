@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import codesquad.bookkbookk.common.error.exception.ChapterIdExistsException;
 import codesquad.bookkbookk.common.type.Status;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.chapter.data.dto.UpdateChapterRequest;
@@ -56,6 +57,11 @@ public class Chapter {
         if (book != null) this.bookId = book.getId();
         this.title = title;
         this.status = Status.BEFORE_READING;
+    }
+
+    public void setId(Long id) {
+        if (this.id != null) throw new ChapterIdExistsException();
+        this.id = id;
     }
 
     public boolean addTopic(Topic topic) {
