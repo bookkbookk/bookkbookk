@@ -116,10 +116,10 @@ CREATE TABLE bookmark
     updated_time TIMESTAMP NULL,
     CONSTRAINT pk_bookmark PRIMARY KEY (bookmark_id),
     CONSTRAINT fk_bookmark_topic FOREIGN KEY (topic_id) REFERENCES topic (topic_id),
-    CONSTRAINT fk_bookmark_member FOREIGN KEY (writer_id) REFERENCES member (member_id),
-    CREATE INDEX idx_bookmark_page ON bookmark (page),
-    CREATE INDEX idx_bookmark_created_time ON bookmark (created_time)
+    CONSTRAINT fk_bookmark_member FOREIGN KEY (writer_id) REFERENCES member (member_id)
 );
+CREATE INDEX idx_bookmark_page ON bookmark (page);
+CREATE INDEX idx_bookmark_created_time ON bookmark (created_time);
 
 CREATE TABLE bookmark_reaction
 (
