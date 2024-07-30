@@ -14,6 +14,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import codesquad.bookkbookk.domain.auth.data.type.LoginType;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
@@ -27,6 +29,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(uniqueConstraints = {
+                @UniqueConstraint(columnNames = "email"),
+                @UniqueConstraint(columnNames = "nickname")
+        })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Member {
