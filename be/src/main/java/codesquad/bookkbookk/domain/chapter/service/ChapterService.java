@@ -1,6 +1,7 @@
 package codesquad.bookkbookk.domain.chapter.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,8 @@ import codesquad.bookkbookk.domain.chapter.data.dto.UpdateChapterRequest;
 import codesquad.bookkbookk.domain.chapter.data.dto.UpdateChapterResponse;
 import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
 import codesquad.bookkbookk.domain.chapter.repository.ChapterRepository;
+import codesquad.bookkbookk.domain.topic.data.entity.Topic;
+import codesquad.bookkbookk.domain.topic.repository.TopicRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,6 +32,7 @@ public class ChapterService {
 
     private final ChapterRepository chapterRepository;
     private final BookRepository bookRepository;
+    private final TopicRepository topicRepository;
 
     @Transactional
     public CreateChapterResponse createChaptersAndTopics(Long memberId, CreateChapterRequest request) {
@@ -37,7 +41,13 @@ public class ChapterService {
         Book book = bookRepository.findById(request.getBookId()).orElseThrow(BookNotFoundException::new);
 
         List<Chapter> chapters = request.toChaptersAndTopics(book);
-        chapterRepository.saveAll(chapters);
+        chapterRepository.saveAllInBatch(chapters);
+
+        List<Topic> topics = chapters.stream()
+                .flatMap(chapter -> chapter.getTopics().stream())
+                .peek(Topic::updateChapterId)
+                .collect(Collectors.toUnmodifiableList());
+        topicRepository.saveAllInBulk(topics);
 
         return CreateChapterResponse.from(chapters);
     }
