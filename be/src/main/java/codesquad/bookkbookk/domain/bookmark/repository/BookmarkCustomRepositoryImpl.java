@@ -57,6 +57,7 @@ public class BookmarkCustomRepositoryImpl implements BookmarkCustomRepository {
     public Slice<Bookmark> findSliceByTopicId(Long topicId, Pageable pageable) {
         List<Bookmark> bookmarks = jpaQueryFactory
                 .selectFrom(bookmark)
+                .innerJoin(bookmark.writer, member).fetchJoin()
                 .innerJoin(bookmark.bookmarkReactions, bookmarkReaction).fetchJoin()
                 .innerJoin(bookmarkReaction.reactor, member).fetchJoin()
                 .where(bookmark.topicId.eq(topicId))
