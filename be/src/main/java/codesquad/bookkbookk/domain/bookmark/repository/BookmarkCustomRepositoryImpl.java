@@ -3,12 +3,12 @@ package codesquad.bookkbookk.domain.bookmark.repository;
 import static codesquad.bookkbookk.domain.book.data.entity.QBook.*;
 import static codesquad.bookkbookk.domain.bookmark.data.entity.QBookmark.*;
 import static codesquad.bookkbookk.domain.chapter.data.entity.QChapter.*;
-import static codesquad.bookkbookk.domain.mapping.entity.QBookmarkReaction.*;
 import static codesquad.bookkbookk.domain.member.data.entity.QMember.*;
 import static codesquad.bookkbookk.domain.topic.data.entity.QTopic.*;
 
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
@@ -31,7 +31,7 @@ public class BookmarkCustomRepositoryImpl implements BookmarkCustomRepository {
 
     @Override
     public List<Bookmark> findAllByFilter(Long bookId, BookmarkFilter bookmarkFilter) {
-        return jpaQueryFactory
+                return jpaQueryFactory
                 .selectFrom(bookmark)
                 .innerJoin(bookmark.writer, member).fetchJoin()
                 .innerJoin(bookmark.topic, topic)
@@ -57,14 +57,19 @@ public class BookmarkCustomRepositoryImpl implements BookmarkCustomRepository {
     public Slice<Bookmark> findSliceByTopicId(Long topicId, Pageable pageable) {
         List<Bookmark> bookmarks = jpaQueryFactory
                 .selectFrom(bookmark)
-                .innerJoin(bookmark.writer, member).fetchJoin()
-                .innerJoin(bookmark.bookmarkReactions, bookmarkReaction).fetchJoin()
-                .innerJoin(bookmarkReaction.reactor, member).fetchJoin()
+                .innerJoin(bookmark.writer).fetchJoin()
                 .where(bookmark.topicId.eq(topicId))
                 .orderBy(bookmark.createdTime.desc(), bookmark.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize() + 1)
                 .fetch();
+
+        bookmarks.stream()
+                .flatMap(bookmark -> bookmark.getBookmarkReactions().stream())
+                .forEach(bookmarkReaction -> {
+                    Hibernate.initialize(bookmarkReaction);
+                    Hibernate.initialize(bookmarkReaction.getReactor());
+                });
 
         boolean hasNext = bookmarks.size() > pageable.getPageSize();
 
