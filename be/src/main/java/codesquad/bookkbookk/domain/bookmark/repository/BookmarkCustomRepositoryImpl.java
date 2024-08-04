@@ -3,11 +3,15 @@ package codesquad.bookkbookk.domain.bookmark.repository;
 import static codesquad.bookkbookk.domain.book.data.entity.QBook.*;
 import static codesquad.bookkbookk.domain.bookmark.data.entity.QBookmark.*;
 import static codesquad.bookkbookk.domain.chapter.data.entity.QChapter.*;
+import static codesquad.bookkbookk.domain.mapping.entity.QBookmarkReaction.*;
 import static codesquad.bookkbookk.domain.member.data.entity.QMember.*;
 import static codesquad.bookkbookk.domain.topic.data.entity.QTopic.*;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
 
 import com.querydsl.core.types.OrderSpecifier;
@@ -47,6 +51,27 @@ public class BookmarkCustomRepositoryImpl implements BookmarkCustomRepository {
                 .innerJoin(bookmark.writer, member).fetchJoin()
                 .where(bookmark.topic.id.eq(topicId))
                 .fetch();
+    }
+
+    @Override
+    public Slice<Bookmark> findSliceByTopicId(Long topicId, Pageable pageable) {
+        List<Bookmark> bookmarks = jpaQueryFactory
+                .selectFrom(bookmark)
+                .innerJoin(bookmark.bookmarkReactions, bookmarkReaction).fetchJoin()
+                .innerJoin(bookmarkReaction.reactor, member).fetchJoin()
+                .where(bookmark.topicId.eq(topicId))
+                .orderBy(bookmark.createdTime.desc(), bookmark.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize() + 1)
+                .fetch();
+
+        boolean hasNext = bookmarks.size() > pageable.getPageSize();
+
+        if (hasNext) {
+            bookmarks.remove(bookmarks.size() - 1);
+        }
+
+        return new SliceImpl<>(bookmarks, pageable, hasNext);
     }
 
     private BooleanExpression createPageCondition(BookmarkFilter bookmarkFilter) {
