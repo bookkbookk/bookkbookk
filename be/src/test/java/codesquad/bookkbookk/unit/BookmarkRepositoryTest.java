@@ -4,6 +4,7 @@ import static org.assertj.core.api.SoftAssertions.*;
 
 import java.time.Instant;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +20,24 @@ import org.springframework.test.context.jdbc.Sql;
 import codesquad.bookkbookk.common.config.QueryDslConfig;
 import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
 import codesquad.bookkbookk.domain.bookmark.repository.BookmarkRepository;
+import codesquad.bookkbookk.util.DatabaseCleaner;
 
 @DataJpaTest
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import(QueryDslConfig.class)
+@Import({QueryDslConfig.class, DatabaseCleaner.class})
 public class BookmarkRepositoryTest {
 
     @Autowired
     private BookmarkRepository bookmarkRepository;
+
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
+
+    @AfterEach
+    void cleanUp() {
+        databaseCleaner.execute();
+    }
 
     @Test
     @DisplayName("Bookmark의 Slice를 가져온다.")
