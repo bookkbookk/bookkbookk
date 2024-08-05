@@ -52,6 +52,8 @@ public class BookmarkRepositoryTest {
         // then
         assertSoftly(softAssertions -> {
             softAssertions.assertThat(bookmarkSlice.hasNext()).isTrue();
+            softAssertions.assertThat(bookmarkSlice.getContent().size()).isEqualTo(5);
+            softAssertions.assertThat(bookmarkSlice.getContent().get(3).getBookmarkReactions().size()).isEqualTo(4);
             softAssertions.assertThat(bookmarkSlice.getContent().get(0).getCreatedTime())
                     .isEqualTo(Instant.parse("2000-01-07T00:00:00Z"));
         });
