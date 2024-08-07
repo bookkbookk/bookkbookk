@@ -45,9 +45,9 @@ public class ChapterService {
 
         List<Topic> topics = chapters.stream()
                 .flatMap(chapter -> chapter.getTopics().stream())
-                .peek(Topic::updateChapterId)
                 .collect(Collectors.toUnmodifiableList());
-        topicRepository.saveAllInBulk(topics);
+        topics.forEach(Topic::updateChapterId);
+        topicRepository.saveAllInBatch(topics);
 
         return CreateChapterResponse.from(chapters);
     }

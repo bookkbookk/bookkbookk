@@ -145,6 +145,7 @@ CREATE TABLE comment
     CONSTRAINT fk_comment_bookmark FOREIGN KEY (bookmark_id) REFERENCES bookmark (bookmark_id),
     CONSTRAINT fk_comment_member FOREIGN KEY (writer_id) REFERENCES member (member_id)
 );
+CREATE INDEX idx_comment_created_time ON comment (created_time);
 
 CREATE TABLE comment_reaction
 (

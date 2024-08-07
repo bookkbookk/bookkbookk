@@ -6,6 +6,10 @@ import codesquad.bookkbookk.domain.topic.data.entity.Topic;
 
 public interface TopicCustomRepository {
 
-    List<Topic> saveAllInBulk(List<Topic> topics);
+    List<Topic> saveAllInBatch(List<Topic> topics);
 
 }
+
+
+
+

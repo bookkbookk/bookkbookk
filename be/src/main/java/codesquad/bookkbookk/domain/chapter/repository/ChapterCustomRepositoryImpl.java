@@ -4,24 +4,17 @@ import static codesquad.bookkbookk.domain.bookmark.data.entity.QBookmark.*;
 import static codesquad.bookkbookk.domain.chapter.data.entity.QChapter.*;
 import static codesquad.bookkbookk.domain.topic.data.entity.QTopic.*;
 
+import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Types;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import javax.sql.DataSource;
-
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import codesquad.bookkbookk.common.error.exception.LastInsertIdDoesNotExistException;
+import codesquad.bookkbookk.common.error.exception.DatasourceNotConnectedException;
 import codesquad.bookkbookk.common.type.Status;
 import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
 
@@ -31,7 +24,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ChapterCustomRepositoryImpl implements ChapterCustomRepository {
 
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private static final String CHAPTER_INSERT_PREFIX = "INSERT INTO chapter (book_id, status, title) VALUES ";
+
+    private final JdbcTemplate jdbcTemplate;
     private final JPAQueryFactory jpaQueryFactory;
 
     // TODO: 쿼리 성능 개선하기
@@ -50,10 +45,9 @@ public class ChapterCustomRepositoryImpl implements ChapterCustomRepository {
 
     @Override
     public List<Chapter> saveAllInBatch(List<Chapter> chapters) {
-        String sql = "INSERT INTO chapter (book_id, status, title) VALUES (:book_id, :status, :title)";
-        SqlParameterSource[] batchParameters = createBatchParameters(chapters);
+        String chaptersBatchInsertQuery = createChaptersBatchInsertQuery(chapters);
 
-        namedParameterJdbcTemplate.batchUpdate(sql, batchParameters);
+        jdbcTemplate.update(chaptersBatchInsertQuery);
         setChapterIds(chapters);
         return chapters;
     }
@@ -65,86 +59,68 @@ public class ChapterCustomRepositoryImpl implements ChapterCustomRepository {
         return chapter.status.eq(status);
     }
 
-
-    private SqlParameterSource[] createBatchParameters(List<Chapter> chapters) {
-        SqlParameterSource[] batchParameters = new SqlParameterSource[chapters.size()];
+    public String createChaptersBatchInsertQuery(List<Chapter> chapters) {
+        StringBuilder sb = new StringBuilder(CHAPTER_INSERT_PREFIX);
 
         for (int i = 0; i < chapters.size(); i++) {
-            Chapter chapter = chapters.get(i);
-            MapSqlParameterSource parameters = new MapSqlParameterSource();
+            appendChapterValue(chapters.get(i), sb);
 
-            parameters.addValue("book_id", chapter.getBookId(), Types.BIGINT);
-            parameters.addValue("status", chapter.getStatus(), Types.VARCHAR);
-            parameters.addValue("title", chapter.getTitle(), Types.VARCHAR);
-            batchParameters[i] = parameters;
+            if (i < chapters.size() - 1) {
+                sb.append(", ");
+            }
         }
-        return batchParameters;
+        return sb.toString();
+    }
+
+    private StringBuilder appendChapterValue(Chapter chapter, StringBuilder sb) {
+        return sb.append('(')
+                .append(chapter.getBookId()).append(", ")
+                .append('\'').append(chapter.getStatus().name()).append('\'').append(", ")
+                .append('\'').append(chapter.getTitle()).append('\'').append(')');
     }
 
     private void setChapterIds(List<Chapter> chapters) {
-        Long lastId = namedParameterJdbcTemplate.getJdbcTemplate().queryForObject(
-                "SELECT LAST_INSERT_ID()", (rs, rowNum) -> rs.getLong("LAST_INSERT_ID()")
-        );
+        String lastInsertIdQuery = "SELECT LAST_INSERT_ID()";
+        Long lastId = jdbcTemplate.queryForObject(lastInsertIdQuery, Long.class);
 
-        if (lastId == null) {
-            throw new LastInsertIdDoesNotExistException();
-        }
-
-        if (savedInBatch()) {
-            setIdsUsingFrontId(chapters, lastId);
-        }
-        else {
-            setIdsInUsingEndId(chapters, lastId);
+        if (isDatabaseH2()) {
+            setIdInDesc(chapters, lastId);
+        } else {
+            setIdInAsc(chapters, lastId);
         }
     }
 
-    private boolean savedInBatch() {
-        DataSource dataSource = namedParameterJdbcTemplate.getJdbcTemplate().getDataSource();
-        String datasourceUrl = null;
+    private boolean isDatabaseH2() {
+        String url;
+
         try {
-            datasourceUrl = dataSource.getConnection().getMetaData().getURL();
+            Connection connection = jdbcTemplate.getDataSource().getConnection();
+            url = connection.getMetaData().getURL();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatasourceNotConnectedException();
         }
-        Map<String, String> properties = extractPropertiesFromDatasource(datasourceUrl);
 
-        return properties.getOrDefault("rewriteBatchedStatements", "").equals("true");
+        String databaseType = extractDatabaseType(url);
+        return databaseType.equals("h2");
     }
 
-    private Map<String, String> extractPropertiesFromDatasource(String datasourceUrl) {
-        Map<String, String> properties = new HashMap<>();
-
-        int paramsIndex = datasourceUrl.indexOf('?');
-        if (paramsIndex == -1) {
-            return Collections.emptyMap();
-        }
-
-        String paramsString = datasourceUrl.substring(paramsIndex + 1);
-        String[] params = paramsString.split("&");
-
-        for (String param : params) {
-            String[] keyValue = param.split("=", 2);
-            if (keyValue.length == 2) {
-                properties.put(keyValue[0], keyValue[1]);
-            } else {
-                properties.put(keyValue[0], "");
-            }
-        }
-
-        return properties;
+    private String extractDatabaseType(String url) {
+        String[] split = url.split(":");
+        return split[1];
     }
 
-    private void setIdsUsingFrontId(List<Chapter> chapters, Long lastId) {
-        for (int i = 0; i < chapters.size(); i++) {
-            chapters.get(i).setId(lastId + i);
+    private void setIdInAsc(List<Chapter> chapters, Long lastId) {
+        for (Chapter chapter : chapters) {
+            chapter.setId(lastId);
+            lastId++;
         }
     }
 
-    private void setIdsInUsingEndId(List<Chapter> chapters, Long lastId) {
-        for (int i = 0; i < chapters.size(); i++) {
-            chapters.get(i).setId(lastId - (chapters.size() - 1 - i));
+    private void setIdInDesc(List<Chapter> chapters, Long lastId) {
+        for (int i = chapters.size() - 1; i >= 0; i--) {
+            chapters.get(i).setId(lastId);
+            lastId--;
         }
     }
-
 
 }

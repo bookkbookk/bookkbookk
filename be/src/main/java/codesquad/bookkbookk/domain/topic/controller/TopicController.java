@@ -2,6 +2,8 @@ package codesquad.bookkbookk.domain.topic.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,10 +12,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.bookkbookk.common.resolver.MemberId;
 import codesquad.bookkbookk.domain.bookmark.data.dto.ReadBookmarkResponse;
+import codesquad.bookkbookk.domain.bookmark.data.dto.ReadBookmarkSliceResponse;
 import codesquad.bookkbookk.domain.bookmark.service.BookmarkService;
 import codesquad.bookkbookk.domain.topic.data.dto.CreateTopicRequest;
 import codesquad.bookkbookk.domain.topic.data.dto.CreateTopicResponse;
@@ -46,6 +50,17 @@ public class TopicController {
 
         return ResponseEntity.ok()
                 .body(responses);
+    }
+
+    @GetMapping("/{topicId}/bookmarks/slice")
+    public ResponseEntity<ReadBookmarkSliceResponse> readBookmarks(@MemberId Long memberId, @PathVariable Long topicId,
+                                                                   @RequestParam Integer cursor,
+                                                                   @RequestParam Integer size) {
+        Pageable pageable = PageRequest.of(cursor, size);
+        ReadBookmarkSliceResponse response = bookmarkService.readBookmarkSlices(memberId, topicId, pageable);
+
+        return ResponseEntity.ok()
+                .body(response);
     }
 
     @PatchMapping("/{topicId}")

@@ -1,20 +1,13 @@
 package codesquad.bookkbookk.domain.topic.repository;
 
+import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Types;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import javax.sql.DataSource;
-
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import codesquad.bookkbookk.common.error.exception.LastInsertIdDoesNotExistException;
+import codesquad.bookkbookk.common.error.exception.DatasourceNotConnectedException;
 import codesquad.bookkbookk.domain.topic.data.entity.Topic;
 
 import lombok.RequiredArgsConstructor;
@@ -23,95 +16,79 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TopicCustomRepositoryImpl implements TopicCustomRepository{
 
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private static final String TOPIC_INSERT_PREFIX = "INSERT INTO topic (chapter_id, title) VALUES ";
+
+    private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public List<Topic> saveAllInBulk(List<Topic> topics) {
-        String sql = "INSERT INTO topic (chapter_id, title) VALUES (:chapter_id, :title)";
-        SqlParameterSource[] batchParameters = createBatchParameters(topics);
+    public List<Topic> saveAllInBatch(List<Topic> topics) {
+        String topicsBatchInsertQuery = createTopicsBatchInsertQuery(topics);
 
-        namedParameterJdbcTemplate.batchUpdate(sql, batchParameters);
-        setTopicIds(topics);
+        jdbcTemplate.update(topicsBatchInsertQuery);
+        setChapterIds(topics);
         return topics;
     }
 
-    private SqlParameterSource[] createBatchParameters(List<Topic> topics) {
-        SqlParameterSource[] batchParameters = new SqlParameterSource[topics.size()];
+    public String createTopicsBatchInsertQuery(List<Topic> topics) {
+        StringBuilder sb = new StringBuilder(TOPIC_INSERT_PREFIX);
 
         for (int i = 0; i < topics.size(); i++) {
-            Topic topic = topics.get(i);
-            MapSqlParameterSource parameters = new MapSqlParameterSource();
+            appendChapterValue(topics.get(i), sb);
 
-            parameters.addValue("chapter_id", topic.getChapterId(), Types.BIGINT);
-            parameters.addValue("title", topic.getTitle(), Types.VARCHAR);
-            batchParameters[i] = parameters;
-        }
-        return batchParameters;
-    }
-
-    private void setTopicIds(List<Topic> topics) {
-        Long lastId = namedParameterJdbcTemplate.getJdbcTemplate().queryForObject(
-                "SELECT LAST_INSERT_ID()", (rs, rowNum) -> rs.getLong("LAST_INSERT_ID()")
-        );
-
-        if (lastId == null) {
-            throw new LastInsertIdDoesNotExistException();
-        }
-
-        if (savedInBatch()) {
-            setIdsUsingFrontId(topics, lastId);
-        }
-        else {
-            setIdsInUsingEndId(topics, lastId);
-        }
-
-    }
-
-    private boolean savedInBatch() {
-        DataSource dataSource = namedParameterJdbcTemplate.getJdbcTemplate().getDataSource();
-        String datasourceUrl = null;
-        try {
-            datasourceUrl = dataSource.getConnection().getMetaData().getURL();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        Map<String, String> properties = extractPropertiesFromDatasource(datasourceUrl);
-
-        return properties.getOrDefault("rewriteBatchedStatements", "").equals("true");
-    }
-
-    private Map<String, String> extractPropertiesFromDatasource(String datasourceUrl) {
-        Map<String, String> properties = new HashMap<>();
-
-        int paramsIndex = datasourceUrl.indexOf('?');
-        if (paramsIndex == -1) {
-            return Collections.emptyMap();
-        }
-
-        String paramsString = datasourceUrl.substring(paramsIndex + 1);
-        String[] params = paramsString.split("&");
-
-        for (String param : params) {
-            String[] keyValue = param.split("=", 2);
-            if (keyValue.length == 2) {
-                properties.put(keyValue[0], keyValue[1]);
-            } else {
-                properties.put(keyValue[0], "");
+            if (i < topics.size() - 1) {
+                sb.append(", ");
             }
         }
-
-        return properties;
+        return sb.toString();
     }
 
-    private void setIdsUsingFrontId(List<Topic> topics, Long lastId) {
-        for (int i = 0; i < topics.size(); i++) {
-            topics.get(i).setId(lastId + i);
+    private StringBuilder appendChapterValue(Topic topic, StringBuilder sb) {
+        return sb.append('(')
+                .append(topic.getChapterId()).append(", ")
+                .append('\'').append(topic.getTitle()).append('\'').append(')');
+    }
+
+    private void setChapterIds(List<Topic> topics) {
+        String lastInsertIdQuery = "SELECT LAST_INSERT_ID()";
+        Long lastId = jdbcTemplate.queryForObject(lastInsertIdQuery, Long.class);
+
+        if (isDatabaseH2()) {
+            setIdInDesc(topics, lastId);
+        } else {
+            setIdInAsc(topics, lastId);
         }
     }
 
-    private void setIdsInUsingEndId(List<Topic> topics, Long lastId) {
-        for (int i = 0; i < topics.size(); i++) {
-            topics.get(i).setId(lastId - (topics.size() - 1 - i));
+    private boolean isDatabaseH2() {
+        String url;
+
+        try {
+            Connection connection = jdbcTemplate.getDataSource().getConnection();
+            url = connection.getMetaData().getURL();
+        } catch (SQLException e) {
+            throw new DatasourceNotConnectedException();
+        }
+
+        String databaseType = extractDatabaseType(url);
+        return databaseType.equals("h2");
+    }
+
+    private String extractDatabaseType(String url) {
+        String[] split = url.split(":");
+        return split[1];
+    }
+
+    private void setIdInAsc(List<Topic> topics, Long lastId) {
+        for (Topic topic : topics) {
+            topic.setId(lastId);
+            lastId++;
+        }
+    }
+
+    private void setIdInDesc(List<Topic> topics, Long lastId) {
+        for (int i = topics.size() - 1; i >= 0; i--) {
+            topics.get(i).setId(lastId);
+            lastId--;
         }
     }
 

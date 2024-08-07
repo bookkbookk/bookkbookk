@@ -8,6 +8,10 @@ import static codesquad.bookkbookk.domain.topic.data.entity.QTopic.*;
 
 import java.util.List;
 
+import org.hibernate.Hibernate;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
 
 import com.querydsl.core.types.OrderSpecifier;
@@ -27,7 +31,7 @@ public class BookmarkCustomRepositoryImpl implements BookmarkCustomRepository {
 
     @Override
     public List<Bookmark> findAllByFilter(Long bookId, BookmarkFilter bookmarkFilter) {
-        return jpaQueryFactory
+                return jpaQueryFactory
                 .selectFrom(bookmark)
                 .innerJoin(bookmark.writer, member).fetchJoin()
                 .innerJoin(bookmark.topic, topic)
@@ -47,6 +51,33 @@ public class BookmarkCustomRepositoryImpl implements BookmarkCustomRepository {
                 .innerJoin(bookmark.writer, member).fetchJoin()
                 .where(bookmark.topic.id.eq(topicId))
                 .fetch();
+    }
+
+    @Override
+    public Slice<Bookmark> findSliceByTopicId(Long topicId, Pageable pageable) {
+        List<Bookmark> bookmarks = jpaQueryFactory
+                .selectFrom(bookmark)
+                .innerJoin(bookmark.writer).fetchJoin()
+                .where(bookmark.topicId.eq(topicId))
+                .orderBy(bookmark.createdTime.desc(), bookmark.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize() + 1)
+                .fetch();
+
+        bookmarks.stream()
+                .flatMap(bookmark -> bookmark.getBookmarkReactions().stream())
+                .forEach(bookmarkReaction -> {
+                    Hibernate.initialize(bookmarkReaction);
+                    Hibernate.initialize(bookmarkReaction.getReactor());
+                });
+
+        boolean hasNext = bookmarks.size() > pageable.getPageSize();
+
+        if (hasNext) {
+            bookmarks.remove(bookmarks.size() - 1);
+        }
+
+        return new SliceImpl<>(bookmarks, pageable, hasNext);
     }
 
     private BooleanExpression createPageCondition(BookmarkFilter bookmarkFilter) {

@@ -1,7 +1,11 @@
 package codesquad.bookkbookk.domain.bookmark.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,10 +21,13 @@ import codesquad.bookkbookk.domain.bookmark.data.dto.CreateBookmarkReactionReque
 import codesquad.bookkbookk.domain.bookmark.data.dto.CreateBookmarkRequest;
 import codesquad.bookkbookk.domain.bookmark.data.dto.DeleteBookmarkReactionRequest;
 import codesquad.bookkbookk.domain.bookmark.data.dto.ReadBookmarkResponse;
+import codesquad.bookkbookk.domain.bookmark.data.dto.ReadBookmarkSliceResponse;
 import codesquad.bookkbookk.domain.bookmark.data.dto.ReadReactionsResponse;
 import codesquad.bookkbookk.domain.bookmark.data.dto.UpdateBookmarkRequest;
 import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
 import codesquad.bookkbookk.domain.bookmark.repository.BookmarkRepository;
+import codesquad.bookkbookk.domain.comment.data.dto.ReadCommentSliceResponse;
+import codesquad.bookkbookk.domain.comment.repository.CommentRepository;
 import codesquad.bookkbookk.domain.mapping.entity.BookmarkReaction;
 import codesquad.bookkbookk.domain.mapping.repository.BookmarkReactionRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
@@ -40,6 +47,7 @@ public class BookmarkService {
     private final MemberRepository memberRepository;
     private final TopicRepository topicRepository;
     private final BookmarkReactionRepository bookmarkReactionRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public void createBookmark(Long memberId, CreateBookmarkRequest createBookmarkRequest) {
@@ -78,6 +86,20 @@ public class BookmarkService {
         List<Bookmark> bookmarks = bookmarkRepository.findAllByFilter(bookId, bookmarkFilter);
 
         return ReadBookmarkResponse.from(bookmarks);
+    }
+
+    @Transactional(readOnly = true)
+    public ReadBookmarkSliceResponse readBookmarkSlices(Long memberId, Long topicId, Pageable pageable) {
+        authorizationService.authorizeBookClubMembershipByTopicId(topicId, memberId);
+
+        Slice<Bookmark> bookmarkSlice = bookmarkRepository.findSliceByTopicId(topicId, pageable);
+        List<Long> bookmarkIds = bookmarkSlice.getContent().stream()
+                .map(Bookmark::getId)
+                .collect(Collectors.toUnmodifiableList());
+        Map<Long, ReadCommentSliceResponse> commentSliceMap =
+                commentRepository.findSlicesByBookmarkIds(bookmarkIds, pageable.getPageSize());
+
+        return ReadBookmarkSliceResponse.from(bookmarkSlice, commentSliceMap);
     }
 
     @Transactional

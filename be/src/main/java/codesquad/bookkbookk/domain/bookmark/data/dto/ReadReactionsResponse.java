@@ -18,15 +18,19 @@ public class ReadReactionsResponse {
     @JsonProperty(value = "like")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private final List<String> likeReactorNames = new ArrayList<>();
+
     @JsonProperty(value = "love")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private final List<String> loveReactorNames = new ArrayList<>();
+
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @JsonProperty(value = "clap")
     private final List<String> clapReactorNames= new ArrayList<>();
+
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @JsonProperty(value = "congratulation")
     private final List<String> congratulationReactorNames= new ArrayList<>();
+
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @JsonProperty(value = "rocket")
     private final List<String> rocketReactorNames= new ArrayList<>();
@@ -43,6 +47,30 @@ public class ReadReactionsResponse {
 
         commentReactions.forEach(response::addName);
         return response;
+    }
+
+    public void addName(String nickname, String reactionName) {
+        Reaction reaction = Reaction.of(reactionName);
+
+        if (reaction.equals(Reaction.LIKE)) {
+            likeReactorNames.add(nickname);
+            return;
+        }
+        if (reaction.equals(Reaction.LOVE)) {
+            loveReactorNames.add(nickname);
+            return;
+        }
+        if (reaction.equals(Reaction.CLAP)) {
+            clapReactorNames.add(nickname);
+            return;
+        }
+        if (reaction.equals(Reaction.CONGRATULATION)) {
+            congratulationReactorNames.add(nickname);
+            return;
+        }
+        if (reaction.equals(Reaction.ROCKET)) {
+            rocketReactorNames.add(nickname);
+        }
     }
 
     private void addName(BookmarkReaction bookmarkReaction) {
