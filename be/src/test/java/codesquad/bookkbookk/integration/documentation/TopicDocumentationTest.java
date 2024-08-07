@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.context.jdbc.Sql;
 
 import codesquad.bookkbookk.common.error.exception.TopicNotFoundException;
 import codesquad.bookkbookk.common.jwt.JwtProvider;
@@ -175,6 +176,92 @@ public class TopicDocumentationTest extends IntegrationTest {
                     .isEqualTo("nickname");
             softAssertions.assertThat(response.jsonPath().getLong("[3].bookmarkId"))
                     .isEqualTo(4);
+        });
+    }
+
+    @DisplayName("토픽의 북마크 슬라이스를 조회한다.")
+    @Test
+    @Sql("classpath:sql/readTopicBookmarkSlice.sql")
+    void readTopicBookmarkSlice() {
+        // given
+        Long memberId = 1L;
+        Long topicId = 1L;
+        String accessToken = jwtProvider.createAccessToken(memberId);
+
+        //when
+        ExtractableResponse<Response> response = RestAssured
+                .given(this.spec).log().all()
+                .pathParam("topicId", topicId)
+                .queryParam("cursor", 0)
+                .queryParam("size", 3)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .filter(document("{class-name}/{method-name}",
+                        pathParameters(
+                                parameterWithName("topicId").description("조회할 토픽 아이디")
+                        ),
+                        requestParameters(
+                                parameterWithName("cursor").description("커서"),
+                                parameterWithName("size").description("조회할 사이즈")
+                        ),
+                        responseFields(
+                                fieldWithPath("hasNext").type(JsonFieldType.BOOLEAN).description("북마크 스크롤 가능 여부"),
+                                fieldWithPath("bookmarks[]").type(JsonFieldType.ARRAY).description("북마크 슬라이스 북마크 정보"),
+                                fieldWithPath("bookmarks[].bookmarkId").type(JsonFieldType.NUMBER).description("북마크 아이디"),
+                                fieldWithPath("bookmarks[].author").type(JsonFieldType.OBJECT).description("북마크 작성자"),
+                                fieldWithPath("bookmarks[].author.memberId")
+                                        .type(JsonFieldType.NUMBER).description("북마크 작성자 멈버 아이디"),
+                                fieldWithPath("bookmarks[].author.nickname")
+                                        .type(JsonFieldType.STRING).description("북마크 작성자 닉네임"),
+                                fieldWithPath("bookmarks[].author.profileImageUrl").
+                                        type(JsonFieldType.STRING).description("북마크 작성자 프로필 이미지 URL"),
+                                fieldWithPath("bookmarks[].page").type(JsonFieldType.NUMBER).description("북마크 페이지"),
+                                fieldWithPath("bookmarks[].createdTime")
+                                        .type(JsonFieldType.STRING).description("북마크 생성 시간"),
+                                fieldWithPath("bookmarks[].updatedTime")
+                                        .type(JsonFieldType.STRING).description("북마크 수정 시간"),
+                                fieldWithPath("bookmarks[].content").type(JsonFieldType.STRING).description("북마크 내용"),
+                                fieldWithPath("bookmarks[].reactions").type(JsonFieldType.OBJECT).description("북마크 리액션들"),
+                                fieldWithPath("bookmarks[].reactions.like[]").optional().ignored(),
+                                fieldWithPath("bookmarks[].reactions.love[]").optional().ignored(),
+                                fieldWithPath("bookmarks[].reactions.congratulation[]").optional().ignored(),
+                                fieldWithPath("bookmarks[].reactions.rocket[]").optional().ignored(),
+                                fieldWithPath("bookmarks[].reactions.clap[]").optional().ignored(),
+                                fieldWithPath("bookmarks[].commentSlice")
+                                        .type(JsonFieldType.OBJECT).description("북마크 코멘트 슬라이스"),
+                                fieldWithPath("bookmarks[].commentSlice.hasNext")
+                                        .type(JsonFieldType.BOOLEAN).description("코멘트 스크롤 가능 여부"),
+                                fieldWithPath("bookmarks[].commentSlice.comments[]")
+                                        .type(JsonFieldType.ARRAY).description("코멘트 정보"),
+                                fieldWithPath("bookmarks[].commentSlice.comments[].commentId")
+                                        .type(JsonFieldType.NUMBER).description("코멘트 아이디"),
+                                fieldWithPath("bookmarks[].commentSlice.comments[].author")
+                                        .type(JsonFieldType.OBJECT).description("코멘트 작성자"),
+                                fieldWithPath("bookmarks[].commentSlice.comments[].author.memberId")
+                                        .type(JsonFieldType.NUMBER).description("코멘트 작성자 멤버 아이디"),
+                                fieldWithPath("bookmarks[].commentSlice.comments[].author.nickname")
+                                        .type(JsonFieldType.STRING).description("코멘트 작성자 닉네임"),
+                                fieldWithPath("bookmarks[].commentSlice.comments[].author.profileImageUrl")
+                                        .type(JsonFieldType.STRING).description("코멘트 작성지 프로필 이미지"),
+                                fieldWithPath("bookmarks[].commentSlice.comments[].createdTime")
+                                        .type(JsonFieldType.STRING).description("코멘트 생성시간"),
+                                fieldWithPath("bookmarks[].commentSlice.comments[].content")
+                                        .type(JsonFieldType.STRING).description("코멘트 내용"),
+                                fieldWithPath("bookmarks[].commentSlice.comments[].reactions")
+                                        .type(JsonFieldType.OBJECT).description("코멘트 리액션"),
+                                fieldWithPath("bookmarks[].commentSlice.comments[].reactions.like[]").optional().ignored(),
+                                fieldWithPath("bookmarks[].commentSlice.comments[].reactions.love[]").optional().ignored(),
+                                fieldWithPath("bookmarks[].commentSlice.comments[].reactions.congratulation[]").optional().ignored(),
+                                fieldWithPath("bookmarks[].commentSlice.comments[].reactions.rocket[]").optional().ignored(),
+                                fieldWithPath("bookmarks[].commentSlice.comments[].reactions.clap[]").optional().ignored()
+                        )))
+                .when()
+                .get("/api/topics/{topicId}/bookmarks/slice")
+                .then().log().all()
+                .extract();
+
+        //then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         });
     }
 
