@@ -76,7 +76,7 @@ operation::topic-documentation-test/update-topic[]
 operation::topic-documentation-test/delete-topic[]
 === 토픽의 북마크들 조회
 operation::topic-documentation-test/read-topic-bookmarks[]
-=== 토픽의 북마크들 슬라이스 해서 조회
+=== **토픽의 북마크들 슬라이스 해서 조회**
 operation::topic-documentation-test/read-topic-bookmark-slice[]
 
 == 북마크 API (/bookmarks)
