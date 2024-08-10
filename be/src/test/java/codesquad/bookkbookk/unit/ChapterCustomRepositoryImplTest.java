@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +22,13 @@ import codesquad.bookkbookk.domain.chapter.data.entity.Chapter;
 import codesquad.bookkbookk.domain.chapter.repository.ChapterRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
+import codesquad.bookkbookk.util.DatabaseCleaner;
 import codesquad.bookkbookk.util.TestDataFactory;
 
 @DataJpaTest
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import(QueryDslConfig.class)
+@Import({QueryDslConfig.class, DatabaseCleaner.class})
 public class ChapterCustomRepositoryImplTest {
 
     @Autowired
@@ -40,6 +42,14 @@ public class ChapterCustomRepositoryImplTest {
 
     @Autowired
     private ChapterRepository chapterRepository;
+
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
+
+    @AfterEach
+    void cleanUp() {
+        databaseCleaner.execute();
+    }
 
     @Test
     @DisplayName("Chapters를 Batch Insert한다.")
