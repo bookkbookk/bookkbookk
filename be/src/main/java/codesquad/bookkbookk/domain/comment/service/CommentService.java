@@ -9,6 +9,7 @@ import codesquad.bookkbookk.common.error.exception.BookmarkNotFoundException;
 import codesquad.bookkbookk.common.error.exception.CommentNotFoundException;
 import codesquad.bookkbookk.common.error.exception.CommentReactionExistsException;
 import codesquad.bookkbookk.common.error.exception.CommentReactionNotFoundException;
+import codesquad.bookkbookk.common.error.exception.MemberIsNotCommentWriterException;
 import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.common.type.Reaction;
 import codesquad.bookkbookk.domain.bookmark.data.dto.ReadReactionsResponse;
@@ -50,12 +51,19 @@ public class CommentService {
     @Transactional
     public void updateComment(Long memberId, Long commentId, UpdateCommentRequest updateCommentRequest) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
+        if (!commentRepository.existsByIdAndWriterId(commentId, memberId)) {
+            throw new MemberIsNotCommentWriterException();
+        }
 
         comment.updateComment(updateCommentRequest);
     }
 
     @Transactional
     public void deleteComment(Long memberId, Long commentId) {
+        if (!commentRepository.existsByIdAndWriterId(commentId, memberId)) {
+            throw new MemberIsNotCommentWriterException();
+        }
+
         commentRepository.deleteById(commentId);
     }
 

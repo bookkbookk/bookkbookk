@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import codesquad.bookkbookk.common.error.exception.BookClubNotFoundException;
 import codesquad.bookkbookk.common.error.exception.BookNotFoundException;
 import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
+import codesquad.bookkbookk.common.error.exception.MemberNotInBookClubException;
 import codesquad.bookkbookk.domain.book.data.dto.CreateBookRequest;
 import codesquad.bookkbookk.domain.book.data.dto.CreateBookResponse;
 import codesquad.bookkbookk.domain.book.data.dto.ReadBookClubBookResponse;
@@ -19,6 +20,7 @@ import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
 import codesquad.bookkbookk.domain.bookclub.repository.BookClubRepository;
+import codesquad.bookkbookk.domain.mapping.repository.BookClubMemberRepository;
 import codesquad.bookkbookk.domain.member.data.entity.Member;
 import codesquad.bookkbookk.domain.member.repository.MemberRepository;
 
@@ -31,9 +33,13 @@ public class BookService {
     private final BookRepository bookRepository;
     private final BookClubRepository bookClubRepository;
     private final MemberRepository memberRepository;
+    private final BookClubMemberRepository bookClubMemberRepository;
 
     @Transactional
     public CreateBookResponse createBook(Long memberId, CreateBookRequest request) {
+        if (!bookClubMemberRepository.existsByBookClubIdAndMemberId(request.getBookClubId(), memberId)) {
+            throw new MemberNotInBookClubException();
+        }
         BookClub bookclub = bookClubRepository.findById(request.getBookClubId())
                 .orElseThrow(BookClubNotFoundException::new);
 

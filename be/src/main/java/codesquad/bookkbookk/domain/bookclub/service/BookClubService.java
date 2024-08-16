@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import codesquad.bookkbookk.common.error.exception.BookClubNotFoundException;
 import codesquad.bookkbookk.common.error.exception.InvitationCodeNotSavedException;
+import codesquad.bookkbookk.common.error.exception.MemberJoinedBookClubException;
 import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.common.image.S3ImageUploader;
 import codesquad.bookkbookk.common.redis.RedisService;
@@ -89,7 +90,13 @@ public class BookClubService {
     public JoinBookClubResponse joinBookClub(Long memberId, JoinBookClubRequest joinBookClubRequest) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         Long bookClubId = redisService.getBookClubIdByInvitationCode(joinBookClubRequest.getInvitationCode());
-        if (bookClubId == null) throw new InvitationCodeNotSavedException();
+        if (bookClubId == null) {
+            throw new InvitationCodeNotSavedException();
+        }
+
+        if (bookClubMemberRepository.existsByBookClubIdAndMemberId(bookClubId, memberId)) {
+            throw new MemberJoinedBookClubException();
+        }
         BookClub bookClub = bookClubRepository.findByIdWithBooks(bookClubId).orElseThrow(BookClubNotFoundException::new);
 
         bookClub.addMember(new BookClubMember(bookClub, member));

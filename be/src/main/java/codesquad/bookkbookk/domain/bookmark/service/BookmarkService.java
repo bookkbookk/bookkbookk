@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import codesquad.bookkbookk.common.error.exception.BookmarkNotFoundException;
 import codesquad.bookkbookk.common.error.exception.BookmarkReactionExistsException;
 import codesquad.bookkbookk.common.error.exception.BookmarkReactionNotFoundException;
+import codesquad.bookkbookk.common.error.exception.MemberIsNotBookmarkWriterException;
 import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.common.error.exception.TopicNotFoundException;
 import codesquad.bookkbookk.common.type.Reaction;
@@ -94,12 +95,19 @@ public class BookmarkService {
     @Transactional
     public void updateBookmark(Long memberId, Long bookmarkId, UpdateBookmarkRequest updateBookmarkRequest) {
         Bookmark bookmark = bookmarkRepository.findById(bookmarkId).orElseThrow(BookmarkNotFoundException::new);
+        if (!bookmarkRepository.existsByIdAndWriterId(bookmarkId, memberId)) {
+            throw new MemberIsNotBookmarkWriterException();
+        }
 
         bookmark.updateBookmark(updateBookmarkRequest);
     }
 
     @Transactional
     public void deleteBookmark(Long memberId, Long bookmarkId) {
+        if (!bookmarkRepository.existsByIdAndWriterId(bookmarkId, memberId)) {
+            throw new MemberIsNotBookmarkWriterException();
+        }
+
         bookmarkRepository.deleteById(bookmarkId);
     }
 
