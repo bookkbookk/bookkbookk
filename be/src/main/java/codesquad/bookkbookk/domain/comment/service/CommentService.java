@@ -9,9 +9,9 @@ import codesquad.bookkbookk.common.error.exception.BookmarkNotFoundException;
 import codesquad.bookkbookk.common.error.exception.CommentNotFoundException;
 import codesquad.bookkbookk.common.error.exception.CommentReactionExistsException;
 import codesquad.bookkbookk.common.error.exception.CommentReactionNotFoundException;
+import codesquad.bookkbookk.common.error.exception.MemberIsNotCommentWriterException;
 import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.common.type.Reaction;
-import codesquad.bookkbookk.domain.auth.service.AuthorizationService;
 import codesquad.bookkbookk.domain.bookmark.data.dto.ReadReactionsResponse;
 import codesquad.bookkbookk.domain.bookmark.data.entity.Bookmark;
 import codesquad.bookkbookk.domain.bookmark.repository.BookmarkRepository;
@@ -33,8 +33,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CommentService {
 
-    private final AuthorizationService authorizationService;
-
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
     private final BookmarkRepository bookmarkRepository;
@@ -42,8 +40,6 @@ public class CommentService {
 
     @Transactional
     public void createComment(Long memberId, CreateCommentRequest createCommentRequest) {
-        authorizationService.authorizeBookClubMembershipByBookmarkId(createCommentRequest.getBookmarkId(), memberId);
-
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         Bookmark bookmark = bookmarkRepository.findById(createCommentRequest.getBookmarkId())
                 .orElseThrow(BookmarkNotFoundException::new);
@@ -54,24 +50,25 @@ public class CommentService {
 
     @Transactional
     public void updateComment(Long memberId, Long commentId, UpdateCommentRequest updateCommentRequest) {
-        authorizationService.authorizeCommentWriter(commentId, memberId);
-
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
+        if (!commentRepository.existsByIdAndWriterId(commentId, memberId)) {
+            throw new MemberIsNotCommentWriterException();
+        }
 
         comment.updateComment(updateCommentRequest);
     }
 
     @Transactional
     public void deleteComment(Long memberId, Long commentId) {
-        authorizationService.authorizeCommentWriter(commentId, memberId);
+        if (!commentRepository.existsByIdAndWriterId(commentId, memberId)) {
+            throw new MemberIsNotCommentWriterException();
+        }
 
         commentRepository.deleteById(commentId);
     }
 
     @Transactional
     public void createCommentReaction(Long memberId, Long commentId, CreateCommentReactionRequest request) {
-        authorizationService.authorizeBookClubMembershipByCommentId(commentId, memberId);
-
         Reaction reaction = Reaction.of(request.getReactionName());
         if (commentReactionRepository.existsByCommentIdAndReactorIdAndReaction(commentId, memberId, reaction)) {
             throw new CommentReactionExistsException();
@@ -96,16 +93,12 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
-    public List<ReadCommentResponse> readComments(Long memberId, Long bookmarkId) {
-        authorizationService.authorizeBookClubMembershipByBookmarkId(bookmarkId, memberId);
-
+    public List<ReadCommentResponse> readComments(Long bookmarkId) {
         return ReadCommentResponse.from(commentRepository.findAllByBookmarkId(bookmarkId));
     }
 
     @Transactional(readOnly = true)
-    public ReadReactionsResponse readCommentReactions(Long memberId, Long commentId) {
-        authorizationService.authorizeBookClubMembershipByCommentId(commentId, memberId);
-
+    public ReadReactionsResponse readCommentReactions(Long commentId) {
         return ReadReactionsResponse.fromCommentReactions(commentReactionRepository.findAllByCommentId(commentId));
     }
 

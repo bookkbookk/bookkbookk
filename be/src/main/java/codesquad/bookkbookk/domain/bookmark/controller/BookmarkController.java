@@ -72,17 +72,16 @@ public class BookmarkController {
     }
 
     @GetMapping("/{bookmarkId}/comments")
-    public ResponseEntity<List<ReadCommentResponse>> readComments(@MemberId Long memberId,
-                                                                  @PathVariable Long bookmarkId) {
-        List<ReadCommentResponse> responses = commentService.readComments(memberId, bookmarkId);
+    public ResponseEntity<List<ReadCommentResponse>> readComments(@PathVariable Long bookmarkId) {
+        List<ReadCommentResponse> responses = commentService.readComments(bookmarkId);
 
         return ResponseEntity.ok()
                 .body(responses);
     }
 
     @GetMapping("/{bookmarkId}/reactions")
-    public ResponseEntity<ReadReactionsResponse> readReactions(@MemberId Long memberId, @PathVariable Long bookmarkId) {
-        ReadReactionsResponse response = bookmarkService.readBookmarkReactions(memberId, bookmarkId);
+    public ResponseEntity<ReadReactionsResponse> readReactions(@PathVariable Long bookmarkId) {
+        ReadReactionsResponse response = bookmarkService.readBookmarkReactions(bookmarkId);
 
         return ResponseEntity.ok()
                 .body(response);

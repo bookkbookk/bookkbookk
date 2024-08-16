@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import codesquad.bookkbookk.common.error.exception.BookClubNotFoundException;
 import codesquad.bookkbookk.common.error.exception.BookNotFoundException;
 import codesquad.bookkbookk.common.error.exception.GatheringNotFoundException;
-import codesquad.bookkbookk.domain.auth.service.AuthorizationService;
+import codesquad.bookkbookk.common.error.exception.MemberNotInBookClubException;
 import codesquad.bookkbookk.domain.book.data.entity.Book;
 import codesquad.bookkbookk.domain.book.repository.BookRepository;
 import codesquad.bookkbookk.domain.bookclub.data.entity.BookClub;
@@ -19,6 +19,7 @@ import codesquad.bookkbookk.domain.gathering.data.dto.UpdateGatheringRequest;
 import codesquad.bookkbookk.domain.gathering.data.dto.UpdateGatheringResponse;
 import codesquad.bookkbookk.domain.gathering.data.entity.Gathering;
 import codesquad.bookkbookk.domain.gathering.repository.GatheringRepository;
+import codesquad.bookkbookk.domain.mapping.repository.BookClubMemberRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,18 +27,18 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class GatheringService {
 
-    private final AuthorizationService authorizationService;
-
     private final GatheringRepository gatheringRepository;
     private final BookRepository bookRepository;
     private final BookClubRepository bookClubRepository;
+    private final BookClubMemberRepository bookClubMemberRepository;
 
     @Transactional
     public void createGatherings(Long memberId, Long bookClubId, CreateGatheringsRequest request) {
-        authorizationService.authorizeBookClubMembershipByBookClubId(bookClubId, memberId);
-
         Book book = bookRepository.findById(request.getBookId()).orElseThrow(BookNotFoundException::new);
         BookClub bookClub = bookClubRepository.findById(bookClubId).orElseThrow(BookClubNotFoundException::new);
+        if (!bookClubMemberRepository.existsByBookClubIdAndMemberId(bookClubId, memberId)) {
+            throw new MemberNotInBookClubException();
+        }
 
         List<Gathering> gatherings = request.toGatherings(book);
         gatheringRepository.saveAll(gatherings);
@@ -46,16 +47,12 @@ public class GatheringService {
     }
 
     @Transactional(readOnly = true)
-    public List<ReadGatheringResponse> readGatherings(Long memberId, Long bookClubId) {
-        authorizationService.authorizeBookClubMembershipByBookClubId(bookClubId, memberId);
-
+    public List<ReadGatheringResponse> readGatherings(Long bookClubId) {
         return ReadGatheringResponse.from(gatheringRepository.findAllByBookClubId(bookClubId));
     }
 
     @Transactional
-    public UpdateGatheringResponse updateGathering(Long memberId, Long gatheringId, UpdateGatheringRequest request) {
-        authorizationService.authorizeBookClubMembershipByGatheringId(gatheringId, memberId);
-
+    public UpdateGatheringResponse updateGathering(Long gatheringId, UpdateGatheringRequest request) {
         Gathering gathering = gatheringRepository.findById(gatheringId).orElseThrow(GatheringNotFoundException::new);
 
         gathering.update(request);
@@ -64,8 +61,6 @@ public class GatheringService {
 
     @Transactional
     public void deleteGathering(Long memberId, Long gatheringId) {
-        authorizationService.authorizeBookClubMembershipByGatheringId(gatheringId, memberId);
-
         gatheringRepository.deleteById(gatheringId);
     }
 

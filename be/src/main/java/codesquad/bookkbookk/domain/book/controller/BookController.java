@@ -46,17 +46,15 @@ public class BookController {
     }
 
     @GetMapping("/{bookId}/chapters")
-    public ResponseEntity<List<ReadChapterResponse>> readChapters(@MemberId Long memberId, @PathVariable Long bookId,
-                                                                  @RequestParam int statusId) {
-        List<ReadChapterResponse> response = chapterService.readChapters(memberId, bookId, statusId);
+    public ResponseEntity<List<ReadChapterResponse>> readChapters(@PathVariable Long bookId, @RequestParam int statusId) {
+        List<ReadChapterResponse> response = chapterService.readChapters(bookId, statusId);
 
         return ResponseEntity.ok()
                 .body(response);
     }
 
     @GetMapping("/{bookId}/bookmarks")
-    public ResponseEntity<List<ReadBookmarkResponse>> readBookmarksWithUpdatedTime(@MemberId Long memberId,
-                                                                                   @PathVariable Long bookId,
+    public ResponseEntity<List<ReadBookmarkResponse>> readBookmarksWithUpdatedTime(@PathVariable Long bookId,
                                                                                    @RequestParam(required = false) Integer startPage,
                                                                                    @RequestParam(required = false) Integer endPage,
                                                                                    @RequestParam(required = false) Instant startTime,
@@ -67,16 +65,16 @@ public class BookController {
                 .startTime(startTime)
                 .endTime(endTime)
                 .build();
-        List<ReadBookmarkResponse> response = bookmarkService.readBookmarksWithFilter(memberId, bookId, bookmarkFilter);
+        List<ReadBookmarkResponse> response = bookmarkService.readBookmarksWithFilter(bookId, bookmarkFilter);
 
         return ResponseEntity.ok()
                 .body(response);
     }
 
     @PatchMapping("/{bookId}")
-    public ResponseEntity<UpdateBookStatusResponse> updateBookStatus(@MemberId Long memberId, @PathVariable Long bookId,
+    public ResponseEntity<UpdateBookStatusResponse> updateBookStatus(@PathVariable Long bookId,
                                                                      @RequestBody UpdateBookStatusRequest request) {
-        UpdateBookStatusResponse response = bookService.updateBookStatus(memberId, bookId, request);
+        UpdateBookStatusResponse response = bookService.updateBookStatus(bookId, request);
 
         return ResponseEntity.ok()
                 .body(response);

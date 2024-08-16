@@ -9,10 +9,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import codesquad.bookkbookk.common.error.exception.BookClubNotFoundException;
 import codesquad.bookkbookk.common.error.exception.InvitationCodeNotSavedException;
+import codesquad.bookkbookk.common.error.exception.MemberJoinedBookClubException;
 import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.common.image.S3ImageUploader;
 import codesquad.bookkbookk.common.redis.RedisService;
-import codesquad.bookkbookk.domain.auth.service.AuthorizationService;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateBookClubRequest;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateBookClubResponse;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateInvitationUrlRequest;
@@ -39,9 +39,7 @@ public class BookClubService {
                     + "JuQiIL6kfwtv0taBXNa_-nOxJKx2BX-z3GxPj6vqoc14GZ7nrT_jDXlrOV1xNL9RVYBTN_brsnBuCwOA.webp";
     private static final String STATUS_ALL = "ALL";
 
-    private final AuthorizationService authorizationService;
     private final RedisService redisService;
-
     private final S3ImageUploader s3ImageUploader;
     private final BookClubRepository bookClubRepository;
     private final BookClubMemberRepository bookClubMemberRepository;
@@ -65,7 +63,7 @@ public class BookClubService {
         bookClub.getBookClubMembers().add(bookClubMember);
         member.getMemberBookClubs().add(bookClubMember);
 
-        InvitationUrlResponse invitationUrlResponse = createInvitationUrl(memberId,
+        InvitationUrlResponse invitationUrlResponse = createInvitationUrl(
                 new CreateInvitationUrlRequest(bookClub.getId()));
 
         return new CreateBookClubResponse(bookClub.getId(), invitationUrlResponse.getInvitationUrl());
@@ -81,9 +79,7 @@ public class BookClubService {
     }
 
     @Transactional
-    public InvitationUrlResponse createInvitationUrl(Long memberId, CreateInvitationUrlRequest request) {
-        authorizationService.authorizeBookClubMembershipByBookClubId(request.getBookClubId(), memberId);
-
+    public InvitationUrlResponse createInvitationUrl(CreateInvitationUrlRequest request) {
         String invitationCode = String.valueOf(UUID.randomUUID());
         redisService.saveInvitationCode(invitationCode, request.getBookClubId());
 
@@ -94,10 +90,14 @@ public class BookClubService {
     public JoinBookClubResponse joinBookClub(Long memberId, JoinBookClubRequest joinBookClubRequest) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         Long bookClubId = redisService.getBookClubIdByInvitationCode(joinBookClubRequest.getInvitationCode());
-        if (bookClubId == null) throw new InvitationCodeNotSavedException();
-        BookClub bookClub = bookClubRepository.findByIdWithBooks(bookClubId).orElseThrow(BookClubNotFoundException::new);
+        if (bookClubId == null) {
+            throw new InvitationCodeNotSavedException();
+        }
 
-        authorizationService.authorizeBookClubJoin(bookClub.getId(), memberId);
+        if (bookClubMemberRepository.existsByBookClubIdAndMemberId(bookClubId, memberId)) {
+            throw new MemberJoinedBookClubException();
+        }
+        BookClub bookClub = bookClubRepository.findByIdWithBooks(bookClubId).orElseThrow(BookClubNotFoundException::new);
 
         bookClub.addMember(new BookClubMember(bookClub, member));
         bookClub.getBooks().forEach(member::addBook);
@@ -106,9 +106,7 @@ public class BookClubService {
     }
 
     @Transactional(readOnly = true)
-    public ReadBookClubDetailResponse readBookClubDetail(Long memberId, Long bookClubId) {
-        authorizationService.authorizeBookClubMembershipByBookClubId(bookClubId, memberId);
-
+    public ReadBookClubDetailResponse readBookClubDetail(Long bookClubId) {
         BookClub bookClub = bookClubRepository.findDetailById(bookClubId).orElseThrow(BookClubNotFoundException::new);
 
         return ReadBookClubDetailResponse.from(bookClub);

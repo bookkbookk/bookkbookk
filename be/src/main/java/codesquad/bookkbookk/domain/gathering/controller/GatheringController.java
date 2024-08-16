@@ -23,10 +23,9 @@ public class GatheringController {
     private final GatheringService gatheringService;
 
     @PatchMapping("/{gatheringId}")
-    public ResponseEntity<UpdateGatheringResponse> updateGathering(@MemberId Long memberId,
-                                                                   @PathVariable Long gatheringId,
+    public ResponseEntity<UpdateGatheringResponse> updateGathering(@PathVariable Long gatheringId,
                                                                    @RequestBody UpdateGatheringRequest request) {
-        UpdateGatheringResponse response = gatheringService.updateGathering(memberId, gatheringId, request);
+        UpdateGatheringResponse response = gatheringService.updateGathering(gatheringId, request);
 
         return ResponseEntity.ok()
                 .body(response);
