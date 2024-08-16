@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import codesquad.bookkbookk.common.error.exception.BookClubNotFoundException;
 import codesquad.bookkbookk.common.error.exception.BookNotFoundException;
 import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
-import codesquad.bookkbookk.domain.auth.service.AuthorizationService;
 import codesquad.bookkbookk.domain.book.data.dto.CreateBookRequest;
 import codesquad.bookkbookk.domain.book.data.dto.CreateBookResponse;
 import codesquad.bookkbookk.domain.book.data.dto.ReadBookClubBookResponse;
@@ -29,16 +28,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BookService {
 
-    private final AuthorizationService authorizationService;
-
     private final BookRepository bookRepository;
     private final BookClubRepository bookClubRepository;
     private final MemberRepository memberRepository;
 
     @Transactional
     public CreateBookResponse createBook(Long memberId, CreateBookRequest request) {
-        authorizationService.authorizeBookClubMembershipByBookClubId(request.getBookClubId(), memberId);
-
         BookClub bookclub = bookClubRepository.findById(request.getBookClubId())
                 .orElseThrow(BookClubNotFoundException::new);
 
@@ -61,16 +56,12 @@ public class BookService {
 
     @Transactional(readOnly = true)
     public ReadBookClubBookResponse readBookClubBooks(Long memberId, Long bookClubId, Pageable pageable) {
-        authorizationService.authorizeBookClubMembershipByBookClubId(bookClubId, memberId);
-
         Slice<Book> books = bookRepository.findSliceByBookClubId(bookClubId, pageable);
         return ReadBookClubBookResponse.from(books);
     }
 
     @Transactional
     public UpdateBookStatusResponse updateBookStatus(Long memberId, Long bookId, UpdateBookStatusRequest request) {
-        authorizationService.authorizeBookClubMembershipByBookId(bookId, memberId);
-
         Book book = bookRepository.findById(bookId).orElseThrow(BookNotFoundException::new);
 
         book.updateStatus(request);

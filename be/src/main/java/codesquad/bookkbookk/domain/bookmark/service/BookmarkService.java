@@ -15,7 +15,6 @@ import codesquad.bookkbookk.common.error.exception.BookmarkReactionNotFoundExcep
 import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.common.error.exception.TopicNotFoundException;
 import codesquad.bookkbookk.common.type.Reaction;
-import codesquad.bookkbookk.domain.auth.service.AuthorizationService;
 import codesquad.bookkbookk.domain.bookmark.data.dto.BookmarkFilter;
 import codesquad.bookkbookk.domain.bookmark.data.dto.CreateBookmarkReactionRequest;
 import codesquad.bookkbookk.domain.bookmark.data.dto.CreateBookmarkRequest;
@@ -41,8 +40,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BookmarkService {
 
-    private final AuthorizationService authorizationService;
-
     private final BookmarkRepository bookmarkRepository;
     private final MemberRepository memberRepository;
     private final TopicRepository topicRepository;
@@ -51,8 +48,6 @@ public class BookmarkService {
 
     @Transactional
     public void createBookmark(Long memberId, CreateBookmarkRequest createBookmarkRequest) {
-        authorizationService.authorizeBookClubMembershipByTopicId(createBookmarkRequest.getTopicId(), memberId);
-
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         Topic topic = topicRepository.findById(createBookmarkRequest.getTopicId())
                 .orElseThrow(TopicNotFoundException::new);
@@ -72,8 +67,6 @@ public class BookmarkService {
 
     @Transactional(readOnly = true)
     public List<ReadBookmarkResponse> readBookmarks(Long memberId, Long topicId) {
-        authorizationService.authorizeBookClubMembershipByTopicId(topicId, memberId);
-
         List<Bookmark> bookmarks = bookmarkRepository.findAllByTopicId(topicId);
 
         return ReadBookmarkResponse.from(bookmarks);
@@ -81,8 +74,6 @@ public class BookmarkService {
 
     @Transactional(readOnly = true)
     public List<ReadBookmarkResponse> readBookmarksWithFilter(Long memberId, Long bookId, BookmarkFilter bookmarkFilter) {
-        authorizationService.authorizeBookClubMembershipByBookId(bookId, memberId);
-
         List<Bookmark> bookmarks = bookmarkRepository.findAllByFilter(bookId, bookmarkFilter);
 
         return ReadBookmarkResponse.from(bookmarks);
@@ -90,8 +81,6 @@ public class BookmarkService {
 
     @Transactional(readOnly = true)
     public ReadBookmarkSliceResponse readBookmarkSlices(Long memberId, Long topicId, Pageable pageable) {
-        authorizationService.authorizeBookClubMembershipByTopicId(topicId, memberId);
-
         Slice<Bookmark> bookmarkSlice = bookmarkRepository.findSliceByTopicId(topicId, pageable);
         List<Long> bookmarkIds = bookmarkSlice.getContent().stream()
                 .map(Bookmark::getId)
@@ -104,8 +93,6 @@ public class BookmarkService {
 
     @Transactional
     public void updateBookmark(Long memberId, Long bookmarkId, UpdateBookmarkRequest updateBookmarkRequest) {
-        authorizationService.authorizeBookmarkWriter(memberId, bookmarkId);
-
         Bookmark bookmark = bookmarkRepository.findById(bookmarkId).orElseThrow(BookmarkNotFoundException::new);
 
         bookmark.updateBookmark(updateBookmarkRequest);
@@ -113,15 +100,11 @@ public class BookmarkService {
 
     @Transactional
     public void deleteBookmark(Long memberId, Long bookmarkId) {
-        authorizationService.authorizeBookmarkWriter(memberId, bookmarkId);
-
         bookmarkRepository.deleteById(bookmarkId);
     }
 
     @Transactional
     public void createBookmarkReaction(Long memberId, Long bookmarkId, CreateBookmarkReactionRequest request) {
-        authorizationService.authorizeBookClubMembershipByBookmarkId(bookmarkId, memberId);
-
         Reaction reaction = Reaction.of(request.getReactionName());
         if (bookmarkReactionRepository.existsByBookmarkIdAndReactorIdAndReaction(bookmarkId, memberId, reaction)) {
             throw new BookmarkReactionExistsException();
@@ -147,8 +130,6 @@ public class BookmarkService {
 
     @Transactional(readOnly = true)
     public ReadReactionsResponse readBookmarkReactions(Long memberId, Long bookmarkId) {
-        authorizationService.authorizeBookClubMembershipByBookmarkId(bookmarkId, memberId);
-
         return ReadReactionsResponse.fromBookmarkReactions(bookmarkReactionRepository.findAllByBookmarkId(bookmarkId));
     }
 

@@ -12,7 +12,6 @@ import codesquad.bookkbookk.common.error.exception.InvitationCodeNotSavedExcepti
 import codesquad.bookkbookk.common.error.exception.MemberNotFoundException;
 import codesquad.bookkbookk.common.image.S3ImageUploader;
 import codesquad.bookkbookk.common.redis.RedisService;
-import codesquad.bookkbookk.domain.auth.service.AuthorizationService;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateBookClubRequest;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateBookClubResponse;
 import codesquad.bookkbookk.domain.bookclub.data.dto.CreateInvitationUrlRequest;
@@ -39,9 +38,7 @@ public class BookClubService {
                     + "JuQiIL6kfwtv0taBXNa_-nOxJKx2BX-z3GxPj6vqoc14GZ7nrT_jDXlrOV1xNL9RVYBTN_brsnBuCwOA.webp";
     private static final String STATUS_ALL = "ALL";
 
-    private final AuthorizationService authorizationService;
     private final RedisService redisService;
-
     private final S3ImageUploader s3ImageUploader;
     private final BookClubRepository bookClubRepository;
     private final BookClubMemberRepository bookClubMemberRepository;
@@ -82,8 +79,6 @@ public class BookClubService {
 
     @Transactional
     public InvitationUrlResponse createInvitationUrl(Long memberId, CreateInvitationUrlRequest request) {
-        authorizationService.authorizeBookClubMembershipByBookClubId(request.getBookClubId(), memberId);
-
         String invitationCode = String.valueOf(UUID.randomUUID());
         redisService.saveInvitationCode(invitationCode, request.getBookClubId());
 
@@ -97,8 +92,6 @@ public class BookClubService {
         if (bookClubId == null) throw new InvitationCodeNotSavedException();
         BookClub bookClub = bookClubRepository.findByIdWithBooks(bookClubId).orElseThrow(BookClubNotFoundException::new);
 
-        authorizationService.authorizeBookClubJoin(bookClub.getId(), memberId);
-
         bookClub.addMember(new BookClubMember(bookClub, member));
         bookClub.getBooks().forEach(member::addBook);
 
@@ -107,8 +100,6 @@ public class BookClubService {
 
     @Transactional(readOnly = true)
     public ReadBookClubDetailResponse readBookClubDetail(Long memberId, Long bookClubId) {
-        authorizationService.authorizeBookClubMembershipByBookClubId(bookClubId, memberId);
-
         BookClub bookClub = bookClubRepository.findDetailById(bookClubId).orElseThrow(BookClubNotFoundException::new);
 
         return ReadBookClubDetailResponse.from(bookClub);
