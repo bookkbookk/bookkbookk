@@ -32,18 +32,17 @@ public class ChapterController {
     private final TopicService topicService;
 
     @PostMapping
-    public ResponseEntity<CreateChapterResponse> createChapter(@MemberId Long memberId,
-                                                               @RequestBody CreateChapterRequest request) {
-        CreateChapterResponse response = chapterService.createChaptersAndTopics(memberId, request);
+    public ResponseEntity<CreateChapterResponse> createChapter(@RequestBody CreateChapterRequest request) {
+        CreateChapterResponse response = chapterService.createChaptersAndTopics(request);
 
         return ResponseEntity.ok()
                 .body(response);
     }
 
     @PatchMapping("/{chapterId}")
-    public ResponseEntity<UpdateChapterResponse> updateChapter(@MemberId Long memberId, @PathVariable Long chapterId,
+    public ResponseEntity<UpdateChapterResponse> updateChapter(@PathVariable Long chapterId,
                                                                @RequestBody UpdateChapterRequest request) {
-        UpdateChapterResponse response = chapterService.updateChapter(memberId, chapterId, request);
+        UpdateChapterResponse response = chapterService.updateChapter(chapterId, request);
 
         return ResponseEntity.ok()
                 .body(response);
@@ -57,8 +56,8 @@ public class ChapterController {
     }
 
     @GetMapping("/{chapterId}/topics")
-    public ResponseEntity<List<ReadTopicResponse>> readTopicList(@MemberId Long memberId, @PathVariable Long chapterId) {
-        List<ReadTopicResponse> responses = topicService.readTopicLIst(memberId, chapterId);
+    public ResponseEntity<List<ReadTopicResponse>> readTopicList(@PathVariable Long chapterId) {
+        List<ReadTopicResponse> responses = topicService.readTopicLIst(chapterId);
 
         return ResponseEntity.ok()
                 .body(responses);

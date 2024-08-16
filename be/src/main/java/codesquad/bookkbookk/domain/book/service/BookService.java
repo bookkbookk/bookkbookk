@@ -61,13 +61,13 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public ReadBookClubBookResponse readBookClubBooks(Long memberId, Long bookClubId, Pageable pageable) {
+    public ReadBookClubBookResponse readBookClubBooks(Long bookClubId, Pageable pageable) {
         Slice<Book> books = bookRepository.findSliceByBookClubId(bookClubId, pageable);
         return ReadBookClubBookResponse.from(books);
     }
 
     @Transactional
-    public UpdateBookStatusResponse updateBookStatus(Long memberId, Long bookId, UpdateBookStatusRequest request) {
+    public UpdateBookStatusResponse updateBookStatus(Long bookId, UpdateBookStatusRequest request) {
         Book book = bookRepository.findById(bookId).orElseThrow(BookNotFoundException::new);
 
         book.updateStatus(request);

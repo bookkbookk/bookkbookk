@@ -67,21 +67,21 @@ public class BookmarkService {
     }
 
     @Transactional(readOnly = true)
-    public List<ReadBookmarkResponse> readBookmarks(Long memberId, Long topicId) {
+    public List<ReadBookmarkResponse> readBookmarks(Long topicId) {
         List<Bookmark> bookmarks = bookmarkRepository.findAllByTopicId(topicId);
 
         return ReadBookmarkResponse.from(bookmarks);
     }
 
     @Transactional(readOnly = true)
-    public List<ReadBookmarkResponse> readBookmarksWithFilter(Long memberId, Long bookId, BookmarkFilter bookmarkFilter) {
+    public List<ReadBookmarkResponse> readBookmarksWithFilter(Long bookId, BookmarkFilter bookmarkFilter) {
         List<Bookmark> bookmarks = bookmarkRepository.findAllByFilter(bookId, bookmarkFilter);
 
         return ReadBookmarkResponse.from(bookmarks);
     }
 
     @Transactional(readOnly = true)
-    public ReadBookmarkSliceResponse readBookmarkSlices(Long memberId, Long topicId, Pageable pageable) {
+    public ReadBookmarkSliceResponse readBookmarkSlices(Long topicId, Pageable pageable) {
         Slice<Bookmark> bookmarkSlice = bookmarkRepository.findSliceByTopicId(topicId, pageable);
         List<Long> bookmarkIds = bookmarkSlice.getContent().stream()
                 .map(Bookmark::getId)
@@ -137,7 +137,7 @@ public class BookmarkService {
     }
 
     @Transactional(readOnly = true)
-    public ReadReactionsResponse readBookmarkReactions(Long memberId, Long bookmarkId) {
+    public ReadReactionsResponse readBookmarkReactions(Long bookmarkId) {
         return ReadReactionsResponse.fromBookmarkReactions(bookmarkReactionRepository.findAllByBookmarkId(bookmarkId));
     }
 

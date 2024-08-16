@@ -63,7 +63,7 @@ public class BookClubService {
         bookClub.getBookClubMembers().add(bookClubMember);
         member.getMemberBookClubs().add(bookClubMember);
 
-        InvitationUrlResponse invitationUrlResponse = createInvitationUrl(memberId,
+        InvitationUrlResponse invitationUrlResponse = createInvitationUrl(
                 new CreateInvitationUrlRequest(bookClub.getId()));
 
         return new CreateBookClubResponse(bookClub.getId(), invitationUrlResponse.getInvitationUrl());
@@ -79,7 +79,7 @@ public class BookClubService {
     }
 
     @Transactional
-    public InvitationUrlResponse createInvitationUrl(Long memberId, CreateInvitationUrlRequest request) {
+    public InvitationUrlResponse createInvitationUrl(CreateInvitationUrlRequest request) {
         String invitationCode = String.valueOf(UUID.randomUUID());
         redisService.saveInvitationCode(invitationCode, request.getBookClubId());
 
@@ -106,7 +106,7 @@ public class BookClubService {
     }
 
     @Transactional(readOnly = true)
-    public ReadBookClubDetailResponse readBookClubDetail(Long memberId, Long bookClubId) {
+    public ReadBookClubDetailResponse readBookClubDetail(Long bookClubId) {
         BookClub bookClub = bookClubRepository.findDetailById(bookClubId).orElseThrow(BookClubNotFoundException::new);
 
         return ReadBookClubDetailResponse.from(bookClub);

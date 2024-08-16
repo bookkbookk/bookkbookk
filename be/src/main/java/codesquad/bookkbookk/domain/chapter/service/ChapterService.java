@@ -32,7 +32,7 @@ public class ChapterService {
     private final TopicRepository topicRepository;
 
     @Transactional
-    public CreateChapterResponse createChaptersAndTopics(Long memberId, CreateChapterRequest request) {
+    public CreateChapterResponse createChaptersAndTopics(CreateChapterRequest request) {
         Book book = bookRepository.findById(request.getBookId()).orElseThrow(BookNotFoundException::new);
 
         List<Chapter> chapters = request.toChaptersAndTopics(book);
@@ -48,14 +48,14 @@ public class ChapterService {
     }
 
     @Transactional(readOnly = true)
-    public List<ReadChapterResponse> readChapters(Long memberId, Long bookId, int chapterStatusId) {
+    public List<ReadChapterResponse> readChapters(Long bookId, int chapterStatusId) {
         Status chapterStatus = Status.of(chapterStatusId);
 
         return ReadChapterResponse.from(chapterRepository.findAllByBookIdAndStatus(bookId, chapterStatus));
     }
 
     @Transactional
-    public UpdateChapterResponse updateChapter(Long memberId, Long chapterId, UpdateChapterRequest request) {
+    public UpdateChapterResponse updateChapter(Long chapterId, UpdateChapterRequest request) {
         Chapter chapter = chapterRepository.findById(chapterId).orElseThrow(ChapterNotFoundException::new);
 
         Chapter updated = chapter.update(request);

@@ -93,12 +93,12 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
-    public List<ReadCommentResponse> readComments(Long memberId, Long bookmarkId) {
+    public List<ReadCommentResponse> readComments(Long bookmarkId) {
         return ReadCommentResponse.from(commentRepository.findAllByBookmarkId(bookmarkId));
     }
 
     @Transactional(readOnly = true)
-    public ReadReactionsResponse readCommentReactions(Long memberId, Long commentId) {
+    public ReadReactionsResponse readCommentReactions(Long commentId) {
         return ReadReactionsResponse.fromCommentReactions(commentReactionRepository.findAllByCommentId(commentId));
     }
 

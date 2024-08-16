@@ -47,12 +47,12 @@ public class GatheringService {
     }
 
     @Transactional(readOnly = true)
-    public List<ReadGatheringResponse> readGatherings(Long memberId, Long bookClubId) {
+    public List<ReadGatheringResponse> readGatherings(Long bookClubId) {
         return ReadGatheringResponse.from(gatheringRepository.findAllByBookClubId(bookClubId));
     }
 
     @Transactional
-    public UpdateGatheringResponse updateGathering(Long memberId, Long gatheringId, UpdateGatheringRequest request) {
+    public UpdateGatheringResponse updateGathering(Long gatheringId, UpdateGatheringRequest request) {
         Gathering gathering = gatheringRepository.findById(gatheringId).orElseThrow(GatheringNotFoundException::new);
 
         gathering.update(request);
